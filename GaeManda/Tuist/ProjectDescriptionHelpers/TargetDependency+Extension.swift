@@ -1,0 +1,114 @@
+import ProjectDescription
+
+public extension TargetDependency {
+    struct Project {}
+    struct SPM {}
+}
+
+public extension TargetDependency.Project {
+    struct PresentationLayer {}
+    struct CoreLayer {}
+    struct DomainLayer {}
+    struct DataLayer {}
+    
+    static let DesignKit = TargetDependency.project(
+      target: "DesignKit",
+      path: .relativeToRoot("Projects/DesignKit")
+    )
+}
+
+//MARK: - Presentation Dependency
+public extension TargetDependency.Project.PresentationLayer {
+    static let DogsOnAround = TargetDependency.project(
+        target: "DogsOnAround",
+        path: .relativeToRoot("Projects/Presentation/DogsOnAround")
+    )
+    static let Chatting = TargetDependency.project(
+        target: "Chatting",
+        path: .relativeToRoot("Projects/Presentation/Chatting")
+    )
+    static let Settings = TargetDependency.project(
+        target: "Settings",
+        path: .relativeToRoot("Projects/Presentation/Settings")
+    )
+    
+    static let SignUp = TargetDependency.project(
+        target: "SignUp",
+        path: .relativeToRoot("Projects/Presentation/SignUp")
+    )
+    static let SignIn = TargetDependency.project(
+        target: "SignIn",
+        path: .relativeToRoot("Projects/Presentation/SignIn")
+    )
+    
+    static let DogsOnAroundImp = TargetDependency.project(
+        target: "DogsOnAroundImp",
+        path: .relativeToRoot("Projects/Presentation/DogsOnAround")
+    )
+    static let ChattingImp = TargetDependency.project(
+        target: "ChattingImp",
+        path: .relativeToRoot("Projects/Presentation/Chatting")
+    )
+    static let SettingsImp = TargetDependency.project(
+        target: "SettingsImp",
+        path: .relativeToRoot("Projects/Presentation/Settings")
+    )
+    
+    static let SignUpImp = TargetDependency.project(
+        target: "SignUpImp",
+        path: .relativeToRoot("Projects/Presentation/SignUp")
+    )
+    static let SignInImp = TargetDependency.project(
+        target: "SignInImp",
+        path: .relativeToRoot("Projects/Presentation/SignIn")
+    )
+}
+
+//MARK: - Core Dependency
+public extension TargetDependency.Project.CoreLayer {
+    static let Extensions = TargetDependency.project(
+        target: "Extensions",
+        path: .relativeToRoot("Projects/Core")
+    )
+}
+
+//MARK: - Domain Dependency
+public extension TargetDependency.Project.DomainLayer {
+    static let Entity = TargetDependency.project(
+        target: "Entity",
+        path: .relativeToRoot("Projects/Domain")
+    )
+    static let UseCase = TargetDependency.project(
+        target: "UseCase",
+        path: .relativeToRoot("Projects/Domain")
+    )
+    static let UseCaseImp = TargetDependency.project(
+        target: "UseCase",
+        path: .relativeToRoot("Projects/Domain")
+    )
+    
+    static let Repository = TargetDependency.project(
+        target: "Repository",
+        path: .relativeToRoot("Projects/Domain")
+    )
+   
+}
+
+//MARK: - Data Dependency
+
+public extension TargetDependency.Project.DataLayer {
+    static let DTO = TargetDependency.project(
+        target: "DTO",
+        path: .relativeToRoot("Projects/Data")
+    )
+    
+    static let RepositoryImp = TargetDependency.project(
+        target: "RepositoryImp",
+        path: .relativeToRoot("Projects/Data")
+    )
+}
+
+//MARK: - SPM Dependency
+public extension TargetDependency.SPM {
+    static let RIBs = TargetDependency.external(name: "RIBs")
+}
