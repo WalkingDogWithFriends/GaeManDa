@@ -26,7 +26,11 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-### Xcode ###
+### macOS Patch ###
+# iCloud generated files
+*.icloud
+
+### Swift ###
 # Xcode
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
@@ -51,6 +55,30 @@ DerivedData/
 *.perspectivev3
 !default.perspectivev3
 
+## Obj-C/Swift specific
+*.hmap
+
+## App packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+# Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
+# Packages/
+# Package.pins
+# Package.resolved
+# *.xcodeproj
+# Xcode automatically generates this directory with a .xcworkspacedata file and xcuserdata
+# hence it is not needed unless you have added a package configuration file to your project
+# .swiftpm
+
+.build/
+
 ### Xcode Patch ###
 *.xcodeproj/*
 !*.xcodeproj/project.pbxproj
@@ -62,9 +90,33 @@ DerivedData/
 *.xcodeproj
 *.xcworkspace
 
-### Tuist derived files ###
-graph.dot
-Derived/
+### Tuist ###
+**/*.xcodeproj
+**/*.xcworkspace
+*.xcarchive
+**/Derived/
 
-### Tuist managed dependencies ###
-Tuist/Dependencies
+Tuist/Dependencies/
+
+### fastlane ###
+# fastlane - A streamlined workflow tool for Cocoa deployment
+#
+# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
+# screenshots whenever they are needed.
+# For more information about the recommended setup visit:
+# https://docs.fastlane.tools/best-practices/source-control/#source-control
+
+# fastlane specific
+**/fastlane/report.xml
+
+# deliver temporary files
+**/fastlane/Preview.html
+
+# snapshot generated screenshots
+**/fastlane/screenshots
+
+# scan temporary files
+**/fastlane/test_output
+
+# Fastlane.swift runner binary
+**/fastlane/FastlaneRunner
