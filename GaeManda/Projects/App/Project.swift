@@ -1,22 +1,55 @@
-import ProjectDescriptionHelpers
 import ProjectDescription
+import ProjectDescriptionHelpers
 
 let project = Project.createProject(
-    name: "GaeManda",
-    targets: [
-        .createTarget(
-            name: "Dev-App",
-            product: .app,
-            infoPlist: .file(path: .relativeToRoot("Projects/App/Info.plist")),
-            resources: ["Resources/**"],
-            dependencies: [
-                .Project.PresentationLayer.SettingsImp,
-                .Project.PresentationLayer.ChattingImp,
-                .Project.PresentationLayer.SignInImp,
-                .Project.PresentationLayer.SignUpImp,
-                .Project.PresentationLayer.DogsOnAroundImp,
-                .Project.DomainLayer.UseCaseImp
-            ]
-        )
-    ]
+	name: "GaeManda",
+	targets: [
+		.createTarget(
+			name: "Dev-GaeManda",
+			product: .app,
+			infoPlist: .file(path: .relativeToRoot("Projects/App/Info.plist")),
+			resources: ["Resources/**"],
+			dependencies: [
+				.Project.PresentationLayer.SettingsImpl,
+				.Project.PresentationLayer.ChattingImpl,
+				.Project.PresentationLayer.SignInImpl,
+				.Project.PresentationLayer.SignUpImpl,
+				.Project.PresentationLayer.DogsOnAroundImpl,
+				.SPM.RIBs
+			],
+			settings: .settings(
+				base: [
+					"ASSETCATALOG_COMPILER_APPICON_NAME":"DevAppIcon"
+				],
+				configurations: [
+					.debug(name: .debug, xcconfig: "./xcconfigs/GaeManda.debug.xcconfig")
+				]
+			)
+		),
+		.createTarget(
+			name: "Prod-GaeManda",
+			product: .app,
+			infoPlist: .file(path: .relativeToRoot("Projects/App/Info.plist")),
+			resources: ["Resources/**"],
+			dependencies: [
+				.Project.PresentationLayer.SettingsImpl,
+				.Project.PresentationLayer.ChattingImpl,
+				.Project.PresentationLayer.SignInImpl,
+				.Project.PresentationLayer.SignUpImpl,
+				.Project.PresentationLayer.DogsOnAroundImpl,
+				.SPM.RIBs
+			],
+			settings: .settings(
+				base: [
+					"ASSETCATALOG_COMPILER_APPICON_NAME":"ProdAppIcon"
+				],
+				configurations: [
+					.release(name: .release, xcconfig: "./xcconfigs/GaeManda.release.xcconfig")
+				]
+			)
+		)
+	],
+	additionalFiles: [
+		"./xcconfigs/GaeManda.shared.xcconfig"
+	]
 )
