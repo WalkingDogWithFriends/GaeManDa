@@ -3,17 +3,29 @@ import ProjectDescriptionHelpers
 
 private let projectName = "SignUp"
 
-let project = Project.createPresentationProject(
-    name: projectName,
-    implementationDependencies: [
-        .SPM.RIBs,
-        .Project.CoreLayer.Extensions,
-        .Project.DomainLayer.Entity,
-        .Project.DomainLayer.Repository,
-        .Project.DesignKit
-    ],
-    interfaceDependencies: [
-        .SPM.RIBs,
-        .Project.DomainLayer.Entity
-    ]
+let project = Project.createProject(
+	name: projectName,
+	targets: [
+		.createTarget(
+			name: "SignUp",
+			product: .framework,
+			sources: ["Interfaces/**"],
+			dependencies: [
+				.Project.CoreLayer.Extensions,
+				.Project.DomainLayer.Entity,
+				.Project.DomainLayer.UseCase
+			]
+		),
+		.createTarget(
+			name: "SignUpImpl",
+			product: .staticLibrary,
+			sources: ["Implementations/**"],
+			dependencies: [
+				.Project.PresentationLayer.SignUp,
+				.Project.DesignKit,
+				.SPM.RIBs,
+			]
+		)
+	]
 )
+
