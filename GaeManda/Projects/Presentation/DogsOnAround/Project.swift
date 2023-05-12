@@ -11,9 +11,7 @@ let project = Project.createProject(
 			product: .framework,
 			sources: ["Interfaces/**"],
 			dependencies: [
-				.Project.CoreLayer.Extensions,
-				.Project.DomainLayer.Entity,
-				.Project.DomainLayer.UseCase
+				
 			]
 		),
 		.createTarget(
@@ -21,9 +19,7 @@ let project = Project.createProject(
 			product: .staticLibrary,
 			sources: ["Implementations/**"],
 			dependencies: [
-				.Project.PresentationLayer.DogsOnAround,
-				.Project.DesignKit,
-				.SPM.RIBs,
+
 			]
 		)
 	]
