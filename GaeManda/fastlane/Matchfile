@@ -1,0 +1,8 @@
+git_url("https://github.com/klmyoungyun/fastlane-match")
+
+storage_mode("git")
+
+type("appstore") # The default type, can be: appstore, adhoc, enterprise or development
+
+app_identifier(["com.gaemanda.dev"])
+username("rladudrbs01@gmail.com") # Your Apple Developer Portal username
