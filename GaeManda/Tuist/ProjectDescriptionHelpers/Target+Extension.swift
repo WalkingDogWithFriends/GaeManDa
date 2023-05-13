@@ -9,7 +9,7 @@ public extension Target {
 			name: "\(name)Impl",
 			platform: .iOS,
 			product: .staticLibrary,
-			bundleId: "com.gmd.app.\(name)Impl",
+			bundleId: "com.gaemanda.\(name)Impl",
 			deploymentTarget: .iOS(targetVersion: "15.0", devices: [.iphone]),
 			infoPlist: nil,
 			sources: ["Implementations/**"],
@@ -24,7 +24,7 @@ public extension Target {
 			name: name,
 			platform: .iOS,
 			product: .framework,
-			bundleId: "com.gmd.app.\(name)",
+			bundleId: "com.gaemanda.\(name)",
 			deploymentTarget: .iOS(targetVersion: "15.0", devices: [.iphone]),
 			infoPlist: nil,
 			sources: ["Interfaces/**"],
@@ -38,7 +38,7 @@ public extension Target {
 			name: "\(name)Tests",
 			platform: .iOS,
 			product: .unitTests,
-			bundleId: "com.gmd.app.\(name)Tests",
+			bundleId: "com.gaemanda.\(name)Tests",
 			deploymentTarget: .iOS(targetVersion: "15.0", devices: [.iphone]),
 			infoPlist: nil,
 			sources: ["Tests/**"],
@@ -54,6 +54,7 @@ public extension Target{
 		name: String,
 		platform: Platform = .iOS,
 		product: Product,
+		bundleId: String? = nil,
 		deploymentTarget: DeploymentTarget = .iOS(targetVersion: "15.0", devices: [.iphone]),
 		infoPlist: InfoPlist = .default,
 		sources: SourceFilesList = ["Sources/**"],
@@ -61,11 +62,15 @@ public extension Target{
 		dependencies: [TargetDependency] = [],
 		settings: Settings? = nil
 	) -> Target {
+		var defaultBundleId = "com.gaemanda.\(name)"
+		if let bingingBundleId = bundleId {
+			defaultBundleId = bingingBundleId
+		}
 		return .init(
 			name: name,
 			platform: platform,
 			product: product,
-			bundleId: "com.gmd.app.\(name)",
+			bundleId: defaultBundleId,
 			deploymentTarget: deploymentTarget,
 			infoPlist: infoPlist,
 			sources: sources,

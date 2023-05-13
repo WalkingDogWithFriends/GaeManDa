@@ -9,7 +9,7 @@ public extension Project {
 	) -> Project {
 		return Project(
 			name: name,
-			organizationName: "com.gmd",
+			organizationName: "com.gaemanda",
 			options: .options(automaticSchemesOptions: .disabled),
 			packages: packages,
 			targets: targets,
@@ -34,7 +34,7 @@ public extension Project {
 		
 		return Project(
 			name: name,
-			organizationName: "com.gmd",
+			organizationName: "com.gaemanda",
 			packages: packages,
 			targets: [implementationTarget, interfaceTarget, testTarget]
 		)

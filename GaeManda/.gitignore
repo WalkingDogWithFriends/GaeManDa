@@ -106,6 +106,9 @@ Tuist/Dependencies/
 # For more information about the recommended setup visit:
 # https://docs.fastlane.tools/best-practices/source-control/#source-control
 
+# fastlane env
+**/fastlane/.env.default
+
 # fastlane specific
 **/fastlane/report.xml
 
