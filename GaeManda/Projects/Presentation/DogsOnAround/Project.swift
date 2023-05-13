@@ -13,7 +13,6 @@ let project = Project.createProject(
                 .SPM.RIBs
             ]
         ),
-        
         .createImplementationTarget(
             name: projectName,
             dependencies: [

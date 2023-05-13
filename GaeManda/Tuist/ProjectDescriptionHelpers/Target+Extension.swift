@@ -16,6 +16,7 @@ public extension Target {
 			dependencies: dependencies
 		)
 	}
+    
 	static func createIntefaceTarget(
 		name: String,
 		dependencies: [TargetDependency] = []
@@ -31,6 +32,7 @@ public extension Target {
 			dependencies: dependencies
 		)
 	}
+    
 	static func createTestTarget(
 		name: String
 	) -> Target {
