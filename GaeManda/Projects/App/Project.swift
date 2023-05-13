@@ -7,6 +7,7 @@ let project = Project.createProject(
 		.createTarget(
 			name: "Dev-GaeManda",
 			product: .app,
+			bundleId: "com.gaemanda.dev",
 			infoPlist: .file(path: .relativeToRoot("Projects/App/Info.plist")),
 			resources: ["Resources/**"],
 			dependencies: [
@@ -29,6 +30,7 @@ let project = Project.createProject(
 		.createTarget(
 			name: "Prod-GaeManda",
 			product: .app,
+			bundleId: "com.gaemanda",
 			infoPlist: .file(path: .relativeToRoot("Projects/App/Info.plist")),
 			resources: ["Resources/**"],
 			dependencies: [
