@@ -113,10 +113,9 @@ force_try:
   severity: warning # 명시적으로 지정
 # path
 included:
-  - ./GaeManDa
+  - ./Projects/**
 excluded:
-  - ./Tuist
-  - ./Projects/App/Sources/Appde/AppDelegate.swift
-  - ./**/SceneDelegate.swift
+  - ./Projects/App/Sources/AppLifeCycle/AppDelegate.swift
+  - ./Projects/App/Sources/AppLifeCycle/SceneDelegate.swift
 reporter: "xcode"
 
