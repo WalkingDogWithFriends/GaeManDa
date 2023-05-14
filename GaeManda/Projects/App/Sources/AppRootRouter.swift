@@ -16,3 +16,4 @@ final class AppRootRouter: LaunchRouter <AppRootInteractable, AppRootViewControl
 		interactor.router = self
 	}
 }
+

@@ -10,12 +10,6 @@ final class AppRootComponent: Component<AppRootDependency> {
 	// TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
 }
 
-final class AppComponent: Component<EmptyComponent>, AppRootDependency {
-	init() {
-		super.init(dependency: EmptyComponent())
-	}
-}
-
 // MARK: - Builder
 protocol AppRootBuildable: Buildable {
 	func build() -> LaunchRouting

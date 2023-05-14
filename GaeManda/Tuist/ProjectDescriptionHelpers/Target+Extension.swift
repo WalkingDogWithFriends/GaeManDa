@@ -11,7 +11,7 @@ public extension Target {
 			product: .staticLibrary,
 			bundleId: "com.gaemanda.\(name)Impl",
 			deploymentTarget: .iOS(targetVersion: "15.0", devices: [.iphone]),
-			infoPlist: nil,
+			infoPlist: .default,
 			sources: ["Implementations/**"],
 			dependencies: dependencies
 		)
@@ -26,7 +26,7 @@ public extension Target {
 			product: .framework,
 			bundleId: "com.gaemanda.\(name)",
 			deploymentTarget: .iOS(targetVersion: "15.0", devices: [.iphone]),
-			infoPlist: nil,
+			infoPlist: .default,
 			sources: ["Interfaces/**"],
 			dependencies: dependencies
 		)
@@ -40,10 +40,10 @@ public extension Target {
 			product: .unitTests,
 			bundleId: "com.gaemanda.\(name)Tests",
 			deploymentTarget: .iOS(targetVersion: "15.0", devices: [.iphone]),
-			infoPlist: nil,
+			infoPlist: .default,
 			sources: ["Tests/**"],
 			dependencies: [
-				.target(name: name + "Imp")
+				.target(name: name + "Impl")
 			]
 		)
 	}

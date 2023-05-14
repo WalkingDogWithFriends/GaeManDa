@@ -11,8 +11,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		options connectionOptions: UIScene.ConnectionOptions
 	) {
 		guard let windowScene = (scene as? UIWindowScene) else { return }
+		
 		let window = UIWindow(windowScene: windowScene)
 		self.window = window
+		
 		let launchRouter = AppRootBuilder(dependency: AppComponent()).build()
 		self.launchRouter = launchRouter
 		self.launchRouter?.launch(from: window)
