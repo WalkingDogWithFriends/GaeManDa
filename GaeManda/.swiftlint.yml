@@ -18,17 +18,8 @@ analyzer_rules:
 
 
 opt_in_rules: # 명시적 룰 활성화
-  # Boolean 변수는 옵셔널을 사용하지 않도록 권장함
-    - discouraged_optional_boolean
-    
-    # Prefer empty collection over optional collection.
-    - discouraged_optional_collection
-
     # type name은 영숫자만 포함, 대문자로 시작해 3-40자 사이어야 함
     - type_name
-    
-    # AnyObject 대신 class 키워드를 사용함
-    - anyobject_protocol
     
     # delegate protocol은 class-only로 참조해 weak로 참조되도록 권장
     - class_delegate_protocol
