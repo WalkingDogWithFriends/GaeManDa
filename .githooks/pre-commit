@@ -1,16 +1,35 @@
 #!/bin/bash
 
-SWIFTLINT_PATH="$(pwd)/GaeManda/swiftlint"
-
-if [[ -e "${SWIFTLINT_PATH}" ]]; then
-  echo "🔍 SwiftLint 검사 경로: $(pwd)"
-  echo "🚀 SwiftLint 검사 중..."
-  echo ""
+# find swiftlint path
+SWIFTLINT_PATH=""
+path=$(find ~/ -name "GaeManda.xcworkspace" -print -quit 2>/dev/null)
+if [ -n "$path" ]; then
+  directory=$(dirname "$path")
+  swiftlint_path=$(find "$directory" -name "swiftlint" -type f -print -quit 2>/dev/null)
+  if [ -n "$swiftlint_path" ]; then
+    echo "GaeManda.xcworkspace 파일이 있는 디렉토리에서 swiftlint 파일을 찾았습니다."
+    echo "[PATH] : $swiftlint_path"
+    echo ""
+    SWIFTLINT_PATH=$swiftlint_path
+  else
+    echo "GaeManda.xcworkspace 파일이 있는 디렉토리에서 swiftlint 파일을 찾을 수 없습니다."
+    exit 1
+  fi
 else
-	echo "SwiftLint가 존재하지 않습니다.\n"
-	exit 1
+  echo "GaeManda.xcworkspace 파일을 찾을 수 없습니다."
+  exit 1
 fi
 
+# is executable?
+if [ -n "$SWIFTLINT_PATH" ] && [ -e "${SWIFTLINT_PATH}" ]; then
+  echo "🚀 swiftlint 검사 중..."
+  echo ""
+else
+  echo "❌ swiftlint 검사 실패."
+  exit 1
+fi
+
+# find files to apply swiftlint
 changed_files=$(git diff --stat --cached)
 upstream_branch=$(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)) 
 swift_files=$(git diff --stat --cached --diff-filter=d --name-only $upstream_branch | grep -E "\.swift$")
@@ -23,17 +42,18 @@ elif [ -z "$changed_files" ] || [ -z "$swift_files" ]; then
   exit 1
 fi
 
+# execute swiftlint
 lint_result=$($SWIFTLINT_PATH lint --quiet --config .swiftlint.yml)
 
 echo ""
 echo "🚀 swiftlint 검사 완료."
 
 if [ -z "$lint_result" ]; then
-  echo "❤️  작성한 코드가 SwiftLint에 맞습니다."
+  echo "❤️  작성한 코드가 swiftlint에 맞습니다."
   echo "🙆🏻‍♂️ 커밋 성공."
 else
 	echo ""
-	printf "💔 SwiftLint에 어긋나는 코드가 있습니다. 아래 내용을 확인해주세요.\n\n"
+	printf "💔 swiftlint에 어긋나는 코드가 있습니다. 아래 내용을 확인해주세요.\n\n"
 
   while IFS=':' read -r file_path \
                         line_number \
@@ -53,6 +73,6 @@ else
     
   done <<< "$lint_result"
 
-  echo "🙅🏻‍♂️ 커밋 실패. SwiftLint에 맞게 코드를 변경해주세요."
+  echo "🙅🏻‍♂️ 커밋 실패. swiftlint에 맞게 코드를 변경해주세요."
   exit 1
 fi
