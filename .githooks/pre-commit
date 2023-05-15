@@ -3,7 +3,7 @@
 SWIFTLINT_PATH="$(pwd)/GaeManda/swiftlint"
 
 if [[ -e "${SWIFTLINT_PATH}" ]]; then
-	echo "🔍 SwiftLint 검사 경로: $(pwd)"
+  echo "🔍 SwiftLint 검사 경로: $(pwd)"
   echo "🚀 SwiftLint 검사 중..."
   echo ""
 else
@@ -29,7 +29,7 @@ echo ""
 echo "🚀 swiftlint 검사 완료."
 
 if [ -z "$lint_result" ]; then
-	echo "❤️  작성한 코드가 SwiftLint에 맞습니다."
+  echo "❤️  작성한 코드가 SwiftLint에 맞습니다."
   echo "🙆🏻‍♂️ 커밋 성공."
 else
 	echo ""
