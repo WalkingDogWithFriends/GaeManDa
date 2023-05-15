@@ -1,31 +1,37 @@
 #!/bin/bash
 
-# find swiftlint path
+readonly WORKSPACE="GaeManda.xcworkspace"
 SWIFTLINT_PATH=""
-path=$(find ~/ -name "GaeManda.xcworkspace" -print -quit 2>/dev/null)
+SWIFTLINT_YML_PATH=""
+
+# find swiftlint path
+path=$(find ~/ -name "$WORKSPACE" -print -quit 2>/dev/null)
 if [ -n "$path" ]; then
   directory=$(dirname "$path")
-  swiftlint_path=$(find "$directory" -name "swiftlint" -type f -print -quit 2>/dev/null)
-  if [ -n "$swiftlint_path" ]; then
-    echo "GaeManda.xcworkspace 파일이 있는 디렉토리에서 swiftlint 파일을 찾았습니다."
-    echo "[PATH] : $swiftlint_path"
-    echo ""
-    SWIFTLINT_PATH=$swiftlint_path
+  swiftlint_path="$directory/swiftlint"
+  swiftlint_yml_path="$directory/.swiftlint.yml"
+  
+  if [ -e "$swiftlint_path" ] && [ -e "$swiftlint_yml_path" ]; then
+    echo "✅ $WORKSPACE 파일이 있는 디렉토리에서 swiftlint과 .swiftlint.yml을 찾았습니다."
+    echo "✅ [swiftlint] : $swiftlint_path"
+    printf "✅ [.swiftlint.yml] : $swiftlint_yml_path\n\n"
+    SWIFTLINT_PATH="$swiftlint_path"
+    SWIFTLINT_YML_PATH="$swiftlint_yml_path"
   else
-    echo "GaeManda.xcworkspace 파일이 있는 디렉토리에서 swiftlint 파일을 찾을 수 없습니다."
+    echo "❌ $WORKSPACE 파일이 있는 디렉토리에서 swiftlint과 .swiftlint.yml을 찾을 수 없습니다."
     exit 1
   fi
 else
-  echo "GaeManda.xcworkspace 파일을 찾을 수 없습니다."
+  echo "❌ $WORKSPACE 파일을 찾을 수 없습니다."
   exit 1
 fi
 
 # is executable?
-if [ -n "$SWIFTLINT_PATH" ] && [ -e "${SWIFTLINT_PATH}" ]; then
-  echo "🚀 swiftlint 검사 중..."
-  echo ""
+printf "🚀 swiftlint, .swiftlint.yml 체크 중...\n\n"
+if [ -n "$SWIFTLINT_PATH" ] && [ -n "$SWIFTLINT_YML_PATH" ] && [ -e "${SWIFTLINT_PATH}" ]; then
+  printf "✅ swiftlint, .swiftlint.yml 체크 성공\n\n"
 else
-  echo "❌ swiftlint 검사 실패."
+  echo "❌ swiftlint, .swiftlint.yml 체크 실패."
   exit 1
 fi
 
@@ -43,18 +49,15 @@ elif [ -z "$changed_files" ] || [ -z "$swift_files" ]; then
 fi
 
 # execute swiftlint
-lint_result=$($SWIFTLINT_PATH lint --quiet --config .swiftlint.yml)
-
-echo ""
-echo "🚀 swiftlint 검사 완료."
+printf "🚀 swiftlint 적용 중...\n\n"
+lint_result=$($SWIFTLINT_PATH lint --quiet --config $SWIFTLINT_YML_PATH) 
+printf "✅ swiftlint 적용 완료.\n\n"
 
 if [ -z "$lint_result" ]; then
   echo "❤️  작성한 코드가 swiftlint에 맞습니다."
   echo "🙆🏻‍♂️ 커밋 성공."
 else
-	echo ""
 	printf "💔 swiftlint에 어긋나는 코드가 있습니다. 아래 내용을 확인해주세요.\n\n"
-
   while IFS=':' read -r file_path \
                         line_number \
                         column_number \
@@ -65,12 +68,10 @@ else
     if [ "$error_type" = " error" ]; then
       icon="🚨"
     fi
-
     echo "$icon$error_type"
     echo "┗ $file_path:$line_number:$column_number"
     echo "┗$error_message:$error_description"
     echo ""
-    
   done <<< "$lint_result"
 
   echo "🙅🏻‍♂️ 커밋 실패. swiftlint에 맞게 코드를 변경해주세요."
