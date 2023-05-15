@@ -1,22 +1,22 @@
 #!/bin/bash
 
+# Constants
 readonly WORKSPACE="GaeManda.xcworkspace"
-SWIFTLINT_PATH=""
-SWIFTLINT_YML_PATH=""
 
-# find swiftlint path
+# Variables
+swiftlint_path=""
+swiftlint_yml_path=""
+
+# Find swiftlint path
 path=$(find ~/ -name "$WORKSPACE" -print -quit 2>/dev/null)
 if [ -n "$path" ]; then
   directory=$(dirname "$path")
   swiftlint_path="$directory/swiftlint"
   swiftlint_yml_path="$directory/.swiftlint.yml"
-  
   if [ -e "$swiftlint_path" ] && [ -e "$swiftlint_yml_path" ]; then
     echo "✅ $WORKSPACE 파일이 있는 디렉토리에서 swiftlint과 .swiftlint.yml을 찾았습니다."
     echo "✅ [swiftlint] : $swiftlint_path"
     printf "✅ [.swiftlint.yml] : $swiftlint_yml_path\n\n"
-    SWIFTLINT_PATH="$swiftlint_path"
-    SWIFTLINT_YML_PATH="$swiftlint_yml_path"
   else
     echo "❌ $WORKSPACE 파일이 있는 디렉토리에서 swiftlint과 .swiftlint.yml을 찾을 수 없습니다."
     exit 1
@@ -26,16 +26,16 @@ else
   exit 1
 fi
 
-# is executable?
+# Check if swiftlint and .swiftlint.yml exist and are executable
 printf "🚀 swiftlint, .swiftlint.yml 체크 중...\n\n"
-if [ -n "$SWIFTLINT_PATH" ] && [ -n "$SWIFTLINT_YML_PATH" ] && [ -e "${SWIFTLINT_PATH}" ]; then
+if [ -n "$swiftlint_path" ] && [ -n "$swiftlint_yml_path" ] && [ -x "$swiftlint_path" ]; then
   printf "✅ swiftlint, .swiftlint.yml 체크 성공\n\n"
 else
   echo "❌ swiftlint, .swiftlint.yml 체크 실패."
   exit 1
 fi
 
-# find files to apply swiftlint
+# Find Swift files to apply swiftlint to
 changed_files=$(git diff --stat --cached)
 upstream_branch=$(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)) 
 swift_files=$(git diff --stat --cached --diff-filter=d --name-only $upstream_branch | grep -E "\.swift$")
@@ -48,22 +48,17 @@ elif [ -z "$changed_files" ] || [ -z "$swift_files" ]; then
   exit 1
 fi
 
-# execute swiftlint
+# Apply swiftlint
 printf "🚀 swiftlint 적용 중...\n\n"
-lint_result=$($SWIFTLINT_PATH lint --quiet --config $SWIFTLINT_YML_PATH) 
+lint_result=$("$swiftlint_path" lint --quiet --config "$swiftlint_yml_path")
 printf "✅ swiftlint 적용 완료.\n\n"
 
 if [ -z "$lint_result" ]; then
   echo "❤️  작성한 코드가 swiftlint에 맞습니다."
   echo "🙆🏻‍♂️ 커밋 성공."
 else
-	printf "💔 swiftlint에 어긋나는 코드가 있습니다. 아래 내용을 확인해주세요.\n\n"
-  while IFS=':' read -r file_path \
-                        line_number \
-                        column_number \
-                        error_type \
-                        error_message \
-                        error_description; do
+  printf "💔 swiftlint에 어긋나는 코드가 있습니다. 아래 내용을 확인해주세요.\n\n"
+  while IFS=':' read -r file_path line_number column_number error_type error_message error_description; do
     icon="🚧"
     if [ "$error_type" = " error" ]; then
       icon="🚨"
