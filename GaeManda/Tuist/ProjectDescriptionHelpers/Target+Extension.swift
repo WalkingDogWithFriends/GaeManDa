@@ -1,4 +1,18 @@
+import Foundation
 import ProjectDescription
+
+fileprivate let commonScripts: [TargetScript] = [
+	.pre(
+		script: """
+		ROOT_DIR=\(ProcessInfo.processInfo.environment["TUIST_ROOT_DIR"] ?? "")
+		
+		${ROOT_DIR}/swiftlint --config ${ROOT_DIR}/.swiftlint.yml
+		
+		""",
+		name: "SwiftLint",
+		basedOnDependencyAnalysis: false
+	)
+]
 
 public extension Target {
 	static func createImplementationTarget(
@@ -11,8 +25,9 @@ public extension Target {
 			product: .staticLibrary,
 			bundleId: "com.gaemanda.\(name)Impl",
 			deploymentTarget: .iOS(targetVersion: "15.0", devices: [.iphone]),
-			infoPlist: nil,
+			infoPlist: .default,
 			sources: ["Implementations/**"],
+			scripts: commonScripts,
 			dependencies: dependencies
 		)
 	}
@@ -26,8 +41,9 @@ public extension Target {
 			product: .framework,
 			bundleId: "com.gaemanda.\(name)",
 			deploymentTarget: .iOS(targetVersion: "15.0", devices: [.iphone]),
-			infoPlist: nil,
+			infoPlist: .default,
 			sources: ["Interfaces/**"],
+			scripts: commonScripts,
 			dependencies: dependencies
 		)
 	}
@@ -40,10 +56,11 @@ public extension Target {
 			product: .unitTests,
 			bundleId: "com.gaemanda.\(name)Tests",
 			deploymentTarget: .iOS(targetVersion: "15.0", devices: [.iphone]),
-			infoPlist: nil,
+			infoPlist: .default,
 			sources: ["Tests/**"],
+			scripts: commonScripts,
 			dependencies: [
-				.target(name: name + "Imp")
+				.target(name: name + "Impl")
 			]
 		)
 	}
@@ -59,6 +76,7 @@ public extension Target{
 		infoPlist: InfoPlist = .default,
 		sources: SourceFilesList = ["Sources/**"],
 		resources: ResourceFileElements? = nil,
+		scripts: [TargetScript] = [],
 		dependencies: [TargetDependency] = [],
 		settings: Settings? = nil
 	) -> Target {
@@ -75,6 +93,7 @@ public extension Target{
 			infoPlist: infoPlist,
 			sources: sources,
 			resources: resources,
+			scripts: commonScripts + scripts,
 			dependencies: dependencies,
 			settings: settings
 		)

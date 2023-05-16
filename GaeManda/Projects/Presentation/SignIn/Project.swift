@@ -25,4 +25,3 @@ let project = Project.createProject(
     .createTestTarget(name: projectName)
   ]
 )
-

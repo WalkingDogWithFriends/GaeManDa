@@ -20,7 +20,7 @@ let project = Project.createProject(
 			],
 			settings: .settings(
 				base: [
-					"ASSETCATALOG_COMPILER_APPICON_NAME":"DevAppIcon"
+					"ASSETCATALOG_COMPILER_APPICON_NAME": "DevAppIcon"
 				],
 				configurations: [
 					.debug(name: .debug, xcconfig: "./xcconfigs/GaeManda.debug.xcconfig")
@@ -43,7 +43,7 @@ let project = Project.createProject(
 			],
 			settings: .settings(
 				base: [
-					"ASSETCATALOG_COMPILER_APPICON_NAME":"ProdAppIcon"
+					"ASSETCATALOG_COMPILER_APPICON_NAME": "ProdAppIcon"
 				],
 				configurations: [
 					.release(name: .release, xcconfig: "./xcconfigs/GaeManda.release.xcconfig")
