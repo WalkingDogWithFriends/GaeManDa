@@ -42,6 +42,10 @@ public extension TargetDependency.Project.PresentationLayer {
     target: "SignIn",
     path: .relativeToRoot("Projects/Presentation/SignIn")
   )
+	static let OnBoarding = TargetDependency.project(
+		target: "OnBoarding",
+		path: .relativeToRoot("Projects/Presentation/OnBoarding")
+	)
   static let DogsOnAroundImpl = TargetDependency.project(
     target: "DogsOnAroundImpl",
     path: .relativeToRoot("Projects/Presentation/DogsOnAround")
@@ -62,6 +66,10 @@ public extension TargetDependency.Project.PresentationLayer {
     target: "SignInImpl",
     path: .relativeToRoot("Projects/Presentation/SignIn")
   )
+	static let OnBoardingImpl = TargetDependency.project(
+		target: "OnBoardingImpl",
+		path: .relativeToRoot("Projects/Presentation/OnBoarding")
+	)
 }
 
 //MARK: - Core Dependency

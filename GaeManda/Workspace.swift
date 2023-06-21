@@ -13,6 +13,7 @@ let workspace = Workspace(
     "Projects/Presentation/Settings",
     "Projects/Presentation/SignIn",
     "Projects/Presentation/SignUp",
+		"Projects/Presentation/OnBoarding"
   ],
   schemes: [
     Scheme(
