@@ -22,7 +22,8 @@ final class LoggedOutBuilder:
 		
 		return LoggedOutRouter(
 			interactor: interactor,
-			viewController: component.loggedOutViewController
+			viewController: component.loggedOutViewController,
+			onBoardingBuildable: component.onBoardingBuildable
 		)
 	}
 }

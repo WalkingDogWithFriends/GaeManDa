@@ -2,6 +2,8 @@ import RIBs
 
 protocol LoggedOutRouting: Routing {
 	func cleanupViews()
+	func attachOnBoarding()
+	func detachOnBoarding()
 }
 
 protocol LoggedOutListener: AnyObject { }
