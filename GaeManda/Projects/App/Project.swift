@@ -17,6 +17,7 @@ let project = Project.createProject(
 				.Project.PresentationLayer.SignUpImpl,
 				.Project.PresentationLayer.DogsOnAroundImpl,
 				.Project.PresentationLayer.OnBoardingImpl,
+				.Project.CoreLayer.Utils,
 				.SPM.RIBs
 			],
 			settings: .settings(

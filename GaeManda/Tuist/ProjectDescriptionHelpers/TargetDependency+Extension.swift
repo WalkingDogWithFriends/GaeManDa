@@ -78,6 +78,10 @@ public extension TargetDependency.Project.CoreLayer {
     target: "Extensions",
     path: .relativeToRoot("Projects/Core")
   )
+	static let Utils = TargetDependency.project(
+		target: "Utils",
+		path: .relativeToRoot("Projects/Core")
+	)
 }
 
 //MARK: - Domain Dependency

@@ -19,6 +19,7 @@ let project = Project.createProject(
         .Project.PresentationLayer.Chatting,
         .Project.DesignKit,
         .Project.CoreLayer.Extensions,
+        .Project.CoreLayer.Utils,
         .Project.DomainLayer.UseCase
       ]
     ),
