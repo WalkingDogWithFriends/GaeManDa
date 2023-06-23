@@ -13,6 +13,16 @@ class OnBoardingTextView: UIView {
 		}
 	}
 	
+	private lazy var hasContent = false {
+		didSet {
+			if hasContent == true {
+				titleLabel.layer.opacity = 1.0
+			} else {
+				titleLabel.layer.opacity = 0.0
+			}
+		}
+	}
+	
 	private let stackView: UIStackView = {
 		let stackView = UIStackView()
 		stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -28,6 +38,7 @@ class OnBoardingTextView: UIView {
 		let label = UILabel()
 		label.translatesAutoresizingMaskIntoConstraints = false
 		label.textColor = .init(hexCode: "979797")
+		label.layer.opacity = 0.0
 		label.numberOfLines = 1
 		label.font = .systemFont(ofSize: 12)
 		
@@ -37,16 +48,18 @@ class OnBoardingTextView: UIView {
 	private let textField: UnderLineTextField = {
 		let textField = UnderLineTextField()
 		textField.translatesAutoresizingMaskIntoConstraints = false
+		textField.font = .systemFont(ofSize: 15)
 		
 		return textField
 	}()
 	
-	private let warningLabel: UILabel = {
+	private lazy var warningLabel: UILabel = {
 		let label = UILabel()
 		label.translatesAutoresizingMaskIntoConstraints = false
 		label.textColor = .init(hexCode: "FF0000")
 		label.numberOfLines = 1
 		label.font = .systemFont(ofSize: 12)
+		label.layer.opacity = 0.0
 		
 		return label
 	}()
@@ -61,25 +74,29 @@ class OnBoardingTextView: UIView {
 	
 	private lazy var maximumTextCount: Int = 0
 	
-	init(
-		title: String,
-		placeHolder: String
-	) {
+	private lazy var calenderButton: UIButton = {
+		let button = UIButton()
+		let image = UIImage(systemName: "calendar")
+		button.tintColor = .black
+		button.setImage(image, for: .normal)
+		
+		return button
+	}()
+	
+	init(title: String) {
 		super.init(frame: .zero)
 		
-		self.textField.placeholder = placeHolder
 		self.titleLabel.text = title
+		self.textField.placeholder = title
 		setupUI()
 	}
 	
 	convenience init(
 		title: String,
-		placeHolder: String,
 		warningText: String
 	) {
-		self.init(title: title, placeHolder: placeHolder)
+		self.init(title: title)
 		self.warningLabel.text = warningText
-		setupUI()
 	}
 	
 	required init?(coder: NSCoder) {
@@ -88,7 +105,6 @@ class OnBoardingTextView: UIView {
 	
 	private func setupUI() {
 		addSubview(stackView)
-		
 		stackView.addArrangedSubview(titleLabel)
 		stackView.addArrangedSubview(textField)
 		stackView.addArrangedSubview(warningLabel)
@@ -97,14 +113,13 @@ class OnBoardingTextView: UIView {
 			stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
 			stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
 			stackView.topAnchor.constraint(equalTo: self.topAnchor),
-			stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+			stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8)
 		])
 	}
 	
 	func displayMaximunTextCount(_ maximumTextCount: Int) {
 		textField.rightView = maximumTextCountLabel
 		textField.rightViewMode = .always
-		
 		self.maximumTextCount = maximumTextCount
 		maximumTextCountLabel.text = "0/\(maximumTextCount)"
 		
@@ -115,17 +130,22 @@ class OnBoardingTextView: UIView {
 			object: textField
 		)
 	}
+	
+	func displayCalenderButton() {
+		textField.rightView = calenderButton
+		textField.rightViewMode = .always
+	}
 }
 
 private extension OnBoardingTextView {
 	func changeNormalMode() {
-		self.textField.underLineColor = .black
-		self.warningLabel.isHidden = true
+		textField.underLineColor = .black
+		warningLabel.layer.opacity = 0.0
 	}
 	
 	func changeWarningMode() {
-		self.textField.underLineColor = .init(hexCode: "FF0000")
-		self.warningLabel.isHidden = false
+		textField.underLineColor = .init(hexCode: "FF0000")
+		warningLabel.layer.opacity = 1.0
 	}
 	
 	@objc func textDidChange(_ notification: Notification) {
@@ -137,7 +157,13 @@ private extension OnBoardingTextView {
 		}
 		var count = text.count
 		
-		if text.count >= maximumTextCount {
+		if count == 0 {
+			hasContent = false
+		} else {
+			hasContent = true
+		}
+		
+		if count >= maximumTextCount {
 			let index = text.index(text.startIndex, offsetBy: maximumTextCount)
 			let newString = text[text.startIndex..<index]
 			textField.text = String(newString)
