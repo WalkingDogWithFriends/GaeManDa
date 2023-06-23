@@ -3,11 +3,15 @@ import OnBoarding
 
 public protocol OnBoardingDependency: Dependency {
 	var onBoardingViewController: ViewControllable { get }
+	var profileSettingBuildable: ProfileSettingBuildable { get }
 }
 
 final class OnBoardingComponent: Component<OnBoardingDependency> {
 	fileprivate var onBoardingViewController: ViewControllable {
 		dependency.onBoardingViewController
+	}
+	var profileSettingBuildable: ProfileSettingBuildable {
+		dependency.profileSettingBuildable
 	}
 }
 
@@ -24,7 +28,8 @@ public final class OnBoardingBuilder:
 		interactor.listener = listener
 		return OnBoardingRouter(
 			interactor: interactor,
-			viewController: component.onBoardingViewController
+			viewController: component.onBoardingViewController,
+			profileSettingBuildable: component.profileSettingBuildable
 		)
 	}
 }

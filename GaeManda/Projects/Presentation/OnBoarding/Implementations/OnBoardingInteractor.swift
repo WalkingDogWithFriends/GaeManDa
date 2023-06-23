@@ -4,6 +4,8 @@ import Utils
 
 protocol OnBoardingRouting: Routing {
 	func cleanupViews()
+	func profileSettingAttach()
+	func profileSettingDetach()
 }
 
 final class OnBoardingInteractor:
