@@ -19,8 +19,22 @@ public extension ViewControllable {
 	func present(
 		_ viewControllable: ViewControllable,
 		animated: Bool,
-		completion: (() -> Void)?
+		completion: (() -> Void)? = nil
 	) {
+		self.uiviewController.present(
+			viewControllable.uiviewController,
+			animated: animated,
+			completion: completion
+		)
+	}
+	
+	func present(
+		_ viewControllable: ViewControllable,
+		animated: Bool,
+		modalPresentationStyle: UIModalPresentationStyle,
+		completion: (() -> Void)? = nil
+	) {
+		viewControllable.uiviewController.modalPresentationStyle = modalPresentationStyle
 		self.uiviewController.present(
 			viewControllable.uiviewController,
 			animated: animated,
