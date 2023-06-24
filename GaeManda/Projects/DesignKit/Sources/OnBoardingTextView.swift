@@ -1,8 +1,15 @@
 import UIKit
 import Extensions
-import DesignKit
 
-class OnBoardingTextView: UIView {
+public enum RightViewMode {
+	case none
+	case calendar
+	case textCount(maximumTextCount: Int) // raw값 넣고
+}
+
+public final class OnBoardingTextView: UIView {
+	private let rightViewMode: RightViewMode
+	
 	public lazy var isWarning = false {
 		didSet {
 			if isWarning == true {
@@ -83,19 +90,33 @@ class OnBoardingTextView: UIView {
 		return button
 	}()
 	
-	init(title: String) {
+	public init(
+		title: String,
+		rightViewMode: RightViewMode
+	) {
+		self.rightViewMode = rightViewMode
 		super.init(frame: .zero)
-		
-		self.titleLabel.text = title
-		self.textField.placeholder = title
+				
+		titleLabel.text = title
+		textField.placeholder = title
 		setupUI()
+		
+		switch rightViewMode {
+		case .calendar:
+			displayCalenderButton()
+		case .textCount(let maximumTextCount):
+			displayMaximunTextCount(maximumTextCount)
+		case .none:
+			break
+		}
 	}
 	
-	convenience init(
+	public convenience init(
 		title: String,
+		rightViewMode: RightViewMode,
 		warningText: String
 	) {
-		self.init(title: title)
+		self.init(title: title, rightViewMode: rightViewMode)
 		self.warningLabel.text = warningText
 	}
 	
@@ -117,7 +138,7 @@ class OnBoardingTextView: UIView {
 		])
 	}
 	
-	func displayMaximunTextCount(_ maximumTextCount: Int) {
+	private func displayMaximunTextCount(_ maximumTextCount: Int) {
 		textField.rightView = maximumTextCountLabel
 		textField.rightViewMode = .always
 		self.maximumTextCount = maximumTextCount
@@ -131,7 +152,7 @@ class OnBoardingTextView: UIView {
 		)
 	}
 	
-	func displayCalenderButton() {
+	private func displayCalenderButton() {
 		textField.rightView = calenderButton
 		textField.rightViewMode = .always
 	}
@@ -169,7 +190,6 @@ private extension OnBoardingTextView {
 			textField.text = String(newString)
 			count = 20
 		}
-		
 		maximumTextCountLabel.text = "\(count)/\(maximumTextCount)"
 	}
 }

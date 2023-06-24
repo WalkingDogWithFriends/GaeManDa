@@ -42,10 +42,10 @@ final class ProfileSettingViewController:
 	private let nickNameTextView: OnBoardingTextView = {
 		let onBoardingTextView = OnBoardingTextView(
 			title: "닉네임",
+			rightViewMode: .textCount(maximumTextCount: 20),
 			warningText: "닉네임을 입력해주세요."
 		)
 		onBoardingTextView.translatesAutoresizingMaskIntoConstraints = false
-		onBoardingTextView.displayMaximunTextCount(20)
 
 		return onBoardingTextView
 	}()
@@ -53,10 +53,10 @@ final class ProfileSettingViewController:
 	private let calenderTextView: OnBoardingTextView = {
 		let onBoardingTextView = OnBoardingTextView(
 			title: "생년월일",
+			rightViewMode: .calendar,
 			warningText: "닉네임을 입력해주세요."
 		)
 		onBoardingTextView.translatesAutoresizingMaskIntoConstraints = false
-		onBoardingTextView.displayCalenderButton()
 		
 		return onBoardingTextView
 	}()
@@ -163,7 +163,7 @@ private extension ProfileSettingViewController {
 	@objc func maleButtonTapped() {
 		if maleButton.buttonIsSelected == true { return }
 		maleButton.buttonIsSelected.toggle()
-		nickNameTextView.isWarning.toggle()
+		
 		if femaleButton.buttonIsSelected == true {
 			femaleButton.buttonIsSelected.toggle()
 		}
@@ -172,7 +172,7 @@ private extension ProfileSettingViewController {
 	@objc func femaleButtonTapped() {
 		if femaleButton.buttonIsSelected == true { return }
 		femaleButton.buttonIsSelected.toggle()
-		nickNameTextView.isWarning.toggle()
+
 		if maleButton.buttonIsSelected == true {
 			maleButton.buttonIsSelected.toggle()
 		}
