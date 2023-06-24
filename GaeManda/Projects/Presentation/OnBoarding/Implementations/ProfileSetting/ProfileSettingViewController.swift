@@ -1,5 +1,5 @@
-import RIBs
 import UIKit
+import RIBs
 import DesignKit
 import Extensions
 

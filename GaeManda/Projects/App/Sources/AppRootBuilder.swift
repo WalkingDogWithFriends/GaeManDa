@@ -1,5 +1,4 @@
 import RIBs
-import UIKit
 
 protocol AppRootDependency: Dependency { }
 

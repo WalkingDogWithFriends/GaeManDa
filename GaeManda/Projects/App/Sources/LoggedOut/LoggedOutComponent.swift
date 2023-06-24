@@ -1,7 +1,7 @@
 import RIBs
-import Utils
-import OnBoardingImpl
 import OnBoarding
+import OnBoardingImpl
+import Utils
 
 final class LoggedOutComponent:
 	Component<LoggedOutDependency>,
