@@ -4,8 +4,11 @@ import Utils
 
 protocol OnBoardingRouting: Routing {
 	func cleanupViews()
+	func termsOfUseAttach()
+	func termsOfUseDetach()
 	func profileSettingAttach()
 	func profileSettingDetach()
+	func termsOfUseDidFinish()
 }
 
 final class OnBoardingInteractor:
@@ -24,5 +27,12 @@ final class OnBoardingInteractor:
 		super.willResignActive()
 		
 		router?.cleanupViews()
+	}
+}
+
+// MARK: TermsOfUseListener
+extension OnBoardingInteractor {
+	func termsOfUseDidFinish() {
+		router?.termsOfUseDidFinish()
 	}
 }
