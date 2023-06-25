@@ -5,7 +5,8 @@ import Utils
 protocol OnBoardingInteractable:
 	Interactable,
 	ProfileSettingListener,
-	TermsOfUseListener {
+	TermsOfUseListener,
+	AddressSettingListener {
 	var router: OnBoardingRouting? { get set }
 	var listener: OnBoardingListener? { get set }
 }
@@ -20,6 +21,9 @@ final class OnBoardingRouter:
 	private let termsOfUseBuildable: TermsOfUseBuildable
 	private var termsOfUseRouting: ViewableRouting?
 	
+	private let addressSettingBuildable: AddressSettingBuildable
+	private var addressSettingRouting: ViewableRouting?
+	
 	private let profileSettingBuildable: ProfileSettingBuildable
 	private var profileSettingRouting: ViewableRouting?
 	
@@ -27,10 +31,12 @@ final class OnBoardingRouter:
 		interactor: OnBoardingInteractable,
 		viewController: ViewControllable,
 		termsOfUseBuildable: TermsOfUseBuildable,
+		addressSettingBuildable: AddressSettingBuildable,
 		profileSettingBuildable: ProfileSettingBuildable
 	) {
 		self.viewController = viewController
 		self.termsOfUseBuildable = termsOfUseBuildable
+		self.addressSettingBuildable = addressSettingBuildable
 		self.profileSettingBuildable = profileSettingBuildable
 		super.init(interactor: interactor)
 		interactor.router = self
@@ -73,7 +79,32 @@ extension OnBoardingRouter {
 	}
 	
 	func termsOfUseDidFinish() {
-		print("termsOfUseDidFinish")
+		addressSettingAttach()
+	}
+}
+
+// MARK: TermsOfUse
+extension OnBoardingRouter {
+	func addressSettingAttach() {
+		if addressSettingRouting != nil { return }
+		
+		let router = addressSettingBuildable.build(withListener: interactor)
+		presentInsideNavigation(router.viewControllable)
+		
+		attachChild(router)
+		termsOfUseRouting = router
+	}
+	
+	func addressSettingeDetach() {
+		guard let router = addressSettingRouting else { return }
+		
+		dismissPresentedNavigation(completion: nil)
+		termsOfUseRouting = nil
+		detachChild(router)
+	}
+	
+	func addressSettingDidFinish() {
+		profileSettingAttach()
 	}
 }
 

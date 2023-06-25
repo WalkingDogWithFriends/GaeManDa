@@ -9,6 +9,7 @@ protocol OnBoardingRouting: Routing {
 	func profileSettingAttach()
 	func profileSettingDetach()
 	func termsOfUseDidFinish()
+	func addressSettingDidFinish()
 }
 
 final class OnBoardingInteractor:
@@ -34,5 +35,12 @@ final class OnBoardingInteractor:
 extension OnBoardingInteractor {
 	func termsOfUseDidFinish() {
 		router?.termsOfUseDidFinish()
+	}
+}
+
+// MARK: AddressSettingListener
+extension OnBoardingInteractor {
+	func addressSettingDidFinish() {
+		router?.addressSettingDidFinish()
 	}
 }
