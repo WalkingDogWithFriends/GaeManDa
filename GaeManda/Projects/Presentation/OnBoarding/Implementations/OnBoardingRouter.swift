@@ -4,8 +4,8 @@ import Utils
 
 protocol OnBoardingInteractable:
 	Interactable,
-	ProfileSettingListener,
 	TermsOfUseListener,
+	ProfileSettingListener,
 	AddressSettingListener {
 	var router: OnBoardingRouting? { get set }
 	var listener: OnBoardingListener? { get set }

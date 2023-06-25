@@ -10,24 +10,15 @@ final class ProfileSettingViewController:
 	ProfileSettingViewControllable {
 	weak var listener: ProfileSettingPresentableListener?
 	
-	private let label: UILabel = {
-		let label = UILabel()
-		label.translatesAutoresizingMaskIntoConstraints = false
-		label.text = "보호자의 프로필을 설정해주세요!"
-		label.font = .systemFont(ofSize: 20, weight: .bold)
-		label.numberOfLines = 1
+	private let onBoardingView: OnBoardingView = {
+		let onBoardingView = OnBoardingView(title: "보호자의 프로필을 설정해주세요!")
+		onBoardingView.translatesAutoresizingMaskIntoConstraints = false
+		let image = UIImage(systemName: "photo")
+		onBoardingView.setProfileImage(image)
 		
-		return label
+		return onBoardingView
 	}()
-	
-	private let profileImageView: RoundImageView = {
-		let imageView = RoundImageView()
-		imageView.translatesAutoresizingMaskIntoConstraints = false
-		imageView.image = UIImage(systemName: "photo")
-		
-		return imageView
-	}()
-	
+
 	private let textStackView: UIStackView = {
 		let stackView = UIStackView()
 		stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -103,7 +94,7 @@ final class ProfileSettingViewController:
 		button.layer.cornerRadius = 4
 		button.backgroundColor = .init(hexCode: "65BF4D")
 		button.titleLabel?.font = .systemFont(ofSize: 14, weight: .bold)
-		
+
 		return button
 	}()
 	
@@ -116,12 +107,15 @@ final class ProfileSettingViewController:
 		super.init(coder: coder)
 		setupUI()
 	}
-	
+
 	private func setupUI() {
 		view.backgroundColor = .white
-		
-		view.addSubview(label)
-		view.addSubview(profileImageView)
+		setupSubviews()
+		setConstraints()
+	}
+	
+	private func setupSubviews() {
+		view.addSubview(onBoardingView)
 		view.addSubview(textStackView)
 		view.addSubview(buttonStackView)
 		view.addSubview(confirmButton)
@@ -131,18 +125,15 @@ final class ProfileSettingViewController:
 		
 		buttonStackView.addArrangedSubview(maleButton)
 		buttonStackView.addArrangedSubview(femaleButton)
-		
-		let safeArea = view.safeAreaLayoutGuide
+	}
+	
+	private func setConstraints() {
 		NSLayoutConstraint.activate([
-			label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 31.5),
-			label.topAnchor.constraint(equalTo: view.topAnchor, constant: 128),
+			onBoardingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+			onBoardingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+			onBoardingView.topAnchor.constraint(equalTo: view.topAnchor),
 			
-			profileImageView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 40),
-			profileImageView.heightAnchor.constraint(equalToConstant: 140),
-			profileImageView.widthAnchor.constraint(equalToConstant: 140),
-			profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-			
-			textStackView.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 40),
+			textStackView.topAnchor.constraint(equalTo: onBoardingView.bottomAnchor, constant: 40),
 			textStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 38),
 			textStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -38),
 			
@@ -150,11 +141,11 @@ final class ProfileSettingViewController:
 			buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 38),
 			buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -38),
 			buttonStackView.heightAnchor.constraint(equalToConstant: 47),
-			
-			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
-			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
-			confirmButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -20),
-			confirmButton.heightAnchor.constraint(equalToConstant: 41)
+
+			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -45),
+			confirmButton.heightAnchor.constraint(equalToConstant: 40)
 		])
 	}
 }

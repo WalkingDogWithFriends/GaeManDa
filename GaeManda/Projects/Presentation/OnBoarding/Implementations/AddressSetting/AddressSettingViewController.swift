@@ -30,18 +30,21 @@ final class AddressSettingViewController:
 	
 	init() {
 		super.init(nibName: nil, bundle: nil)
-		setupSubviews()
-		setConstraints()
+		setupUI()
 	}
 	
 	required init?(coder: NSCoder) {
 		super.init(coder: coder)
+		setupUI()
+	}
+	
+	private func setupUI() {
+		self.view.backgroundColor = .white
 		setupSubviews()
 		setConstraints()
 	}
 	
 	private func setupSubviews() {
-		self.view.backgroundColor = .white
 		self.view.addSubview(confirmButton)
 	}
 	
