@@ -20,7 +20,8 @@ let project = Project.createProject(
 				.Project.DesignKit,
 				.Project.CoreLayer.Extensions,
 				.Project.CoreLayer.Utils,
-				.Project.DomainLayer.UseCase
+				.Project.DomainLayer.UseCase,
+				.SPM.RxCocoa
 			]
 		),
 		.createTestTarget(name: projectName)

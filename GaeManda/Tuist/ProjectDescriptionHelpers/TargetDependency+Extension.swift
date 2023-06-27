@@ -119,4 +119,5 @@ public extension TargetDependency.Project.DataLayer {
 //MARK: - SPM Dependency
 public extension TargetDependency.SPM {
 	static let RIBs = TargetDependency.external(name: "RIBs")
+	static let RxCocoa = TargetDependency.external(name: "RxCocoa")
 }
