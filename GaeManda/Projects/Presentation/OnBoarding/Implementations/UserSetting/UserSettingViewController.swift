@@ -3,12 +3,15 @@ import RIBs
 import DesignKit
 import Extensions
 
-protocol ProfileSettingPresentableListener: AnyObject { }
-final class ProfileSettingViewController:
+protocol UserSettingPresentableListener: AnyObject {
+	func didTapConfirmButton()
+}
+
+final class UserSettingViewController:
 	UIViewController,
-	ProfileSettingPresentable,
-	ProfileSettingViewControllable {
-	weak var listener: ProfileSettingPresentableListener?
+	UserSettingPresentable,
+	UserSettingViewControllable {
+	weak var listener: UserSettingPresentableListener?
 	
 	private let onBoardingView: OnBoardingView = {
 		let onBoardingView = OnBoardingView(title: "보호자의 프로필을 설정해주세요!")
@@ -18,7 +21,7 @@ final class ProfileSettingViewController:
 		
 		return onBoardingView
 	}()
-
+	
 	private let textStackView: UIStackView = {
 		let stackView = UIStackView()
 		stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -33,18 +36,22 @@ final class ProfileSettingViewController:
 	private let nickNameTextView: OnBoardingTextView = {
 		let onBoardingTextView = OnBoardingTextView(
 			title: "닉네임",
-			rightViewMode: .textCount(maximumTextCount: 20),
 			warningText: "닉네임을 입력해주세요."
 		)
 		onBoardingTextView.translatesAutoresizingMaskIntoConstraints = false
-
+		
 		return onBoardingTextView
+	}()
+	
+	private let nickNameTextViewCountLabel: UILabel = {
+		let label = UILabel()
+		
+		return label
 	}()
 	
 	private let calenderTextView: OnBoardingTextView = {
 		let onBoardingTextView = OnBoardingTextView(
 			title: "생년월일",
-			rightViewMode: .calendar,
 			warningText: "닉네임을 입력해주세요."
 		)
 		onBoardingTextView.translatesAutoresizingMaskIntoConstraints = false
@@ -86,7 +93,7 @@ final class ProfileSettingViewController:
 		return button
 	}()
 	
-	private let confirmButton: UIButton = {
+	private lazy var confirmButton: UIButton = {
 		let button = UIButton()
 		button.translatesAutoresizingMaskIntoConstraints = false
 		button.setTitle("확인", for: .normal)
@@ -94,7 +101,12 @@ final class ProfileSettingViewController:
 		button.layer.cornerRadius = 4
 		button.backgroundColor = .init(hexCode: "65BF4D")
 		button.titleLabel?.font = .systemFont(ofSize: 14, weight: .bold)
-
+		button.addTarget(
+			self,
+			action: #selector(didTapConfirmButton),
+			for: .touchUpInside
+		)
+		
 		return button
 	}()
 	
@@ -107,11 +119,12 @@ final class ProfileSettingViewController:
 		super.init(coder: coder)
 		setupUI()
 	}
-
+	
 	private func setupUI() {
 		view.backgroundColor = .white
 		setupSubviews()
 		setConstraints()
+		bind()
 	}
 	
 	private func setupSubviews() {
@@ -141,16 +154,22 @@ final class ProfileSettingViewController:
 			buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 38),
 			buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -38),
 			buttonStackView.heightAnchor.constraint(equalToConstant: 47),
-
+			
 			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
 			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
 			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -45),
 			confirmButton.heightAnchor.constraint(equalToConstant: 40)
 		])
 	}
+	
+	private func bind() {
+		
+	}
+	
 }
 
-private extension ProfileSettingViewController {
+// MARK: - Action
+private extension UserSettingViewController {
 	@objc func maleButtonTapped() {
 		if maleButton.buttonIsSelected == true { return }
 		maleButton.buttonIsSelected.toggle()
@@ -163,9 +182,13 @@ private extension ProfileSettingViewController {
 	@objc func femaleButtonTapped() {
 		if femaleButton.buttonIsSelected == true { return }
 		femaleButton.buttonIsSelected.toggle()
-
+		
 		if maleButton.buttonIsSelected == true {
 			maleButton.buttonIsSelected.toggle()
 		}
+	}
+	
+	@objc func didTapConfirmButton() {
+		listener?.didTapConfirmButton()
 	}
 }
