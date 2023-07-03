@@ -50,5 +50,6 @@ public extension Array where Element == HTTPHeader {
 }
 
 // MARK: - Defaults
-extension HTTPHeaders {
-	static let `default`: HTTPHeaders = HTTPHeaders([.contentType("application/json")])}
+public extension HTTPHeaders {
+	static let `default`: HTTPHeaders = HTTPHeaders([.contentType("application/json")])	
+}

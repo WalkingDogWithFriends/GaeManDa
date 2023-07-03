@@ -13,15 +13,8 @@ public protocol TargetType: URLRequestConvertible {
 	var path: String { get }
 	var method: HTTPMethod { get }
 	var task: TaskType { get }
-}
-
-public extension TargetType {
-	var headers: HTTPHeaders {
-		return .default
-	}
-	var sampleData: Data {
-		return Data()
-	}
+	var headers: HTTPHeaders { get }
+	var sampleData: Data { get }
 }
 
 extension TargetType {
