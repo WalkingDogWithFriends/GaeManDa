@@ -51,7 +51,6 @@ private extension Provider {
 					single(.success(decodedData))
 				}
 			} catch {
-				print(error)
 				single(.failure(error))
 			}
 			return Disposables.create()
