@@ -1,7 +1,7 @@
 import UIKit
 import Extensions
 
-public final class OnBoardingTextView: UIView {
+public final class OnBoardingTextField: UIView {
 	public lazy var isWarning = false {
 		didSet {
 			if isWarning == true {
@@ -12,9 +12,13 @@ public final class OnBoardingTextView: UIView {
 		}
 	}
 	
-	public lazy var warningText: String = "" {
+	private lazy var hasContent = false {
 		didSet {
-			warningLabel.text = warningText
+			if hasContent == true {
+				titleLabel.layer.opacity = 1.0
+			} else {
+				titleLabel.layer.opacity = 0.0
+			}
 		}
 	}
 	
@@ -29,45 +33,23 @@ public final class OnBoardingTextView: UIView {
 		return stackView
 	}()
 	
-	private let labelStackView: UIStackView = {
-		let stackView = UIStackView()
-		stackView.translatesAutoresizingMaskIntoConstraints = false
-		stackView.axis = .horizontal
-		stackView.alignment = .fill
-		stackView.distribution = .fillEqually
-		
-		return stackView
-	}()
-	
 	private let titleLabel: UILabel = {
 		let label = UILabel()
 		label.translatesAutoresizingMaskIntoConstraints = false
 		label.textColor = .init(hexCode: "979797")
+		label.layer.opacity = 0.0
 		label.numberOfLines = 1
 		label.font = .systemFont(ofSize: 12)
 		
 		return label
 	}()
 	
-	public let maximumTextCountLabel: UILabel = {
-		let label = UILabel()
-		label.translatesAutoresizingMaskIntoConstraints = false
-		label.textColor = .init(hexCode: "979797")
-		label.numberOfLines = 1
-		label.font = .systemFont(ofSize: 12)
-		label.textAlignment = .right
+	public let textField: UnderLineTextField = {
+		let textField = UnderLineTextField()
+		textField.translatesAutoresizingMaskIntoConstraints = false
+		textField.font = .systemFont(ofSize: 15)
 		
-		return label
-	}()
-	
-	public let textView: UITextView = {
-		let textView = UITextView()
-		textView.translatesAutoresizingMaskIntoConstraints = false
-		textView.layer.borderColor = UIColor.black.cgColor
-		textView.layer.borderWidth = 1.5
-		textView.layer.cornerRadius = 4
-		
-		return textView
+		return textField
 	}()
 	
 	private lazy var warningLabel: UILabel = {
@@ -85,7 +67,15 @@ public final class OnBoardingTextView: UIView {
 		super.init(frame: .zero)
 		
 		titleLabel.text = title
+		textField.placeholder = title
 		setupUI()
+		
+		NotificationCenter.default.addObserver(
+			self,
+			selector: #selector(textDidChange),
+			name: UITextField.textDidChangeNotification,
+			object: textField
+		)
 	}
 	
 	public convenience init(
@@ -93,7 +83,7 @@ public final class OnBoardingTextView: UIView {
 		warningText: String
 	) {
 		self.init(title: title)
-		self.warningText = warningText
+		self.warningLabel.text = warningText
 	}
 	
 	required init?(coder: NSCoder) {
@@ -102,32 +92,42 @@ public final class OnBoardingTextView: UIView {
 	
 	private func setupUI() {
 		addSubview(stackView)
-		
-		labelStackView.addArrangedSubview(titleLabel)
-		labelStackView.addArrangedSubview(maximumTextCountLabel)
-
-		stackView.addArrangedSubview(labelStackView)
-		stackView.addArrangedSubview(textView)
+		stackView.addArrangedSubview(titleLabel)
+		stackView.addArrangedSubview(textField)
 		stackView.addArrangedSubview(warningLabel)
 		
 		NSLayoutConstraint.activate([
 			stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
 			stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-			textView.heightAnchor.constraint(equalToConstant: 110),
 			stackView.topAnchor.constraint(equalTo: self.topAnchor),
 			stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8)
 		])
 	}
 }
 
-private extension OnBoardingTextView {
+private extension OnBoardingTextField {
+	@objc func textDidChange(_ notification: Notification) {
+		guard
+			let textField = notification.object as? UITextField,
+			let text = textField.text
+		else {
+			return
+		}
+		
+		if text.isEmpty {
+			hasContent = false
+		} else {
+			hasContent = true
+		}
+	}
+	
 	func changeNormalMode() {
-		textView.layer.borderColor = UIColor.black.cgColor
+		textField.underLineColor = .black
 		warningLabel.layer.opacity = 0.0
 	}
 	
 	func changeWarningMode() {
-		textView.layer.borderColor = UIColor(hexCode: "FF0000").cgColor
+		textField.underLineColor = .init(hexCode: "FF0000")
 		warningLabel.layer.opacity = 1.0
 	}
 }
