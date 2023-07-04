@@ -12,11 +12,33 @@ public final class NavigationControllerable: ViewControllable {
 	
 	public init(root: ViewControllable) {
 		let navigation = UINavigationController(rootViewController: root.uiviewController)
-		navigation.navigationBar.isTranslucent = false
-		navigation.navigationBar.backgroundColor = .white
-		navigation.navigationBar.scrollEdgeAppearance = navigation.navigationBar.standardAppearance
-		
 		self.navigationController = navigation
+		setNavigationBarAppearance()
+	}
+	
+	public func pushViewControllerable(
+		_ viewControllerable: ViewControllable,
+		animated: Bool
+	) {
+		navigationController.pushViewController(
+			viewControllerable.uiviewController,
+			animated: animated
+		)
+	}
+	
+	public func popViewControllerable(animated: Bool) {
+		self.navigationController.popViewController(animated: animated)
+	}
+	
+	private func setNavigationBarAppearance() {
+		let apprearance = UINavigationBarAppearance()
+		
+		apprearance.configureWithOpaqueBackground()
+		apprearance.shadowColor = .clear
+		apprearance.backgroundColor = .systemBackground
+		apprearance.shadowImage = UIImage()
+		apprearance.backgroundImage = UIImage()
+		navigationController.navigationBar.standardAppearance = apprearance
 	}
 }
 
