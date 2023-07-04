@@ -6,4 +6,5 @@ public protocol UserSettingBuildable: Buildable {
 
 public protocol UserSettingListener: AnyObject {
 	func userSettingDidFinish()
+	func userSettingBackButtonDidTap()
 }

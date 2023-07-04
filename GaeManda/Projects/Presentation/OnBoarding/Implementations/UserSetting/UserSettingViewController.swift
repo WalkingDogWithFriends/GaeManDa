@@ -1,10 +1,14 @@
 import UIKit
 import RIBs
+import RxCocoa
+import RxSwift
 import DesignKit
 import Extensions
+import Utils
 
 protocol UserSettingPresentableListener: AnyObject {
 	func confirmButtonDidTap()
+	func backButtonDidTap()
 }
 
 final class UserSettingViewController:
@@ -12,6 +16,7 @@ final class UserSettingViewController:
 	UserSettingPresentable,
 	UserSettingViewControllable {
 	weak var listener: UserSettingPresentableListener?
+	private let disposeBag = DisposeBag()
 	
 	private let onBoardingView: OnBoardingView = {
 		let onBoardingView = OnBoardingView(title: "보호자의 프로필을 설정해주세요!")
@@ -63,17 +68,12 @@ final class UserSettingViewController:
 		return onBoardingTextField
 	}()
 	
-	private lazy var calenderButton: UIButton = {
+	private let calenderButton: UIButton = {
 		let button = UIButton()
 		let image = UIImage(systemName: "calendar")
 		button.tintColor = .black
 		button.setImage(image, for: .normal)
-		button.addTarget(
-			self,
-			action: #selector(calenderButtonDidTap),
-			for: .touchUpInside
-		)
-		
+	
 		return button
 	}()
 	
@@ -88,31 +88,21 @@ final class UserSettingViewController:
 		return stackView
 	}()
 	
-	private lazy var maleButton: OnBoardingButton = {
+	private let maleButton: OnBoardingButton = {
 		let button = OnBoardingButton(title: "남")
 		button.translatesAutoresizingMaskIntoConstraints = false
-		button.addTarget(
-			self,
-			action: #selector(maleButtonDidTap),
-			for: .touchUpInside
-		)
 		
 		return button
 	}()
 	
-	private lazy var femaleButton: OnBoardingButton = {
+	private let femaleButton: OnBoardingButton = {
 		let button = OnBoardingButton(title: "여")
 		button.translatesAutoresizingMaskIntoConstraints = false
-		button.addTarget(
-			self,
-			action: #selector(femaleButtonDidTap),
-			for: .touchUpInside
-		)
 		
 		return button
 	}()
 	
-	private lazy var confirmButton: UIButton = {
+	private let confirmButton: UIButton = {
 		let button = UIButton()
 		button.translatesAutoresizingMaskIntoConstraints = false
 		button.setTitle("확인", for: .normal)
@@ -120,12 +110,7 @@ final class UserSettingViewController:
 		button.layer.cornerRadius = 4
 		button.backgroundColor = .init(hexCode: "65BF4D")
 		button.titleLabel?.font = .systemFont(ofSize: 14, weight: .bold)
-		button.addTarget(
-			self,
-			action: #selector(confirmButtonDidTap),
-			for: .touchUpInside
-		)
-		
+
 		return button
 	}()
 	
@@ -136,6 +121,10 @@ final class UserSettingViewController:
 	
 	private func setupUI() {
 		view.backgroundColor = .white
+		self.setupBackNavigationButton(
+			target: self,
+			action: #selector(backButtonDidTap)
+		)
 		
 		nickNameTextField.textField.rightView = maximumTextCountLabel
 		nickNameTextField.textField.rightViewMode = .always
@@ -145,6 +134,7 @@ final class UserSettingViewController:
 		
 		setupSubviews()
 		setConstraints()
+		bind()
 	}
 	
 	private func setupSubviews() {
@@ -181,11 +171,44 @@ final class UserSettingViewController:
 			confirmButton.heightAnchor.constraint(equalToConstant: 40)
 		])
 	}
+	
+	private func bind() {
+		nickNameTextField.textField.rx.text
+			.orEmpty
+			.bind { [weak self] text in
+				self?.setTextCountLabel(text)
+			}
+			.disposed(by: disposeBag)
+		
+		calenderButton.rx.tap
+			.bind { [weak self] _ in
+				self?.calenderButtonDidTap()
+			}
+			.disposed(by: disposeBag)
+		
+		maleButton.rx.tap
+			.bind { [weak self] _ in
+				self?.maleButtonDidTap()
+			}
+			.disposed(by: disposeBag)
+		
+		femaleButton.rx.tap
+			.bind { [weak self] _ in
+				self?.femaleButtonDidTap()
+			}
+			.disposed(by: disposeBag)
+		
+		confirmButton.rx.tap
+			.bind { [weak self] _ in
+				self?.listener?.confirmButtonDidTap()
+			}
+			.disposed(by: disposeBag)
+	}
 }
 
 // MARK: - Action
 private extension UserSettingViewController {
-	@objc func setTextCountLabel(_ text: String) {
+	func setTextCountLabel(_ text: String) {
 		var newText = text
 		
 		if text.count >= maximumTextCount {
@@ -196,11 +219,11 @@ private extension UserSettingViewController {
 		maximumTextCountLabel.text = "\(newText.count)/\(maximumTextCount)"
 	}
 	
-	@objc func calenderButtonDidTap() {
+	func calenderButtonDidTap() {
 		print("calenderButtonDidTap")
 	}
 	
-	@objc func maleButtonDidTap() {
+	func maleButtonDidTap() {
 		if maleButton.buttonIsSelected == true { return }
 		
 		maleButton.buttonIsSelected.toggle()
@@ -209,7 +232,7 @@ private extension UserSettingViewController {
 		}
 	}
 	
-	@objc func femaleButtonDidTap() {
+	func femaleButtonDidTap() {
 		if femaleButton.buttonIsSelected == true { return }
 		
 		femaleButton.buttonIsSelected.toggle()
@@ -218,7 +241,7 @@ private extension UserSettingViewController {
 		}
 	}
 	
-	@objc func confirmButtonDidTap() {
-		listener?.confirmButtonDidTap()
+	@objc func backButtonDidTap() {
+		listener?.backButtonDidTap()
 	}
 }

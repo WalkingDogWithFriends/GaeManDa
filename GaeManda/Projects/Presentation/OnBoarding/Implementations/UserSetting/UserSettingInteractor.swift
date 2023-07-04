@@ -33,4 +33,8 @@ extension UserSettingInteractor {
 	func confirmButtonDidTap() {
 		listener?.userSettingDidFinish()
 	}
+	
+	func backButtonDidTap() {
+		listener?.userSettingBackButtonDidTap()
+	}
 }

@@ -5,8 +5,8 @@ import Utils
 protocol OnBoardingInteractable:
 	Interactable,
 	TermsOfUseListener,
-	ProfileSettingListener,
-	AddressSettingListener {
+	AddressSettingListener,
+	UserSettingListener {
 	var router: OnBoardingRouting? { get set }
 	var listener: OnBoardingListener? { get set }
 }
@@ -24,20 +24,20 @@ final class OnBoardingRouter:
 	private let addressSettingBuildable: AddressSettingBuildable
 	private var addressSettingRouting: ViewableRouting?
 	
-	private let profileSettingBuildable: ProfileSettingBuildable
-	private var profileSettingRouting: ViewableRouting?
+	private let userSettingBuildable: UserSettingBuildable
+	private var userSettingRouting: ViewableRouting?
 	
 	init(
 		interactor: OnBoardingInteractable,
 		viewController: ViewControllable,
 		termsOfUseBuildable: TermsOfUseBuildable,
 		addressSettingBuildable: AddressSettingBuildable,
-		profileSettingBuildable: ProfileSettingBuildable
+		userSettingBuildable: UserSettingBuildable
 	) {
 		self.viewController = viewController
 		self.termsOfUseBuildable = termsOfUseBuildable
 		self.addressSettingBuildable = addressSettingBuildable
-		self.profileSettingBuildable = profileSettingBuildable
+		self.userSettingBuildable = userSettingBuildable
 		super.init(interactor: interactor)
 		interactor.router = self
 	}
@@ -66,13 +66,13 @@ extension OnBoardingRouter {
 		let router = termsOfUseBuildable.build(withListener: interactor)
 		presentInsideNavigation(router.viewControllable)
 		
-		attachChild(router)
 		termsOfUseRouting = router
+		attachChild(router)
 	}
 	
 	func termsOfUseDetach() {
 		guard let router = termsOfUseRouting else { return }
-		
+
 		dismissPresentedNavigation(completion: nil)
 		termsOfUseRouting = nil
 		detachChild(router)
@@ -83,52 +83,60 @@ extension OnBoardingRouter {
 	}
 }
 
-// MARK: TermsOfUse
+// MARK: AddressSetting
 extension OnBoardingRouter {
 	func addressSettingAttach() {
 		if addressSettingRouting != nil { return }
 		
 		let router = addressSettingBuildable.build(withListener: interactor)
-		presentInsideNavigation(router.viewControllable)
+		navigationControllerable?.pushViewControllerable(
+			router.viewControllable,
+			animated: true
+		)
 		
+		addressSettingRouting = router
 		attachChild(router)
-		termsOfUseRouting = router
 	}
 	
-	func addressSettingeDetach() {
+	func addressSettingDetach() {
 		guard let router = addressSettingRouting else { return }
 		
-		dismissPresentedNavigation(completion: nil)
-		termsOfUseRouting = nil
+		navigationControllerable?.popViewControllerable(animated: true)
+		addressSettingRouting = nil
 		detachChild(router)
 	}
 	
 	func addressSettingDidFinish() {
-		profileSettingAttach()
+		userSettingAttach()
 	}
 }
 
-// MARK: ProfileSetting
+// MARK: UserSetting
 extension OnBoardingRouter {
-	func profileSettingAttach() {
-		if profileSettingRouting != nil { return }
+	func userSettingAttach() {
+		if userSettingRouting != nil { return }
 		
-		let router = profileSettingBuildable.build(withListener: interactor)
-		presentInsideNavigation(router.viewControllable)
-		
+		let router = userSettingBuildable.build(withListener: interactor)
+		navigationControllerable?.pushViewControllerable(
+			router.viewControllable,
+			animated: true
+		)
+
+		userSettingRouting = router
 		attachChild(router)
-		profileSettingRouting = router
 	}
-	
-	func profileSettingDetach() {
-		guard let router = profileSettingRouting else { return }
+
+	func userSettingDetach() {
+		guard let router = userSettingRouting else { return }
 		
-		dismissPresentedNavigation(completion: nil)
-		profileSettingRouting = nil
+		navigationControllerable?.popViewControllerable(animated: true)
+		userSettingRouting = nil
 		detachChild(router)
 	}
+	
+	func userSettingDidFinish() { }
 }
-
+	
 // MARK: NavigationControllable Extension
 private extension OnBoardingRouter {
 	private func presentInsideNavigation(_ viewControllable: ViewControllable) {
@@ -141,7 +149,6 @@ private extension OnBoardingRouter {
 	
 	private func createNavigation(_ viewControllable: ViewControllable) {
 		let navigation = NavigationControllerable(root: viewControllable)
-		navigation.navigationBarIsHidden = true
 		self.navigationControllerable = navigation
 		viewController.present(
 			navigation,

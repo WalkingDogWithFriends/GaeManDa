@@ -1,9 +1,12 @@
 import UIKit
 import RIBs
+import RxCocoa
+import RxSwift
 import Utils
 
 protocol AddressSettingPresentableListener: AnyObject {
 	func confirmButtonDidTap()
+	func backButtonDidTap()
 }
 
 final class AddressSettingViewController:
@@ -11,8 +14,9 @@ final class AddressSettingViewController:
 	AddressSettingPresentable,
 	AddressSettingViewControllable {
 	weak var listener: AddressSettingPresentableListener?
+	private let disposeBag = DisposeBag()
 	
-	private lazy var confirmButton: UIButton = {
+	private let confirmButton: UIButton = {
 		let button = UIButton()
 		button.translatesAutoresizingMaskIntoConstraints = false
 		button.setTitle("확인", for: .normal)
@@ -20,12 +24,7 @@ final class AddressSettingViewController:
 		button.layer.cornerRadius = 4
 		button.backgroundColor = .init(hexCode: "65BF4D")
 		button.titleLabel?.font = .systemFont(ofSize: 14, weight: .bold)
-		button.addTarget(
-			self,
-			action: #selector(confirmButtonDidTap),
-			for: .touchUpInside
-		)
-		
+
 		return button
 	}()
 	
@@ -36,8 +35,14 @@ final class AddressSettingViewController:
 	
 	private func setupUI() {
 		self.view.backgroundColor = .white
+		self.setupBackNavigationButton(
+			target: self,
+			action: #selector(backButtonDidTap)
+		)
+		
 		setupSubviews()
 		setConstraints()
+		bind()
 	}
 	
 	private func setupSubviews() {
@@ -52,11 +57,19 @@ final class AddressSettingViewController:
 			confirmButton.heightAnchor.constraint(equalToConstant: 40)
 		])
 	}
+	
+	private func bind() {
+		confirmButton.rx.tap
+			.bind { [weak self] _ in
+				self?.listener?.confirmButtonDidTap()
+			}
+			.disposed(by: disposeBag)
+	}
 }
 
 // MARK: Action
 private extension AddressSettingViewController {
-	@objc func confirmButtonDidTap() {
-		listener?.confirmButtonDidTap()
+	@objc func backButtonDidTap() {
+		listener?.backButtonDidTap()
 	}
 }

@@ -33,4 +33,8 @@ extension AddressSettingInteractor {
 	func confirmButtonDidTap() {
 		listener?.addressSettingDidFinish()
 	}
+	
+	func backButtonDidTap() {
+		listener?.addressSettingBackButtonDidTap()
+	}
 }

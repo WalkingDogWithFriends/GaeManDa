@@ -6,4 +6,5 @@ public protocol AddressSettingBuildable: Buildable {
 
 public protocol AddressSettingListener: AnyObject {
 	func addressSettingDidFinish()
+	func addressSettingBackButtonDidTap()
 }

@@ -15,7 +15,7 @@ final class TermsOfUseViewController:
 	weak var listener: TermsOfUsePresentableListener?
 	private let disposeBag = DisposeBag()
 	
-	private lazy var confirmButton: UIButton = {
+	private let confirmButton: UIButton = {
 		let button = UIButton()
 		button.translatesAutoresizingMaskIntoConstraints = false
 		button.setTitle("확인", for: .normal)
@@ -23,11 +23,6 @@ final class TermsOfUseViewController:
 		button.layer.cornerRadius = 4
 		button.backgroundColor = .init(hexCode: "65BF4D")
 		button.titleLabel?.font = .systemFont(ofSize: 14, weight: .bold)
-		button.addTarget(
-			self,
-			action: #selector(confirmButtonDidTap),
-			for: .touchUpInside
-		)
 		
 		return button
 	}()
@@ -41,6 +36,7 @@ final class TermsOfUseViewController:
 		self.view.backgroundColor = .white
 		setupSubviews()
 		setConstraints()
+		bind()
 	}
 	
 	private func setupSubviews() {
@@ -54,6 +50,13 @@ final class TermsOfUseViewController:
 			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -45),
 			confirmButton.heightAnchor.constraint(equalToConstant: 40)
 		])
+	}
+	
+	private func bind() {
+		confirmButton.rx.tap
+			.bind { [weak self] _ in
+				self?.listener?.confirmButtonDidTap()
+			}
 	}
 }
 
