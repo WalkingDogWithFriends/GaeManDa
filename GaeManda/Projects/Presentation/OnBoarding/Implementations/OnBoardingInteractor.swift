@@ -13,6 +13,8 @@ protocol OnBoardingRouting: Routing {
 	func userSettingAttach()
 	func userSettingDetach()
 	func userSettingDidFinish()
+	func dogSettingAttach()
+	func dogSettingDetach()
 }
 
 final class OnBoardingInteractor:
@@ -60,5 +62,16 @@ extension OnBoardingInteractor {
 	
 	func userSettingBackButtonDidTap() {
 		router?.userSettingDetach()
+	}
+}
+
+// MARK: DogSettingListener
+extension OnBoardingInteractor {
+	func dogSettingDidFinish() {
+		listener?.onBoardingDidFinish()
+	}
+	
+	func dogSettingBackButtonDidTap() {
+		router?.dogSettingDetach()
 	}
 }

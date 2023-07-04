@@ -24,3 +24,10 @@ final class LoggedOutInteractor: Interactor, LoggedOutInteractable {
 		router?.cleanupViews()
 	}
 }
+
+// MARK: OnBoardingListener
+extension LoggedOutInteractor {
+	func onBoardingDidFinish() {
+		router?.detachOnBoarding()
+	}
+}

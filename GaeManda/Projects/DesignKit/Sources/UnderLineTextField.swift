@@ -1,6 +1,21 @@
 import UIKit
 
 public class UnderLineTextField: UITextField {
+	public override var selectedTextRange: UITextRange? {
+		get { return super.selectedTextRange }
+		set {
+			super.selectedTextRange = newValue
+		}
+	}
+	
+	public var selecetedRange: NSRange? {
+		guard let range = self.selectedTextRange else { return nil }
+		let location = offset(from: beginningOfDocument, to: range.start)
+		let length = offset(from: range.start, to: range.end)
+		
+		return NSRange(location: location, length: length)
+	}
+	
 	public lazy var underLineColor: UIColor = .black {
 		didSet {
 			self.underLineView.backgroundColor = underLineColor

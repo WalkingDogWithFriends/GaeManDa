@@ -6,7 +6,8 @@ protocol OnBoardingInteractable:
 	Interactable,
 	TermsOfUseListener,
 	AddressSettingListener,
-	UserSettingListener {
+	UserSettingListener,
+	DogSettingListener {
 	var router: OnBoardingRouting? { get set }
 	var listener: OnBoardingListener? { get set }
 }
@@ -27,17 +28,22 @@ final class OnBoardingRouter:
 	private let userSettingBuildable: UserSettingBuildable
 	private var userSettingRouting: ViewableRouting?
 	
+	private let dogSettingBuildable: DogSettingBuildable
+	private var dogSettingRouting: Routing?
+	
 	init(
 		interactor: OnBoardingInteractable,
 		viewController: ViewControllable,
 		termsOfUseBuildable: TermsOfUseBuildable,
 		addressSettingBuildable: AddressSettingBuildable,
-		userSettingBuildable: UserSettingBuildable
+		userSettingBuildable: UserSettingBuildable,
+		dogSettingBuildable: DogSettingBuildable
 	) {
 		self.viewController = viewController
 		self.termsOfUseBuildable = termsOfUseBuildable
 		self.addressSettingBuildable = addressSettingBuildable
 		self.userSettingBuildable = userSettingBuildable
+		self.dogSettingBuildable = dogSettingBuildable
 		super.init(interactor: interactor)
 		interactor.router = self
 	}
@@ -89,10 +95,7 @@ extension OnBoardingRouter {
 		if addressSettingRouting != nil { return }
 		
 		let router = addressSettingBuildable.build(withListener: interactor)
-		navigationControllerable?.pushViewControllerable(
-			router.viewControllable,
-			animated: true
-		)
+		navigationControllerable?.pushViewControllerable(router.viewControllable, animated: true)
 		
 		addressSettingRouting = router
 		attachChild(router)
@@ -117,15 +120,13 @@ extension OnBoardingRouter {
 		if userSettingRouting != nil { return }
 		
 		let router = userSettingBuildable.build(withListener: interactor)
-		navigationControllerable?.pushViewControllerable(
-			router.viewControllable,
-			animated: true
-		)
+		navigationControllerable?.pushViewControllerable(router.viewControllable, animated: true)
 
 		userSettingRouting = router
 		attachChild(router)
 	}
 
+	// 최종 부모 detach?
 	func userSettingDetach() {
 		guard let router = userSettingRouting else { return }
 		
@@ -134,7 +135,30 @@ extension OnBoardingRouter {
 		detachChild(router)
 	}
 	
-	func userSettingDidFinish() { }
+	func userSettingDidFinish() {
+		dogSettingAttach()
+	}
+}
+
+// MARK: DogSetting
+extension OnBoardingRouter {
+	func dogSettingAttach() {
+		if dogSettingRouting != nil { return }
+		
+		let router = dogSettingBuildable.build(
+			withListener: interactor,
+			navigationControllerable: navigationControllerable
+		)
+		dogSettingRouting = router
+		attachChild(router)
+	}
+	
+	func dogSettingDetach() {
+		guard let router = dogSettingRouting else { return }
+		
+		dogSettingRouting = nil
+		detachChild(router)
+	}
 }
 	
 // MARK: NavigationControllable Extension
