@@ -41,10 +41,10 @@ final class OnBoardingView: UIView {
 	
 	private func setConstraints() {
 		NSLayoutConstraint.activate([
-			label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 31.5),
-			label.topAnchor.constraint(equalTo: topAnchor, constant: 128),
+			label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 31),
+			label.topAnchor.constraint(equalTo: topAnchor, constant: 121),
 			
-			profileImageView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 40),
+			profileImageView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 80),
 			profileImageView.heightAnchor.constraint(equalToConstant: 140),
 			profileImageView.widthAnchor.constraint(equalToConstant: 140),
 			profileImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
