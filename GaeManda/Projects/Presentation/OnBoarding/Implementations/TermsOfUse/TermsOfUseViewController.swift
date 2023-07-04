@@ -1,9 +1,11 @@
 import UIKit
 import RIBs
+import RxCocoa
+import RxSwift
 import Utils
 
 protocol TermsOfUsePresentableListener: AnyObject {
-	func didTapConfirmButton()
+	func confirmButtonDidTap()
 }
 
 final class TermsOfUseViewController:
@@ -11,6 +13,7 @@ final class TermsOfUseViewController:
 	TermsOfUsePresentable,
 	TermsOfUseViewControllable {
 	weak var listener: TermsOfUsePresentableListener?
+	private let disposeBag = DisposeBag()
 	
 	private lazy var confirmButton: UIButton = {
 		let button = UIButton()
@@ -22,20 +25,15 @@ final class TermsOfUseViewController:
 		button.titleLabel?.font = .systemFont(ofSize: 14, weight: .bold)
 		button.addTarget(
 			self,
-			action: #selector(didTapConfirmButton),
+			action: #selector(confirmButtonDidTap),
 			for: .touchUpInside
 		)
 		
 		return button
 	}()
 	
-	init() {
-		super.init(nibName: nil, bundle: nil)
-		setupUI()
-	}
-	
-	required init?(coder: NSCoder) {
-		super.init(coder: coder)
+	override func viewDidLoad() {
+		super.viewDidLoad()
 		setupUI()
 	}
 	
@@ -61,7 +59,7 @@ final class TermsOfUseViewController:
 
 // MARK: - Action
 extension TermsOfUseViewController {
-	@objc func didTapConfirmButton() {
-		listener?.didTapConfirmButton()
+	@objc func confirmButtonDidTap() {
+		listener?.confirmButtonDidTap()
 	}
 }

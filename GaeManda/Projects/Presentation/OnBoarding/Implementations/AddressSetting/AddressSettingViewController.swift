@@ -3,7 +3,7 @@ import RIBs
 import Utils
 
 protocol AddressSettingPresentableListener: AnyObject {
-	func didTapConfirmButton()
+	func confirmButtonDidTap()
 }
 
 final class AddressSettingViewController:
@@ -22,19 +22,15 @@ final class AddressSettingViewController:
 		button.titleLabel?.font = .systemFont(ofSize: 14, weight: .bold)
 		button.addTarget(
 			self,
-			action: #selector(didTapConfirmButton),
-			for: .touchUpInside)
+			action: #selector(confirmButtonDidTap),
+			for: .touchUpInside
+		)
 		
 		return button
 	}()
 	
-	init() {
-		super.init(nibName: nil, bundle: nil)
-		setupUI()
-	}
-	
-	required init?(coder: NSCoder) {
-		super.init(coder: coder)
+	override func viewDidLoad() {
+		super.viewDidLoad()
 		setupUI()
 	}
 	
@@ -58,9 +54,9 @@ final class AddressSettingViewController:
 	}
 }
 
-// MARK: - Action
-extension AddressSettingViewController {
-	@objc func didTapConfirmButton() {
-		listener?.didTapConfirmButton()
+// MARK: Action
+private extension AddressSettingViewController {
+	@objc func confirmButtonDidTap() {
+		listener?.confirmButtonDidTap()
 	}
 }

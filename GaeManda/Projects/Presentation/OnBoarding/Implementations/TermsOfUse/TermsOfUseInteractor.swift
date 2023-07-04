@@ -30,7 +30,7 @@ final class TermsOfUseInteractor:
 
 // MARK: - PresentableListener
 extension TermsOfUseInteractor {
-	func didTapConfirmButton() {
+	func confirmButtonDidTap() {
 		listener?.termsOfUseDidFinish()
 	}
 }

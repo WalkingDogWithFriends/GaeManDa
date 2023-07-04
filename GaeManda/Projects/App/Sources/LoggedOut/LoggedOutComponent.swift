@@ -8,7 +8,8 @@ final class LoggedOutComponent:
 	OnBoardingDependency,
 	TermsOfUseDependency,
 	AddressSettingDependency,
-	ProfileSettingDependency {
+	UserSettingDependency,
+	DogSettingDependency {
 	lazy var onBoardingBuildable: OnBoardingBuildable = {
 		return OnBoardingBuilder(dependency: self)
 	}()
@@ -21,14 +22,22 @@ final class LoggedOutComponent:
 		return AddressSettingBuilder(dependency: self)
 	}()
 	
-	lazy var profileSettingBuildable: ProfileSettingBuildable = {
-		return ProfileSettingBuilder(dependency: self)
+	lazy var userSettingBuildable: UserSettingBuildable = {
+		return UserSettingBuilder(dependency: self)
 	}()
-
+	
+	lazy var dogSettingBuildable: DogSettingBuildable = {
+		return DogSettingBuilder(dependency: self)
+	}()
+	
 	var onBoardingViewController: ViewControllable {
 		loggedOutViewController.topViewControllable
 	}
 	
+	var dogSettingViewController: ViewControllable {
+		loggedOutViewController.topViewControllable
+	}
+
 	var loggedOutViewController: ViewControllable {
 		dependency.loggedOutViewController
 	}

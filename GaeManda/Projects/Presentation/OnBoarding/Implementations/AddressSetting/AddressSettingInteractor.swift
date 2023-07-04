@@ -30,7 +30,7 @@ final class AddressSettingInteractor:
 
 // MARK: - PresentableListener
 extension AddressSettingInteractor {
-	func didTapConfirmButton() {
+	func confirmButtonDidTap() {
 		listener?.addressSettingDidFinish()
 	}
 }

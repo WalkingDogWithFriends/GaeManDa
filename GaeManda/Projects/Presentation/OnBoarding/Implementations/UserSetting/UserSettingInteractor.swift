@@ -30,7 +30,7 @@ final class UserSettingInteractor:
 
 // MARK: - PresentableListener
 extension UserSettingInteractor {
-	func didTapConfirmButton() {
+	func confirmButtonDidTap() {
 		listener?.userSettingDidFinish()
 	}
 }

@@ -4,7 +4,7 @@ import DesignKit
 import Extensions
 
 protocol UserSettingPresentableListener: AnyObject {
-	func didTapConfirmButton()
+	func confirmButtonDidTap()
 }
 
 final class UserSettingViewController:
@@ -33,30 +33,48 @@ final class UserSettingViewController:
 		return stackView
 	}()
 	
-	private let nickNameTextView: OnBoardingTextView = {
-		let onBoardingTextView = OnBoardingTextView(
+	private let nickNameTextField: OnBoardingTextField = {
+		let onBoardingTextField = OnBoardingTextField(
 			title: "닉네임",
 			warningText: "닉네임을 입력해주세요."
 		)
-		onBoardingTextView.translatesAutoresizingMaskIntoConstraints = false
+		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
 		
-		return onBoardingTextView
+		return onBoardingTextField
 	}()
 	
-	private let nickNameTextViewCountLabel: UILabel = {
+	private var maximumTextCount = 20
+	
+	private lazy var maximumTextCountLabel: UILabel = {
 		let label = UILabel()
+		label.textColor = .init(hexCode: "979797")
+		label.font = .systemFont(ofSize: 15)
 		
 		return label
 	}()
 	
-	private let calenderTextView: OnBoardingTextView = {
-		let onBoardingTextView = OnBoardingTextView(
+	private let calenderTextField: OnBoardingTextField = {
+		let onBoardingTextField = OnBoardingTextField(
 			title: "생년월일",
-			warningText: "닉네임을 입력해주세요."
+			warningText: "생년월일을 입력해주세요."
 		)
-		onBoardingTextView.translatesAutoresizingMaskIntoConstraints = false
+		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
 		
-		return onBoardingTextView
+		return onBoardingTextField
+	}()
+	
+	private lazy var calenderButton: UIButton = {
+		let button = UIButton()
+		let image = UIImage(systemName: "calendar")
+		button.tintColor = .black
+		button.setImage(image, for: .normal)
+		button.addTarget(
+			self,
+			action: #selector(calenderButtonDidTap),
+			for: .touchUpInside
+		)
+		
+		return button
 	}()
 	
 	private let buttonStackView: UIStackView = {
@@ -75,7 +93,7 @@ final class UserSettingViewController:
 		button.translatesAutoresizingMaskIntoConstraints = false
 		button.addTarget(
 			self,
-			action: #selector(maleButtonTapped),
+			action: #selector(maleButtonDidTap),
 			for: .touchUpInside
 		)
 		
@@ -87,9 +105,10 @@ final class UserSettingViewController:
 		button.translatesAutoresizingMaskIntoConstraints = false
 		button.addTarget(
 			self,
-			action: #selector(femaleButtonTapped),
+			action: #selector(femaleButtonDidTap),
 			for: .touchUpInside
 		)
+		
 		return button
 	}()
 	
@@ -103,28 +122,29 @@ final class UserSettingViewController:
 		button.titleLabel?.font = .systemFont(ofSize: 14, weight: .bold)
 		button.addTarget(
 			self,
-			action: #selector(didTapConfirmButton),
+			action: #selector(confirmButtonDidTap),
 			for: .touchUpInside
 		)
 		
 		return button
 	}()
 	
-	init() {
-		super.init(nibName: nil, bundle: nil)
-		setupUI()
-	}
-	
-	required init?(coder: NSCoder) {
-		super.init(coder: coder)
+	override func viewDidLoad() {
+		super.viewDidLoad()
 		setupUI()
 	}
 	
 	private func setupUI() {
 		view.backgroundColor = .white
+		
+		nickNameTextField.textField.rightView = maximumTextCountLabel
+		nickNameTextField.textField.rightViewMode = .always
+		
+		calenderTextField.textField.rightView = calenderButton
+		calenderTextField.textField.rightViewMode = .always
+		
 		setupSubviews()
 		setConstraints()
-		bind()
 	}
 	
 	private func setupSubviews() {
@@ -133,8 +153,8 @@ final class UserSettingViewController:
 		view.addSubview(buttonStackView)
 		view.addSubview(confirmButton)
 		
-		textStackView.addArrangedSubview(nickNameTextView)
-		textStackView.addArrangedSubview(calenderTextView)
+		textStackView.addArrangedSubview(nickNameTextField)
+		textStackView.addArrangedSubview(calenderTextField)
 		
 		buttonStackView.addArrangedSubview(maleButton)
 		buttonStackView.addArrangedSubview(femaleButton)
@@ -161,34 +181,44 @@ final class UserSettingViewController:
 			confirmButton.heightAnchor.constraint(equalToConstant: 40)
 		])
 	}
-	
-	private func bind() {
-		
-	}
-	
 }
 
 // MARK: - Action
 private extension UserSettingViewController {
-	@objc func maleButtonTapped() {
+	@objc func setTextCountLabel(_ text: String) {
+		var newText = text
+		
+		if text.count >= maximumTextCount {
+			let index = text.index(text.startIndex, offsetBy: maximumTextCount)
+			newText = String(text[..<index])
+			nickNameTextField.textField.text = newText
+		}
+		maximumTextCountLabel.text = "\(newText.count)/\(maximumTextCount)"
+	}
+	
+	@objc func calenderButtonDidTap() {
+		print("calenderButtonDidTap")
+	}
+	
+	@objc func maleButtonDidTap() {
 		if maleButton.buttonIsSelected == true { return }
+		
 		maleButton.buttonIsSelected.toggle()
-		
 		if femaleButton.buttonIsSelected == true {
-			femaleButton.buttonIsSelected.toggle()
+			femaleButton.buttonIsSelected = false
 		}
 	}
 	
-	@objc func femaleButtonTapped() {
+	@objc func femaleButtonDidTap() {
 		if femaleButton.buttonIsSelected == true { return }
-		femaleButton.buttonIsSelected.toggle()
 		
+		femaleButton.buttonIsSelected.toggle()
 		if maleButton.buttonIsSelected == true {
-			maleButton.buttonIsSelected.toggle()
+			maleButton.buttonIsSelected = false
 		}
 	}
 	
-	@objc func didTapConfirmButton() {
-		listener?.didTapConfirmButton()
+	@objc func confirmButtonDidTap() {
+		listener?.confirmButtonDidTap()
 	}
 }

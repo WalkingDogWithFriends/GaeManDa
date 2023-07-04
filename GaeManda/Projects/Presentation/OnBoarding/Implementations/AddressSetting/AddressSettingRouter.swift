@@ -1,4 +1,5 @@
 import RIBs
+import OnBoarding
 
 protocol AddressSettingInteractable: Interactable {
 	var router: AddressSettingRouting? { get set }

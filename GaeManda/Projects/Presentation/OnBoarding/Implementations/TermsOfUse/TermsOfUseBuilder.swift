@@ -1,4 +1,5 @@
 import RIBs
+import OnBoarding
 
 public protocol TermsOfUseDependency: Dependency { }
 
