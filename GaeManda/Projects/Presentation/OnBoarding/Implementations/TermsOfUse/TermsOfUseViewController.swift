@@ -57,12 +57,6 @@ final class TermsOfUseViewController:
 			.bind { [weak self] _ in
 				self?.listener?.confirmButtonDidTap()
 			}
-	}
-}
-
-// MARK: - Action
-extension TermsOfUseViewController {
-	@objc func confirmButtonDidTap() {
-		listener?.confirmButtonDidTap()
+			.disposed(by: disposeBag)
 	}
 }
