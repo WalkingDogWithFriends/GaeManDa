@@ -18,10 +18,11 @@ final class SecondDogSettingViewController:
 	private let disposeBag = DisposeBag()
 	
 	private let onBoardingView: OnBoardingView = {
-		let onBoardingView = OnBoardingView(title: "우리 아이를 등록해주세요! (2/3)")
+		let onBoardingView = OnBoardingView(
+			willDisplayImageView: true,
+			title: "우리 아이를 등록해주세요! (2/3)"
+		)
 		onBoardingView.translatesAutoresizingMaskIntoConstraints = false
-		let image = UIImage(systemName: "photo")
-		onBoardingView.setProfileImage(image)
 		
 		return onBoardingView
 	}()

@@ -16,6 +16,16 @@ final class AddressSettingViewController:
 	weak var listener: AddressSettingPresentableListener?
 	private let disposeBag = DisposeBag()
 	
+	private let onBoardingView: OnBoardingView = {
+		let onBoardingView = OnBoardingView(
+			willDisplayImageView: false,
+			title: "사생활 보호를 위해\n집 주소를 입력해주세요!"
+		)
+		onBoardingView.translatesAutoresizingMaskIntoConstraints = false
+		
+		return onBoardingView
+	}()
+	
 	private let confirmButton: UIButton = {
 		let button = UIButton()
 		button.translatesAutoresizingMaskIntoConstraints = false
@@ -34,7 +44,7 @@ final class AddressSettingViewController:
 	}
 	
 	private func setupUI() {
-		self.view.backgroundColor = .white
+		view.backgroundColor = .white
 		self.setupBackNavigationButton(
 			target: self,
 			action: #selector(backButtonDidTap)
@@ -46,11 +56,15 @@ final class AddressSettingViewController:
 	}
 	
 	private func setupSubviews() {
-		self.view.addSubview(confirmButton)
+		view.addSubview(onBoardingView)
+		view.addSubview(confirmButton)
 	}
 	
 	private func setConstraints() {
 		NSLayoutConstraint.activate([
+			onBoardingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+			onBoardingView.topAnchor.constraint(equalTo: view.topAnchor),
+			
 			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
 			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
 			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -45),

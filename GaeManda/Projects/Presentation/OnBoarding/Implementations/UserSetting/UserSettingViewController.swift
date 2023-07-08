@@ -19,10 +19,11 @@ final class UserSettingViewController:
 	private let disposeBag = DisposeBag()
 	
 	private let onBoardingView: OnBoardingView = {
-		let onBoardingView = OnBoardingView(title: "보호자의 프로필을 설정해주세요!")
+		let onBoardingView = OnBoardingView(
+			willDisplayImageView: true,
+			title: "보호자의 프로필을 설정해주세요!"
+		)
 		onBoardingView.translatesAutoresizingMaskIntoConstraints = false
-		let image = UIImage(systemName: "photo")
-		onBoardingView.setProfileImage(image)
 		
 		return onBoardingView
 	}()
