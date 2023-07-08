@@ -10,6 +10,9 @@ protocol OnBoardingRouting: Routing {
 	func addressSettingAttach()
 	func addressSettingDetach()
 	func addressSettingDidFinish()
+	func detailAddressSettingAttach()
+	func detailAddressSettingDetach()
+	func detailAddressSettingDismiss()
 	func userSettingAttach()
 	func userSettingDetach()
 	func userSettingDidFinish()
@@ -23,7 +26,7 @@ final class OnBoardingInteractor:
 	weak var router: OnBoardingRouting?
 	weak var listener: OnBoardingListener?
 	
-	override init() {	}
+	override init() { }
 	
 	override func didBecomeActive() {
 		super.didBecomeActive()
@@ -51,6 +54,21 @@ extension OnBoardingInteractor {
 	
 	func addressSettingBackButtonDidTap() {
 		router?.addressSettingDetach()
+	}
+}
+
+// MARK: DetailAddressSettingListener
+extension OnBoardingInteractor {
+	func addressSettingDidTapSearchTextField() {
+		router?.detailAddressSettingAttach()
+	}
+	
+	func detailAddressSettingDidDismiss() {
+		router?.detailAddressSettingDismiss()
+	}
+	
+	func detailAddressSettingCloseButtonDidTap() {
+		router?.detailAddressSettingDetach()
 	}
 }
 

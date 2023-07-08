@@ -24,6 +24,10 @@ public final class AddressSettingBuilder:
 		let viewController = AddressSettingViewController()
 		let interactor = AddressSettingInteractor(presenter: viewController)
 		interactor.listener = listener
-		return AddressSettingRouter(interactor: interactor, viewController: viewController)
+		
+		return AddressSettingRouter(
+			interactor: interactor,
+			viewController: viewController
+		)
 	}
 }

@@ -8,6 +8,7 @@ final class LoggedOutComponent:
 	OnBoardingDependency,
 	TermsOfUseDependency,
 	AddressSettingDependency,
+	DetailAddressSettingDependency,
 	UserSettingDependency,
 	DogSettingDependency {
 	lazy var onBoardingBuildable: OnBoardingBuildable = {
@@ -20,6 +21,10 @@ final class LoggedOutComponent:
 	
 	lazy var addressSettingBuildable: AddressSettingBuildable = {
 		return AddressSettingBuilder(dependency: self)
+	}()
+	
+	lazy var detailAddressSettingBuildable: DetailAddressSettingBuildable = {
+		return DetailAddressSettingBuilder(dependency: self)
 	}()
 	
 	lazy var userSettingBuildable: UserSettingBuildable = {

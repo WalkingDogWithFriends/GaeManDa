@@ -8,6 +8,13 @@ public class UnderLineTextField: UITextField {
 		}
 	}
 	
+	private let textPadding = UIEdgeInsets(
+		top: 0,
+		left: 10,
+		bottom: 0,
+		right: 0
+	)
+	
 	public var selecetedRange: NSRange? {
 		guard let range = self.selectedTextRange else { return nil }
 		let location = offset(from: beginningOfDocument, to: range.start)
@@ -48,5 +55,17 @@ public class UnderLineTextField: UITextField {
 			underLineView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
 			underLineView.heightAnchor.constraint(equalToConstant: 1)
 		])
+	}
+}
+
+public extension UnderLineTextField {
+	func setLeftImage(_ imageName: String) {
+		let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: 34, height: 24))
+		let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
+		imageView.image = UIImage(systemName: imageName)
+		imageView.tintColor = .black
+		leftPaddingView.addSubview(imageView)
+		leftView = leftPaddingView
+		leftViewMode = .always
 	}
 }
