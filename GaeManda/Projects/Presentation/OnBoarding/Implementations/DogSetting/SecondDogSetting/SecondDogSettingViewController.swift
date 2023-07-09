@@ -72,18 +72,17 @@ final class SecondDogSettingViewController:
 		return button
 	}()
 	
-	init() {
-		super.init(nibName: nil, bundle: nil)
-		setupUI()
-	}
-	
-	required init?(coder: NSCoder) {
-		super.init(coder: coder)
+	override func viewDidLoad() {
+		super.viewDidLoad()
 		setupUI()
 	}
 	
 	private func setupUI() {
 		view.backgroundColor = .white
+		self.setupBackNavigationButton(
+			target: self,
+			action: #selector(backButtonDidTap)
+		)
 		setupSubviews()
 		setConstraints()
 		bind()
@@ -93,11 +92,6 @@ final class SecondDogSettingViewController:
 		view.addSubview(onBoardingView)
 		view.addSubview(textStackView)
 		view.addSubview(confirmButton)
-		
-		self.setupBackNavigationButton(
-			target: self,
-			action: #selector(backButtonDidTap)
-		)
 		
 		textStackView.addArrangedSubview(dogBreedTextField)
 		textStackView.addArrangedSubview(dogWeightTextField)
