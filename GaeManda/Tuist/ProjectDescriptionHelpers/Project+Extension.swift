@@ -5,7 +5,8 @@ public extension Project {
 		name: String,
 		packages: [Package] = [],
 		targets: [Target] = [],
-		additionalFiles: [FileElement] = []
+		additionalFiles: [FileElement] = [],
+		resourceSynthesizers: [ResourceSynthesizer] = []	
 	) -> Project {
 		return Project(
 			name: name,
@@ -13,7 +14,8 @@ public extension Project {
 			options: .options(automaticSchemesOptions: .disabled),
 			packages: packages,
 			targets: targets,
-			additionalFiles: additionalFiles
+			additionalFiles: additionalFiles,
+			resourceSynthesizers: resourceSynthesizers
 		)
 	}
 	static func createPresentationProject(
