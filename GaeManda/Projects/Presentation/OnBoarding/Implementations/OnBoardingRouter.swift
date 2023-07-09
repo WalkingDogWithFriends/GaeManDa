@@ -129,8 +129,7 @@ extension OnBoardingRouter {
 		
 		let navigation = NavigationControllerable(root: router.viewControllable)
 		navigationControllerable?.present(navigation, animated: true)
-//		navigationControllerable?.present(router.viewControllable, animated: true)
-			
+		
 		detailAddressSettingRouting = router
 		attachChild(router)
 	}
