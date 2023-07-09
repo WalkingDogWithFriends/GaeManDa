@@ -7,7 +7,10 @@ protocol SignInPresentable: Presentable {
 	var listener: SignInPresentableListener? { get set }
 }
 
-final class SignInInteractor: PresentableInteractor<SignInPresentable>, SignInInteractable, SignInPresentableListener {
+final class SignInInteractor:
+	PresentableInteractor<SignInPresentable>,
+	SignInInteractable,
+	SignInPresentableListener {
 	weak var router: SignInRouting?
 	weak var listener: SignInListener?
 	

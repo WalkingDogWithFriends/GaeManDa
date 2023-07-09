@@ -6,7 +6,10 @@ protocol SignInPresentableListener: AnyObject {
 	func kakaoLoginButtonDidTapped()
 }
 
-final class SignInViewController: UIViewController, SignInPresentable, SignInViewControllable {
+final class SignInViewController:
+	UIViewController,
+	SignInPresentable,
+	SignInViewControllable {
 	weak var listener: SignInPresentableListener?
 	
 	private lazy var appleLoginButton: UIButton = {
