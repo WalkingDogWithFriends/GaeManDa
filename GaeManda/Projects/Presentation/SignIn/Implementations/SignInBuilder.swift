@@ -1,5 +1,6 @@
-import SignIn
 import RIBs
+
+import SignIn
 
 protocol SignInDependency: Dependency { }
 
