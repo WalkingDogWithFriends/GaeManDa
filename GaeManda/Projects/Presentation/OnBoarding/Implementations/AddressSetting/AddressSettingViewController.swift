@@ -33,7 +33,8 @@ final class AddressSettingViewController:
 		let underLineTextField = UnderLineTextField()
 		underLineTextField.translatesAutoresizingMaskIntoConstraints = false
 		underLineTextField.placeholder = "도로명 또는 지번 주소를 입력해주세요"
-		underLineTextField.setLeftImage("magnifyingglass")
+		let image = UIImage(systemName: "magnifyingglass")
+		underLineTextField.setLeftImage(image, size: 24)
 		
 		return underLineTextField
 	}()

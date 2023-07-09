@@ -46,4 +46,8 @@ extension DetailAddressSettingInteractor {
 	func closeButtonDidTap() {
 		listener?.detailAddressSettingCloseButtonDidTap()
 	}
+	
+	func loadLocationButtonDidTap() {
+		print("loadLocationButtonDidTap")
+	}
 }

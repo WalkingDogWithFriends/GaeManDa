@@ -57,15 +57,3 @@ public class UnderLineTextField: UITextField {
 		])
 	}
 }
-
-public extension UnderLineTextField {
-	func setLeftImage(_ imageName: String) {
-		let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: 34, height: 24))
-		let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
-		imageView.image = UIImage(systemName: imageName)
-		imageView.tintColor = .black
-		leftPaddingView.addSubview(imageView)
-		leftView = leftPaddingView
-		leftViewMode = .always
-	}
-}
