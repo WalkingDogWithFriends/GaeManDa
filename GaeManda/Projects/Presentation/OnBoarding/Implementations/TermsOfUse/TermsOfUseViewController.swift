@@ -101,16 +101,19 @@ final class TermsOfUseViewController:
 		])
 	}
 	
+//	 MARK: 수정 bind -> with retained
 	private func bind() {
 		confirmButton.rx.tap
-			.bind { [weak self] _ in
-				self?.listener?.confirmButtonDidTap()
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.listener?.confirmButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 		
 		agreeAllButton.checkButton.rx.tap
-			.bind { [weak self] _ in
-				self?.agreeAllButton.isChecked.toggle()
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.agreeAllButton.isChecked.toggle()
 			}
 			.disposed(by: disposeBag)
 		
@@ -125,6 +128,7 @@ final class TermsOfUseViewController:
 						onNext: { _ in
 							cell.termsOfUseButton.isChecked.toggle()
 							let selectedType = cell.termsOfUseButton.isChecked
+							print(selectedType)
 						}
 					)
 					.disposed(by: cell.disposeBag)

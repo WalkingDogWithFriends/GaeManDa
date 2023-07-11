@@ -157,26 +157,30 @@ final class ThirdDogSettingViewController:
 		characterTextView.textView.rx.text
 			.orEmpty
 			.map { $0.count }
-			.bind { [weak self] count in
-				self?.setTextCountLabel(count)
+			.withUnretained(self)
+			.bind { owner, count in
+				owner.setTextCountLabel(count)
 			}
 			.disposed(by: disposeBag)
 		
 		didNeuterButton.rx.tap
-			.bind { [weak self] _ in
-				self?.didNeuterButtonDidTap()
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.didNeuterButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 		
 		didNotNeuterButton.rx.tap
-			.bind { [weak self] _ in
-				self?.didNotNeuterButtonDidTap()
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.didNotNeuterButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 		
 		confirmButton.rx.tap
-			.bind { [weak self] _ in
-				self?.listener?.confirmButtonDidTap()
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.listener?.confirmButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 	}

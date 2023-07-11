@@ -3,6 +3,7 @@ import RIBs
 import RxCocoa
 import RxSwift
 import DesignKit
+import Extensions
 import Utils
 
 protocol AddressSettingPresentableListener: AnyObject {
@@ -163,25 +164,30 @@ final class AddressSettingViewController:
 	
 	private func bind() {
 		searchTextField.rx.controlEvent(.editingDidBegin)
-			.bind { [weak self] in
-				self?.searchTextField.endEditing(true)
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.searchTextField.endEditing(true)
 			}
 			.disposed(by: disposeBag)
 		
 		searchTextField.rx.controlEvent(.touchDown)
-			.bind { [weak self] in
-				self?.listener?.searchTextFieldDidTap()
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.listener?.searchTextFieldDidTap()
 			}
 			.disposed(by: disposeBag)
 		
 		loadLocationButton.rx.tap
-			.bind { [weak self] _ in
-				self?.listener?.loadLocationButtonDidTap()
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.listener?.loadLocationButtonDidTap()
 			}
+			.disposed(by: disposeBag)
 		
 		confirmButton.rx.tap
-			.bind { [weak self] _ in
-				self?.listener?.confirmButtonDidTap()
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.listener?.confirmButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 	}

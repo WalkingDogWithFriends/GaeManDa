@@ -10,6 +10,7 @@ import UIKit
 import RIBs
 import RxSwift
 import RxCocoa
+import Extensions
 import Utils
 
 protocol DetailAddressSettingPresentableListener: AnyObject {
@@ -134,16 +135,18 @@ final class DetailAddressSettingViewController:
 	
 	private func bind() {
 		self.rx.viewDidDisappear
+			.withUnretained(self)
 			.subscribe(
-				onNext: { [weak self] _ in
-					self?.listener?.detailAddressSettingDidDismiss()
+				onNext: { owner, _ in
+					owner.listener?.detailAddressSettingDidDismiss()
 				}
 			)
 			.disposed(by: disposeBag)
 		
 		loadLocationButton.rx.tap
-			.bind { [weak self] _ in
-				self?.listener?.loadLocationButtonDidTap()
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.listener?.loadLocationButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 	}

@@ -118,8 +118,9 @@ final class SecondDogSettingViewController:
 	private func bind() {
 		dogWeightTextField.textField.rx.text
 			.orEmpty
-			.bind { [weak self] text in
-				self?.addSuffix(text)
+			.withUnretained(self)
+			.bind { owner, text in
+				owner.addSuffix(text)
 			}
 			.disposed(by: disposeBag)
 		
@@ -138,8 +139,9 @@ final class SecondDogSettingViewController:
 			.disposed(by: disposeBag)
 		
 		confirmButton.rx.tap
-			.bind { [weak self] _ in
-				self?.listener?.confirmButtonDidTap()
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.listener?.confirmButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 	}

@@ -176,32 +176,37 @@ final class UserSettingViewController:
 	private func bind() {
 		nickNameTextField.textField.rx.text
 			.orEmpty
-			.bind { [weak self] text in
-				self?.setTextCountLabel(text)
+			.withUnretained(self)
+			.bind { owner, text in
+				owner.setTextCountLabel(text)
 			}
 			.disposed(by: disposeBag)
 		
 		calenderButton.rx.tap
-			.bind { [weak self] _ in
-				self?.calenderButtonDidTap()
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.calenderButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 		
 		maleButton.rx.tap
-			.bind { [weak self] _ in
-				self?.maleButtonDidTap()
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.maleButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 		
 		femaleButton.rx.tap
-			.bind { [weak self] _ in
-				self?.femaleButtonDidTap()
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.femaleButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 		
 		confirmButton.rx.tap
-			.bind { [weak self] _ in
-				self?.listener?.confirmButtonDidTap()
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.listener?.confirmButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 	}
