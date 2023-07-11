@@ -11,12 +11,12 @@ protocol ThirdDogSettingPresentableListener: AnyObject {
 }
 
 final class ThirdDogSettingViewController:
-	UIViewController,
+	KeyboardRespondViewController,
 	ThirdDogSettingPresentable,
 	ThirdDogSettingViewControllable {
 	weak var listener: ThirdDogSettingPresentableListener?
 	private let disposeBag = DisposeBag()
-
+		
 	private let onBoardingView: OnBoardingView = {
 		let onBoardingView = OnBoardingView(
 			willDisplayImageView: true,
@@ -48,7 +48,7 @@ final class ThirdDogSettingViewController:
 	private let didNotNeuterButton: OnBoardingButton = {
 		let button = OnBoardingButton(title: "중성화 안 했어요")
 		button.translatesAutoresizingMaskIntoConstraints = false
-
+		
 		return button
 	}()
 	
@@ -76,6 +76,20 @@ final class ThirdDogSettingViewController:
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
+		
+		NotificationCenter.default.addObserver(
+			self,
+			selector: #selector(keyboardWillShow),
+			name: UIResponder.keyboardWillShowNotification,
+			object: nil
+		)
+		
+		NotificationCenter.default.addObserver(
+			self,
+			selector: #selector(keyboardWillHidden),
+			name: UIResponder.keyboardWillHideNotification,
+			object: nil
+		)
 	}
 	
 	private func setupUI() {
@@ -84,6 +98,7 @@ final class ThirdDogSettingViewController:
 			target: self,
 			action: #selector(backButtonDidTap)
 		)
+		self.paddingValue = 10
 		
 		characterTextView.warningText = "\(maximumTextCount)자 이내로 입력 가능합니다."
 		characterTextView.maximumTextCountLabel.text = "0/\(maximumTextCount)"
@@ -116,15 +131,29 @@ final class ThirdDogSettingViewController:
 			characterTextView.topAnchor.constraint(equalTo: buttonStackView.bottomAnchor, constant: 40),
 			characterTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 38),
 			characterTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -38),
-
+			
 			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
 			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
 			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -45),
 			confirmButton.heightAnchor.constraint(equalToConstant: 40)
 		])
 	}
-
+	
 	private func bind() {
+		characterTextView.textView.rx.didBeginEditing
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.editingView = owner.characterTextView.textView
+			}
+			.disposed(by: disposeBag)
+		
+		characterTextView.textView.rx.didEndEditing
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.editingView = nil
+			}
+			.disposed(by: disposeBag)
+
 		characterTextView.textView.rx.text
 			.orEmpty
 			.map { $0.count }

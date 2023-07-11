@@ -11,7 +11,7 @@ protocol SecondDogSettingPresentableListener: AnyObject {
 }
 
 final class SecondDogSettingViewController:
-	UIViewController,
+	KeyboardRespondViewController,
 	SecondDogSettingPresentable,
 	SecondDogSettingViewControllable {
 	weak var listener: SecondDogSettingPresentableListener?
@@ -54,6 +54,7 @@ final class SecondDogSettingViewController:
 			warningText: "우리 아이 몸무게 (kg)을 입력해주세요."
 		)
 		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
+		onBoardingTextField.textField.keyboardType = .numberPad
 		
 		return onBoardingTextField
 	}()
@@ -119,6 +120,20 @@ final class SecondDogSettingViewController:
 			.orEmpty
 			.bind { [weak self] text in
 				self?.addSuffix(text)
+			}
+			.disposed(by: disposeBag)
+		
+		dogWeightTextField.textField.rx.controlEvent(.editingDidBegin)
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.editingView = owner.dogWeightTextField
+			}
+			.disposed(by: disposeBag)
+		
+		dogWeightTextField.textField.rx.controlEvent(.editingDidEnd)
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.editingView = nil
 			}
 			.disposed(by: disposeBag)
 		
