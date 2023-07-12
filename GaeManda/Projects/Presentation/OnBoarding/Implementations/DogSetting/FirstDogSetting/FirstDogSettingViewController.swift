@@ -91,7 +91,8 @@ final class FirstDogSettingViewController:
 	private let maleButton: OnBoardingButton = {
 		let button = OnBoardingButton(title: "남")
 		button.translatesAutoresizingMaskIntoConstraints = false
-		
+		button.buttonIsSelected = true
+
 		return button
 	}()
 	
@@ -178,6 +179,13 @@ final class FirstDogSettingViewController:
 			.withUnretained(self)
 			.bind { owner, text in
 				owner.setTextCountLabel(text)
+			}
+			.disposed(by: disposeBag)
+		
+		calenderTextField.textField.rx.controlEvent(.editingDidBegin)
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.calenderTextField.textField.endEditing(true)
 			}
 			.disposed(by: disposeBag)
 		
