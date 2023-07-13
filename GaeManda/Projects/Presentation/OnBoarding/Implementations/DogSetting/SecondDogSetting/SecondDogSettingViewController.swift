@@ -116,11 +116,17 @@ final class SecondDogSettingViewController:
 	}
 	
 	private func bind() {
-		dogWeightTextField.textField.rx.text
-			.orEmpty
+		dogWeightTextField.textField.rx.controlEvent(.editingChanged)
 			.withUnretained(self)
-			.bind { owner, text in
-				owner.addSuffix(text)
+			.bind { owner, _ in
+				owner.addSuffix()
+			}
+			.disposed(by: disposeBag)
+		
+		dogWeightTextField.textField.rx.cursorChanged
+			.withUnretained(self)
+			.bind { owner, range in
+				owner.setUneditableSuffix(range)
 			}
 			.disposed(by: disposeBag)
 		
@@ -149,8 +155,8 @@ final class SecondDogSettingViewController:
 
 // MARK: - Action
 private extension SecondDogSettingViewController {
-	func addSuffix(_ text: String) {
-		if text.isEmpty { return }
+	func addSuffix() {
+		guard let text = dogWeightTextField.textField.text else { return }
 		
 		if text.contains(suffix), text.count == suffix.count {
 			dogWeightTextField.textField.text = ""
@@ -159,7 +165,39 @@ private extension SecondDogSettingViewController {
 		}
 	}
 	
-	func setUneditableSuffix() {}
+	func setUneditableSuffix(_ selectedRange: UITextRange?) {
+		let textField = dogWeightTextField.textField
+		
+		guard
+			let text = textField.text,
+			let selectedRange = selectedRange,
+			let suffixRange = text.range(of: suffix)
+		else {
+			return
+		}
+		let suffixStartIndex = text.distance(
+			from: text.startIndex,
+			to: suffixRange.lowerBound
+		)
+
+		let cursorStartPosition = textField.offset(
+			from: textField.beginningOfDocument,
+			to: selectedRange.start
+		)
+		let cursorEndPosition = textField.offset(
+			from: textField.beginningOfDocument,
+			to: selectedRange.end
+		)
+	
+		if
+			cursorEndPosition > suffixStartIndex,
+			let newPosition = textField.position(from: selectedRange.end, offset: -2) {
+			textField.selectedTextRange = textField.textRange(
+				from: newPosition,
+				to: newPosition
+			)
+		}
+	}
 	
 	@objc func backButtonDidTap() {
 		listener?.backButtonDidTap()

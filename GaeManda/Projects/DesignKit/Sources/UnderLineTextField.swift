@@ -1,13 +1,7 @@
 import UIKit
+import RxCocoa
 
 public class UnderLineTextField: UITextField {
-	public override var selectedTextRange: UITextRange? {
-		get { return super.selectedTextRange }
-		set {
-			super.selectedTextRange = newValue
-		}
-	}
-	
 	private let textPadding = UIEdgeInsets(
 		top: 0,
 		left: 10,

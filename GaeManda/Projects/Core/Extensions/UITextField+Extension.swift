@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 public extension UITextField {
 	func setLeftImage(
@@ -23,5 +25,25 @@ public extension UITextField {
 		leftPaddingView.addSubview(imageView)
 		leftView = leftPaddingView
 		leftViewMode = .always
+	}
+}
+
+public extension Reactive where Base: UITextField {
+	var cursorChanged: ControlProperty<UITextRange?> {
+		return cursor
+	}
+	
+	var cursor: ControlProperty<UITextRange?> {
+		return base.rx.controlProperty(
+			editingEvents: [.allTouchEvents, .allEditingEvents, .valueChanged],
+			getter: { textField in
+				textField.selectedTextRange
+			},
+			setter: { textField, value in
+				if textField.selectedTextRange != value {
+					textField.selectedTextRange = value
+				}
+			}
+		)
 	}
 }
