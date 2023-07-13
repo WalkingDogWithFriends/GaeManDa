@@ -1,5 +1,5 @@
-import RIBs
 import UIKit
+import RIBs
 
 protocol AppRootPresentableListener: AnyObject { }
 

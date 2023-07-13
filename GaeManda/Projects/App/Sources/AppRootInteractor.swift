@@ -1,6 +1,9 @@
 import RIBs
 
-protocol AppRootRouting: ViewableRouting { }
+protocol AppRootRouting: ViewableRouting {
+	func attachLoggedOut()
+	func detachLoggedOut()
+}
 
 protocol AppRootPresentable: Presentable {
 	var listener: AppRootPresentableListener? { get set }
