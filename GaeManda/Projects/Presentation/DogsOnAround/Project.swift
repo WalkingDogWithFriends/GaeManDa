@@ -10,6 +10,7 @@ let project = Project.createProject(
 			name: projectName,
 			dependencies: [
 				.Project.DomainLayer.Entity,
+				.Project.CoreLayer.GMDUtils,
 				.SPM.RIBs
 			]
 		),
@@ -18,8 +19,7 @@ let project = Project.createProject(
 			dependencies: [
 				.Project.PresentationLayer.DogsOnAround,
 				.Project.DesignKit,
-				.Project.CoreLayer.Extensions,
-				.Project.CoreLayer.Utils,
+				.Project.CoreLayer.GMDExtensions,
 				.Project.DomainLayer.UseCase,
 				.SPM.RxCocoa
 			]

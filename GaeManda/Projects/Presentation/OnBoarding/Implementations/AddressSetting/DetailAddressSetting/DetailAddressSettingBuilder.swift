@@ -8,7 +8,7 @@
 
 import RIBs
 import OnBoarding
-import Utils
+import GMDUtils
 
 public protocol DetailAddressSettingDependency: Dependency { }
 

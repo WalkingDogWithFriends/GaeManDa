@@ -1,5 +1,5 @@
 import RIBs
-import Utils
+import GMDUtils
 
 final class AppRootComponent:
 	Component<AppRootDependency>,

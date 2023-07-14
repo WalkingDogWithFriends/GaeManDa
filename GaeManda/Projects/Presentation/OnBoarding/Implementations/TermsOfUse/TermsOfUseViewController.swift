@@ -3,7 +3,7 @@ import RIBs
 import RxCocoa
 import RxSwift
 import Entity
-import Utils
+import GMDUtils
 
 protocol TermsOfUsePresentableListener: AnyObject {
 	func confirmButtonDidTap()

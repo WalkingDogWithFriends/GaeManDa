@@ -5,17 +5,17 @@ let project = Project.createProject(
 	name: "Core",
 	targets: [
 		.createTarget(
-			name: "Extensions",
+			name: "GMDExtensions",
 			product: .framework,
-			sources: ["Extensions/**"],
+			sources: ["GMDExtensions/**"],
 			dependencies: [
 				.SPM.RxCocoa
 			]
 		),
 		.createTarget(
-			name: "Utils",
+			name: "GMDUtils",
 			product: .framework,
-			sources: ["Utils/**"],
+			sources: ["GMDUtils/**"],
 			dependencies: [
 				.SPM.RIBs
 			]

@@ -10,8 +10,8 @@ import UIKit
 import RIBs
 import RxSwift
 import RxCocoa
-import Extensions
-import Utils
+import GMDExtensions
+import GMDUtils
 
 protocol DetailAddressSettingPresentableListener: AnyObject {
 	func detailAddressSettingDidDismiss()

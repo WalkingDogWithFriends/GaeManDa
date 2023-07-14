@@ -9,7 +9,7 @@ let project = Project.createProject(
 			product: .framework,
 			resources: ["Resources/**"],
 			dependencies: [
-				.Project.CoreLayer.Extensions
+				.Project.CoreLayer.GMDExtensions
 			]
 		)
 	]

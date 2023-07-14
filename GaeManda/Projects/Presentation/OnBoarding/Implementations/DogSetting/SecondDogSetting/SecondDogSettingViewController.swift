@@ -3,7 +3,7 @@ import RIBs
 import RxCocoa
 import RxSwift
 import DesignKit
-import Utils
+import GMDUtils
 
 protocol SecondDogSettingPresentableListener: AnyObject {
 	func confirmButtonDidTap()

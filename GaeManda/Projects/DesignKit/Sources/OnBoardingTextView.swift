@@ -1,5 +1,5 @@
 import UIKit
-import Extensions
+import GMDExtensions
 
 public final class OnBoardingTextView: UIView {
 	public lazy var isWarning = false {

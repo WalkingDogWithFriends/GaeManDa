@@ -74,12 +74,12 @@ public extension TargetDependency.Project.PresentationLayer {
 
 //MARK: - Core Dependency
 public extension TargetDependency.Project.CoreLayer {
-	static let Extensions = TargetDependency.project(
-		target: "Extensions",
+	static let GMDExtensions = TargetDependency.project(
+		target: "GMDExtensions",
 		path: .relativeToRoot("Projects/Core")
 	)
-	static let Utils = TargetDependency.project(
-		target: "Utils",
+	static let GMDUtils = TargetDependency.project(
+		target: "GMDUtils",
 		path: .relativeToRoot("Projects/Core")
 	)
 }

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Utils
+import GMDUtils
 
 final class TermsOfUseButton: UIView {
 	lazy var isChecked: Bool = false {

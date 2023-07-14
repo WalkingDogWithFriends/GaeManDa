@@ -1,6 +1,5 @@
 import UIKit
 
-
 public class UnderLineTextField: UITextField {
 	private let textPadding = UIEdgeInsets(
 		top: 0,

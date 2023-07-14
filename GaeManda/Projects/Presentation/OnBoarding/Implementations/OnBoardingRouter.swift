@@ -1,6 +1,6 @@
 import RIBs
 import OnBoarding
-import Utils
+import GMDUtils
 
 protocol OnBoardingInteractable:
 	Interactable,

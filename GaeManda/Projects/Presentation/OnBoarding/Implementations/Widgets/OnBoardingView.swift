@@ -1,6 +1,6 @@
 import UIKit
 import DesignKit
-import Utils
+import GMDUtils
 
 final class OnBoardingView: UIView {
 	private let label: UILabel = {

@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import Entity
-import Utils
+import GMDUtils
 
 final class TermsOfUseCell: UITableViewCell {
 	static let identifier = "TermsOfUseCell"

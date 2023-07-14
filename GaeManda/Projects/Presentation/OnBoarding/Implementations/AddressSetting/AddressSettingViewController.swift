@@ -3,8 +3,8 @@ import RIBs
 import RxCocoa
 import RxSwift
 import DesignKit
-import Extensions
-import Utils
+import GMDExtensions
+import GMDUtils
 
 protocol AddressSettingPresentableListener: AnyObject {
 	func confirmButtonDidTap()

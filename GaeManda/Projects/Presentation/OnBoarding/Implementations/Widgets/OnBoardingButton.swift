@@ -1,5 +1,5 @@
 import UIKit
-import Extensions
+import GMDExtensions
 
 class OnBoardingButton: UIButton {
 	var buttonIsSelected: Bool = false {

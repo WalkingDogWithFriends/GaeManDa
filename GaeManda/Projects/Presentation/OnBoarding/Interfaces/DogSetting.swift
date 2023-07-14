@@ -1,5 +1,5 @@
 import RIBs
-import Utils
+import GMDUtils
 
 public protocol DogSettingBuildable: Buildable {
 	func build(
