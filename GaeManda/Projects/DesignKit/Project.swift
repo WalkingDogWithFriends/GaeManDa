@@ -7,7 +7,10 @@ let project = Project.createProject(
 		.createTarget(
 			name: "DesignKit",
 			product: .framework,
-			resources: ["Resources/**"]
+			resources: ["Resources/**"],
+			dependencies: [
+				.Project.CoreLayer.Extensions
+			]
 		)
 	]
 )

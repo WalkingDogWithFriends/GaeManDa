@@ -7,7 +7,10 @@ let project = Project.createProject(
 		.createTarget(
 			name: "Extensions",
 			product: .framework,
-			sources: ["Extensions/**"]
+			sources: ["Extensions/**"],
+			dependencies: [
+				.SPM.RxCocoa
+			]
 		),
 		.createTarget(
 			name: "Utils",

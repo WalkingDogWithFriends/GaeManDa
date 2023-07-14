@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Extensions
 
 open class KeyboardRespondViewController: UIViewController {
 	public var editingView: UIView?

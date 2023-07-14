@@ -7,7 +7,6 @@
 //
 
 import RIBs
-import Utils
 
 public protocol DetailAddressSettingBuildable: Buildable {
 	func build(withListener listener: DetailAddressSettingListener) -> ViewableRouting
