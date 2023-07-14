@@ -179,11 +179,6 @@ private extension SecondDogSettingViewController {
 			from: text.startIndex,
 			to: suffixRange.lowerBound
 		)
-
-		let cursorStartPosition = textField.offset(
-			from: textField.beginningOfDocument,
-			to: selectedRange.start
-		)
 		let cursorEndPosition = textField.offset(
 			from: textField.beginningOfDocument,
 			to: selectedRange.end

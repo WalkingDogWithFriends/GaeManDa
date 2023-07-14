@@ -36,7 +36,6 @@ public extension KeyboardRespondViewController {
 		guard let editingView = editingView else { return	}
 		
 		let viewBottom = editingView.convert(editingView.bounds, to: self.view).maxY
-		let viewTop = editingView.convert(editingView.bounds, to: self.view).minY
 
 		moveUpViewWithKeyboard(
 			notification: notification,
