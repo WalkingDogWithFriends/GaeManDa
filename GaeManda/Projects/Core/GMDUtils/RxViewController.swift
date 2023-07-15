@@ -6,7 +6,7 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
-#if os(iOS) || os(tvOS)
+#if os(iOS)
 import UIKit
 import RxCocoa
 import RxSwift

@@ -38,11 +38,9 @@ final class LoggedOutComponent:
 	var onBoardingViewController: ViewControllable {
 		loggedOutViewController.topViewControllable
 	}
-	
 	var dogSettingViewController: ViewControllable {
 		loggedOutViewController.topViewControllable
 	}
-
 	var loggedOutViewController: ViewControllable {
 		dependency.loggedOutViewController
 	}

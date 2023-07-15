@@ -14,21 +14,19 @@ final class OnBoardingComponent: Component<OnBoardingDependency> {
 	fileprivate var onBoardingViewController: ViewControllable {
 		dependency.onBoardingViewController
 	}
-	var termsOfUseBuildable: TermsOfUseBuildable {
+	fileprivate var termsOfUseBuildable: TermsOfUseBuildable {
 		dependency.termsOfUseBuildable
 	}
-	var addressSettingBuildable: AddressSettingBuildable {
+	fileprivate var addressSettingBuildable: AddressSettingBuildable {
 		dependency.addressSettingBuildable
 	}
-	
-	var detailAddressSettingBuildable: DetailAddressSettingBuildable {
+	fileprivate var detailAddressSettingBuildable: DetailAddressSettingBuildable {
 		dependency.detailAddressSettingBuildable
 	}
-	
-	var userSettingBuildable: UserSettingBuildable {
+	fileprivate var userSettingBuildable: UserSettingBuildable {
 		dependency.userSettingBuildable
 	}
-	var dogSettingBuildable: DogSettingBuildable {
+	fileprivate var dogSettingBuildable: DogSettingBuildable {
 		dependency.dogSettingBuildable
 	}
 }
