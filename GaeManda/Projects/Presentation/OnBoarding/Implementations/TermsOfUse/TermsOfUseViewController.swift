@@ -100,8 +100,7 @@ final class TermsOfUseViewController:
 			confirmButton.heightAnchor.constraint(equalToConstant: 40)
 		])
 	}
-	
-//	 MARK: 수정 bind -> with retained
+
 	private func bind() {
 		confirmButton.rx.tap
 			.withUnretained(self)
