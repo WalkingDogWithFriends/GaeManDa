@@ -15,8 +15,7 @@ let project = Project.createProject(
 				.Project.PresentationLayer.ChattingImpl,
 				.Project.PresentationLayer.SignInImpl,
 				.Project.PresentationLayer.SignUpImpl,
-				.Project.PresentationLayer.DogsOnAroundImpl,
-				.SPM.RIBs
+				.Project.PresentationLayer.DogsOnAroundImpl
 			],
 			settings: .settings(
 				base: [
@@ -38,8 +37,7 @@ let project = Project.createProject(
 				.Project.PresentationLayer.ChattingImpl,
 				.Project.PresentationLayer.SignInImpl,
 				.Project.PresentationLayer.SignUpImpl,
-				.Project.PresentationLayer.DogsOnAroundImpl,
-				.SPM.RIBs
+				.Project.PresentationLayer.DogsOnAroundImpl
 			],
 			settings: .settings(
 				base: [
