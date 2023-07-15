@@ -22,7 +22,8 @@ let project = Project.createProject(
 			product: .framework,
 			sources: ["RepositoryImpl/Sources/**"],
 			dependencies: [
-				.Project.DomainLayer.Repository
+				.Project.DomainLayer.Repository,
+				.Project.DataLayer.GMDNetwork
 			]
 		),
 		.createTarget(
@@ -33,6 +34,11 @@ let project = Project.createProject(
 				.Project.DataLayer.RepositoryImpl,
 				.Project.DomainLayer.Repository
 			]
+		),
+		.createTarget(
+			name: "GMDNetwork",
+			product: .staticLibrary,
+			sources: ["GMDNetwork/**"]
 		)
 	]
 )

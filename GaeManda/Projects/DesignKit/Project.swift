@@ -12,5 +12,9 @@ let project = Project.createProject(
 				.Project.CoreLayer.GMDExtensions
 			]
 		)
+	],
+	resourceSynthesizers: [
+		.custom(name: "Assets", parser: .assets, extensions: ["xcassets"]),
+		.fonts()
 	]
 )

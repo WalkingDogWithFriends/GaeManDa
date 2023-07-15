@@ -114,6 +114,10 @@ public extension TargetDependency.Project.DataLayer {
 		target: "RepositoryImpl",
 		path: .relativeToRoot("Projects/Data")
 	)
+	static let GMDNetwork = TargetDependency.project(
+		target: "GMDNetwork",
+		path: .relativeToRoot("Projects/Data")
+	)
 }
 
 //MARK: - SPM Dependency
