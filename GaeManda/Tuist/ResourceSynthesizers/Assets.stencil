@@ -198,6 +198,7 @@ import UIKit
 		}
 		return result
 	}
+	}
 
 {{accessModifier}} extension {{imageType}}.Image {
 	@available(macOS, deprecated,
