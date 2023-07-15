@@ -8,8 +8,8 @@
 
 import UIKit
 import RIBs
-import RxSwift
 import RxCocoa
+import RxSwift
 import GMDExtensions
 import GMDUtils
 

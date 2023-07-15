@@ -1,7 +1,7 @@
 import RIBs
+import GMDUtils
 import OnBoarding
 import OnBoardingImpl
-import GMDUtils
 
 final class LoggedOutComponent:
 	Component<LoggedOutDependency>,

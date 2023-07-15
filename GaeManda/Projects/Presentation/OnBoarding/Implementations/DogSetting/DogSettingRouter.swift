@@ -1,6 +1,6 @@
 import RIBs
-import OnBoarding
 import GMDUtils
+import OnBoarding
 
 protocol DogSettingInteractable:
 	Interactable,

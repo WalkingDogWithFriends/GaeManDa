@@ -1,6 +1,6 @@
 import RIBs
-import OnBoarding
 import GMDUtils
+import OnBoarding
 
 public protocol DogSettingDependency: Dependency {
 	var dogSettingViewController: ViewControllable { get }
