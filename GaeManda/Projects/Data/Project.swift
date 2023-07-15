@@ -6,7 +6,7 @@ let project = Project.createProject(
 	targets: [
 		.createTarget(
 			name: "DTO",
-			product: .framework,
+			product: .staticLibrary,
 			sources: ["DTO/Sources/**"]
 		),
 		.createTarget(
@@ -19,7 +19,7 @@ let project = Project.createProject(
 		),
 		.createTarget(
 			name: "RepositoryImpl",
-			product: .framework,
+			product: .staticLibrary,
 			sources: ["RepositoryImpl/Sources/**"],
 			dependencies: [
 				.Project.DomainLayer.Repository,

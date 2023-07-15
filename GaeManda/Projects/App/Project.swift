@@ -17,8 +17,7 @@ let project = Project.createProject(
 				.Project.PresentationLayer.SignUpImpl,
 				.Project.PresentationLayer.DogsOnAroundImpl,
 				.Project.PresentationLayer.OnBoardingImpl,
-				.Project.CoreLayer.GMDUtils,
-				.SPM.RIBs
+				.Project.CoreLayer.GMDUtils
 			],
 			settings: .settings(
 				base: [
@@ -41,8 +40,7 @@ let project = Project.createProject(
 				.Project.PresentationLayer.SignInImpl,
 				.Project.PresentationLayer.SignUpImpl,
 				.Project.PresentationLayer.DogsOnAroundImpl,
-				.Project.PresentationLayer.OnBoardingImpl,
-				.SPM.RIBs
+				.Project.PresentationLayer.OnBoardingImpl
 			],
 			settings: .settings(
 				base: [
