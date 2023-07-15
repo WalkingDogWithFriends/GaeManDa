@@ -6,7 +6,6 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
-#if os(iOS)
 import UIKit
 import RxCocoa
 import RxSwift
@@ -72,4 +71,3 @@ public extension Reactive where Base: UIViewController {
 		return ControlEvent(events: source)
 	}
 }
-#endif
