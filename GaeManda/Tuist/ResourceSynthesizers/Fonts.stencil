@@ -137,6 +137,7 @@ import SwiftUI
 		self.init(name: font.name, size: size)
 	}
 }
+
 {{accessModifier}} extension UIFont {
 	{% for family in families where family.name == "Jalnan OTF" %}
 		static var jalnan20: UIFont {

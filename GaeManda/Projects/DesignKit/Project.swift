@@ -14,7 +14,8 @@ let project = Project.createProject(
 		)
 	],
 	resourceSynthesizers: [
-		.custom(name: "Assets", parser: .assets, extensions: ["xcassets"]),
+		.custom(name: "Colors", parser: .assets, extensions: ["xcassets"]),
+		.custom(name: "Images", parser: .assets, extensions: ["xcassets"]),
 		.fonts()
 	]
 )
