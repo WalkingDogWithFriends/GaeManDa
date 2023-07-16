@@ -6,7 +6,7 @@ let project = Project.createProject(
 	targets: [
 		.createTarget(
 			name: "GMDExtensions",
-			product: .framework,
+			product: .staticLibrary,
 			sources: ["GMDExtensions/**"],
 			dependencies: [
 				.SPM.RxCocoa
@@ -14,7 +14,7 @@ let project = Project.createProject(
 		),
 		.createTarget(
 			name: "GMDUtils",
-			product: .framework,
+			product: .staticLibrary,
 			sources: ["GMDUtils/**"],
 			dependencies: [
 				.SPM.RIBs

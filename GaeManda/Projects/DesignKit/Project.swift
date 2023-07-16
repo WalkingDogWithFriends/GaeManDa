@@ -6,7 +6,7 @@ let project = Project.createProject(
 	targets: [
 		.createTarget(
 			name: "DesignKit",
-			product: .framework,
+			product: .staticLibrary,
 			resources: ["Resources/**"],
 			dependencies: [
 				.Project.CoreLayer.GMDExtensions

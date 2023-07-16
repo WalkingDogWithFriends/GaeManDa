@@ -6,7 +6,7 @@ let project = Project.createProject(
 	targets: [
 		.createTarget(
 			name: "Entity",
-			product: .framework,
+			product: .staticLibrary,
 			sources: ["Entity/**"]
 		),
 		.createTarget(
@@ -28,12 +28,12 @@ let project = Project.createProject(
 		),
 		.createTarget(
 			name: "UseCase",
-			product: .framework,
+			product: .staticLibrary,
 			sources: ["Interfaces/UseCase/**"]
 		),
 		.createTarget(
 			name: "Repository",
-			product: .framework,
+			product: .staticLibrary,
 			sources: ["Interfaces/Repository/**"]
 		)
 	]

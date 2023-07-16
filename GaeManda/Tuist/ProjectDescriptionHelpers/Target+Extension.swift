@@ -38,7 +38,7 @@ public extension Target {
 		return .init(
 			name: name,
 			platform: .iOS,
-			product: .framework,
+			product: .staticLibrary,
 			bundleId: "com.gaemanda.\(name)",
 			deploymentTarget: .iOS(targetVersion: "15.0", devices: [.iphone]),
 			infoPlist: .default,
