@@ -7,15 +7,15 @@
 //
 
 import UIKit
-import GMDUtils
+import DesignKit
 
 final class TermsOfUseButton: UIView {
 	lazy var isChecked: Bool = false {
 		didSet {
 			if isChecked == true {
-				checkButton.tintColor = .init(hexCode: "#65BF4D")
+				checkButton.tintColor = .green100
 			} else {
-				checkButton.tintColor = .init(hexCode: "#ABABAB")
+				checkButton.tintColor = .gray70
 			}
 		}
 	}
@@ -25,16 +25,16 @@ final class TermsOfUseButton: UIView {
 		button.translatesAutoresizingMaskIntoConstraints = false
 		let image = UIImage(systemName: "checkmark.circle")
 		button.setImage(image, for: .normal)
-		button.tintColor = .init(hexCode: "#ABABAB")
+		button.tintColor = .gray70
 		
 		return button
 	}()
 	
-	private let titleLabel: UILabel = {
+	let titleLabel: UILabel = {
 		let label = UILabel()
 		label.translatesAutoresizingMaskIntoConstraints = false
 		label.tintColor = .black
-		label.font = .systemFont(ofSize: 15)
+		label.font = .r16
 		
 		return label
 	}()
@@ -67,14 +67,14 @@ final class TermsOfUseButton: UIView {
 			
 	private func setConstraints() {
 		NSLayoutConstraint.activate([
-			checkButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+			checkButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
 			checkButton.centerYAnchor.constraint(equalTo: centerYAnchor),
 			checkButton.widthAnchor.constraint(equalToConstant: 24),
 			checkButton.heightAnchor.constraint(equalToConstant: 24),
-			checkButton.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-			checkButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
+			checkButton.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+			checkButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
 			
-			titleLabel.leadingAnchor.constraint(equalTo: checkButton.trailingAnchor, constant: 10),
+			titleLabel.leadingAnchor.constraint(equalTo: checkButton.trailingAnchor, constant: 12),
 			titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
 		])
 	}
