@@ -126,9 +126,7 @@ extension OnBoardingRouter {
 		if detailAddressSettingRouting != nil { return }
 		
 		let router = detailAddressSettingBuildable.build(withListener: interactor)
-		
-		let navigation = NavigationControllerable(root: router.viewControllable)
-		navigationControllerable?.present(navigation, animated: true)
+		navigationControllerable?.present(router.viewControllable, animated: true)
 		
 		detailAddressSettingRouting = router
 		attachChild(router)

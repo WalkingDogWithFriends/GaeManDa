@@ -7,7 +7,7 @@ public extension UIViewController {
 	) {
 		if navigationController == nil { return }
 		
-		navigationItem.leftBarButtonItem = UIBarButtonItem(
+		let backButton = UIBarButtonItem(
 			image: UIImage(
 				systemName: "chevron.backward",
 				withConfiguration: UIImage.SymbolConfiguration(pointSize: 18, weight: .semibold)
@@ -16,6 +16,10 @@ public extension UIViewController {
 			target: target,
 			action: action
 		)
+		
+		backButton.imageInsets = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 0)
+		
+		navigationItem.leftBarButtonItem = backButton
 		navigationItem.leftBarButtonItem?.tintColor = .black
 	}
 	

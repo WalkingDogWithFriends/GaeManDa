@@ -10,6 +10,7 @@ import UIKit
 import RIBs
 import RxCocoa
 import RxSwift
+import DesignKit
 import GMDExtensions
 import GMDUtils
 
@@ -28,8 +29,41 @@ final class DetailAddressSettingViewController:
 	
 	private let topStackView: UIStackView = {
 		let stackView = UIStackView()
+		stackView.translatesAutoresizingMaskIntoConstraints = false
+		stackView.spacing = 20
+		stackView.axis = .vertical
+		stackView.alignment = .fill
+		stackView.distribution = .fill
 		
 		return stackView
+	}()
+	
+	private let topBarView: UIView = {
+		let view = UIView()
+		
+		return view
+	}()
+	
+	private let titleLabel: UILabel = {
+		let label = UILabel()
+		label.translatesAutoresizingMaskIntoConstraints = false
+		label.text = "주소 검색"
+		label.font = .b16
+		
+		return label
+	}()
+	
+	private let closeButton: UIButton = {
+		let button = UIButton()
+		button.translatesAutoresizingMaskIntoConstraints = false
+		let image = UIImage(
+			systemName: "xmark",
+			withConfiguration: UIImage.SymbolConfiguration(pointSize: 18, weight: .semibold)
+		)
+		button.setImage(image, for: .normal)
+		button.tintColor = .black
+		
+		return button
 	}()
 	
 	private let textField: UITextField = {
@@ -44,6 +78,8 @@ final class DetailAddressSettingViewController:
 			withConfiguration: UIImage.SymbolConfiguration(weight: .bold)
 		)
 		textField.setLeftImage(image, size: 15, leftPadding: 8)
+		textField.setPlaceholdColor(.gray90)
+		textField.font = .r12
 		
 		return textField
 	}()
@@ -63,7 +99,7 @@ final class DetailAddressSettingViewController:
 		configuration.imagePadding = 10
 		
 		var titleAttribute = AttributedString.init("현재 위치로 설정")
-		titleAttribute.font = .boldSystemFont(ofSize: 12)
+		titleAttribute.font = .b12
 		configuration.attributedTitle = titleAttribute
 		
 		configuration.contentInsets = NSDirectionalEdgeInsets(
@@ -96,37 +132,40 @@ final class DetailAddressSettingViewController:
 	
 	private func setupUI() {
 		view.backgroundColor = .white
-		title = "주소 검색"
-		setupCloseNavigationButton(
-			target: self,
-			action: #selector(closeButtonDidTap)
-		)
-		
+
 		setupSubviews()
 		setConstraints()
 		bind()
 	}
 	
 	private func setupSubviews() {
-		view.addSubview(textField)
-		view.addSubview(loadLocationButton)
+		view.addSubview(topStackView)
 		view.addSubview(bottomView)
+		
+		topBarView.addSubview(titleLabel)
+		topBarView.addSubview(closeButton)
+		
+		topStackView.addArrangedSubview(topBarView)
+		topStackView.addArrangedSubview(textField)
+		topStackView.addArrangedSubview(loadLocationButton)
 	}
 	
 	private func setConstraints() {
 		let safeArea = view.safeAreaLayoutGuide
 		NSLayoutConstraint.activate([
-			textField.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 0),
-			textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-			textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-			textField.heightAnchor.constraint(equalToConstant: 33),
+			topStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 36),
+			topStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			topStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
 			
-			loadLocationButton.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 20),
-			loadLocationButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-			loadLocationButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-			loadLocationButton.heightAnchor.constraint(equalToConstant: 26),
+			topBarView.heightAnchor.constraint(equalToConstant: 28),
+			titleLabel.leadingAnchor.constraint(equalTo: topBarView.leadingAnchor),
+			titleLabel.topAnchor.constraint(equalTo: topBarView.topAnchor),
+			closeButton.trailingAnchor.constraint(equalTo: topBarView.trailingAnchor),
+			closeButton.topAnchor.constraint(equalTo: topBarView.topAnchor),
+			textField.heightAnchor.constraint(equalToConstant: 32),
+			loadLocationButton.heightAnchor.constraint(equalToConstant: 28),
 			
-			bottomView.topAnchor.constraint(equalTo: loadLocationButton.bottomAnchor, constant: 36),
+			bottomView.topAnchor.constraint(equalTo: topStackView.bottomAnchor, constant: 36),
 			bottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
 			bottomView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 			bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -149,12 +188,12 @@ final class DetailAddressSettingViewController:
 				owner.listener?.loadLocationButtonDidTap()
 			}
 			.disposed(by: disposeBag)
-	}
-}
-
-// MARK: Action
-extension DetailAddressSettingViewController {
-	@objc func closeButtonDidTap() {
-		listener?.closeButtonDidTap()
+		
+		closeButton.rx.tap
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.listener?.closeButtonDidTap()
+			}
+			.disposed(by: disposeBag)
 	}
 }
