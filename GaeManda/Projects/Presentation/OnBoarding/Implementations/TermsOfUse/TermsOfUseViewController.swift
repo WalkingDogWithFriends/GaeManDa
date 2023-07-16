@@ -89,16 +89,16 @@ final class TermsOfUseViewController:
 			onBoardingView.topAnchor.constraint(equalTo: view.topAnchor),
 			
 			agreeAllButton.topAnchor.constraint(equalTo: onBoardingView.bottomAnchor, constant: 300),
-			agreeAllButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-			agreeAllButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+			agreeAllButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			agreeAllButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
 			
 			tableView.topAnchor.constraint(equalTo: agreeAllButton.bottomAnchor, constant: 10),
-			tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-			tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+			tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
 			tableView.bottomAnchor.constraint(greaterThanOrEqualTo: confirmButton.topAnchor),
 			
-			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
 			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -54),
 			confirmButton.heightAnchor.constraint(equalToConstant: 40)
 		])
