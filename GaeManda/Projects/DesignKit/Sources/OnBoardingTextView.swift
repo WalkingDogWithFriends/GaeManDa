@@ -1,5 +1,4 @@
 import UIKit
-import GMDExtensions
 
 public final class OnBoardingTextView: UIView {
 	public lazy var isWarning = false {
@@ -21,7 +20,7 @@ public final class OnBoardingTextView: UIView {
 	private let stackView: UIStackView = {
 		let stackView = UIStackView()
 		stackView.translatesAutoresizingMaskIntoConstraints = false
-		stackView.spacing = 7
+		stackView.spacing = 8
 		stackView.axis = .vertical
 		stackView.alignment = .fill
 		stackView.distribution = .fillProportionally
@@ -42,9 +41,9 @@ public final class OnBoardingTextView: UIView {
 	private let titleLabel: UILabel = {
 		let label = UILabel()
 		label.translatesAutoresizingMaskIntoConstraints = false
-		label.textColor = .init(hexCode: "979797")
+		label.textColor = .gray90
 		label.numberOfLines = 1
-		label.font = .systemFont(ofSize: 12)
+		label.font = .r12
 		
 		return label
 	}()
@@ -52,9 +51,9 @@ public final class OnBoardingTextView: UIView {
 	public let maximumTextCountLabel: UILabel = {
 		let label = UILabel()
 		label.translatesAutoresizingMaskIntoConstraints = false
-		label.textColor = .init(hexCode: "979797")
+		label.textColor = .gray90
 		label.numberOfLines = 1
-		label.font = .systemFont(ofSize: 12)
+		label.font = .r12
 		label.textAlignment = .right
 		
 		return label
@@ -63,9 +62,10 @@ public final class OnBoardingTextView: UIView {
 	public let textView: UITextView = {
 		let textView = UITextView()
 		textView.translatesAutoresizingMaskIntoConstraints = false
-		textView.layer.borderColor = UIColor.black.cgColor
+		textView.layer.borderColor = UIColor.gray90.cgColor
 		textView.layer.borderWidth = 1.5
 		textView.layer.cornerRadius = 4
+		textView.font = .r12
 		
 		return textView
 	}()
@@ -73,9 +73,9 @@ public final class OnBoardingTextView: UIView {
 	private lazy var warningLabel: UILabel = {
 		let label = UILabel()
 		label.translatesAutoresizingMaskIntoConstraints = false
-		label.textColor = .init(hexCode: "FF0000")
+		label.textColor = .red100
 		label.numberOfLines = 1
-		label.font = .systemFont(ofSize: 12)
+		label.font = .r12
 		label.layer.opacity = 0.0
 		
 		return label
@@ -101,33 +101,39 @@ public final class OnBoardingTextView: UIView {
 	}
 	
 	private func setupUI() {
-		addSubview(stackView)
-		
+		addSubview(labelStackView)
+		addSubview(textView)
+		addSubview(warningLabel)
+
 		labelStackView.addArrangedSubview(titleLabel)
 		labelStackView.addArrangedSubview(maximumTextCountLabel)
 
-		stackView.addArrangedSubview(labelStackView)
-		stackView.addArrangedSubview(textView)
-		stackView.addArrangedSubview(warningLabel)
-		
 		NSLayoutConstraint.activate([
-			stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-			stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-			textView.heightAnchor.constraint(equalToConstant: 110),
-			stackView.topAnchor.constraint(equalTo: self.topAnchor),
-			stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8)
+			labelStackView.topAnchor.constraint(equalTo: self.topAnchor),
+			labelStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+			labelStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+			
+			textView.topAnchor.constraint(equalTo: labelStackView.bottomAnchor, constant: 7),
+			textView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+			textView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+			textView.heightAnchor.constraint(equalToConstant: 127),
+			
+			warningLabel.topAnchor.constraint(equalTo: textView.bottomAnchor),
+			warningLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+			warningLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+			warningLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor)
 		])
 	}
 }
 
 private extension OnBoardingTextView {
 	func changeNormalMode() {
-		textView.layer.borderColor = UIColor.black.cgColor
+		textView.layer.borderColor = UIColor.gray90.cgColor
 		warningLabel.layer.opacity = 0.0
 	}
 	
 	func changeWarningMode() {
-		textView.layer.borderColor = UIColor(hexCode: "FF0000").cgColor
+		textView.layer.borderColor = UIColor.red100.cgColor
 		warningLabel.layer.opacity = 1.0
 	}
 }

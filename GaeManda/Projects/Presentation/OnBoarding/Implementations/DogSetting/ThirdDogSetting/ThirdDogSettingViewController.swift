@@ -3,6 +3,7 @@ import RIBs
 import RxCocoa
 import RxSwift
 import DesignKit
+import GMDExtensions
 import GMDUtils
 
 protocol ThirdDogSettingPresentableListener: AnyObject {
@@ -23,8 +24,18 @@ final class ThirdDogSettingViewController:
 			title: "우리 아이를 등록해주세요! (3/3)"
 		)
 		onBoardingView.translatesAutoresizingMaskIntoConstraints = false
-		
+
 		return onBoardingView
+	}()
+	
+	private let buttonStackViewLabel: UILabel = {
+		let label = UILabel()
+		label.translatesAutoresizingMaskIntoConstraints = false
+		label.text = "중성화"
+		label.font = .r12
+		label.textColor = .gray90
+		
+		return label
 	}()
 	
 	private let buttonStackView: UIStackView = {
@@ -32,21 +43,22 @@ final class ThirdDogSettingViewController:
 		stackView.translatesAutoresizingMaskIntoConstraints = false
 		stackView.axis = .horizontal
 		stackView.alignment = .fill
-		stackView.spacing = 8
+		stackView.spacing = 26
 		stackView.distribution = .fillEqually
 		
 		return stackView
 	}()
 	
 	private let didNeuterButton: OnBoardingButton = {
-		let button = OnBoardingButton(title: "중성화 했어요")
+		let button = OnBoardingButton(title: "했어요")
 		button.translatesAutoresizingMaskIntoConstraints = false
+		button.buttonIsSelected = true
 		
 		return button
 	}()
 	
 	private let didNotNeuterButton: OnBoardingButton = {
-		let button = OnBoardingButton(title: "중성화 안 했어요")
+		let button = OnBoardingButton(title: "안 했어요")
 		button.translatesAutoresizingMaskIntoConstraints = false
 		
 		return button
@@ -59,7 +71,7 @@ final class ThirdDogSettingViewController:
 		return onBoardingTextView
 	}()
 	
-	private var maximumTextCount: Int = 20
+	private var maximumTextCount: Int = 100
 	
 	private let confirmButton: UIButton = {
 		let button = UIButton()
@@ -109,6 +121,7 @@ final class ThirdDogSettingViewController:
 	
 	private func setupSubviews() {
 		view.addSubview(onBoardingView)
+		view.addSubview(buttonStackViewLabel)
 		view.addSubview(buttonStackView)
 		view.addSubview(characterTextView)
 		view.addSubview(confirmButton)
@@ -123,18 +136,22 @@ final class ThirdDogSettingViewController:
 			onBoardingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 			onBoardingView.topAnchor.constraint(equalTo: view.topAnchor),
 			
-			buttonStackView.topAnchor.constraint(equalTo: onBoardingView.bottomAnchor, constant: 40),
-			buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 38),
-			buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -38),
-			buttonStackView.heightAnchor.constraint(equalToConstant: 47),
+			buttonStackViewLabel.topAnchor.constraint(equalTo: onBoardingView.bottomAnchor, constant: 48),
+			buttonStackViewLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			buttonStackViewLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
 			
-			characterTextView.topAnchor.constraint(equalTo: buttonStackView.bottomAnchor, constant: 40),
-			characterTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 38),
-			characterTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -38),
+			buttonStackView.topAnchor.constraint(equalTo: buttonStackViewLabel.bottomAnchor, constant: 8),
+			buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+			buttonStackView.heightAnchor.constraint(equalToConstant: 40),
 			
-			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -45),
+			characterTextView.topAnchor.constraint(equalTo: buttonStackView.bottomAnchor, constant: 20),
+			characterTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			characterTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+			
+			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -54),
 			confirmButton.heightAnchor.constraint(equalToConstant: 40)
 		])
 	}
