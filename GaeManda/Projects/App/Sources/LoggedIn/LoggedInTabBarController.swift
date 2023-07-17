@@ -19,6 +19,9 @@ final class LoggedInTabBarController:
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		
+		tabBar.isTranslucent = false
+		tabBar.backgroundColor = .white
 	}
 	
 	func setViewControllers(_ viewControllers: [ViewControllable]) {

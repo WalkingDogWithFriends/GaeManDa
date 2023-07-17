@@ -3,6 +3,8 @@ import RIBs
 protocol AppRootRouting: ViewableRouting {
 	func attachLoggedOut()
 	func detachLoggedOut()
+	func attachLoggedIn()
+	func detachLoggedIn()
 }
 
 protocol AppRootPresentable: Presentable {

@@ -3,7 +3,8 @@ import GMDUtils
 
 final class AppRootComponent:
 	Component<AppRootDependency>,
-	LoggedOutDependency {
+	LoggedOutDependency,
+	LoggedInDependency {
 	lazy var loggedOutBuildable: LoggedOutBuildable = {
 		return LoggedOutBuilder(dependency: self)
 	}()

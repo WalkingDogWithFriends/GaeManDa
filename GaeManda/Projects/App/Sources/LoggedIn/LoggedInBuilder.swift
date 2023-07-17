@@ -23,12 +23,16 @@ final class LoggedInBuilder:
 	}
 	
 	func build(withListener listener: LoggedInListener) -> ViewableRouting {
+		let component = LoggedInComponent(dependency: dependency)
 		let viewController = LoggedInTabBarController()
 		let interactor = LoggedInInteractor(presenter: viewController)
 		interactor.listener = listener
 		return LoggedInRouter(
 			interactor: interactor,
-			viewController: viewController
+			viewController: viewController,
+			chattingBuildable: component.chattingBuildable,
+			dogsOnAroundBuildable: component.dogsOnAroundBuildable,
+			userSettingBuildable: component.userProfileBuildable
 		)
 	}
 }

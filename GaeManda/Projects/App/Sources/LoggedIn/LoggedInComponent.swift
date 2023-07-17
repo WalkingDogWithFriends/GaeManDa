@@ -18,4 +18,16 @@ final class LoggedInComponent:
 	Component<LoggedInDependency>,
 	ChattingDependency,
 	DogsOnAroundDependency,
-	UserProfileDependency { }
+	UserProfileDependency {
+	lazy var chattingBuildable: ChattingBuildable = {
+		return ChattingBuilder(dependency: self)
+	}()
+	
+	lazy var dogsOnAroundBuildable: DogsOnAroundBuildable = {
+		return DogsOnAroundBuilder(dependency: self)
+	}()
+	
+	lazy var userProfileBuildable: UserProfileBuildable = {
+		return UserProfileBuilder(dependency: self)
+	}()
+}
