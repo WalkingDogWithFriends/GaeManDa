@@ -23,7 +23,6 @@ final class TermsOfUseViewController:
 			title: "아래 약관에 동의해주세요!"
 		)
 		onBoardingView.translatesAutoresizingMaskIntoConstraints = false
-		onBoardingView.backgroundColor = .red
 		
 		return onBoardingView
 	}()

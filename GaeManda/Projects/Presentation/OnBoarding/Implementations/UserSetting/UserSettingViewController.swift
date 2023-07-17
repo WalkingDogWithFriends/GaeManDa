@@ -45,6 +45,7 @@ final class UserSettingViewController:
 			warningText: "닉네임을 입력해주세요."
 		)
 		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
+		
 		return onBoardingTextField
 	}()
 	
@@ -64,6 +65,7 @@ final class UserSettingViewController:
 			warningText: "생년월일을 입력해주세요."
 		)
 		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
+		
 		return onBoardingTextField
 	}()
 	

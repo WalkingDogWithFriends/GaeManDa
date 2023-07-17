@@ -44,7 +44,7 @@ final class SecondDogSettingViewController:
 			warningText: "우리 아이 종을 작성해주세요"
 		)
 		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
-		
+
 		return onBoardingTextField
 	}()
 	
@@ -55,7 +55,7 @@ final class SecondDogSettingViewController:
 		)
 		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
 		onBoardingTextField.textField.keyboardType = .numberPad
-		
+
 		return onBoardingTextField
 	}()
 	

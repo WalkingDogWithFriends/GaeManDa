@@ -44,7 +44,7 @@ final class FirstDogSettingViewController:
 			warningText: "우리 아이 이름을 작성해주세요"
 		)
 		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
-		
+
 		return onBoardingTextField
 	}()
 	
@@ -64,7 +64,7 @@ final class FirstDogSettingViewController:
 			warningText: "우리아이 생년월일을 입력해주세요."
 		)
 		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
-		
+
 		return onBoardingTextField
 	}()
 	
