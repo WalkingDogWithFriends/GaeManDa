@@ -36,18 +36,20 @@ public final class OnBoardingTextField: UIView {
 	private let titleLabel: UILabel = {
 		let label = UILabel()
 		label.translatesAutoresizingMaskIntoConstraints = false
-		label.textColor = .init(hexCode: "979797")
+		label.textColor = .gray90
 		label.layer.opacity = 0.0
 		label.numberOfLines = 1
-		label.font = .systemFont(ofSize: 12)
-		
+		label.font = .r12
+
 		return label
 	}()
 	
 	public let textField: UnderLineTextField = {
 		let textField = UnderLineTextField()
 		textField.translatesAutoresizingMaskIntoConstraints = false
-		textField.font = .systemFont(ofSize: 15)
+		textField.font = .r15
+		textField.underLineColor = .gray90
+		textField.setPlaceholdColor(.gray90)
 		
 		return textField
 	}()
@@ -55,9 +57,9 @@ public final class OnBoardingTextField: UIView {
 	private lazy var warningLabel: UILabel = {
 		let label = UILabel()
 		label.translatesAutoresizingMaskIntoConstraints = false
-		label.textColor = .init(hexCode: "FF0000")
+		label.textColor = .red100
 		label.numberOfLines = 1
-		label.font = .systemFont(ofSize: 12)
+		label.font = .r12
 		label.layer.opacity = 0.0
 		
 		return label
@@ -100,7 +102,7 @@ public final class OnBoardingTextField: UIView {
 			stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
 			stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
 			stackView.topAnchor.constraint(equalTo: self.topAnchor),
-			stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8)
+			stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0)
 		])
 	}
 }
@@ -119,15 +121,16 @@ private extension OnBoardingTextField {
 		} else {
 			hasContent = true
 		}
+		print(hasContent)
 	}
 	
 	func changeNormalMode() {
-		textField.underLineColor = .black
+		textField.underLineColor = .gray90
 		warningLabel.layer.opacity = 0.0
 	}
 	
 	func changeWarningMode() {
-		textField.underLineColor = .init(hexCode: "FF0000")
+		textField.underLineColor = .red100
 		warningLabel.layer.opacity = 1.0
 	}
 }

@@ -1,4 +1,5 @@
 import UIKit
+import DesignKit
 import GMDExtensions
 
 class OnBoardingButton: UIButton {
@@ -16,10 +17,10 @@ class OnBoardingButton: UIButton {
 		super.init(frame: .zero)
 		
 		self.layer.cornerRadius = 4
-		self.backgroundColor = .init(hexCode: "F4F4F4")
-		self.setTitleColor(.init(hexCode: "CDCCCC"), for: .normal)
+		self.backgroundColor = .gray60
+		self.setTitleColor(.white, for: .normal)
 		self.setTitle(title, for: .normal)
-		self.titleLabel?.font = .systemFont(ofSize: 14)
+		self.titleLabel?.font = .b16
 	}
 	
 	required init?(coder: NSCoder) {
@@ -27,8 +28,7 @@ class OnBoardingButton: UIButton {
 	}
 	
 	private func buttonDisSelected() {
-		setTitleColor(.init(hexCode: "CDCCCC"), for: .normal)
-		backgroundColor = .init(hexCode: "F4F4F4")
+		backgroundColor = .gray60
 	}
 	
 	private func buttonSeleceted() {

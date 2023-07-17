@@ -33,7 +33,7 @@ final class UserSettingViewController:
 		stackView.translatesAutoresizingMaskIntoConstraints = false
 		stackView.axis = .vertical
 		stackView.alignment = .fill
-		stackView.spacing = 0
+		stackView.spacing = 16
 		stackView.distribution = .fillProportionally
 		
 		return stackView
@@ -45,7 +45,6 @@ final class UserSettingViewController:
 			warningText: "닉네임을 입력해주세요."
 		)
 		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
-		
 		return onBoardingTextField
 	}()
 	
@@ -53,8 +52,8 @@ final class UserSettingViewController:
 	
 	private lazy var maximumTextCountLabel: UILabel = {
 		let label = UILabel()
-		label.textColor = .init(hexCode: "979797")
-		label.font = .systemFont(ofSize: 15)
+		label.textColor = .gray90
+		label.font = .r15
 		
 		return label
 	}()
@@ -65,7 +64,6 @@ final class UserSettingViewController:
 			warningText: "생년월일을 입력해주세요."
 		)
 		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
-		
 		return onBoardingTextField
 	}()
 	
@@ -83,7 +81,7 @@ final class UserSettingViewController:
 		stackView.translatesAutoresizingMaskIntoConstraints = false
 		stackView.axis = .horizontal
 		stackView.alignment = .fill
-		stackView.spacing = 8
+		stackView.spacing = 26
 		stackView.distribution = .fillEqually
 		
 		return stackView
@@ -110,8 +108,8 @@ final class UserSettingViewController:
 		button.setTitle("확인", for: .normal)
 		button.setTitleColor(.white, for: .normal)
 		button.layer.cornerRadius = 4
-		button.backgroundColor = .init(hexCode: "65BF4D")
-		button.titleLabel?.font = .systemFont(ofSize: 14, weight: .bold)
+		button.backgroundColor = .green100
+		button.titleLabel?.font = .b16
 
 		return button
 	}()
@@ -158,18 +156,18 @@ final class UserSettingViewController:
 			onBoardingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 			onBoardingView.topAnchor.constraint(equalTo: view.topAnchor),
 			
-			textStackView.topAnchor.constraint(equalTo: onBoardingView.bottomAnchor, constant: 40),
-			textStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 38),
-			textStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -38),
+			textStackView.topAnchor.constraint(equalTo: onBoardingView.bottomAnchor, constant: 48),
+			textStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			textStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
 			
-			buttonStackView.topAnchor.constraint(equalTo: textStackView.bottomAnchor, constant: 40),
-			buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 38),
-			buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -38),
-			buttonStackView.heightAnchor.constraint(equalToConstant: 47),
+			buttonStackView.topAnchor.constraint(equalTo: textStackView.bottomAnchor, constant: 44),
+			buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+			buttonStackView.heightAnchor.constraint(equalToConstant: 40),
 			
-			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -45),
+			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -54),
 			confirmButton.heightAnchor.constraint(equalToConstant: 40)
 		])
 	}
