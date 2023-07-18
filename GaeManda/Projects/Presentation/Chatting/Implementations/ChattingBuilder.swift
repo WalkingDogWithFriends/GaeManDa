@@ -21,7 +21,6 @@ public final class ChattingBuilder:
 	}
 	
 	public func build(withListener listener: ChattingListener) -> ViewableRouting {
-		let component = ChattingComponent(dependency: dependency)
 		let viewController = ChattingViewController()
 		let interactor = ChattingInteractor(presenter: viewController)
 		interactor.listener = listener

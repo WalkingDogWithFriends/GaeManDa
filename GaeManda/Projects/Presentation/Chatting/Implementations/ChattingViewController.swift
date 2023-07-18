@@ -8,6 +8,7 @@
 
 import UIKit
 import RIBs
+import DesignKit
 
 protocol ChattingPresentableListener: AnyObject { }
 
@@ -19,8 +20,21 @@ final class ChattingViewController:
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
-		view.backgroundColor = .blue
+		setupUI()
 		print("Chatting ViewDidLoad")
 	}
+	
+	private func setupUI() {
+		view.backgroundColor = .gray
+		
+		setupSubviews()
+		setConstraints()
+		bind()
+	}
+		
+	private func setupSubviews() { }
+	
+	private func setConstraints() { }
+	
+	private func bind() { }
 }

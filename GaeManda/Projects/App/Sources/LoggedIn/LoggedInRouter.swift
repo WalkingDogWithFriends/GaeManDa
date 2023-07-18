@@ -62,9 +62,9 @@ final class LoggedInRouter:
 		attachChild(userSettingRouting)
 
 		let viewControllers = [
-			NavigationControllerable(root: chattingRouting.viewControllable),
 			NavigationControllerable(root: dogsOnAroundRouting.viewControllable),
-			NavigationControllerable(root: userSettingRouting.viewControllable)
+			NavigationControllerable(root: userSettingRouting.viewControllable),
+			NavigationControllerable(root: chattingRouting.viewControllable)
 		]
 		
 		viewController.setViewControllers(viewControllers)
