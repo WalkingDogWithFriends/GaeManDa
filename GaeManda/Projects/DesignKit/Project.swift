@@ -9,7 +9,8 @@ let project = Project.createProject(
 			product: .staticLibrary,
 			resources: ["Resources/**"],
 			dependencies: [
-				.Project.CoreLayer.GMDExtensions
+				.Project.CoreLayer.GMDExtensions,
+				.SPM.SnapKit
 			]
 		)
 	],
