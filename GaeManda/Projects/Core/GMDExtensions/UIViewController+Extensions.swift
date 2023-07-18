@@ -18,13 +18,13 @@ public extension UIViewController {
 
 public extension UIViewController {
 	func hideTabBar() {
-		guard let parent = self.parent as? FloatingTabBarPresentable else { return }
+		guard let parent = navigationController?.parent as? FloatingTabBarPresentable else { return }
 
 		parent.dismissTabBar()
 	}
 	
 	func showTabBar() {
-		guard let parent = self.parent as? FloatingTabBarPresentable else { return }
+		guard let parent = navigationController?.parent as? FloatingTabBarPresentable else { return }
 		
 		parent.presentTabBar()
 	}
