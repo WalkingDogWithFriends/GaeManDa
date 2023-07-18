@@ -21,7 +21,8 @@ let project = Project.createProject(
 				.Project.DesignKit,
 				.Project.CoreLayer.GMDExtensions,
 				.Project.DomainLayer.UseCase,
-				.SPM.RxCocoa
+				.SPM.RxCocoa,
+				.SPM.RxGesture
 			]
 		),
 		.createTestTarget(name: projectName)

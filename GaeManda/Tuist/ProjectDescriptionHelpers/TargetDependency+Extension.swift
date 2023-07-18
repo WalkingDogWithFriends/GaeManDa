@@ -133,4 +133,5 @@ public extension TargetDependency.Project.DataLayer {
 public extension TargetDependency.SPM {
 	static let RIBs = TargetDependency.external(name: "RIBs")
 	static let RxCocoa = TargetDependency.external(name: "RxCocoa")
+	static let RxGesture = TargetDependency.external(name: "RxGesture")
 }
