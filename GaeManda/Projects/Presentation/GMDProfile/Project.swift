@@ -1,7 +1,7 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-private let projectName = "Chatting"
+private let projectName = "GMDProfile"
 
 let project = Project.createProject(
 	name: projectName,
@@ -17,7 +17,7 @@ let project = Project.createProject(
 		.createImplementationTarget(
 			name: projectName,
 			dependencies: [
-				.Project.PresentationLayer.Chatting,
+				.Project.PresentationLayer.GMDProfile,
 				.Project.DesignKit,
 				.Project.CoreLayer.GMDExtensions,
 				.Project.DomainLayer.UseCase,

@@ -7,6 +7,12 @@ public final class RoundImageView: UIImageView {
 		contentMode = .scaleAspectFill
 	}
 	
+	public override init(image: UIImage?) {
+		super.init(image: image)
+		self.layer.masksToBounds = true
+		contentMode = .scaleAspectFill
+	}
+	
 	required init?(coder: NSCoder) {
 		fatalError()
 	}

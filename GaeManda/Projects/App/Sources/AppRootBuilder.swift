@@ -23,11 +23,13 @@ final class AppRootBuilder:
 		let interactor = AppRootInteractor(presenter: viewController)
 		
 		let loggedOut = LoggedOutBuilder(dependency: component)
+		let loggedIn = LoggedInBuilder(dependency: component)
 		
 		return AppRootRouter(
 			interactor: interactor,
 			viewController: viewController,
-			loggedOutBuildable: loggedOut
+			loggedOutBuildable: loggedOut,
+			loggedInBuildable: loggedIn
 		)
 	}
 }

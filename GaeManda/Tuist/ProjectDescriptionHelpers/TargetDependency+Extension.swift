@@ -21,7 +21,8 @@ public extension TargetDependency.Project {
 public extension TargetDependency.Project.PresentationLayer {
 	static let Presentation = TargetDependency.project(
 		target: "Presentation",
-		path: .relativeToRoot("Projects/Presentation"))
+		path: .relativeToRoot("Projects/Presentation")
+	)
 	static let DogsOnAround = TargetDependency.project(
 		target: "DogsOnAround",
 		path: .relativeToRoot("Projects/Presentation/DogsOnAround")
@@ -46,6 +47,10 @@ public extension TargetDependency.Project.PresentationLayer {
 		target: "OnBoarding",
 		path: .relativeToRoot("Projects/Presentation/OnBoarding")
 	)
+	static let GMDProfile = TargetDependency.project(
+		target: "GMDProfile",
+		path: .relativeToRoot("Projects/Presentation/GMDProfile")
+	)
 	static let DogsOnAroundImpl = TargetDependency.project(
 		target: "DogsOnAroundImpl",
 		path: .relativeToRoot("Projects/Presentation/DogsOnAround")
@@ -69,6 +74,10 @@ public extension TargetDependency.Project.PresentationLayer {
 	static let OnBoardingImpl = TargetDependency.project(
 		target: "OnBoardingImpl",
 		path: .relativeToRoot("Projects/Presentation/OnBoarding")
+	)
+	static let GMDProfileImpl = TargetDependency.project(
+		target: "GMDProfileImpl",
+		path: .relativeToRoot("Projects/Presentation/GMDProfile")
 	)
 }
 
@@ -124,4 +133,6 @@ public extension TargetDependency.Project.DataLayer {
 public extension TargetDependency.SPM {
 	static let RIBs = TargetDependency.external(name: "RIBs")
 	static let RxCocoa = TargetDependency.external(name: "RxCocoa")
+	static let RxGesture = TargetDependency.external(name: "RxGesture")
+	static let SnapKit = TargetDependency.external(name: "SnapKit")
 }

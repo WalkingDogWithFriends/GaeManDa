@@ -2,7 +2,8 @@ import RIBs
 
 protocol AppRootInteractable:
 	Interactable,
-	LoggedOutListener {
+	LoggedOutListener,
+	LoggedInListener {
 	var router: AppRootRouting? { get set }
 	var listener: AppRootListener? { get set }
 }
@@ -15,19 +16,24 @@ final class AppRootRouter:
 	private let loggedOutBuildable: LoggedOutBuildable
 	private var loggedOutRouting: Routing?
 	
+	private let loggedInBuildable: LoggedInBuildable
+	private var loggedInRouting: ViewableRouting?
+	
 	init(
 		interactor: AppRootInteractable,
 		viewController: AppRootViewControllable,
-		loggedOutBuildable: LoggedOutBuildable
+		loggedOutBuildable: LoggedOutBuildable,
+		loggedInBuildable: LoggedInBuildable
 	) {
 		self.loggedOutBuildable = loggedOutBuildable
+		self.loggedInBuildable = loggedInBuildable
 		super.init(interactor: interactor, viewController: viewController)
 		interactor.router = self
 	}
 	
 	override func didLoad() {
 		super.didLoad()
-		attachLoggedOut()
+		attachLoggedIn()
 	}
 	
 	func attachLoggedOut() {
@@ -40,7 +46,30 @@ final class AppRootRouter:
 	
 	func detachLoggedOut() {
 		guard let router = loggedOutRouting else { return }
+		
 		loggedOutRouting = nil
 		detachChild(router)
+	}
+	
+	func attachLoggedIn() {
+		if loggedInRouting != nil { return }
+		
+		let router = loggedInBuildable.build(withListener: interactor)
+		loggedInRouting = router
+		
+		attachChild(router)
+		viewControllable.present(
+			router.viewControllable,
+			animated: true,
+			modalPresentationStyle: .fullScreen
+		)
+	}
+	
+	func detachLoggedIn() {
+		guard let router = loggedInRouting else { return }
+		
+		loggedInRouting = nil
+		detachChild(router)
+		viewControllable.dismiss(completion: nil)
 	}
 }
