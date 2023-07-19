@@ -6,7 +6,7 @@ final class OnBoardingView: UIView {
 	private let label: UILabel = {
 		let label = UILabel()
 		label.translatesAutoresizingMaskIntoConstraints = false
-		label.font = .systemFont(ofSize: 20, weight: .bold)
+		label.font = .jalnan20
 		label.numberOfLines = 0
 		
 		return label
@@ -14,7 +14,7 @@ final class OnBoardingView: UIView {
 	
 	private lazy var profileImageView: RoundImageView = {
 		let imageView = RoundImageView()
-		imageView.backgroundColor = .init(hexCode: "#F4F4F4")
+		imageView.backgroundColor = .gray30
 		imageView.translatesAutoresizingMaskIntoConstraints = false
 		
 		return imageView
@@ -55,14 +55,14 @@ final class OnBoardingView: UIView {
 	
 	// MARK: Constriants
 	lazy var constraintLabel = [
-		label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 31),
-		label.topAnchor.constraint(equalTo: topAnchor, constant: 121),
+		label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 33),
+		label.topAnchor.constraint(equalTo: topAnchor, constant: 119),
 		label.bottomAnchor.constraint(equalTo: bottomAnchor)
 	]
 	lazy var constraintLabelAndImageView = [
-		label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 31),
-		label.topAnchor.constraint(equalTo: topAnchor, constant: 121),
-		profileImageView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 80),
+		label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 33),
+		label.topAnchor.constraint(equalTo: topAnchor, constant: 119),
+		profileImageView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 48),
 		profileImageView.heightAnchor.constraint(equalToConstant: 140),
 		profileImageView.widthAnchor.constraint(equalToConstant: 140),
 		profileImageView.centerXAnchor.constraint(equalTo: centerXAnchor),

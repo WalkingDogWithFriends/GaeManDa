@@ -9,7 +9,7 @@
 import UIKit
 
 public extension UILabel {
-	func adaptFontSpecificText(_ text: String, specificText: String) {
+	func adaptFontSpecificText(_ text: String, specificText: String, font: UIFont) {
 		guard let range = text.range(of: specificText) else { return }
 		
 		let startIndex = text.distance(from: text.startIndex, to: range.lowerBound)
@@ -17,7 +17,7 @@ public extension UILabel {
 		let textAttribute = NSMutableAttributedString.init(string: text)
 		textAttribute.setAttributes(
 			[
-				NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15)
+				NSAttributedString.Key.font: font
 			],
 			range: NSRange(location: startIndex, length: specificText.count)
 		)

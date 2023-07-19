@@ -9,6 +9,7 @@
 import UIKit
 import RxCocoa
 import RxSwift
+import DesignKit
 import Entity
 import GMDUtils
 
@@ -30,8 +31,8 @@ final class TermsOfUseCell: UITableViewCell {
 	lazy var subTitleLabel: UILabel = {
 		let label = UILabel()
 		label.translatesAutoresizingMaskIntoConstraints = false
-		label.textColor = .init(hexCode: "#B8B8B8")
-		label.font = .systemFont(ofSize: 13)
+		label.textColor = .gray80
+		label.font = .r12
 		
 		return label
 	}()
@@ -73,7 +74,7 @@ final class TermsOfUseCell: UITableViewCell {
 			termsOfUseButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
 			
 			subTitleLabel.topAnchor.constraint(equalTo: termsOfUseButton.bottomAnchor),
-			subTitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 45),
+			subTitleLabel.leadingAnchor.constraint(equalTo: termsOfUseButton.titleLabel.leadingAnchor),
 			subTitleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
 		])
 	}

@@ -16,7 +16,7 @@ public class UnderLineTextField: UITextField {
 		return NSRange(location: location, length: length)
 	}
 	
-	public lazy var underLineColor: UIColor = .black {
+	public var underLineColor: UIColor? {
 		didSet {
 			self.underLineView.backgroundColor = underLineColor
 		}
@@ -34,7 +34,7 @@ public class UnderLineTextField: UITextField {
 		super.init(frame: .zero)
 		setupUI()
 	}
-	
+		
 	public required init?(coder: NSCoder) {
 		super.init(coder: coder)
 	}

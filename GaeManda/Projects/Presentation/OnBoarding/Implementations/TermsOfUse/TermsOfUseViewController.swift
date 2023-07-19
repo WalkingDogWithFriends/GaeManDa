@@ -4,6 +4,7 @@ import RxCocoa
 import RxSwift
 import Entity
 import GMDUtils
+import DesignKit
 
 protocol TermsOfUsePresentableListener: AnyObject {
 	func confirmButtonDidTap()
@@ -22,7 +23,6 @@ final class TermsOfUseViewController:
 			title: "아래 약관에 동의해주세요!"
 		)
 		onBoardingView.translatesAutoresizingMaskIntoConstraints = false
-		onBoardingView.backgroundColor = .red
 		
 		return onBoardingView
 	}()
@@ -30,7 +30,8 @@ final class TermsOfUseViewController:
 	private let agreeAllButton: TermsOfUseButton = {
 		let button = TermsOfUseButton(title: "약관 전체 동의")
 		button.translatesAutoresizingMaskIntoConstraints = false
-		button.backgroundColor = .init(hexCode: "#F4F4F4")
+		button.backgroundColor = .gray30
+		button.checkButton.titleLabel?.font = .b16
 		
 		return button
 	}()
@@ -55,8 +56,8 @@ final class TermsOfUseViewController:
 		button.setTitle("확인", for: .normal)
 		button.setTitleColor(.white, for: .normal)
 		button.layer.cornerRadius = 4
-		button.backgroundColor = .init(hexCode: "65BF4D")
-		button.titleLabel?.font = .systemFont(ofSize: 14, weight: .bold)
+		button.backgroundColor = .green100
+		button.titleLabel?.font = .b16
 		
 		return button
 	}()
@@ -68,6 +69,7 @@ final class TermsOfUseViewController:
 	
 	private func setupUI() {
 		view.backgroundColor = .white
+		
 		setupSubviews()
 		setConstraints()
 		bind()
@@ -85,18 +87,18 @@ final class TermsOfUseViewController:
 			onBoardingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
 			onBoardingView.topAnchor.constraint(equalTo: view.topAnchor),
 			
-			agreeAllButton.topAnchor.constraint(equalTo: onBoardingView.bottomAnchor, constant: 300),
-			agreeAllButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-			agreeAllButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+			agreeAllButton.bottomAnchor.constraint(equalTo: tableView.topAnchor, constant: -10),
+			agreeAllButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			agreeAllButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
 			
-			tableView.topAnchor.constraint(equalTo: agreeAllButton.bottomAnchor, constant: 10),
-			tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-			tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-			tableView.bottomAnchor.constraint(greaterThanOrEqualTo: confirmButton.topAnchor),
+			tableView.heightAnchor.constraint(equalToConstant: 192),
+			tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+			tableView.bottomAnchor.constraint(equalTo: confirmButton.topAnchor, constant: -32),
 			
-			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -45),
+			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -54),
 			confirmButton.heightAnchor.constraint(equalToConstant: 40)
 		])
 	}

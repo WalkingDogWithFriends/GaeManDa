@@ -58,8 +58,8 @@ import SwiftUI
 		return font
 	}
 	
-	{{accessModifier}} var _16_5: UIFont {
-		guard let font = Font(font: self, size: 16.5) else {
+	{{accessModifier}} var _16: UIFont {
+		guard let font = Font(font: self, size: 16) else {
 			fatalError("Unable to initialize font '\\(name)' (\\(family))")
 		}
 		return font
@@ -72,8 +72,8 @@ import SwiftUI
 		return font
 	}
 	
-	{{accessModifier}} var _13: UIFont {
-		guard let font = Font(font: self, size: 13) else {
+	{{accessModifier}} var _12: UIFont {
+		guard let font = Font(font: self, size: 12) else {
 			fatalError("Unable to initialize font '\\(name)' (\\(family))")
 		}
 		return font
@@ -137,19 +137,20 @@ import SwiftUI
 		self.init(name: font.name, size: size)
 	}
 }
+
 {{accessModifier}} extension UIFont {
 	{% for family in families where family.name == "Jalnan OTF" %}
 		static var jalnan20: UIFont {
 		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._20
 	}
-	static var jalnan16_5: UIFont {
-		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._16_5
+	static var jalnan16: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._16
 	}
 	static var jalnan15: UIFont {
 		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._15
 	}
-	static var jalnan13: UIFont {
-		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._13
+	static var jalnan12: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._12
 	}
 	{% endfor %}
 	
@@ -157,26 +158,26 @@ import SwiftUI
 	static var b20: UIFont {
 		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.bold._20
 	}
-	static var b16_5: UIFont {
-		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.bold._16_5
+	static var b16: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.bold._16
 	}
 	static var b15: UIFont {
 		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.bold._15
 	}
-	static var b13: UIFont {
-		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.bold._13
+	static var b12: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.bold._12
 	}
 	static var r20: UIFont {
 		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._20
 	}
-	static var r16_5: UIFont {
-		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._16_5
+	static var r16: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._16
 	}
 	static var r15: UIFont {
 		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._15
 	}
-	static var r13: UIFont {
-		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._13
+	static var r12: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._12
 	}
 	{% endfor %}
 }

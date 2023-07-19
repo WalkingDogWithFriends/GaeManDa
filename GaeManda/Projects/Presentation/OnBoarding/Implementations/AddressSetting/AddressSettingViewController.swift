@@ -33,9 +33,11 @@ final class AddressSettingViewController:
 	private let searchTextField: UnderLineTextField = {
 		let underLineTextField = UnderLineTextField()
 		underLineTextField.translatesAutoresizingMaskIntoConstraints = false
+		underLineTextField.underLineColor = .black
 		underLineTextField.placeholder = "도로명 또는 지번 주소를 입력해주세요"
 		let image = UIImage(systemName: "magnifyingglass")
 		underLineTextField.setLeftImage(image, size: 24)
+		underLineTextField.setPlaceholdColor(.gray90)
 		
 		return underLineTextField
 	}()
@@ -55,7 +57,7 @@ final class AddressSettingViewController:
 		configuration.imagePadding = 10
 		
 		var titleAttribute = AttributedString.init("현재 위치 불러오기")
-		titleAttribute.font = .boldSystemFont(ofSize: 12)
+		titleAttribute.font = .b12
 		configuration.attributedTitle = titleAttribute
 		
 		configuration.contentInsets = NSDirectionalEdgeInsets(
@@ -87,9 +89,9 @@ final class AddressSettingViewController:
 		label.translatesAutoresizingMaskIntoConstraints = false
 		label.tintColor = .black
 		let text = "사생활 보호를 위해 등록된 주소에서 반경 500M 내에는 보호자의 위치가 노출되지 않습니다.\n주소를 비롯한 보호자의 개인정보는 타인에게 공유되지 않으니 안심하고 서비스를 이용해주세요."
-		label.font = .systemFont(ofSize: 14)
+		label.font = .r12
 		label.numberOfLines = 0
-		label.adaptFontSpecificText(text, specificText: "반경 500M")
+		label.adaptFontSpecificText(text, specificText: "반경 500M", font: .b12)
 		
 		return label
 	}()
@@ -100,8 +102,8 @@ final class AddressSettingViewController:
 		button.setTitle("확인", for: .normal)
 		button.setTitleColor(.white, for: .normal)
 		button.layer.cornerRadius = 4
-		button.backgroundColor = .init(hexCode: "65BF4D")
-		button.titleLabel?.font = .systemFont(ofSize: 14, weight: .bold)
+		button.backgroundColor = .green100
+		button.titleLabel?.font = .b16
 		
 		return button
 	}()
@@ -138,26 +140,26 @@ final class AddressSettingViewController:
 			onBoardingView.topAnchor.constraint(equalTo: view.topAnchor),
 			
 			searchTextField.topAnchor.constraint(equalTo: onBoardingView.bottomAnchor, constant: 61),
-			searchTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-			searchTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+			searchTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			searchTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
 			
-			loadLocationButton.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: 30),
-			loadLocationButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-			loadLocationButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+			loadLocationButton.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: 35),
+			loadLocationButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			loadLocationButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
 			loadLocationButton.heightAnchor.constraint(equalToConstant: 28),
 			
-			mapView.topAnchor.constraint(equalTo: loadLocationButton.bottomAnchor, constant: 10),
-			mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-			mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-			mapView.heightAnchor.constraint(equalToConstant: 237),
+			mapView.topAnchor.constraint(equalTo: loadLocationButton.bottomAnchor, constant: 52),
+			mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+			mapView.heightAnchor.constraint(equalToConstant: 235),
 			
-			noticeLabel.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 20),
-			noticeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-			noticeLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+			noticeLabel.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 28),
+			noticeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			noticeLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
 			
-			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -45),
+			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -54),
 			confirmButton.heightAnchor.constraint(equalToConstant: 40)
 		])
 	}

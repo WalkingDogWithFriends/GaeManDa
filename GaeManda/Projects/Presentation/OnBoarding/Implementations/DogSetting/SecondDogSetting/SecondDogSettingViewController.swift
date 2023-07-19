@@ -32,7 +32,7 @@ final class SecondDogSettingViewController:
 		stackView.translatesAutoresizingMaskIntoConstraints = false
 		stackView.axis = .vertical
 		stackView.alignment = .fill
-		stackView.spacing = 0
+		stackView.spacing = 16
 		stackView.distribution = .fillProportionally
 		
 		return stackView
@@ -44,7 +44,7 @@ final class SecondDogSettingViewController:
 			warningText: "우리 아이 종을 작성해주세요"
 		)
 		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
-		
+
 		return onBoardingTextField
 	}()
 	
@@ -55,7 +55,7 @@ final class SecondDogSettingViewController:
 		)
 		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
 		onBoardingTextField.textField.keyboardType = .numberPad
-		
+
 		return onBoardingTextField
 	}()
 	
@@ -67,8 +67,8 @@ final class SecondDogSettingViewController:
 		button.setTitle("확인", for: .normal)
 		button.setTitleColor(.white, for: .normal)
 		button.layer.cornerRadius = 4
-		button.backgroundColor = .init(hexCode: "65BF4D")
-		button.titleLabel?.font = .systemFont(ofSize: 14, weight: .bold)
+		button.backgroundColor = .green100
+		button.titleLabel?.font = .b16
 		
 		return button
 	}()
@@ -104,13 +104,13 @@ final class SecondDogSettingViewController:
 			onBoardingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 			onBoardingView.topAnchor.constraint(equalTo: view.topAnchor),
 			
-			textStackView.topAnchor.constraint(equalTo: onBoardingView.bottomAnchor, constant: 40),
-			textStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 38),
-			textStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -38),
+			textStackView.topAnchor.constraint(equalTo: onBoardingView.bottomAnchor, constant: 48),
+			textStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			textStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
 			
-			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -45),
+			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -54),
 			confirmButton.heightAnchor.constraint(equalToConstant: 40)
 		])
 	}

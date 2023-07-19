@@ -26,6 +26,15 @@ public extension UITextField {
 		leftView = leftPaddingView
 		leftViewMode = .always
 	}
+	
+	func setPlaceholdColor(_ color: UIColor) {
+		guard let placeholder = self.placeholder else { return }
+
+		self.attributedPlaceholder = NSAttributedString(
+			string: placeholder,
+			attributes: [.foregroundColor: color]
+		)
+	}
 }
 
 public extension Reactive where Base: UITextField {
