@@ -13,11 +13,9 @@ final class TabBarButton: UIView {
 	var isSelected: Bool = false {
 		didSet {
 			if isSelected == true {
-				// TODO: Branch merge 후 수정.
-				titleLabel.font = .b13  // b12
+				titleLabel.font = .b12
 			} else {
-				// TODO: Branch merge 후 수정.
-				titleLabel.font = .r13	// r12
+				titleLabel.font = .r12
 			}
 		}
 	}
@@ -26,8 +24,7 @@ final class TabBarButton: UIView {
 		let label = UILabel()
 		label.translatesAutoresizingMaskIntoConstraints = false
 		
-		// TODO: Branch merge 후 수정.
-		label.font = .r13 // r12
+		label.font = .r12
 		label.textAlignment = .center
 		
 		return label
@@ -37,6 +34,8 @@ final class TabBarButton: UIView {
 	
 	init(imageView: UIImageView, title: String) {
 		self.imageView = imageView
+		imageView.translatesAutoresizingMaskIntoConstraints = false
+		
 		super.init(frame: .zero)
 		
 		titleLabel.text = title
@@ -45,7 +44,8 @@ final class TabBarButton: UIView {
 	
 	init(image: UIImage?, title: String) {
 		imageView = UIImageView(image: image)
-		
+		imageView.translatesAutoresizingMaskIntoConstraints = false
+
 		super.init(frame: .zero)
 		
 		titleLabel.text = title
