@@ -13,6 +13,10 @@ import DogsOnAround
 import DogsOnAroundImpl
 import GMDProfile
 import GMDProfileImpl
+import UseCase
+import UseCaseImpl
+import Repository
+import RepositoryImpl
 
 final class LoggedInComponent:
 	Component<LoggedInDependency>,
@@ -29,5 +33,13 @@ final class LoggedInComponent:
 	
 	lazy var userProfileBuildable: UserProfileBuildable = {
 		return UserProfileBuilder(dependency: self)
+	}()
+	
+	lazy var dogRepository: DogRepository = {
+		return DogRepositoryImpl()
+	}()
+	
+	lazy var userProfileUseCase: UserProfileUseCase = {
+		return UserProfileUseCaseImpl(dogDependecy: dogRepository)
 	}()
 }

@@ -23,6 +23,7 @@ final class UserProfileViewController:
 	UserProfileViewControllable {
 	weak var listener: UserProfilePresentableListener?
 	private let disposeBag = DisposeBag()
+	var dogsProfile = BehaviorSubject<[Dog]>(value: [])
 	
 	private let notificationButton: UIButton = {
 		let button = UIButton()
@@ -232,15 +233,16 @@ private extension UserProfileViewController {
 	}
 	
 	private func collectionViewBind() {
-		Observable.of(dogInformations)
+		dogsProfile
+			.asDriver(onErrorJustReturn: [])
 			.map { $0.count }
-			.withUnretained(self)
-			.bind { owner, count in
+			.drive(with: self) { owner, count in
 				owner.collectionView.isScrollEnabled = count == 1 ? false : true
 			}
 			.disposed(by: disposeBag)
 		
-		Observable.of(dogInformations)
+		dogsProfile
+			.asDriver(onErrorJustReturn: [])
 			.map { item in
 				guard let last = item.last, let first = item.first else { return item }
 				
@@ -250,7 +252,7 @@ private extension UserProfileViewController {
 				
 				return dogs
 			}
-			.bind(to: collectionView.rx.items(
+			.drive(collectionView.rx.items(
 				cellIdentifier: DogsCollectionViewCell.idenfier,
 				cellType: DogsCollectionViewCell.self
 			)) { (_, item, cell) in

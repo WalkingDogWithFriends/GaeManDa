@@ -115,7 +115,6 @@ final class DogsCollectionViewCell: UICollectionViewCell {
 		setupUI()
 	}
 	
-
 	override func prepareForReuse() {
 		super.prepareForReuse()
 	}
@@ -177,10 +176,6 @@ extension DogsCollectionViewCell {
 		titleLabel.text = "\(dog.name) (\(dog.sex) / \(dog.age))"
 		
 		weightValueLabel.text = "\(dog.weight)kg"
-		if dog.didNeutered == true {
-			neuteringValueLabel.text = "했어요"
-		} else {
-			neuteringValueLabel.text = "안 했어요"
-		}
+		neuteringValueLabel.text = dog.didNeutered == true ? "했어요" : "안 했어요"
 	}
 }

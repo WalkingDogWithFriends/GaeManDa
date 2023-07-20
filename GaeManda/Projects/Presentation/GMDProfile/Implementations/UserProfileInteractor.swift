@@ -8,11 +8,21 @@
 
 import RIBs
 import GMDProfile
+import RxSwift
+import RxCocoa
+import Entity
+import UseCase
 
 protocol UserProfileRouting: ViewableRouting { }
 
 protocol UserProfilePresentable: Presentable {
 	var listener: UserProfilePresentableListener? { get set }
+	
+	var dogsProfile: BehaviorSubject<[Dog]> { get }
+}
+
+protocol UserProfileInteractorDependency {
+	var userProfileUseCase: UserProfileUseCase { get }
 }
 
 final class UserProfileInteractor:
@@ -22,13 +32,29 @@ final class UserProfileInteractor:
 	weak var router: UserProfileRouting?
 	weak var listener: UserProfileListener?
 	
-	override init(presenter: UserProfilePresentable) {
+	private let disposeBag: DisposeBag
+	private let dependency: UserProfileInteractorDependency
+	
+	init(
+		presenter: UserProfilePresentable,
+		dependency: UserProfileInteractorDependency
+	) {
+		self.dependency = dependency
+		self.disposeBag = DisposeBag()
 		super.init(presenter: presenter)
 		presenter.listener = self
 	}
 	
 	override func didBecomeActive() {
 		super.didBecomeActive()
+		
+		Task {
+			await dependency
+				.userProfileUseCase
+				.fetchDogs(id: 0)
+				.subscribe(onSuccess: presenter.dogsProfile.onNext)
+				.disposed(by: disposeBag)
+		}
 	}
 	
 	override func willResignActive() {
