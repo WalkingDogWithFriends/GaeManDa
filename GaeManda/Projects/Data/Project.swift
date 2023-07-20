@@ -7,7 +7,10 @@ let project = Project.createProject(
 		.createTarget(
 			name: "DTO",
 			product: .staticLibrary,
-			sources: ["DTO/Sources/**"]
+			sources: ["DTO/Sources/**"],
+			dependencies: [
+				.Project.DomainLayer.Entity
+			]
 		),
 		.createTarget(
 			name: "DTOTest",
@@ -22,6 +25,7 @@ let project = Project.createProject(
 			product: .staticLibrary,
 			sources: ["RepositoryImpl/Sources/**"],
 			dependencies: [
+				.Project.DataLayer.DTO,
 				.Project.DomainLayer.Repository,
 				.Project.DataLayer.GMDNetwork
 			]
@@ -38,7 +42,10 @@ let project = Project.createProject(
 		.createTarget(
 			name: "GMDNetwork",
 			product: .staticLibrary,
-			sources: ["GMDNetwork/**"]
+			sources: ["GMDNetwork/**"],
+			dependencies: [
+				.Project.DataLayer.DTO
+			]
 		)
 	]
 )

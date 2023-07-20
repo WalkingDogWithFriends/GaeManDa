@@ -132,6 +132,7 @@ public extension TargetDependency.Project.DataLayer {
 //MARK: - SPM Dependency
 public extension TargetDependency.SPM {
 	static let RIBs = TargetDependency.external(name: "RIBs")
+	static let RxSwift = TargetDependency.external(name: "RxSwift")
 	static let RxCocoa = TargetDependency.external(name: "RxCocoa")
 	static let RxGesture = TargetDependency.external(name: "RxGesture")
 	static let SnapKit = TargetDependency.external(name: "SnapKit")
