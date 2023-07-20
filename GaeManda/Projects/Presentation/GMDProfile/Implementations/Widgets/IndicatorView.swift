@@ -11,6 +11,13 @@ import SnapKit
 import DesignKit
 
 final class IndicatorView: UIStackView {
+	var indicatorCount: Int = 0 {
+		didSet {
+			indicators = Array(indicatorViews[0..<indicatorCount])
+			setupUI()
+		}
+	}
+	
 	private let firstView: UIView = {
 		let view = UIView()
 		view.clipsToBounds = true
@@ -34,16 +41,9 @@ final class IndicatorView: UIStackView {
 		
 		return view
 	}()
+	
 	private lazy var indicatorViews = [firstView, secondView, thirdView]
-	
 	private var indicators: [UIView] = []
-	
-	var indicatorCount: Int = 0 {
-		didSet {
-			indicators = Array(indicatorViews[0..<indicatorCount])
-			setupUI()
-		}
-	}
 	
 	init() {
 		super.init(frame: .zero)
@@ -73,15 +73,16 @@ final class IndicatorView: UIStackView {
 	}
 }
 
+// MARK: indicatorView Action
 extension IndicatorView {
-	func idicatorDidChange(_ index: Int) {
+	func indicatorDidChange(_ index: Int) {
 		guard index >= 0, index < indicatorCount else { return }
 		
 		for (idx, item) in indicators.enumerated() {
 			if idx == index {
 				item.backgroundColor = .green60
 			} else {
-				item.backgroundColor = .systemGray6
+				item.backgroundColor = .gray40
 			}
 		}
 	}

@@ -120,7 +120,34 @@ final class UserProfileViewController:
 		setupUI()
 	}
 	
-	private func setupUI() {
+	private	var dogInformations = [
+		Dog(
+			name: "자몽",
+			sex: "여",
+			age: "7",
+			weight: "30",
+			didNeutered: false
+		),
+		Dog(
+			name: "얌이",
+			sex: "남",
+			age: "2",
+			weight: "12",
+			didNeutered: true
+		),
+		Dog(
+			name: "루비",
+			sex: "여",
+			age: "5",
+			weight: "22",
+			didNeutered: false
+		)
+	]
+}
+
+// MARK: UI Setting
+private extension UserProfileViewController {
+	func setupUI() {
 		view.backgroundColor = .white
 		title = "프로필"
 		indicatorView.indicatorCount = dogInformations.count
@@ -141,14 +168,7 @@ final class UserProfileViewController:
 		bind()
 	}
 	
-	private func setNavigationBarButton() {
-		let notificationBarButton = UIBarButtonItem(customView: notificationButton)
-		let settingBarButton = UIBarButtonItem(customView: settingButton)
-		
-		navigationItem.rightBarButtonItems = [settingBarButton, notificationBarButton]
-	}
-	
-	private func setupSubviews() {
+	func setupSubviews() {
 		view.addSubview(nickNameLabel)
 		view.addSubview(profileEditButton)
 		view.addSubview(sexAndAgeLabel)
@@ -157,7 +177,7 @@ final class UserProfileViewController:
 		view.addSubview(collectionView)
 	}
 	
-	private func setConstraints() {
+	func setConstraints() {
 		nickNameLabel.snp.makeConstraints { make in
 			make.centerX.equalToSuperview()
 			make.top.equalToSuperview().offset(160)
@@ -193,7 +213,20 @@ final class UserProfileViewController:
 			make.height.equalTo(102)
 		}
 	}
-	
+}
+
+// MARK: Navigation Button Setting
+private extension UserProfileViewController {
+	func setNavigationBarButton() {
+		let notificationBarButton = UIBarButtonItem(customView: notificationButton)
+		let settingBarButton = UIBarButtonItem(customView: settingButton)
+		
+		navigationItem.rightBarButtonItems = [settingBarButton, notificationBarButton]
+	}
+}
+
+// MARK: Bind
+private extension UserProfileViewController {
 	private func bind() {
 		collectionViewBind()
 	}
@@ -203,11 +236,7 @@ final class UserProfileViewController:
 			.map { $0.count }
 			.withUnretained(self)
 			.bind { owner, count in
-				if count == 1 {
-					owner.collectionView.isScrollEnabled = false
-				} else {
-					owner.collectionView.isScrollEnabled = true
-				}
+				owner.collectionView.isScrollEnabled = count == 1 ? false : true
 			}
 			.disposed(by: disposeBag)
 		
@@ -233,52 +262,38 @@ final class UserProfileViewController:
 			.withUnretained(self)
 			.observe(on: MainScheduler.asyncInstance)
 			.bind { owner, _ in
-				let page = Int(owner.collectionView.contentOffset.x / owner.collectionView.frame.width)
-				var index = page
-				
-				if page == 0 {
-					owner.collectionView.scrollToItem(
-						at: IndexPath(row: owner.dogInformations.count, section: 0),
-						at: .right,
-						animated: false
-					)
-					index = owner.dogInformations.count
-				} else if page == owner.dogInformations.count + 1 {
-					owner.collectionView.scrollToItem(
-						at: IndexPath(row: 1, section: 0),
-						at: .right,
-						animated: false
-					)
-					index = 1
-				}
-				owner.indicatorView.idicatorDidChange(index - 1)
+				/// move Page When the page in boundary
+				owner.movePageInBoundary()
 			}
 			.disposed(by: disposeBag)
 	}
-	
-	private	var dogInformations = [
-		Dog(
-			name: "자몽",
-			sex: "여",
-			age: "7",
-			weight: "30",
-			didNeutered: false
-		),
-		Dog(
-			name: "얌이",
-			sex: "남",
-			age: "2",
-			weight: "12",
-			didNeutered: true
-		),
-		Dog(
-			name: "루비",
-			sex: "여",
-			age: "5",
-			weight: "22",
-			didNeutered: false
-		)
-	]
+}
+
+// MARK: CollectionView Infinite Carousel
+private extension UserProfileViewController {
+	func movePageInBoundary() {
+		let page = Int(collectionView.contentOffset.x / collectionView.frame.width)
+		var index = page
+		
+		if page == 0 {
+			collectionView.scrollToItem(
+				at: IndexPath(row: dogInformations.count, section: 0),
+				at: .right,
+				animated: false
+			)
+			index = dogInformations.count
+		} else if page == dogInformations.count + 1 {
+			collectionView.scrollToItem(
+				at: IndexPath(row: 1, section: 0),
+				at: .right,
+				animated: false
+			)
+			index = 1
+		}
+		
+		/// Indicator UI Change
+		indicatorView.indicatorDidChange(index - 1)
+	}
 }
 
 // MARK: UICollectionViewDelegateFlowLayout

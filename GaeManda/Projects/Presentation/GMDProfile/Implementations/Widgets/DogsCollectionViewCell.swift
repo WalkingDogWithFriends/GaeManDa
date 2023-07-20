@@ -7,12 +7,17 @@
 //
 
 import UIKit
+import RxSwift
 import SnapKit
 import DesignKit
 import Entity
 
-class DogsCollectionViewCell: UICollectionViewCell {
+final class DogsCollectionViewCell: UICollectionViewCell {
 	static let idenfier = "DogsCollectionViewCell"
+	
+	lazy var editButtonTap: Observable<Void> = {
+		return editButton.rx.tap.asObservable()
+	}()
 	
 	private let roundImageView: RoundImageView = {
 		let imageView = RoundImageView()
@@ -28,7 +33,7 @@ class DogsCollectionViewCell: UICollectionViewCell {
 		return label
 	}()
 	
-	let editButton: UIButton = {
+	private let editButton: UIButton = {
 		let button = UIButton()
 		button.setTitle("수정", for: .normal)
 		button.titleLabel?.font = .r8
@@ -100,17 +105,6 @@ class DogsCollectionViewCell: UICollectionViewCell {
 		return label
 	}()
 	
-	func configuration(_ dog: Dog) {
-		titleLabel.text = "\(dog.name) (\(dog.sex) / \(dog.age))"
-		
-		weightValueLabel.text = "\(dog.weight)kg"
-		if dog.didNeutered == true {
-			neuteringValueLabel.text = "했어요"
-		} else {
-			neuteringValueLabel.text = "안 했어요"
-		}
-	}
-	
 	override init(frame: CGRect) {
 		super.init(frame: .zero)
 		setupUI()
@@ -121,14 +115,22 @@ class DogsCollectionViewCell: UICollectionViewCell {
 		setupUI()
 	}
 	
-	private func setupUI() {
+
+	override func prepareForReuse() {
+		super.prepareForReuse()
+	}
+}
+
+// MARK: UI Setting
+private extension DogsCollectionViewCell {
+	func setupUI() {
 		self.contentView.backgroundColor = .clear
 		
 		setupSubviews()
 		setConstraints()
 	}
 	
-	private func setupSubviews() {
+	func setupSubviews() {
 		contentView.addSubview(roundImageView)
 		contentView.addSubview(titleLabel)
 		contentView.addSubview(editButton)
@@ -144,7 +146,7 @@ class DogsCollectionViewCell: UICollectionViewCell {
 		neuteringStackView.addArrangedSubview(neuteringValueLabel)
 	}
 	
-	private func setConstraints() {
+	func setConstraints() {
 		roundImageView.snp.makeConstraints { make in
 			make.top.leading.equalToSuperview().offset(8)
 			make.width.height.equalTo(36)
@@ -167,8 +169,18 @@ class DogsCollectionViewCell: UICollectionViewCell {
 			make.bottom.equalToSuperview().offset(-8)
 		}
 	}
-	
-	override func prepareForReuse() {
-		super.prepareForReuse()
+}
+
+// MARK: Configure
+extension DogsCollectionViewCell {
+	func configuration(_ dog: Dog) {
+		titleLabel.text = "\(dog.name) (\(dog.sex) / \(dog.age))"
+		
+		weightValueLabel.text = "\(dog.weight)kg"
+		if dog.didNeutered == true {
+			neuteringValueLabel.text = "했어요"
+		} else {
+			neuteringValueLabel.text = "안 했어요"
+		}
 	}
 }
