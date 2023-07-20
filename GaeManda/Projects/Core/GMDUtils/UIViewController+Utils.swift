@@ -40,4 +40,9 @@ public extension UIViewController {
 		)
 		navigationItem.rightBarButtonItem?.tintColor = .black
 	}
+	
+	func setNavigationTitleFont(_ font: UIFont) {
+		let attributes = [NSAttributedString.Key.font: font]
+		self.navigationController?.navigationBar.standardAppearance.titleTextAttributes = attributes
+	}
 }
