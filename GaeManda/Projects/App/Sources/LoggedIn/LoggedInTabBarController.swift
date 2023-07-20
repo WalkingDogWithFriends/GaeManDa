@@ -30,8 +30,7 @@ final class LoggedInTabBarController:
 		let view = UIView()
 		view.translatesAutoresizingMaskIntoConstraints = false
 		
-		// TODO: Color Set 추가 후 수정.
-		view.backgroundColor = .init(hexCode: "FCFBFB")
+		view.backgroundColor = .gray20
 		view.layer.cornerRadius = 20
 		
 		return view
