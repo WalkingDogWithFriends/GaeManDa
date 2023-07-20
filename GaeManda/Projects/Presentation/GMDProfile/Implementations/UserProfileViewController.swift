@@ -24,6 +24,8 @@ final class UserProfileViewController:
 	weak var listener: UserProfilePresentableListener?
 	private let disposeBag = DisposeBag()
 	var dogsProfile = BehaviorSubject<[Dog]>(value: [])
+	var userProfile = BehaviorSubject<User>(value: User.defaultUser)
+	private var dogsCount = 0
 	
 	private let notificationButton: UIButton = {
 		let button = UIButton()
@@ -53,7 +55,6 @@ final class UserProfileViewController:
 	
 	private let nickNameLabel: UILabel = {
 		let label = UILabel()
-		label.text = "mk1604"
 		label.font = .jalnan20
 		label.textColor = .black
 		
@@ -74,7 +75,6 @@ final class UserProfileViewController:
 	
 	private let sexAndAgeLabel: UILabel = {
 		let label = UILabel()
-		label.text = "여 23세"
 		label.font = .r12
 		label.textColor = .black
 		
@@ -120,30 +120,6 @@ final class UserProfileViewController:
 		collectionView.delegate = self
 		setupUI()
 	}
-	
-	private	var dogInformations = [
-		Dog(
-			name: "자몽",
-			sex: "여",
-			age: "7",
-			weight: "30",
-			didNeutered: false
-		),
-		Dog(
-			name: "얌이",
-			sex: "남",
-			age: "2",
-			weight: "12",
-			didNeutered: true
-		),
-		Dog(
-			name: "루비",
-			sex: "여",
-			age: "5",
-			weight: "22",
-			didNeutered: false
-		)
-	]
 }
 
 // MARK: UI Setting
@@ -151,7 +127,6 @@ private extension UserProfileViewController {
 	func setupUI() {
 		view.backgroundColor = .white
 		title = "프로필"
-		indicatorView.indicatorCount = dogInformations.count
 		
 		DispatchQueue.main.async {
 			self.collectionView.scrollToItem(
@@ -229,6 +204,14 @@ private extension UserProfileViewController {
 // MARK: Bind
 private extension UserProfileViewController {
 	private func bind() {
+		userProfile
+			.asDriver(onErrorJustReturn: User.defaultUser)
+			.drive(with: self) { owner, user in
+				owner.nickNameLabel.text = user.name
+				owner.sexAndAgeLabel.text = "\(user.sex) \(user.age)"
+			}
+			.disposed(by: disposeBag)
+		
 		collectionViewBind()
 	}
 	
@@ -237,6 +220,8 @@ private extension UserProfileViewController {
 			.asDriver(onErrorJustReturn: [])
 			.map { $0.count }
 			.drive(with: self) { owner, count in
+				owner.dogsCount = count
+				owner.indicatorView.indicatorCount = count
 				owner.collectionView.isScrollEnabled = count == 1 ? false : true
 			}
 			.disposed(by: disposeBag)
@@ -279,12 +264,12 @@ private extension UserProfileViewController {
 		
 		if page == 0 {
 			collectionView.scrollToItem(
-				at: IndexPath(row: dogInformations.count, section: 0),
+				at: IndexPath(row: dogsCount, section: 0),
 				at: .right,
 				animated: false
 			)
-			index = dogInformations.count
-		} else if page == dogInformations.count + 1 {
+			index = dogsCount
+		} else if page == dogsCount + 1 {
 			collectionView.scrollToItem(
 				at: IndexPath(row: 1, section: 0),
 				at: .right,

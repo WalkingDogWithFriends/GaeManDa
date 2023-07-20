@@ -23,6 +23,7 @@ final class LoggedInComponent:
 	ChattingDependency,
 	DogsOnAroundDependency,
 	UserProfileDependency {
+	// MARK: Buildable
 	lazy var chattingBuildable: ChattingBuildable = {
 		return ChattingBuilder(dependency: self)
 	}()
@@ -35,11 +36,20 @@ final class LoggedInComponent:
 		return UserProfileBuilder(dependency: self)
 	}()
 	
+	// MARK: Repository
 	lazy var dogRepository: DogRepository = {
 		return DogRepositoryImpl()
 	}()
 	
+	lazy var userRepository: UserRepository = {
+		return UserRepositoryImpl()
+	}()
+	
+	// MARK: UseCase
 	lazy var userProfileUseCase: UserProfileUseCase = {
-		return UserProfileUseCaseImpl(dogDependecy: dogRepository)
+		return UserProfileUseCaseImpl(
+			dogDependecy: dogRepository,
+			userDependency: userRepository
+		)
 	}()
 }

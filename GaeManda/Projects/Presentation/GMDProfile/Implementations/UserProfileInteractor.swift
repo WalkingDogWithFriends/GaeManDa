@@ -19,6 +19,7 @@ protocol UserProfilePresentable: Presentable {
 	var listener: UserProfilePresentableListener? { get set }
 	
 	var dogsProfile: BehaviorSubject<[Dog]> { get }
+	var userProfile: BehaviorSubject<User> { get }
 }
 
 protocol UserProfileInteractorDependency {
@@ -53,6 +54,12 @@ final class UserProfileInteractor:
 				.userProfileUseCase
 				.fetchDogs(id: 0)
 				.subscribe(onSuccess: presenter.dogsProfile.onNext)
+				.disposed(by: disposeBag)
+			
+			await dependency
+				.userProfileUseCase
+				.fetchUser(id: 0)
+				.subscribe(onSuccess: presenter.userProfile.onNext)
 				.disposed(by: disposeBag)
 		}
 	}

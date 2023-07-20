@@ -13,8 +13,13 @@ import Repository
 
 public protocol UserProfileUseCase {
 	var dogDependency: DogRepository { get }
-	
-	init(dogDependecy: DogRepository)
+	var userDependency: UserRepository { get }
+
+	init(
+		dogDependecy: DogRepository,
+		userDependency: UserRepository
+	)
 	
 	func fetchDogs(id: Int) async -> Single<[Dog]>
+	func fetchUser(id: Int) async -> Single<User>
 }
