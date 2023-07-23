@@ -25,10 +25,13 @@ public struct UserResponseDTO: Decodable {
 
 #if DEBUG
 extension UserResponseDTO {
-	public static let stubData: [String: Any] = [
-			"name": "thrdud0423",
-			"sex": "남",
-			"age": "26"
-	]
+	public static let stubData =
+	"""
+	{
+		"name": "thrdud0423",
+		"sex": "남",
+		"age": "26"
+	}
+	"""
 }
 #endif

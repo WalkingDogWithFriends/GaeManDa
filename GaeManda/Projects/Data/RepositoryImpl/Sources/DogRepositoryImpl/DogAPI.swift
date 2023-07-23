@@ -46,11 +46,12 @@ extension DogAPI: TargetType {
 	public var sampleData: Data {
 		switch self {
 		case .fetchDogs:
-			do {
-				let data = DogResponseDTO.stubData
-				let json = try JSONSerialization.data(withJSONObject: [data], options: .prettyPrinted)
-				return json
-			} catch {
+			let jsonString = DogResponseDTO.stubData
+			let data = jsonString.data(using: .utf8)
+			
+			if let data = data {
+				return data
+			} else {
 				return Data()
 			}
 		}

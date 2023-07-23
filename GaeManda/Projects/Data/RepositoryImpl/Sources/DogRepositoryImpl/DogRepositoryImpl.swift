@@ -19,8 +19,7 @@ public struct DogRepositoryImpl: DogRepository {
 	public func fetchDogs(id: Int) async -> Single<[Dog]> {
 		return  Provider<DogAPI>
 			.init(stubBehavior: .immediate)
-			.request(DogAPI.fetchDogs(id: id), type: [[DogResponseDTO]].self)
-			.map { $0.first! }
+			.request(DogAPI.fetchDogs(id: id), type: [DogResponseDTO].self)
 			.map { $0.map { $0.toDomain } }
 	}
 }

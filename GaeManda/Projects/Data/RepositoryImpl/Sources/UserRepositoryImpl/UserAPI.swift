@@ -48,11 +48,12 @@ extension UserAPI: TargetType {
 	public var sampleData: Data {
 		switch self {
 		case .fetchUser:
-			do {
-				let data = UserResponseDTO.stubData
-				let json = try JSONSerialization.data(withJSONObject: [data], options: .prettyPrinted)
-				return json
-			} catch {
+			let jsonString = UserResponseDTO.stubData
+			let data = jsonString.data(using: .utf8)
+			
+			if let data = data {
+				return data
+			} else {
 				return Data()
 			}
 		}
