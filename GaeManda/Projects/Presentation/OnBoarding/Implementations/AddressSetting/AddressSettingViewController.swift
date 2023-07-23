@@ -2,6 +2,7 @@ import UIKit
 import RIBs
 import RxCocoa
 import RxSwift
+import SnapKit
 import DesignKit
 import GMDExtensions
 import GMDUtils
@@ -135,33 +136,43 @@ final class AddressSettingViewController:
 	}
 	
 	private func setConstraints() {
-		NSLayoutConstraint.activate([
-			onBoardingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-			onBoardingView.topAnchor.constraint(equalTo: view.topAnchor),
-			
-			searchTextField.topAnchor.constraint(equalTo: onBoardingView.bottomAnchor, constant: 61),
-			searchTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			searchTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			
-			loadLocationButton.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: 35),
-			loadLocationButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			loadLocationButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			loadLocationButton.heightAnchor.constraint(equalToConstant: 28),
-			
-			mapView.topAnchor.constraint(equalTo: loadLocationButton.bottomAnchor, constant: 52),
-			mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			mapView.heightAnchor.constraint(equalToConstant: 235),
-			
-			noticeLabel.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 28),
-			noticeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			noticeLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			
-			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -54),
-			confirmButton.heightAnchor.constraint(equalToConstant: 40)
-		])
+		onBoardingView.snp.makeConstraints { make in
+			make.leading.equalToSuperview()
+			make.top.equalToSuperview()
+		}
+		
+		searchTextField.snp.makeConstraints { make in
+			make.top.equalTo(onBoardingView.snp.bottom).offset(61)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+		}
+		
+		loadLocationButton.snp.makeConstraints { make in
+			make.top.equalTo(searchTextField.snp.bottom).offset(35)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.height.equalTo(28)
+		}
+		
+		mapView.snp.makeConstraints { make in
+			make.top.equalTo(loadLocationButton.snp.bottom).offset(52)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.height.equalTo(235)
+		}
+		
+		noticeLabel.snp.makeConstraints { make in
+			make.top.equalTo(mapView.snp.bottom).offset(28)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+		}
+		
+		confirmButton.snp.makeConstraints { make in
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.bottom.equalToSuperview().offset(-54)
+			make.height.equalTo(40)
+		}
 	}
 	
 	private func bind() {

@@ -2,6 +2,7 @@ import UIKit
 import RIBs
 import RxCocoa
 import RxSwift
+import SnapKit
 import Entity
 import GMDUtils
 import DesignKit
@@ -83,24 +84,30 @@ final class TermsOfUseViewController:
 	}
 	
 	private func setConstraints() {
-		NSLayoutConstraint.activate([
-			onBoardingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-			onBoardingView.topAnchor.constraint(equalTo: view.topAnchor),
-			
-			agreeAllButton.bottomAnchor.constraint(equalTo: tableView.topAnchor, constant: -10),
-			agreeAllButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			agreeAllButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			
-			tableView.heightAnchor.constraint(equalToConstant: 192),
-			tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			tableView.bottomAnchor.constraint(equalTo: confirmButton.topAnchor, constant: -32),
-			
-			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -54),
-			confirmButton.heightAnchor.constraint(equalToConstant: 40)
-		])
+		onBoardingView.snp.makeConstraints { make in
+			make.leading.equalToSuperview()
+			make.top.equalToSuperview()
+		}
+		
+		agreeAllButton.snp.makeConstraints { make in
+			make.bottom.equalTo(tableView.snp.top).offset(-10)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+		}
+		
+		tableView.snp.makeConstraints { make in
+			make.height.equalTo(192)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.bottom.equalTo(confirmButton.snp.top).offset(-32)
+		}
+		
+		confirmButton.snp.makeConstraints { make in
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.bottom.equalToSuperview().offset(-54)
+			make.height.equalTo(40)
+		}
 	}
 
 	private func bind() {

@@ -2,6 +2,7 @@ import UIKit
 import RIBs
 import RxCocoa
 import RxSwift
+import SnapKit
 import DesignKit
 import GMDExtensions
 import GMDUtils
@@ -131,29 +132,37 @@ final class ThirdDogSettingViewController:
 	}
 	
 	private func setConstraints() {
-		NSLayoutConstraint.activate([
-			onBoardingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-			onBoardingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-			onBoardingView.topAnchor.constraint(equalTo: view.topAnchor),
-			
-			buttonStackViewLabel.topAnchor.constraint(equalTo: onBoardingView.bottomAnchor, constant: 48),
-			buttonStackViewLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			buttonStackViewLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			
-			buttonStackView.topAnchor.constraint(equalTo: buttonStackViewLabel.bottomAnchor, constant: 8),
-			buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			buttonStackView.heightAnchor.constraint(equalToConstant: 40),
-			
-			characterTextView.topAnchor.constraint(equalTo: buttonStackView.bottomAnchor, constant: 20),
-			characterTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			characterTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			
-			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -54),
-			confirmButton.heightAnchor.constraint(equalToConstant: 40)
-		])
+		onBoardingView.snp.makeConstraints { make in
+			make.leading.equalToSuperview()
+			make.trailing.equalToSuperview()
+			make.top.equalToSuperview()
+		}
+		
+		buttonStackViewLabel.snp.makeConstraints { make in
+			make.top.equalTo(onBoardingView.snp.bottom).offset(48)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+		}
+		
+		buttonStackView.snp.makeConstraints { make in
+			make.top.equalTo(buttonStackViewLabel.snp.bottom).offset(8)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.height.equalTo(40)
+		}
+		
+		characterTextView.snp.makeConstraints { make in
+			make.top.equalTo(buttonStackView.snp.bottom).offset(20)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+		}
+		
+		confirmButton.snp.makeConstraints { make in
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.bottom.equalToSuperview().offset(-54)
+			make.height.equalTo(40)
+		}
 	}
 	
 	private func bind() {

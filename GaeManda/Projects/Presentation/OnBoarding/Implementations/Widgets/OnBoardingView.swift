@@ -1,4 +1,5 @@
 import UIKit
+import SnapKit
 import DesignKit
 import GMDUtils
 
@@ -47,27 +48,25 @@ final class OnBoardingView: UIView {
 	
 	private func setConstraints(_ willDisplayImageView: Bool) {
 		if willDisplayImageView {
-			NSLayoutConstraint.activate(constraintLabelAndImageView)
+			label.snp.makeConstraints { make in
+				make.leading.equalToSuperview().offset(33)
+				make.top.equalToSuperview().offset(119)
+			}
+			profileImageView.snp.makeConstraints { make in
+				make.top.equalTo(label.snp.bottom).offset(48)
+				make.height.equalTo(140)
+				make.width.equalTo(140)
+				make.centerX.equalToSuperview()
+				make.bottom.equalToSuperview()
+			}
 		} else {
-			NSLayoutConstraint.activate(constraintLabel)
+			label.snp.makeConstraints { make in
+				make.leading.equalToSuperview().offset(33)
+				make.top.equalToSuperview().offset(119)
+				make.bottom.equalToSuperview()
+			}
 		}
 	}
-	
-	// MARK: Constriants
-	lazy var constraintLabel = [
-		label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 33),
-		label.topAnchor.constraint(equalTo: topAnchor, constant: 119),
-		label.bottomAnchor.constraint(equalTo: bottomAnchor)
-	]
-	lazy var constraintLabelAndImageView = [
-		label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 33),
-		label.topAnchor.constraint(equalTo: topAnchor, constant: 119),
-		profileImageView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 48),
-		profileImageView.heightAnchor.constraint(equalToConstant: 140),
-		profileImageView.widthAnchor.constraint(equalToConstant: 140),
-		profileImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-		profileImageView.bottomAnchor.constraint(equalTo: bottomAnchor)
-	]
 }
 
 // MARK: setter
