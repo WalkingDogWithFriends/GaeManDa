@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import GMDNetwork
 import DTO
+import GMDNetwork
 
 public enum DogAPI {
 	case fetchDogs(id: Int)

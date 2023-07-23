@@ -9,8 +9,8 @@
 import Foundation
 import RxSwift
 import Entity
-import UseCase
 import Repository
+import UseCase
 
 public struct UserProfileUseCaseImpl: UserProfileUseCase {
 	public let dogDependency: DogRepository

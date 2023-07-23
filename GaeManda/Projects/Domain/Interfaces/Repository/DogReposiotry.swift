@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import Entity
 import RxSwift
+import Entity
 
 public protocol DogRepository {
 	func fetchDogs(id: Int) async -> Single<[Dog]>

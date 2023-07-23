@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import Entity
 import RxSwift
+import Entity
 
 public protocol UserRepository {
 	func fetchUser(id: Int) async -> Single<User>

@@ -13,10 +13,10 @@ import DogsOnAround
 import DogsOnAroundImpl
 import GMDProfile
 import GMDProfileImpl
-import UseCase
-import UseCaseImpl
 import Repository
 import RepositoryImpl
+import UseCase
+import UseCaseImpl
 
 final class LoggedInComponent:
 	Component<LoggedInDependency>,

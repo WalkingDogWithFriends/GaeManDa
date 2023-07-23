@@ -8,8 +8,8 @@
 
 import RIBs
 import GMDProfile
-import RxSwift
 import RxCocoa
+import RxSwift
 import Entity
 import UseCase
 

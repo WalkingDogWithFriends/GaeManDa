@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import GMDNetwork
 import DTO
+import GMDNetwork
 
 enum UserAPI {
 	case fetchUser(id: Int)
