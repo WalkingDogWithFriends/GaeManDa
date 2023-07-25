@@ -11,5 +11,5 @@ import RxSwift
 import Entity
 
 public protocol DogRepository {
-	func fetchDogs(id: Int) async -> Single<[Dog]>
+	func fetchDogs(id: Int) -> Single<[Dog]>
 }

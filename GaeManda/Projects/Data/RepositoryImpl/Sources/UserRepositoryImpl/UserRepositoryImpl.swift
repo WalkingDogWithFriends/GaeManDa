@@ -16,7 +16,7 @@ import Repository
 public struct UserRepositoryImpl: UserRepository {
 	public init() { }
 	
-	public func fetchUser(id: Int) async -> Single<User> {
+	public func fetchUser(id: Int) -> Single<User> {
 		return  Provider<UserAPI>
 			.init(stubBehavior: .immediate)
 			.request(UserAPI.fetchUser(id: id), type: UserResponseDTO.self)

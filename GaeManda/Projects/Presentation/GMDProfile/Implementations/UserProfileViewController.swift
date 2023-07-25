@@ -15,7 +15,12 @@ import DesignKit
 import Entity
 import GMDUtils
 
-protocol UserProfilePresentableListener: AnyObject { }
+protocol UserProfilePresentableListener: AnyObject {
+	var dogProfiles: Driver<[Dog]> { get set }
+	var userName: Driver<String> { get set }
+	var userSex: Driver<String> { get set }
+	var userAge: Driver<String> { get set }
+}
 
 final class UserProfileViewController:
 	UIViewController,
@@ -23,8 +28,6 @@ final class UserProfileViewController:
 	UserProfileViewControllable {
 	weak var listener: UserProfilePresentableListener?
 	private let disposeBag = DisposeBag()
-	var dogsProfile = BehaviorSubject<[Dog]>(value: [])
-	var userProfile = BehaviorSubject<User>(value: User.defaultUser)
 	private var dogsCount = 0
 	
 	private let notificationButton: UIButton = {
@@ -204,20 +207,27 @@ private extension UserProfileViewController {
 // MARK: Bind
 private extension UserProfileViewController {
 	private func bind() {
-		userProfile
-			.asDriver(onErrorJustReturn: User.defaultUser)
-			.drive(with: self) { owner, user in
-				owner.nickNameLabel.text = user.name
-				owner.sexAndAgeLabel.text = "\(user.sex) \(user.age)"
+		guard let listener = listener else { return }
+		
+		listener.userName
+			.drive(with: self) { owner, name in
+				owner.nickNameLabel.text = name
 			}
 			.disposed(by: disposeBag)
+		
+		Driver.combineLatest(listener.userSex, listener.userAge) {
+			return "\($0) \($1)세"
+		}
+		.drive(with: self) { owner, sexAndAge in
+			owner.sexAndAgeLabel.text = sexAndAge
+		}
+		.disposed(by: disposeBag)
 		
 		collectionViewBind()
 	}
 	
 	private func collectionViewBind() {
-		dogsProfile
-			.asDriver(onErrorJustReturn: [])
+		listener?.dogProfiles
 			.map { $0.count }
 			.drive(with: self) { owner, count in
 				owner.dogsCount = count
@@ -226,8 +236,7 @@ private extension UserProfileViewController {
 			}
 			.disposed(by: disposeBag)
 		
-		dogsProfile
-			.asDriver(onErrorJustReturn: [])
+		listener?.dogProfiles
 			.map { item in
 				guard let last = item.last, let first = item.first else { return item }
 				

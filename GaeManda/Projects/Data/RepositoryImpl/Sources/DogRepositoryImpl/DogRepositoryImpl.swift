@@ -16,7 +16,7 @@ import Repository
 public struct DogRepositoryImpl: DogRepository {
 	public init() { }
 	
-	public func fetchDogs(id: Int) async -> Single<[Dog]> {
+	public func fetchDogs(id: Int) -> Single<[Dog]> {
 		return  Provider<DogAPI>
 			.init(stubBehavior: .immediate)
 			.request(DogAPI.fetchDogs(id: id), type: [DogResponseDTO].self)

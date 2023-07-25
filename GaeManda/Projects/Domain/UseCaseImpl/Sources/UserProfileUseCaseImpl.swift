@@ -24,11 +24,11 @@ public struct UserProfileUseCaseImpl: UserProfileUseCase {
 		self.userDependency = userDependency
 	}
 	
-	public func fetchDogs(id: Int) async -> Single<[Dog]> {
-		return await dogDependency.fetchDogs(id: id)
+	public func fetchDogs(id: Int) -> Single<[Dog]> {
+		return dogDependency.fetchDogs(id: id)
 	}
 	
-	public func fetchUser(id: Int) async -> Single<User> {
-		return await userDependency.fetchUser(id: id)
+	public func fetchUser(id: Int) -> Single<User> {
+		return userDependency.fetchUser(id: id)
 	}
 }

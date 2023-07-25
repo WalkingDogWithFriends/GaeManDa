@@ -11,5 +11,5 @@ import RxSwift
 import Entity
 
 public protocol UserRepository {
-	func fetchUser(id: Int) async -> Single<User>
+	func fetchUser(id: Int) -> Single<User>
 }

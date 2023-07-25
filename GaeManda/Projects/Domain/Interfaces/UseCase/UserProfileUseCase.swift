@@ -20,6 +20,6 @@ public protocol UserProfileUseCase {
 		userDependency: UserRepository
 	)
 	
-	func fetchDogs(id: Int) async -> Single<[Dog]>
-	func fetchUser(id: Int) async -> Single<User>
+	func fetchDogs(id: Int) -> Single<[Dog]>
+	func fetchUser(id: Int) -> Single<User>
 }

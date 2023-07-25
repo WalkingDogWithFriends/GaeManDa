@@ -7,19 +7,17 @@
 //
 
 import RIBs
-import GMDProfile
 import RxCocoa
 import RxSwift
 import Entity
+import GMDProfile
+import GMDUtils
 import UseCase
 
 protocol UserProfileRouting: ViewableRouting { }
 
 protocol UserProfilePresentable: Presentable {
 	var listener: UserProfilePresentableListener? { get set }
-	
-	var dogsProfile: BehaviorSubject<[Dog]> { get }
-	var userProfile: BehaviorSubject<User> { get }
 }
 
 protocol UserProfileInteractorDependency {
@@ -36,32 +34,41 @@ final class UserProfileInteractor:
 	private let disposeBag: DisposeBag
 	private let dependency: UserProfileInteractorDependency
 	
+	// MARK: Interactable Output
+	var dogProfiles: Driver<[Dog]>
+	var userName: Driver<String>
+	var userSex: Driver<String>
+	var userAge: Driver<String>
+	
 	init(
 		presenter: UserProfilePresentable,
 		dependency: UserProfileInteractorDependency
 	) {
 		self.dependency = dependency
 		self.disposeBag = DisposeBag()
+		
+		self.dogProfiles = dependency
+			.userProfileUseCase
+			.fetchDogs(id: 0)
+			.ignoreTerminate()
+			.asDriver(onErrorJustReturn: [])
+
+		let users = dependency
+			.userProfileUseCase
+			.fetchUser(id: 0)
+			.ignoreTerminate()
+			.asDriver(onErrorJustReturn: User.defaultUser)
+		
+		self.userName = users.map { $0.name }
+		self.userSex = users.map { $0.sex }
+		self.userAge = users.map { $0.age }
+		
 		super.init(presenter: presenter)
 		presenter.listener = self
 	}
 	
 	override func didBecomeActive() {
 		super.didBecomeActive()
-		
-		Task {
-			await dependency
-				.userProfileUseCase
-				.fetchDogs(id: 0)
-				.subscribe(onSuccess: presenter.dogsProfile.onNext)
-				.disposed(by: disposeBag)
-			
-			await dependency
-				.userProfileUseCase
-				.fetchUser(id: 0)
-				.subscribe(onSuccess: presenter.userProfile.onNext)
-				.disposed(by: disposeBag)
-		}
 	}
 	
 	override func willResignActive() {
