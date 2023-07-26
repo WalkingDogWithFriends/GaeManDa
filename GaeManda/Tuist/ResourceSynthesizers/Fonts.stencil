@@ -79,6 +79,20 @@ import SwiftUI
 		return font
 	}
 	
+	{{accessModifier}} var _10: UIFont {
+		guard let font = Font(font: self, size: 10) else {
+			fatalError("Unable to initialize font '\\(name)' (\\(family))")
+		}
+		return font
+	}
+	
+	{{accessModifier}} var _8: UIFont {
+		guard let font = Font(font: self, size: 8) else {
+			fatalError("Unable to initialize font '\\(name)' (\\(family))")
+		}
+		return font
+	}
+	
 #if os(macOS)
 	{{accessModifier}} typealias Font = NSFont
 #elseif os(iOS) || os(tvOS) || os(watchOS)
@@ -152,6 +166,12 @@ import SwiftUI
 	static var jalnan12: UIFont {
 		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._12
 	}
+	static var jalnan10: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._10
+	}
+	static var jalnan8: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._8
+	}
 	{% endfor %}
 	
 	{% for family in families where family.name != "Jalnan OTF" %}
@@ -167,6 +187,13 @@ import SwiftUI
 	static var b12: UIFont {
 		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.bold._12
 	}
+	static var b10: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.bold._10
+	}
+	static var b8: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.bold._8
+	}
+
 	static var r20: UIFont {
 		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._20
 	}
@@ -178,6 +205,12 @@ import SwiftUI
 	}
 	static var r12: UIFont {
 		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._12
+	}
+	static var r10: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._10
+	}
+	static var r8: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._8
 	}
 	{% endfor %}
 }
