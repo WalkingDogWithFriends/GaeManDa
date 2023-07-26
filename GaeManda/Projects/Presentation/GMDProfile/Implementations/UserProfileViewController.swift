@@ -18,8 +18,7 @@ import GMDUtils
 protocol UserProfilePresentableListener: AnyObject {
 	var dogProfiles: Driver<[Dog]> { get set }
 	var userName: Driver<String> { get set }
-	var userSex: Driver<String> { get set }
-	var userAge: Driver<String> { get set }
+	var userSexAndAge: Driver<String> { get set }
 }
 
 final class UserProfileViewController:
@@ -207,17 +206,13 @@ private extension UserProfileViewController {
 // MARK: Bind
 private extension UserProfileViewController {
 	private func bind() {
-		guard let listener = listener else { return }
-		
-		listener.userName
+		listener?.userName
 			.drive(with: self) { owner, name in
 				owner.nickNameLabel.text = name
 			}
 			.disposed(by: disposeBag)
 		
-		Driver.combineLatest(listener.userSex, listener.userAge) {
-			return "\($0) \($1)세"
-		}
+		listener?.userSexAndAge
 		.drive(with: self) { owner, sexAndAge in
 			owner.sexAndAgeLabel.text = sexAndAge
 		}

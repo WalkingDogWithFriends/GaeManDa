@@ -51,11 +51,7 @@ extension UserAPI: TargetType {
 			let jsonString = UserResponseDTO.stubData
 			let data = jsonString.data(using: .utf8)
 			
-			if let data = data {
-				return data
-			} else {
-				return Data()
-			}
+			return data ?? Data()
 		}
 	}
 }

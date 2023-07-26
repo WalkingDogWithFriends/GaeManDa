@@ -49,11 +49,7 @@ extension DogAPI: TargetType {
 			let jsonString = DogResponseDTO.stubData
 			let data = jsonString.data(using: .utf8)
 			
-			if let data = data {
-				return data
-			} else {
-				return Data()
-			}
+			return data ?? Data()
 		}
 	}
 }

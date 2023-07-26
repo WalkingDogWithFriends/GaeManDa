@@ -37,8 +37,7 @@ final class UserProfileInteractor:
 	// MARK: Interactable Output
 	var dogProfiles: Driver<[Dog]>
 	var userName: Driver<String>
-	var userSex: Driver<String>
-	var userAge: Driver<String>
+	var userSexAndAge: Driver<String>
 	
 	init(
 		presenter: UserProfilePresentable,
@@ -60,8 +59,7 @@ final class UserProfileInteractor:
 			.asDriver(onErrorJustReturn: User.defaultUser)
 		
 		self.userName = users.map { $0.name }
-		self.userSex = users.map { $0.sex }
-		self.userAge = users.map { $0.age }
+		self.userSexAndAge = users.map { "\($0.sex) \($0.age)세"}
 		
 		super.init(presenter: presenter)
 		presenter.listener = self
