@@ -21,7 +21,7 @@ final class LoggedInTabBarController:
 	LoggedInViewControllable {
 	weak var listener: LoggedInPresentableListener?
 	private let disposeBag = DisposeBag()
-
+	
 	private var selectedIndex: Int = 0
 	private lazy var tabBarButtons = [firstTabButton, secondTabButton, thirdTabButton]
 	private var tabViewControllers = [UIViewController]()
@@ -39,6 +39,7 @@ final class LoggedInTabBarController:
 			systemName: "pawprint",
 			withConfiguration: UIImage.SymbolConfiguration(pointSize: 20)
 		)
+		
 		let button = TabBarButton(image: image, title: "산책")
 		button.tag = 0
 		
@@ -94,21 +95,27 @@ final class LoggedInTabBarController:
 	}
 	
 	private func setConstraints() {
-		NSLayoutConstraint.activate([
-			floatingTabBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 21),
-			floatingTabBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -21),
-			floatingTabBar.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -32),
-			floatingTabBar.heightAnchor.constraint(equalToConstant: 60),
-			
-			firstTabButton.leadingAnchor.constraint(equalTo: floatingTabBar.leadingAnchor, constant: 26),
-			firstTabButton.centerYAnchor.constraint(equalTo: floatingTabBar.centerYAnchor),
-			
-			secondTabButton.centerXAnchor.constraint(equalTo: floatingTabBar.centerXAnchor),
-			secondTabButton.bottomAnchor.constraint(equalTo: firstTabButton.bottomAnchor),
-			
-			thirdTabButton.trailingAnchor.constraint(equalTo: floatingTabBar.trailingAnchor, constant: -21),
-			thirdTabButton.centerYAnchor.constraint(equalTo: floatingTabBar.centerYAnchor)
-		])
+		floatingTabBar.snp.makeConstraints { make in
+			make.leading.equalTo(view.snp.leading).offset(21)
+			make.trailing.equalTo(view.snp.trailing).offset(-21)
+			make.bottom.equalTo(view.snp.bottom).offset(-32)
+			make.height.equalTo(60)
+		}
+		
+		firstTabButton.snp.makeConstraints { make in
+			make.leading.equalTo(floatingTabBar.snp.leading).offset(26)
+			make.centerY.equalTo(floatingTabBar.snp.centerY)
+		}
+		
+		secondTabButton.snp.makeConstraints { make in
+			make.centerX.equalTo(floatingTabBar.snp.centerX)
+			make.bottom.equalTo(firstTabButton.snp.bottom)
+		}
+		
+		thirdTabButton.snp.makeConstraints { make in
+			make.trailing.equalTo(floatingTabBar.snp.trailing).offset(-21)
+			make.centerY.equalTo(floatingTabBar.snp.centerY)
+		}
 	}
 	
 	private func bind() {
@@ -181,7 +188,7 @@ extension LoggedInTabBarController: FloatingTabBarPresentable {
 				height: self.floatingTabBar.frame.height
 			)
 			self.view.layoutIfNeeded()
-			}
+		}
 	}
 	
 	public func presentTabBar() {
@@ -200,6 +207,6 @@ extension LoggedInTabBarController: FloatingTabBarPresentable {
 				height: self.floatingTabBar.frame.height
 			)
 			self.view.layoutIfNeeded()
-			}
+		}
 	}
 }
