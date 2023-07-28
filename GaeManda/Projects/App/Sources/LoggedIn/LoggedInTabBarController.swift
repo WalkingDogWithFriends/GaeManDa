@@ -28,8 +28,6 @@ final class LoggedInTabBarController:
 	
 	private let floatingTabBar: UIView = {
 		let view = UIView()
-		view.translatesAutoresizingMaskIntoConstraints = false
-		
 		view.backgroundColor = .gray20
 		view.layer.cornerRadius = 20
 		
@@ -41,10 +39,8 @@ final class LoggedInTabBarController:
 			systemName: "pawprint",
 			withConfiguration: UIImage.SymbolConfiguration(pointSize: 20)
 		)
-		
 		let button = TabBarButton(image: image, title: "산책")
 		button.tag = 0
-		button.translatesAutoresizingMaskIntoConstraints = false
 		
 		return button
 	}()
@@ -58,9 +54,7 @@ final class LoggedInTabBarController:
 		let roundImageView = RoundImageView(image: image)
 		roundImageView.backgroundColor = .white
 		let button = TabBarButton(imageView: roundImageView, title: "프로필")
-		
 		button.tag = 1
-		button.translatesAutoresizingMaskIntoConstraints = false
 		
 		return button
 	}()
@@ -70,11 +64,8 @@ final class LoggedInTabBarController:
 			systemName: "pawprint",
 			withConfiguration: UIImage.SymbolConfiguration(pointSize: 20)
 		)
-		
 		let button = TabBarButton(image: image, title: "채팅")
 		button.tag = 2
-		
-		button.translatesAutoresizingMaskIntoConstraints = false
 		
 		return button
 	}()

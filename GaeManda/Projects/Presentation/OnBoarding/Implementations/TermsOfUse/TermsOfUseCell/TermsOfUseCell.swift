@@ -23,14 +23,12 @@ final class TermsOfUseCell: UITableViewCell {
 	
 	let termsOfUseButton: TermsOfUseButton = {
 		let button = TermsOfUseButton()
-		button.translatesAutoresizingMaskIntoConstraints = false
 		
 		return button
 	}()
 	
 	lazy var subTitleLabel: UILabel = {
 		let label = UILabel()
-		label.translatesAutoresizingMaskIntoConstraints = false
 		label.textColor = .gray80
 		label.font = .r12
 		

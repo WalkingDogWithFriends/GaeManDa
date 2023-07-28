@@ -24,14 +24,12 @@ final class UserSettingViewController:
 			willDisplayImageView: true,
 			title: "보호자의 프로필을 설정해주세요!"
 		)
-		onBoardingView.translatesAutoresizingMaskIntoConstraints = false
 		
 		return onBoardingView
 	}()
 	
 	private let textStackView: UIStackView = {
 		let stackView = UIStackView()
-		stackView.translatesAutoresizingMaskIntoConstraints = false
 		stackView.axis = .vertical
 		stackView.alignment = .fill
 		stackView.spacing = 16
@@ -45,7 +43,6 @@ final class UserSettingViewController:
 			title: "닉네임",
 			warningText: "닉네임을 입력해주세요."
 		)
-		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
 		
 		return onBoardingTextField
 	}()
@@ -65,7 +62,6 @@ final class UserSettingViewController:
 			title: "생년월일",
 			warningText: "생년월일을 입력해주세요."
 		)
-		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
 		
 		return onBoardingTextField
 	}()
@@ -81,7 +77,6 @@ final class UserSettingViewController:
 	
 	private let buttonStackView: UIStackView = {
 		let stackView = UIStackView()
-		stackView.translatesAutoresizingMaskIntoConstraints = false
 		stackView.axis = .horizontal
 		stackView.alignment = .fill
 		stackView.spacing = 26
@@ -92,7 +87,6 @@ final class UserSettingViewController:
 	
 	private let maleButton: OnBoardingButton = {
 		let button = OnBoardingButton(title: "남")
-		button.translatesAutoresizingMaskIntoConstraints = false
 		button.buttonIsSelected = true
 		
 		return button
@@ -100,14 +94,12 @@ final class UserSettingViewController:
 	
 	private let femaleButton: OnBoardingButton = {
 		let button = OnBoardingButton(title: "여")
-		button.translatesAutoresizingMaskIntoConstraints = false
 		
 		return button
 	}()
 	
 	private let confirmButton: UIButton = {
 		let button = UIButton()
-		button.translatesAutoresizingMaskIntoConstraints = false
 		button.setTitle("확인", for: .normal)
 		button.setTitleColor(.white, for: .normal)
 		button.layer.cornerRadius = 4

@@ -23,14 +23,12 @@ final class SecondDogSettingViewController:
 			willDisplayImageView: true,
 			title: "우리 아이를 등록해주세요! (2/3)"
 		)
-		onBoardingView.translatesAutoresizingMaskIntoConstraints = false
 		
 		return onBoardingView
 	}()
 	
 	private let textStackView: UIStackView = {
 		let stackView = UIStackView()
-		stackView.translatesAutoresizingMaskIntoConstraints = false
 		stackView.axis = .vertical
 		stackView.alignment = .fill
 		stackView.spacing = 16
@@ -44,7 +42,6 @@ final class SecondDogSettingViewController:
 			title: "우리 아이 종",
 			warningText: "우리 아이 종을 작성해주세요"
 		)
-		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
 
 		return onBoardingTextField
 	}()
@@ -54,7 +51,6 @@ final class SecondDogSettingViewController:
 			title: "우리 아이 몸무게 (kg)",
 			warningText: "우리 아이 몸무게 (kg)을 입력해주세요."
 		)
-		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
 		onBoardingTextField.textField.keyboardType = .numberPad
 
 		return onBoardingTextField
@@ -64,7 +60,6 @@ final class SecondDogSettingViewController:
 	
 	private let confirmButton: UIButton = {
 		let button = UIButton()
-		button.translatesAutoresizingMaskIntoConstraints = false
 		button.setTitle("확인", for: .normal)
 		button.setTitleColor(.white, for: .normal)
 		button.layer.cornerRadius = 4

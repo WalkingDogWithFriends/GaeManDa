@@ -24,14 +24,12 @@ final class ThirdDogSettingViewController:
 			willDisplayImageView: true,
 			title: "우리 아이를 등록해주세요! (3/3)"
 		)
-		onBoardingView.translatesAutoresizingMaskIntoConstraints = false
 
 		return onBoardingView
 	}()
 	
 	private let buttonStackViewLabel: UILabel = {
 		let label = UILabel()
-		label.translatesAutoresizingMaskIntoConstraints = false
 		label.text = "중성화"
 		label.font = .r12
 		label.textColor = .gray90
@@ -41,7 +39,6 @@ final class ThirdDogSettingViewController:
 	
 	private let buttonStackView: UIStackView = {
 		let stackView = UIStackView()
-		stackView.translatesAutoresizingMaskIntoConstraints = false
 		stackView.axis = .horizontal
 		stackView.alignment = .fill
 		stackView.spacing = 26
@@ -52,7 +49,6 @@ final class ThirdDogSettingViewController:
 	
 	private let didNeuterButton: OnBoardingButton = {
 		let button = OnBoardingButton(title: "했어요")
-		button.translatesAutoresizingMaskIntoConstraints = false
 		button.buttonIsSelected = true
 		
 		return button
@@ -60,14 +56,12 @@ final class ThirdDogSettingViewController:
 	
 	private let didNotNeuterButton: OnBoardingButton = {
 		let button = OnBoardingButton(title: "안 했어요")
-		button.translatesAutoresizingMaskIntoConstraints = false
 		
 		return button
 	}()
 	
 	private let characterTextView: OnBoardingTextView = {
 		let onBoardingTextView = OnBoardingTextView(title: "우리 아이 성격 (선택)")
-		onBoardingTextView.translatesAutoresizingMaskIntoConstraints = false
 		
 		return onBoardingTextView
 	}()
@@ -76,7 +70,6 @@ final class ThirdDogSettingViewController:
 	
 	private let confirmButton: UIButton = {
 		let button = UIButton()
-		button.translatesAutoresizingMaskIntoConstraints = false
 		button.setTitle("확인", for: .normal)
 		button.setTitleColor(.white, for: .normal)
 		button.layer.cornerRadius = 4

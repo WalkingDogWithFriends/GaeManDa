@@ -26,14 +26,12 @@ final class AddressSettingViewController:
 			willDisplayImageView: false,
 			title: "사생활 보호를 위해\n집 주소를 입력해주세요!"
 		)
-		onBoardingView.translatesAutoresizingMaskIntoConstraints = false
 		
 		return onBoardingView
 	}()
 	
 	private let searchTextField: UnderLineTextField = {
 		let underLineTextField = UnderLineTextField()
-		underLineTextField.translatesAutoresizingMaskIntoConstraints = false
 		underLineTextField.underLineColor = .black
 		underLineTextField.placeholder = "도로명 또는 지번 주소를 입력해주세요"
 		let image = UIImage(systemName: "magnifyingglass")
@@ -45,8 +43,6 @@ final class AddressSettingViewController:
 	
 	private let loadLocationButton: UIButton = {
 		let button = UIButton()
-		button.translatesAutoresizingMaskIntoConstraints = false
-		
 		var configuration = UIButton.Configuration.plain()
 		
 		let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 12, weight: .light)
@@ -78,7 +74,6 @@ final class AddressSettingViewController:
 	
 	private let mapView: UIView = {
 		let view = UIView()
-		view.translatesAutoresizingMaskIntoConstraints = false
 		view.backgroundColor = .gray
 		view.layer.cornerRadius = 24
 		
@@ -87,9 +82,13 @@ final class AddressSettingViewController:
 	
 	private let noticeLabel: UILabel = {
 		let label = UILabel()
-		label.translatesAutoresizingMaskIntoConstraints = false
 		label.tintColor = .black
-		let text = "사생활 보호를 위해 등록된 주소에서 반경 500M 내에는 보호자의 위치가 노출되지 않습니다.\n주소를 비롯한 보호자의 개인정보는 타인에게 공유되지 않으니 안심하고 서비스를 이용해주세요."
+		let text =
+		"""
+		사생활 보호를 위해 등록된 주소에서 반경 500M 내에는 보호자의 위치가 노출되지 않습니다.
+		주소를 비롯한 보호자의 개인정보는 타인에게 공유되지 않으니 안심하고 서비스를 이용해주세요.
+		"""
+		
 		label.font = .r12
 		label.numberOfLines = 0
 		label.adaptFontSpecificText(text, specificText: "반경 500M", font: .b12)
@@ -99,7 +98,6 @@ final class AddressSettingViewController:
 	
 	private let confirmButton: UIButton = {
 		let button = UIButton()
-		button.translatesAutoresizingMaskIntoConstraints = false
 		button.setTitle("확인", for: .normal)
 		button.setTitleColor(.white, for: .normal)
 		button.layer.cornerRadius = 4

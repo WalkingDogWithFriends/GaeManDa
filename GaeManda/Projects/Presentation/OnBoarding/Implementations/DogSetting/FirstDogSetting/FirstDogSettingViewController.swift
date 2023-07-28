@@ -23,14 +23,12 @@ final class FirstDogSettingViewController:
 			willDisplayImageView: true,
 			title: "우리 아이를 등록해주세요! (1/3)"
 		)
-		onBoardingView.translatesAutoresizingMaskIntoConstraints = false
 		
 		return onBoardingView
 	}()
 	
 	private let textStackView: UIStackView = {
 		let stackView = UIStackView()
-		stackView.translatesAutoresizingMaskIntoConstraints = false
 		stackView.axis = .vertical
 		stackView.alignment = .fill
 		stackView.spacing = 16
@@ -44,7 +42,6 @@ final class FirstDogSettingViewController:
 			title: "우리 아이 이름",
 			warningText: "우리 아이 이름을 작성해주세요"
 		)
-		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
 
 		return onBoardingTextField
 	}()
@@ -64,7 +61,6 @@ final class FirstDogSettingViewController:
 			title: "우리 아이 생년월일",
 			warningText: "우리아이 생년월일을 입력해주세요."
 		)
-		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
 
 		return onBoardingTextField
 	}()
@@ -80,7 +76,6 @@ final class FirstDogSettingViewController:
 	
 	private let buttonStackView: UIStackView = {
 		let stackView = UIStackView()
-		stackView.translatesAutoresizingMaskIntoConstraints = false
 		stackView.axis = .horizontal
 		stackView.alignment = .fill
 		stackView.spacing = 26
@@ -91,7 +86,6 @@ final class FirstDogSettingViewController:
 	
 	private let maleButton: OnBoardingButton = {
 		let button = OnBoardingButton(title: "남")
-		button.translatesAutoresizingMaskIntoConstraints = false
 		button.buttonIsSelected = true
 
 		return button
@@ -99,14 +93,12 @@ final class FirstDogSettingViewController:
 	
 	private let femaleButton: OnBoardingButton = {
 		let button = OnBoardingButton(title: "여")
-		button.translatesAutoresizingMaskIntoConstraints = false
 
 		return button
 	}()
 	
 	private let confirmButton: UIButton = {
 		let button = UIButton()
-		button.translatesAutoresizingMaskIntoConstraints = false
 		button.setTitle("확인", for: .normal)
 		button.setTitleColor(.white, for: .normal)
 		button.layer.cornerRadius = 4

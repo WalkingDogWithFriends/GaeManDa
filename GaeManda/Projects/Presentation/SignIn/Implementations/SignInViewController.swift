@@ -14,7 +14,6 @@ final class SignInViewController:
 	
 	private lazy var appleLoginButton: UIButton = {
 		let button = UIButton()
-		button.translatesAutoresizingMaskIntoConstraints = false
 		button.setTitle("Apple", for: .normal)
 		button.tintColor = .black
 		button.addTarget(self, action: #selector(appleLoginButtonTapped), for: .touchUpInside)
@@ -24,7 +23,6 @@ final class SignInViewController:
 	
 	private lazy var kakaoLoginButton: UIButton = {
 		let button = UIButton()
-		button.translatesAutoresizingMaskIntoConstraints = false
 		button.setTitle("Kakao", for: .normal)
 		button.tintColor = .black
 		button.addTarget(self, action: #selector(kakaoLoginButtonTapped), for: .touchUpInside)

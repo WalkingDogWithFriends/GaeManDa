@@ -23,14 +23,12 @@ final class TermsOfUseViewController:
 			willDisplayImageView: false,
 			title: "아래 약관에 동의해주세요!"
 		)
-		onBoardingView.translatesAutoresizingMaskIntoConstraints = false
 		
 		return onBoardingView
 	}()
 	
 	private let agreeAllButton: TermsOfUseButton = {
 		let button = TermsOfUseButton(title: "약관 전체 동의")
-		button.translatesAutoresizingMaskIntoConstraints = false
 		button.backgroundColor = .gray30
 		button.checkButton.titleLabel?.font = .b16
 		
@@ -39,7 +37,6 @@ final class TermsOfUseViewController:
 	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
-		tableView.translatesAutoresizingMaskIntoConstraints = false
 		tableView.register(
 			TermsOfUseCell.self,
 			forCellReuseIdentifier: TermsOfUseCell.identifier
@@ -53,7 +50,6 @@ final class TermsOfUseViewController:
 	
 	private let confirmButton: UIButton = {
 		let button = UIButton()
-		button.translatesAutoresizingMaskIntoConstraints = false
 		button.setTitle("확인", for: .normal)
 		button.setTitleColor(.white, for: .normal)
 		button.layer.cornerRadius = 4

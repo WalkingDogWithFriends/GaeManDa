@@ -22,7 +22,6 @@ final class TermsOfUseButton: UIView {
 	
 	let checkButton: UIButton = {
 		let button = UIButton()
-		button.translatesAutoresizingMaskIntoConstraints = false
 		let image = UIImage(systemName: "checkmark.circle")
 		button.setImage(image, for: .normal)
 		button.tintColor = .gray70
@@ -32,7 +31,6 @@ final class TermsOfUseButton: UIView {
 	
 	let titleLabel: UILabel = {
 		let label = UILabel()
-		label.translatesAutoresizingMaskIntoConstraints = false
 		label.tintColor = .black
 		label.font = .r16
 		

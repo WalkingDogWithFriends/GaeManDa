@@ -6,7 +6,6 @@ import GMDUtils
 final class OnBoardingView: UIView {
 	private let label: UILabel = {
 		let label = UILabel()
-		label.translatesAutoresizingMaskIntoConstraints = false
 		label.font = .jalnan20
 		label.numberOfLines = 0
 		
@@ -16,7 +15,6 @@ final class OnBoardingView: UIView {
 	private lazy var profileImageView: RoundImageView = {
 		let imageView = RoundImageView()
 		imageView.backgroundColor = .gray30
-		imageView.translatesAutoresizingMaskIntoConstraints = false
 		
 		return imageView
 	}()
