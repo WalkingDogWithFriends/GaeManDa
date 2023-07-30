@@ -14,7 +14,7 @@ let project = Project.createProject(
 			product: .staticLibrary,
 			sources: ["UseCaseImpl/Sources/**"],
 			dependencies: [
-				.Project.DomainLayer.Repository
+				.Project.DomainLayer.UseCase
 			]
 		),
 		.createTarget(
@@ -29,12 +29,21 @@ let project = Project.createProject(
 		.createTarget(
 			name: "UseCase",
 			product: .staticLibrary,
-			sources: ["Interfaces/UseCase/**"]
+			sources: ["Interfaces/UseCase/**"],
+			dependencies: [
+				.Project.DomainLayer.Entity,
+				.Project.DomainLayer.Repository,
+				.SPM.RxSwift
+			]
 		),
 		.createTarget(
 			name: "Repository",
 			product: .staticLibrary,
-			sources: ["Interfaces/Repository/**"]
+			sources: ["Interfaces/Repository/**"],
+			dependencies: [
+				.Project.DomainLayer.Entity,
+				.SPM.RxSwift
+			]
 		)
 	]
 )

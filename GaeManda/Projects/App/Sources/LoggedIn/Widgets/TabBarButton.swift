@@ -32,6 +32,8 @@ final class TabBarButton: UIView {
 	
 	init(imageView: UIImageView, title: String) {
 		self.imageView = imageView
+		imageView.translatesAutoresizingMaskIntoConstraints = false
+		
 		super.init(frame: .zero)
 		titleLabel.text = title
 		setupUI()

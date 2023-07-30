@@ -18,7 +18,9 @@ let project = Project.createProject(
 				.Project.PresentationLayer.DogsOnAroundImpl,
 				.Project.PresentationLayer.OnBoardingImpl,
 				.Project.PresentationLayer.GMDProfileImpl,
-				.Project.CoreLayer.GMDUtils
+				.Project.CoreLayer.GMDUtils,
+				.Project.DomainLayer.UseCaseImpl,
+				.Project.DataLayer.RepositoryImpl
 			],
 			settings: .settings(
 				base: [
@@ -43,7 +45,9 @@ let project = Project.createProject(
 				.Project.PresentationLayer.DogsOnAroundImpl,
 				.Project.PresentationLayer.OnBoardingImpl,
 				.Project.PresentationLayer.GMDProfileImpl,
-				.Project.CoreLayer.GMDUtils
+				.Project.CoreLayer.GMDUtils,
+				.Project.DomainLayer.UseCaseImpl,
+				.Project.DataLayer.RepositoryImpl
 			],
 			settings: .settings(
 				base: [
