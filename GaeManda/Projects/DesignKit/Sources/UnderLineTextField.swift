@@ -1,4 +1,5 @@
 import UIKit
+import SnapKit
 
 public class UnderLineTextField: UITextField {
 	private let textPadding = UIEdgeInsets(
@@ -18,13 +19,12 @@ public class UnderLineTextField: UITextField {
 	
 	public var underLineColor: UIColor? {
 		didSet {
-			self.underLineView.backgroundColor = underLineColor
+			underLineView.backgroundColor = underLineColor
 		}
 	}
 	
 	private lazy var underLineView: UIView = {
 		let view = UIView()
-		view.backgroundColor = self.underLineColor
 		
 		return view
 	}()
@@ -41,11 +41,10 @@ public class UnderLineTextField: UITextField {
 	private func setupUI() {
 		addSubview(underLineView)
 		
-		NSLayoutConstraint.activate([
-			underLineView.topAnchor.constraint(equalTo: self.bottomAnchor, constant: 4),
-			underLineView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-			underLineView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-			underLineView.heightAnchor.constraint(equalToConstant: 1)
-		])
+		underLineView.snp.makeConstraints { make in
+			make.top.equalTo(self.snp.bottom).offset(4)
+			make.leading.trailing.equalToSuperview()
+			make.height.equalTo(1)
+		}
 	}
 }
