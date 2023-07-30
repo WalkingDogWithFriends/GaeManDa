@@ -174,14 +174,14 @@ extension LoggedInTabBarController {
 extension LoggedInTabBarController: FloatingTabBarPresentable {
 	public func dismissTabBar() {
 		UIView.animate(
-			withDuration: 0.3,
+			withDuration: 0.2,
 			delay: 0,
 			options: .curveLinear
 		) { [weak self] in
 			guard let self = self else { return }
 			
 			self.floatingTabBar.snp.updateConstraints { make in
-				make.bottom.equalTo(self.view.snp.bottom).offset(+100)
+				make.bottom.equalTo(self.view.snp.bottom).offset(100)
 			}
 			self.view.layoutIfNeeded()
 		}
@@ -189,7 +189,7 @@ extension LoggedInTabBarController: FloatingTabBarPresentable {
 	
 	public func presentTabBar() {
 		UIView.animate(
-			withDuration: 0.3,
+			withDuration: 0.2,
 			delay: 0,
 			options: .curveLinear
 		) { [weak self] in
