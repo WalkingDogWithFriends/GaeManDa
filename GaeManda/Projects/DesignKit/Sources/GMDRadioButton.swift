@@ -1,9 +1,8 @@
 import UIKit
-import DesignKit
 import GMDExtensions
 
-class OnBoardingButton: UIButton {
-	var buttonIsSelected: Bool = false {
+public class GMDRadioButton: UIButton {
+	public var buttonIsSelected: Bool = false {
 		didSet {
 			if buttonIsSelected == false {
 				buttonDisSelected()
@@ -13,7 +12,7 @@ class OnBoardingButton: UIButton {
 		}
 	}
 	
-	init(title: String) {
+	public init(title: String) {
 		super.init(frame: .zero)
 		
 		self.layer.cornerRadius = 4

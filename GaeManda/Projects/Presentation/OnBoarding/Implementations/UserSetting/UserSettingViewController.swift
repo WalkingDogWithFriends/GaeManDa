@@ -85,15 +85,15 @@ final class UserSettingViewController:
 		return stackView
 	}()
 	
-	private let maleButton: OnBoardingButton = {
-		let button = OnBoardingButton(title: "남")
+	private let maleButton: GMDRadioButton = {
+		let button = GMDRadioButton(title: "남")
 		button.buttonIsSelected = true
 		
 		return button
 	}()
 	
-	private let femaleButton: OnBoardingButton = {
-		let button = OnBoardingButton(title: "여")
+	private let femaleButton: GMDRadioButton = {
+		let button = GMDRadioButton(title: "여")
 		
 		return button
 	}()

@@ -47,15 +47,15 @@ final class ThirdDogSettingViewController:
 		return stackView
 	}()
 	
-	private let didNeuterButton: OnBoardingButton = {
-		let button = OnBoardingButton(title: "했어요")
+	private let didNeuterButton: GMDRadioButton = {
+		let button = GMDRadioButton(title: "했어요")
 		button.buttonIsSelected = true
 		
 		return button
 	}()
 	
-	private let didNotNeuterButton: OnBoardingButton = {
-		let button = OnBoardingButton(title: "안 했어요")
+	private let didNotNeuterButton: GMDRadioButton = {
+		let button = GMDRadioButton(title: "안 했어요")
 		
 		return button
 	}()
