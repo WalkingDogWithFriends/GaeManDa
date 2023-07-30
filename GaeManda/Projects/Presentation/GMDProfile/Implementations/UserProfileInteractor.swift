@@ -73,3 +73,14 @@ final class UserProfileInteractor:
 		super.willResignActive()
 	}
 }
+
+// MARK: PresentableListener
+extension UserProfileInteractor {
+	func dogProfileEditButtonDidTap() {
+		print("dogProfileEditButtonDidTap")
+	}
+	
+	func userProfileEditButtonDidTap() {
+		print("userProfileEditButtonDidTap")
+	}
+}

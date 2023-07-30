@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxCocoa
 import RxSwift
 import SnapKit
 import DesignKit
@@ -14,10 +15,11 @@ import Entity
 
 final class DogsCollectionViewCell: UICollectionViewCell {
 	static let idenfier = "DogsCollectionViewCell"
+	let disposeBag = DisposeBag()
 	
-	lazy var editButtonTap: Observable<Void> = {
-		return editButton.rx.tap.asObservable()
-	}()
+	lazy var editButtonTap = ControlEvent(events: editButton.rx.tap)
+	
+	lazy var deleteButtonTap = ControlEvent(events: deleteButton.rx.tap)
 	
 	private let roundImageView: RoundImageView = {
 		let imageView = RoundImageView()

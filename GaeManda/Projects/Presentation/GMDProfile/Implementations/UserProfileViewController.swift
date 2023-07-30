@@ -20,6 +20,9 @@ protocol UserProfilePresentableListener: AnyObject {
 	var dogProfiles: Driver<[Dog]> { get set }
 	var userName: Driver<String> { get set }
 	var userSexAndAge: Driver<String> { get set }
+	
+	func dogProfileEditButtonDidTap()
+	func userProfileEditButtonDidTap()
 }
 
 final class UserProfileViewController:
@@ -214,12 +217,19 @@ private extension UserProfileViewController {
 			.disposed(by: disposeBag)
 		
 		listener?.userSexAndAge
-		.drive(with: self) { owner, sexAndAge in
-			owner.sexAndAgeLabel.text = sexAndAge
-		}
-		.disposed(by: disposeBag)
+			.drive(with: self) { owner, sexAndAge in
+				owner.sexAndAgeLabel.text = sexAndAge
+			}
+			.disposed(by: disposeBag)
 		
 		collectionViewBind()
+		
+		profileEditButton.rx.tap
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.listener?.userProfileEditButtonDidTap()
+			}
+			.disposed(by: disposeBag)
 	}
 	
 	private func collectionViewBind() {
@@ -247,6 +257,13 @@ private extension UserProfileViewController {
 				cellType: DogsCollectionViewCell.self
 			)) { (_, item, cell) in
 				cell.configuration(item)
+				
+				cell.editButtonTap
+					.withUnretained(self)
+					.bind { owner, _ in
+						owner.listener?.dogProfileEditButtonDidTap()
+					}
+					.disposed(by: cell.disposeBag)
 			}
 			.disposed(by: disposeBag)
 		
