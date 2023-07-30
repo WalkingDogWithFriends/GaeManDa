@@ -24,7 +24,6 @@ public class UnderLineTextField: UITextField {
 	
 	private lazy var underLineView: UIView = {
 		let view = UIView()
-		view.translatesAutoresizingMaskIntoConstraints = false
 		view.backgroundColor = self.underLineColor
 		
 		return view

@@ -29,7 +29,6 @@ final class DetailAddressSettingViewController:
 	
 	private let topStackView: UIStackView = {
 		let stackView = UIStackView()
-		stackView.translatesAutoresizingMaskIntoConstraints = false
 		stackView.spacing = 20
 		stackView.axis = .vertical
 		stackView.alignment = .fill
@@ -46,7 +45,6 @@ final class DetailAddressSettingViewController:
 	
 	private let titleLabel: UILabel = {
 		let label = UILabel()
-		label.translatesAutoresizingMaskIntoConstraints = false
 		label.text = "주소 검색"
 		label.font = .b16
 		
@@ -55,7 +53,6 @@ final class DetailAddressSettingViewController:
 	
 	private let closeButton: UIButton = {
 		let button = UIButton()
-		button.translatesAutoresizingMaskIntoConstraints = false
 		let image = UIImage(
 			systemName: "xmark",
 			withConfiguration: UIImage.SymbolConfiguration(pointSize: 18, weight: .semibold)
@@ -68,7 +65,6 @@ final class DetailAddressSettingViewController:
 	
 	private let textField: UITextField = {
 		let textField = UITextField()
-		textField.translatesAutoresizingMaskIntoConstraints = false
 		textField.placeholder = "지번, 도로명, 건물명으로 검색"
 		textField.layer.cornerRadius = 7
 		textField.layer.borderWidth = 1.2
@@ -86,10 +82,7 @@ final class DetailAddressSettingViewController:
 	
 	private let loadLocationButton: UIButton = {
 		let button = UIButton()
-		button.translatesAutoresizingMaskIntoConstraints = false
-		
 		var configuration = UIButton.Configuration.plain()
-		
 		let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 12, weight: .light)
 		let image = UIImage(
 			systemName: "location.north.circle.fill",
@@ -119,7 +112,6 @@ final class DetailAddressSettingViewController:
 	
 	private let bottomView: UIView = {
 		let view = UIView()
-		view.translatesAutoresizingMaskIntoConstraints = false
 		view.backgroundColor = .init(hexCode: "#F6F6F6")
 		
 		return view

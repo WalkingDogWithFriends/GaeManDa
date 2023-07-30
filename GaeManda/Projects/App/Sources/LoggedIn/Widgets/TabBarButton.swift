@@ -22,8 +22,6 @@ final class TabBarButton: UIView {
 	
 	private let titleLabel: UILabel = {
 		let label = UILabel()
-		label.translatesAutoresizingMaskIntoConstraints = false
-		
 		label.font = .r12
 		label.textAlignment = .center
 		
@@ -37,17 +35,13 @@ final class TabBarButton: UIView {
 		imageView.translatesAutoresizingMaskIntoConstraints = false
 		
 		super.init(frame: .zero)
-		
 		titleLabel.text = title
 		setupUI()
 	}
 	
 	init(image: UIImage?, title: String) {
 		imageView = UIImageView(image: image)
-		imageView.translatesAutoresizingMaskIntoConstraints = false
-
 		super.init(frame: .zero)
-		
 		titleLabel.text = title
 		setupUI()
 	}
@@ -69,15 +63,17 @@ final class TabBarButton: UIView {
 	}
 	
 	private func setConstraints() {
-		NSLayoutConstraint.activate([
-			imageView.topAnchor.constraint(equalTo: topAnchor),
-			imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-			imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-			
-			titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
-			titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-			titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-			titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
-		])
+		imageView.snp.makeConstraints { make in
+				make.top.equalToSuperview()
+				make.leading.equalToSuperview()
+				make.trailing.equalToSuperview()
+		}
+
+		titleLabel.snp.makeConstraints { make in
+				make.top.equalTo(imageView.snp.bottom).offset(8)
+				make.leading.equalToSuperview()
+				make.trailing.equalToSuperview()
+				make.bottom.equalToSuperview()
+		}
 	}
 }

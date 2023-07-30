@@ -19,7 +19,6 @@ public final class OnBoardingTextView: UIView {
 	
 	private let stackView: UIStackView = {
 		let stackView = UIStackView()
-		stackView.translatesAutoresizingMaskIntoConstraints = false
 		stackView.spacing = 8
 		stackView.axis = .vertical
 		stackView.alignment = .fill
@@ -30,7 +29,6 @@ public final class OnBoardingTextView: UIView {
 	
 	private let labelStackView: UIStackView = {
 		let stackView = UIStackView()
-		stackView.translatesAutoresizingMaskIntoConstraints = false
 		stackView.axis = .horizontal
 		stackView.alignment = .fill
 		stackView.distribution = .fillEqually
@@ -40,7 +38,6 @@ public final class OnBoardingTextView: UIView {
 	
 	private let titleLabel: UILabel = {
 		let label = UILabel()
-		label.translatesAutoresizingMaskIntoConstraints = false
 		label.textColor = .gray90
 		label.numberOfLines = 1
 		label.font = .r12
@@ -50,7 +47,6 @@ public final class OnBoardingTextView: UIView {
 	
 	public let maximumTextCountLabel: UILabel = {
 		let label = UILabel()
-		label.translatesAutoresizingMaskIntoConstraints = false
 		label.textColor = .gray90
 		label.numberOfLines = 1
 		label.font = .r12
@@ -61,7 +57,6 @@ public final class OnBoardingTextView: UIView {
 	
 	public let textView: UITextView = {
 		let textView = UITextView()
-		textView.translatesAutoresizingMaskIntoConstraints = false
 		textView.layer.borderColor = UIColor.gray90.cgColor
 		textView.layer.borderWidth = 1.5
 		textView.layer.cornerRadius = 4
@@ -72,7 +67,6 @@ public final class OnBoardingTextView: UIView {
 	
 	private lazy var warningLabel: UILabel = {
 		let label = UILabel()
-		label.translatesAutoresizingMaskIntoConstraints = false
 		label.textColor = .red100
 		label.numberOfLines = 1
 		label.font = .r12

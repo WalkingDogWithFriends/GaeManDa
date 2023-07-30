@@ -2,6 +2,7 @@ import UIKit
 import RIBs
 import RxCocoa
 import RxSwift
+import SnapKit
 import DesignKit
 import GMDExtensions
 import GMDUtils
@@ -23,14 +24,12 @@ final class ThirdDogSettingViewController:
 			willDisplayImageView: true,
 			title: "우리 아이를 등록해주세요! (3/3)"
 		)
-		onBoardingView.translatesAutoresizingMaskIntoConstraints = false
 
 		return onBoardingView
 	}()
 	
 	private let buttonStackViewLabel: UILabel = {
 		let label = UILabel()
-		label.translatesAutoresizingMaskIntoConstraints = false
 		label.text = "중성화"
 		label.font = .r12
 		label.textColor = .gray90
@@ -40,7 +39,6 @@ final class ThirdDogSettingViewController:
 	
 	private let buttonStackView: UIStackView = {
 		let stackView = UIStackView()
-		stackView.translatesAutoresizingMaskIntoConstraints = false
 		stackView.axis = .horizontal
 		stackView.alignment = .fill
 		stackView.spacing = 26
@@ -51,7 +49,6 @@ final class ThirdDogSettingViewController:
 	
 	private let didNeuterButton: OnBoardingButton = {
 		let button = OnBoardingButton(title: "했어요")
-		button.translatesAutoresizingMaskIntoConstraints = false
 		button.buttonIsSelected = true
 		
 		return button
@@ -59,14 +56,12 @@ final class ThirdDogSettingViewController:
 	
 	private let didNotNeuterButton: OnBoardingButton = {
 		let button = OnBoardingButton(title: "안 했어요")
-		button.translatesAutoresizingMaskIntoConstraints = false
 		
 		return button
 	}()
 	
 	private let characterTextView: OnBoardingTextView = {
 		let onBoardingTextView = OnBoardingTextView(title: "우리 아이 성격 (선택)")
-		onBoardingTextView.translatesAutoresizingMaskIntoConstraints = false
 		
 		return onBoardingTextView
 	}()
@@ -75,7 +70,6 @@ final class ThirdDogSettingViewController:
 	
 	private let confirmButton: UIButton = {
 		let button = UIButton()
-		button.translatesAutoresizingMaskIntoConstraints = false
 		button.setTitle("확인", for: .normal)
 		button.setTitleColor(.white, for: .normal)
 		button.layer.cornerRadius = 4
@@ -131,29 +125,37 @@ final class ThirdDogSettingViewController:
 	}
 	
 	private func setConstraints() {
-		NSLayoutConstraint.activate([
-			onBoardingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-			onBoardingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-			onBoardingView.topAnchor.constraint(equalTo: view.topAnchor),
-			
-			buttonStackViewLabel.topAnchor.constraint(equalTo: onBoardingView.bottomAnchor, constant: 48),
-			buttonStackViewLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			buttonStackViewLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			
-			buttonStackView.topAnchor.constraint(equalTo: buttonStackViewLabel.bottomAnchor, constant: 8),
-			buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			buttonStackView.heightAnchor.constraint(equalToConstant: 40),
-			
-			characterTextView.topAnchor.constraint(equalTo: buttonStackView.bottomAnchor, constant: 20),
-			characterTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			characterTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			
-			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -54),
-			confirmButton.heightAnchor.constraint(equalToConstant: 40)
-		])
+		onBoardingView.snp.makeConstraints { make in
+			make.leading.equalToSuperview()
+			make.trailing.equalToSuperview()
+			make.top.equalToSuperview()
+		}
+		
+		buttonStackViewLabel.snp.makeConstraints { make in
+			make.top.equalTo(onBoardingView.snp.bottom).offset(48)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+		}
+		
+		buttonStackView.snp.makeConstraints { make in
+			make.top.equalTo(buttonStackViewLabel.snp.bottom).offset(8)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.height.equalTo(40)
+		}
+		
+		characterTextView.snp.makeConstraints { make in
+			make.top.equalTo(buttonStackView.snp.bottom).offset(20)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+		}
+		
+		confirmButton.snp.makeConstraints { make in
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.bottom.equalToSuperview().offset(-54)
+			make.height.equalTo(40)
+		}
 	}
 	
 	private func bind() {

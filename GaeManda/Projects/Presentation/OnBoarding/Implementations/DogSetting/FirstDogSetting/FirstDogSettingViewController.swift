@@ -2,6 +2,7 @@ import UIKit
 import RIBs
 import RxCocoa
 import RxSwift
+import SnapKit
 import DesignKit
 import GMDUtils
 
@@ -22,14 +23,12 @@ final class FirstDogSettingViewController:
 			willDisplayImageView: true,
 			title: "우리 아이를 등록해주세요! (1/3)"
 		)
-		onBoardingView.translatesAutoresizingMaskIntoConstraints = false
 		
 		return onBoardingView
 	}()
 	
 	private let textStackView: UIStackView = {
 		let stackView = UIStackView()
-		stackView.translatesAutoresizingMaskIntoConstraints = false
 		stackView.axis = .vertical
 		stackView.alignment = .fill
 		stackView.spacing = 16
@@ -43,7 +42,6 @@ final class FirstDogSettingViewController:
 			title: "우리 아이 이름",
 			warningText: "우리 아이 이름을 작성해주세요"
 		)
-		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
 
 		return onBoardingTextField
 	}()
@@ -63,7 +61,6 @@ final class FirstDogSettingViewController:
 			title: "우리 아이 생년월일",
 			warningText: "우리아이 생년월일을 입력해주세요."
 		)
-		onBoardingTextField.translatesAutoresizingMaskIntoConstraints = false
 
 		return onBoardingTextField
 	}()
@@ -79,7 +76,6 @@ final class FirstDogSettingViewController:
 	
 	private let buttonStackView: UIStackView = {
 		let stackView = UIStackView()
-		stackView.translatesAutoresizingMaskIntoConstraints = false
 		stackView.axis = .horizontal
 		stackView.alignment = .fill
 		stackView.spacing = 26
@@ -90,7 +86,6 @@ final class FirstDogSettingViewController:
 	
 	private let maleButton: OnBoardingButton = {
 		let button = OnBoardingButton(title: "남")
-		button.translatesAutoresizingMaskIntoConstraints = false
 		button.buttonIsSelected = true
 
 		return button
@@ -98,14 +93,12 @@ final class FirstDogSettingViewController:
 	
 	private let femaleButton: OnBoardingButton = {
 		let button = OnBoardingButton(title: "여")
-		button.translatesAutoresizingMaskIntoConstraints = false
 
 		return button
 	}()
 	
 	private let confirmButton: UIButton = {
 		let button = UIButton()
-		button.translatesAutoresizingMaskIntoConstraints = false
 		button.setTitle("확인", for: .normal)
 		button.setTitleColor(.white, for: .normal)
 		button.layer.cornerRadius = 4
@@ -152,25 +145,31 @@ final class FirstDogSettingViewController:
 	}
 	
 	private func setConstraints() {
-		NSLayoutConstraint.activate([
-			onBoardingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-			onBoardingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-			onBoardingView.topAnchor.constraint(equalTo: view.topAnchor),
-			
-			textStackView.topAnchor.constraint(equalTo: onBoardingView.bottomAnchor, constant: 48),
-			textStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			textStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			
-			buttonStackView.topAnchor.constraint(equalTo: textStackView.bottomAnchor, constant: 44),
-			buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			buttonStackView.heightAnchor.constraint(equalToConstant: 40),
-			
-			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -54),
-			confirmButton.heightAnchor.constraint(equalToConstant: 40)
-		])
+		onBoardingView.snp.makeConstraints { make in
+				make.leading.equalToSuperview()
+				make.trailing.equalToSuperview()
+				make.top.equalToSuperview()
+		}
+
+		textStackView.snp.makeConstraints { make in
+				make.top.equalTo(onBoardingView.snp.bottom).offset(48)
+				make.leading.equalToSuperview().offset(32)
+				make.trailing.equalToSuperview().offset(-32)
+		}
+
+		buttonStackView.snp.makeConstraints { make in
+				make.top.equalTo(textStackView.snp.bottom).offset(44)
+				make.leading.equalToSuperview().offset(32)
+				make.trailing.equalToSuperview().offset(-32)
+				make.height.equalTo(40)
+		}
+
+		confirmButton.snp.makeConstraints { make in
+				make.leading.equalToSuperview().offset(32)
+				make.trailing.equalToSuperview().offset(-32)
+				make.bottom.equalToSuperview().offset(-54)
+				make.height.equalTo(40)
+		}
 	}
 	
 	private func bind() {

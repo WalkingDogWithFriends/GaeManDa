@@ -24,7 +24,6 @@ public final class OnBoardingTextField: UIView {
 	
 	private let stackView: UIStackView = {
 		let stackView = UIStackView()
-		stackView.translatesAutoresizingMaskIntoConstraints = false
 		stackView.spacing = 7
 		stackView.axis = .vertical
 		stackView.alignment = .fill
@@ -35,7 +34,6 @@ public final class OnBoardingTextField: UIView {
 	
 	private let titleLabel: UILabel = {
 		let label = UILabel()
-		label.translatesAutoresizingMaskIntoConstraints = false
 		label.textColor = .gray90
 		label.layer.opacity = 0.0
 		label.numberOfLines = 1
@@ -46,7 +44,6 @@ public final class OnBoardingTextField: UIView {
 	
 	public let textField: UnderLineTextField = {
 		let textField = UnderLineTextField()
-		textField.translatesAutoresizingMaskIntoConstraints = false
 		textField.font = .r15
 		textField.underLineColor = .gray90
 		textField.setPlaceholdColor(.gray90)
@@ -56,7 +53,6 @@ public final class OnBoardingTextField: UIView {
 	
 	private lazy var warningLabel: UILabel = {
 		let label = UILabel()
-		label.translatesAutoresizingMaskIntoConstraints = false
 		label.textColor = .red100
 		label.numberOfLines = 1
 		label.font = .r12

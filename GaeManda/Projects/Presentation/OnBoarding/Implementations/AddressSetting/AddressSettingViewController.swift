@@ -2,6 +2,7 @@ import UIKit
 import RIBs
 import RxCocoa
 import RxSwift
+import SnapKit
 import DesignKit
 import GMDExtensions
 import GMDUtils
@@ -25,14 +26,12 @@ final class AddressSettingViewController:
 			willDisplayImageView: false,
 			title: "사생활 보호를 위해\n집 주소를 입력해주세요!"
 		)
-		onBoardingView.translatesAutoresizingMaskIntoConstraints = false
 		
 		return onBoardingView
 	}()
 	
 	private let searchTextField: UnderLineTextField = {
 		let underLineTextField = UnderLineTextField()
-		underLineTextField.translatesAutoresizingMaskIntoConstraints = false
 		underLineTextField.underLineColor = .black
 		underLineTextField.placeholder = "도로명 또는 지번 주소를 입력해주세요"
 		let image = UIImage(systemName: "magnifyingglass")
@@ -44,8 +43,6 @@ final class AddressSettingViewController:
 	
 	private let loadLocationButton: UIButton = {
 		let button = UIButton()
-		button.translatesAutoresizingMaskIntoConstraints = false
-		
 		var configuration = UIButton.Configuration.plain()
 		
 		let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 12, weight: .light)
@@ -77,7 +74,6 @@ final class AddressSettingViewController:
 	
 	private let mapView: UIView = {
 		let view = UIView()
-		view.translatesAutoresizingMaskIntoConstraints = false
 		view.backgroundColor = .gray
 		view.layer.cornerRadius = 24
 		
@@ -86,9 +82,13 @@ final class AddressSettingViewController:
 	
 	private let noticeLabel: UILabel = {
 		let label = UILabel()
-		label.translatesAutoresizingMaskIntoConstraints = false
 		label.tintColor = .black
-		let text = "사생활 보호를 위해 등록된 주소에서 반경 500M 내에는 보호자의 위치가 노출되지 않습니다.\n주소를 비롯한 보호자의 개인정보는 타인에게 공유되지 않으니 안심하고 서비스를 이용해주세요."
+		let text =
+		"""
+		사생활 보호를 위해 등록된 주소에서 반경 500M 내에는 보호자의 위치가 노출되지 않습니다.
+		주소를 비롯한 보호자의 개인정보는 타인에게 공유되지 않으니 안심하고 서비스를 이용해주세요.
+		"""
+		
 		label.font = .r12
 		label.numberOfLines = 0
 		label.adaptFontSpecificText(text, specificText: "반경 500M", font: .b12)
@@ -98,7 +98,6 @@ final class AddressSettingViewController:
 	
 	private let confirmButton: UIButton = {
 		let button = UIButton()
-		button.translatesAutoresizingMaskIntoConstraints = false
 		button.setTitle("확인", for: .normal)
 		button.setTitleColor(.white, for: .normal)
 		button.layer.cornerRadius = 4
@@ -135,33 +134,43 @@ final class AddressSettingViewController:
 	}
 	
 	private func setConstraints() {
-		NSLayoutConstraint.activate([
-			onBoardingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-			onBoardingView.topAnchor.constraint(equalTo: view.topAnchor),
-			
-			searchTextField.topAnchor.constraint(equalTo: onBoardingView.bottomAnchor, constant: 61),
-			searchTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			searchTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			
-			loadLocationButton.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: 35),
-			loadLocationButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			loadLocationButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			loadLocationButton.heightAnchor.constraint(equalToConstant: 28),
-			
-			mapView.topAnchor.constraint(equalTo: loadLocationButton.bottomAnchor, constant: 52),
-			mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			mapView.heightAnchor.constraint(equalToConstant: 235),
-			
-			noticeLabel.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 28),
-			noticeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			noticeLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			
-			confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -54),
-			confirmButton.heightAnchor.constraint(equalToConstant: 40)
-		])
+		onBoardingView.snp.makeConstraints { make in
+			make.leading.equalToSuperview()
+			make.top.equalToSuperview()
+		}
+		
+		searchTextField.snp.makeConstraints { make in
+			make.top.equalTo(onBoardingView.snp.bottom).offset(61)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+		}
+		
+		loadLocationButton.snp.makeConstraints { make in
+			make.top.equalTo(searchTextField.snp.bottom).offset(35)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.height.equalTo(28)
+		}
+		
+		mapView.snp.makeConstraints { make in
+			make.top.equalTo(loadLocationButton.snp.bottom).offset(52)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.height.equalTo(235)
+		}
+		
+		noticeLabel.snp.makeConstraints { make in
+			make.top.equalTo(mapView.snp.bottom).offset(28)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+		}
+		
+		confirmButton.snp.makeConstraints { make in
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.bottom.equalToSuperview().offset(-54)
+			make.height.equalTo(40)
+		}
 	}
 	
 	private func bind() {
