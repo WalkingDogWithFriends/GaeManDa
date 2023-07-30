@@ -68,7 +68,7 @@ final class UserProfileViewController:
 		let button = UIButton()
 		button.setTitle("수정", for: .normal)
 		button.setTitleColor(.black, for: .normal)
-		button.titleLabel?.font = .r8
+		button.titleLabel?.font = .r12
 		button.layer.borderColor = UIColor.gray50.cgColor
 		button.layer.cornerRadius = 10
 		button.layer.borderWidth = 1
@@ -165,8 +165,8 @@ private extension UserProfileViewController {
 		profileEditButton.snp.makeConstraints { make in
 			make.leading.equalTo(nickNameLabel.snp.trailing).offset(12)
 			make.centerY.equalTo(nickNameLabel)
-			make.width.equalTo(36)
-			make.height.equalTo(16)
+			make.width.equalTo(40)
+			make.height.equalTo(20)
 		}
 		
 		sexAndAgeLabel.snp.makeConstraints { make in

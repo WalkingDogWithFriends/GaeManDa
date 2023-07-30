@@ -28,19 +28,41 @@ final class DogsCollectionViewCell: UICollectionViewCell {
 	
 	private let titleLabel: UILabel = {
 		let label = UILabel()
-		label.font = .r12
+		label.font = .r16
 		
 		return label
 	}()
 	
+	private let buttonStackView: UIStackView = {
+		let stackView = UIStackView()
+		stackView.axis = .horizontal
+		stackView.spacing = 8
+		stackView.alignment = .fill
+		stackView.distribution = .fillEqually
+		
+		return stackView
+	}()
+	
 	private let editButton: UIButton = {
 		let button = UIButton()
-		button.setTitle("수정", for: .normal)
-		button.titleLabel?.font = .r8
-		button.setTitleColor(.black, for: .normal)
-		button.layer.borderColor = UIColor.gray50.cgColor
-		button.layer.borderWidth = 1
-		button.layer.cornerRadius = 10
+		let image = UIImage(
+			systemName: "rectangle.and.pencil.and.ellipsis.rtl",
+			withConfiguration: UIImage.SymbolConfiguration(pointSize: 18)
+		)
+		button.setImage(image, for: .normal)
+		button.tintColor = .gray90
+		
+		return button
+	}()
+	
+	private let deleteButton: UIButton = {
+		let button = UIButton()
+		let image = UIImage(
+			systemName: "trash",
+			withConfiguration: UIImage.SymbolConfiguration(pointSize: 18)
+		)
+		button.setImage(image, for: .normal)
+		button.tintColor = .gray90
 		
 		return button
 	}()
@@ -77,7 +99,7 @@ final class DogsCollectionViewCell: UICollectionViewCell {
 	
 	private let weightLabel: UILabel = {
 		let label = UILabel()
-		label.font = .r10
+		label.font = .r12
 		label.text = "몸무게"
 		
 		return label
@@ -85,14 +107,14 @@ final class DogsCollectionViewCell: UICollectionViewCell {
 	
 	private let weightValueLabel: UILabel = {
 		let label = UILabel()
-		label.font = .r8
+		label.font = .r12
 		
 		return label
 	}()
 	
 	private let neuteringLabel: UILabel = {
 		let label = UILabel()
-		label.font = .r10
+		label.font = .r12
 		label.text = "중성화"
 		
 		return label
@@ -100,7 +122,7 @@ final class DogsCollectionViewCell: UICollectionViewCell {
 	
 	private let neuteringValueLabel: UILabel = {
 		let label = UILabel()
-		label.font = .r8
+		label.font = .r12
 		
 		return label
 	}()
@@ -132,8 +154,11 @@ private extension DogsCollectionViewCell {
 	func setupSubviews() {
 		contentView.addSubview(roundImageView)
 		contentView.addSubview(titleLabel)
-		contentView.addSubview(editButton)
+		contentView.addSubview(buttonStackView)
 		contentView.addSubview(bottomStackView)
+		
+		buttonStackView.addArrangedSubview(editButton)
+		buttonStackView.addArrangedSubview(deleteButton)
 		
 		bottomStackView.addArrangedSubview(weightStackView)
 		bottomStackView.addArrangedSubview(neuteringStackView)
@@ -156,11 +181,9 @@ private extension DogsCollectionViewCell {
 			make.leading.equalTo(roundImageView.snp.trailing).offset(12)
 		}
 		
-		editButton.snp.makeConstraints { make in
+		buttonStackView.snp.makeConstraints { make in
 			make.centerY.equalTo(roundImageView)
 			make.trailing.equalToSuperview().offset(-8)
-			make.width.equalTo(36)
-			make.height.equalTo(16)
 		}
 		
 		bottomStackView.snp.makeConstraints { make in
@@ -173,7 +196,7 @@ private extension DogsCollectionViewCell {
 // MARK: Configure
 extension DogsCollectionViewCell {
 	func configuration(_ dog: Dog) {
-		titleLabel.text = "\(dog.name) (\(dog.sex) / \(dog.age))"
+		titleLabel.text = "\(dog.name) (\(dog.sex) / \(dog.age)세)"
 		
 		weightValueLabel.text = "\(dog.weight)kg"
 		neuteringValueLabel.text = dog.didNeutered == true ? "했어요" : "안 했어요"
