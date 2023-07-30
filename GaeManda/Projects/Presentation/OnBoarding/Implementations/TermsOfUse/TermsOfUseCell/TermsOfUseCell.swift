@@ -46,7 +46,7 @@ final class TermsOfUseCell: UITableViewCell {
 	}
 	
 	private func setupUI(termsOfUse: TermsOfUse) {
-		var prefix = termsOfUse.isRequired ? "[필수]" : "[선택]"
+		let prefix = termsOfUse.isRequired ? "[필수]" : "[선택]"
 		
 		termsOfUseButton.setTitle("\(prefix) \(termsOfUse.title)")
 		subTitleLabel.text = termsOfUse.subTitle
