@@ -180,13 +180,9 @@ extension LoggedInTabBarController: FloatingTabBarPresentable {
 		) { [weak self] in
 			guard let self = self else { return }
 			
-			// TODO: SnapKit 이후 수정.
-			self.floatingTabBar.frame = CGRect(
-				x: self.floatingTabBar.frame.origin.x,
-				y: self.view.frame.height + 100,
-				width: self.floatingTabBar.frame.width,
-				height: self.floatingTabBar.frame.height
-			)
+			self.floatingTabBar.snp.updateConstraints { make in
+				make.bottom.equalTo(self.view.snp.bottom).offset(+100)
+			}
 			self.view.layoutIfNeeded()
 		}
 	}
@@ -198,14 +194,10 @@ extension LoggedInTabBarController: FloatingTabBarPresentable {
 			options: .curveLinear
 		) { [weak self] in
 			guard let self = self else { return }
-			
-			// TODO: SnapKit 이후 수정.
-			self.floatingTabBar.frame = CGRect(
-				x: self.floatingTabBar.frame.origin.x,
-				y: self.view.frame.height - 92,
-				width: self.floatingTabBar.frame.width,
-				height: self.floatingTabBar.frame.height
-			)
+
+			self.floatingTabBar.snp.updateConstraints { make in
+				make.bottom.equalTo(self.view.snp.bottom).offset(-32)
+			}
 			self.view.layoutIfNeeded()
 		}
 	}

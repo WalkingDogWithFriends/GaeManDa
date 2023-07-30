@@ -59,7 +59,7 @@ final class UserProfileInteractor:
 			.asDriver(onErrorJustReturn: User.defaultUser)
 		
 		self.userName = users.map { $0.name }
-		self.userSexAndAge = users.map { "\($0.sex) \($0.age)세"}
+		self.userSexAndAge = users.map { "\($0.sex) \($0.age)세" }
 		
 		super.init(presenter: presenter)
 		presenter.listener = self
