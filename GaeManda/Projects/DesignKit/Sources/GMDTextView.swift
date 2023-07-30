@@ -1,4 +1,5 @@
 import UIKit
+import SnapKit
 
 public final class GMDTextView: UIView {
 	public lazy var isWarning = false {
@@ -102,21 +103,20 @@ public final class GMDTextView: UIView {
 		labelStackView.addArrangedSubview(titleLabel)
 		labelStackView.addArrangedSubview(maximumTextCountLabel)
 
-		NSLayoutConstraint.activate([
-			labelStackView.topAnchor.constraint(equalTo: self.topAnchor),
-			labelStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-			labelStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-			
-			textView.topAnchor.constraint(equalTo: labelStackView.bottomAnchor, constant: 7),
-			textView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-			textView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-			textView.heightAnchor.constraint(equalToConstant: 127),
-			
-			warningLabel.topAnchor.constraint(equalTo: textView.bottomAnchor),
-			warningLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-			warningLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-			warningLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor)
-		])
+		labelStackView.snp.makeConstraints { make in
+			make.top.leading.trailing.equalToSuperview()
+		}
+		
+		textView.snp.makeConstraints { make in
+			make.top.equalTo(labelStackView.snp.bottom).offset(8)
+			make.leading.trailing.equalToSuperview()
+			make.height.equalTo(128)
+		}
+		
+		warningLabel.snp.makeConstraints { make in
+			make.top.equalTo(textView.snp.bottom)
+			make.leading.trailing.bottom.equalToSuperview()
+		}
 	}
 }
 

@@ -143,7 +143,6 @@ final class DetailAddressSettingViewController:
 	}
 	
 	private func setConstraints() {
-		let safeArea = view.safeAreaLayoutGuide
 		NSLayoutConstraint.activate([
 			topStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 36),
 			topStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),

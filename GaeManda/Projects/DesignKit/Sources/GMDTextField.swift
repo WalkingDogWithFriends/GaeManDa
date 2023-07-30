@@ -1,4 +1,5 @@
 import UIKit
+import SnapKit
 import GMDExtensions
 
 public final class GMDTextField: UIView {
@@ -94,12 +95,9 @@ public final class GMDTextField: UIView {
 		stackView.addArrangedSubview(textField)
 		stackView.addArrangedSubview(warningLabel)
 		
-		NSLayoutConstraint.activate([
-			stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-			stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-			stackView.topAnchor.constraint(equalTo: self.topAnchor),
-			stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
-		])
+		stackView.snp.makeConstraints { make in
+			make.leading.trailing.top.bottom.equalToSuperview()
+		}
 	}
 }
 

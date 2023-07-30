@@ -7,16 +7,13 @@
 //
 
 import UIKit
+import SnapKit
 import DesignKit
 
 final class TermsOfUseButton: UIView {
 	lazy var isChecked: Bool = false {
 		didSet {
-			if isChecked == true {
-				checkButton.tintColor = .green100
-			} else {
-				checkButton.tintColor = .gray70
-			}
+			checkButton.tintColor = isChecked ? .green100 : .gray70
 		}
 	}
 	
@@ -64,17 +61,17 @@ final class TermsOfUseButton: UIView {
 	}
 			
 	private func setConstraints() {
-		NSLayoutConstraint.activate([
-			checkButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
-			checkButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-			checkButton.widthAnchor.constraint(equalToConstant: 24),
-			checkButton.heightAnchor.constraint(equalToConstant: 24),
-			checkButton.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-			checkButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
-			
-			titleLabel.leadingAnchor.constraint(equalTo: checkButton.trailingAnchor, constant: 12),
-			titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
-		])
+		checkButton.snp.makeConstraints { make in
+			make.leading.equalToSuperview().offset(12)
+			make.width.height.equalTo(24)
+			make.top.equalToSuperview().offset(8)
+			make.bottom.equalToSuperview().offset(-8)
+		}
+		
+		titleLabel.snp.makeConstraints { make in
+			make.leading.equalTo(checkButton.snp.trailing).offset(12)
+			make.centerY.equalToSuperview()
+		}
 	}
 }
 

@@ -33,7 +33,7 @@ final class AppRootRouter:
 	
 	override func didLoad() {
 		super.didLoad()
-		attachLoggedIn()
+		attachLoggedOut()
 	}
 	
 	func attachLoggedOut() {
