@@ -60,10 +60,10 @@ final class ThirdDogSettingViewController:
 		return button
 	}()
 	
-	private let characterTextView: OnBoardingTextView = {
-		let onBoardingTextView = OnBoardingTextView(title: "우리 아이 성격 (선택)")
+	private let characterTextView: GMDTextView = {
+		let gmdTextView = GMDTextView(title: "우리 아이 성격 (선택)")
 		
-		return onBoardingTextView
+		return gmdTextView
 	}()
 	
 	private var maximumTextCount: Int = 100

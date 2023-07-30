@@ -37,13 +37,13 @@ final class FirstDogSettingViewController:
 		return stackView
 	}()
 	
-	private let dogNameTextField: OnBoardingTextField = {
-		let onBoardingTextField = OnBoardingTextField(
+	private let dogNameTextField: GMDTextField = {
+		let gmdTextField = GMDTextField(
 			title: "우리 아이 이름",
 			warningText: "우리 아이 이름을 작성해주세요"
 		)
 
-		return onBoardingTextField
+		return gmdTextField
 	}()
 	
 	private var maximumTextCount = 20
@@ -56,13 +56,13 @@ final class FirstDogSettingViewController:
 		return label
 	}()
 	
-	private let calenderTextField: OnBoardingTextField = {
-		let onBoardingTextField = OnBoardingTextField(
+	private let calenderTextField: GMDTextField = {
+		let gmdTextField = GMDTextField(
 			title: "우리 아이 생년월일",
 			warningText: "우리아이 생년월일을 입력해주세요."
 		)
 
-		return onBoardingTextField
+		return gmdTextField
 	}()
 	
 	private let calenderButton: UIButton = {

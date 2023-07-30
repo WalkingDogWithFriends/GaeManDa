@@ -1,6 +1,6 @@
 import UIKit
 
-public final class OnBoardingTextView: UIView {
+public final class GMDTextView: UIView {
 	public lazy var isWarning = false {
 		didSet {
 			if isWarning == true {
@@ -120,7 +120,7 @@ public final class OnBoardingTextView: UIView {
 	}
 }
 
-private extension OnBoardingTextView {
+private extension GMDTextView {
 	func changeNormalMode() {
 		textView.layer.borderColor = UIColor.gray90.cgColor
 		warningLabel.layer.opacity = 0.0

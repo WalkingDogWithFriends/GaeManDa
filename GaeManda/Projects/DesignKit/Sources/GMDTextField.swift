@@ -1,7 +1,7 @@
 import UIKit
 import GMDExtensions
 
-public final class OnBoardingTextField: UIView {
+public final class GMDTextField: UIView {
 	public lazy var isWarning = false {
 		didSet {
 			if isWarning == true {
@@ -103,7 +103,7 @@ public final class OnBoardingTextField: UIView {
 	}
 }
 
-private extension OnBoardingTextField {
+private extension GMDTextField {
 	@objc func textDidChange(_ notification: Notification) {
 		guard
 			let textField = notification.object as? UITextField,

@@ -37,23 +37,23 @@ final class SecondDogSettingViewController:
 		return stackView
 	}()
 	
-	private let dogBreedTextField: OnBoardingTextField = {
-		let onBoardingTextField = OnBoardingTextField(
+	private let dogBreedTextField: GMDTextField = {
+		let gmdTextField = GMDTextField(
 			title: "우리 아이 종",
 			warningText: "우리 아이 종을 작성해주세요"
 		)
 
-		return onBoardingTextField
+		return gmdTextField
 	}()
 	
-	private let dogWeightTextField: OnBoardingTextField = {
-		let onBoardingTextField = OnBoardingTextField(
+	private let dogWeightTextField: GMDTextField = {
+		let gmdTextField = GMDTextField(
 			title: "우리 아이 몸무게 (kg)",
 			warningText: "우리 아이 몸무게 (kg)을 입력해주세요."
 		)
-		onBoardingTextField.textField.keyboardType = .numberPad
+		gmdTextField.textField.keyboardType = .numberPad
 
-		return onBoardingTextField
+		return gmdTextField
 	}()
 	
 	private let suffix = "kg"

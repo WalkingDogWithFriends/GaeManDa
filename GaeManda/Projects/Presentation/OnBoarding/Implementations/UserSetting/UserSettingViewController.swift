@@ -38,13 +38,13 @@ final class UserSettingViewController:
 		return stackView
 	}()
 	
-	private let nickNameTextField: OnBoardingTextField = {
-		let onBoardingTextField = OnBoardingTextField(
+	private let nickNameTextField: GMDTextField = {
+		let gmdTextField = GMDTextField(
 			title: "닉네임",
 			warningText: "닉네임을 입력해주세요."
 		)
 		
-		return onBoardingTextField
+		return gmdTextField
 	}()
 	
 	private var maximumTextCount = 20
@@ -57,13 +57,13 @@ final class UserSettingViewController:
 		return label
 	}()
 	
-	private let calenderTextField: OnBoardingTextField = {
-		let onBoardingTextField = OnBoardingTextField(
+	private let calenderTextField: GMDTextField = {
+		let gmdTextField = GMDTextField(
 			title: "생년월일",
 			warningText: "생년월일을 입력해주세요."
 		)
 		
-		return onBoardingTextField
+		return gmdTextField
 	}()
 	
 	private let calenderButton: UIButton = {
