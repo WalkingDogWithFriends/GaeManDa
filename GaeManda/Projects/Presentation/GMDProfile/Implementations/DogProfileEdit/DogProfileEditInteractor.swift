@@ -35,3 +35,10 @@ final class DogProfileEditInteractor:
 		super.willResignActive()
 	}
 }
+
+// MARK: PresentableListener
+extension DogProfileEditInteractor {
+	func backbuttonDidTap() {
+		listener?.dogProfileEditBackButtonDidTap()
+	}
+}

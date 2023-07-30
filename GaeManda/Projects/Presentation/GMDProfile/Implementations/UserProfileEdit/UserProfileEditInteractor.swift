@@ -35,3 +35,10 @@ final class UserProfileEditInteractor:
 		super.willResignActive()
 	}
 }
+
+// MARK: PresentableListener
+extension UserProfileEditInteractor {
+	func backbuttonDidTap() {
+		listener?.userProfileEditBackButtonDidTap()
+	}
+}

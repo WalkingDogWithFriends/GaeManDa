@@ -12,4 +12,6 @@ public protocol UserProfileEditBuildable: Buildable {
 	func build(withListener listener: UserProfileEditListener) -> ViewableRouting
 }
 
-public protocol UserProfileEditListener: AnyObject { }
+public protocol UserProfileEditListener: AnyObject {
+	func userProfileEditBackButtonDidTap()
+}

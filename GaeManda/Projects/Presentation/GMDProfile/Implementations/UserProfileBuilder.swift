@@ -12,6 +12,8 @@ import UseCase
 
 public protocol UserProfileDependency: Dependency {
 	var userProfileUseCase: UserProfileUseCase { get }
+	var userProfileEditBuildable: UserProfileEditBuildable { get }
+	var dogProfileEditBuildable: DogProfileEditBuildable { get }
 }
 
 final class UserProfileComponent:
@@ -19,6 +21,12 @@ final class UserProfileComponent:
 	UserProfileInteractorDependency {
 	var userProfileUseCase: UserProfileUseCase {
 		dependency.userProfileUseCase
+	}
+	fileprivate var userProfileEditBuildable: UserProfileEditBuildable {
+		dependency.userProfileEditBuildable
+	}
+	fileprivate var dogProfileEditBuildable: DogProfileEditBuildable {
+		dependency.dogProfileEditBuildable
 	}
 }
 
@@ -36,10 +44,13 @@ public final class UserProfileBuilder:
 			presenter: viewController,
 			dependency: component
 		)
+				
 		interactor.listener = listener
 		return UserProfileRouter(
 			interactor: interactor,
-			viewController: viewController
+			viewController: viewController,
+			userProfileEditBuildable: component.userProfileEditBuildable,
+			dogProfileEditBuildable: component.dogProfileEditBuildable
 		)
 	}
 }

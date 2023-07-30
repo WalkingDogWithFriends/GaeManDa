@@ -14,7 +14,12 @@ import GMDProfile
 import GMDUtils
 import UseCase
 
-protocol UserProfileRouting: ViewableRouting { }
+protocol UserProfileRouting: ViewableRouting {
+	func userProfileEditAttach()
+	func userProfileEditDetach()
+	func dogProfileEditAttach()
+	func dogProfileEditDetach()
+}
 
 protocol UserProfilePresentable: Presentable {
 	var listener: UserProfilePresentableListener? { get set }
@@ -77,10 +82,24 @@ final class UserProfileInteractor:
 // MARK: PresentableListener
 extension UserProfileInteractor {
 	func dogProfileEditButtonDidTap() {
-		print("dogProfileEditButtonDidTap")
+		router?.dogProfileEditAttach()
 	}
 	
 	func userProfileEditButtonDidTap() {
-		print("userProfileEditButtonDidTap")
+		router?.userProfileEditAttach()
+	}
+}
+
+// MARK: UserProfileEditListener
+extension UserProfileInteractor {
+	func userProfileEditBackButtonDidTap() {
+		router?.userProfileEditDetach()
+	}
+}
+
+// MARK: DogProfileEditListener
+extension UserProfileInteractor {
+	func dogProfileEditBackButtonDidTap() {
+		router?.dogProfileEditDetach()
 	}
 }

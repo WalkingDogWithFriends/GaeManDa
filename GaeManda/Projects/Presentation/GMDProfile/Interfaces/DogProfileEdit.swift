@@ -12,4 +12,6 @@ public protocol DogProfileEditBuildable: Buildable {
 	func build(withListener listener: DogProfileEditListener) -> ViewableRouting
 }
 
-public protocol DogProfileEditListener: AnyObject { }
+public protocol DogProfileEditListener: AnyObject {
+	func dogProfileEditBackButtonDidTap()
+}
