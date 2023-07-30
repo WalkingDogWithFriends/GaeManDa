@@ -121,10 +121,17 @@ final class UserProfileViewController:
 		return collectionView
 	}()
 	
+	// MARK: Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		collectionView.delegate = self
 		setupUI()
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		
+		showTabBar()
 	}
 }
 

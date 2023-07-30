@@ -95,6 +95,10 @@ extension UserProfileInteractor {
 	func userProfileEditBackButtonDidTap() {
 		router?.userProfileEditDetach()
 	}
+	
+	func userProfileEndEditing() {
+		router?.userProfileEditDetach()
+	}
 }
 
 // MARK: DogProfileEditListener

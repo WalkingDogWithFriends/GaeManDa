@@ -41,4 +41,8 @@ extension UserProfileEditInteractor {
 	func backbuttonDidTap() {
 		listener?.userProfileEditBackButtonDidTap()
 	}
+	
+	func endEditingButtonDidTap() {
+		listener?.userProfileEndEditing()
+	}
 }
