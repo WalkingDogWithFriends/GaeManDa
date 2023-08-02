@@ -62,6 +62,7 @@ final class DogProfileEditViewController:
 		super.viewDidLoad()
 
 		setupUI()
+		addKeyboardObserver()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -329,5 +330,76 @@ private extension DogProfileEditViewController {
 		
 		scrollView.didNotNeuterButton.buttonIsSelected.toggle()
 		scrollView.didNeuterButton.buttonIsSelected = false
+	}
+}
+
+// MARK: Keyboard Respond
+private extension DogProfileEditViewController {
+	/// Register Keyboard notifications
+	func addKeyboardObserver() {
+		NotificationCenter.default.addObserver(
+			self,
+			selector: #selector(keyboardWillShow),
+			name: UIResponder.keyboardWillShowNotification,
+			object: nil
+		)
+		NotificationCenter.default.addObserver(
+			self,
+			selector: #selector(keyboardWillHide),
+			name: UIResponder.keyboardWillHideNotification,
+			object: nil
+		)
+	}
+	
+	@objc func keyboardWillShow(_ notification: Notification) {
+		guard let userInfo = notification.userInfo,
+					let keyboardSize = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
+		else {
+			return
+		}
+		/// give extra space for ScrollView
+		// 이거 추가하면 스크롤 뷰가 잠시 위로 올라가서 원하는 위치만큼 이동이 안됨
+		scrollView.contentInset.bottom = keyboardSize.height + 20
+		let firstResponder = UIResponder.currentFirstResponder
+		let topOfKeyBoard = view.frame.height - keyboardSize.height
+		var moveValue: CGFloat = 0
+
+		if let textField = firstResponder as? UITextField {
+			moveValue = getTextFieldMoveValue(textField, topOfKeyBoard: topOfKeyBoard)
+		} else if let textView = firstResponder as? UITextView {
+			moveValue = getTextViewMoveValue(textView, topOfKeyBoard: topOfKeyBoard)
+		}
+	
+		let point = CGPoint(x: 0, y: scrollView.bounds.origin.y + moveValue)
+		let rect = CGRect(
+			origin: point,
+			size: scrollView.frame.size
+		)
+		
+		if moveValue > 0 {
+			scrollView.scrollRectToVisible(rect, animated: true)
+		}
+	}
+	
+	@objc func keyboardWillHide() {
+		let contentInset = UIEdgeInsets.zero
+		scrollView.contentInset = contentInset
+		scrollView.scrollIndicatorInsets = contentInset
+	}
+	
+	func getTextFieldMoveValue(
+		_ textField: UITextField,
+		topOfKeyBoard: CGFloat
+	) -> CGFloat {
+		let viewBottom = textField.convert(textField.bounds, to: view).maxY
+		return viewBottom - topOfKeyBoard + 20
+	}
+	
+	func getTextViewMoveValue(
+		_ textView: UITextView,
+		topOfKeyBoard: CGFloat
+	) -> CGFloat {
+		let viewTop = textView.convert(textView.bounds, to: view).minY
+		return viewTop - topOfKeyBoard + 20
 	}
 }

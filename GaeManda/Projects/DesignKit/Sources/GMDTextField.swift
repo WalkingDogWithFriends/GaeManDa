@@ -15,11 +15,14 @@ public final class GMDTextField: UIView {
 	
 	private lazy var hasContent = false {
 		didSet {
-			if hasContent == true {
-				titleLabel.layer.opacity = 1.0
-			} else {
-				titleLabel.layer.opacity = 0.0
-			}
+			titleLabel.layer.opacity = hasContent ? 1.0 : 0.0
+		}
+	}
+	
+	public lazy var text: String = "" {
+		didSet {
+			textField.text = text
+			hasContent = !(textField.text?.isEmpty ?? false)
 		}
 	}
 	
