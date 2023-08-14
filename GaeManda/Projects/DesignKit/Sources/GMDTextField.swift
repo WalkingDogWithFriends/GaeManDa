@@ -42,7 +42,7 @@ public final class GMDTextField: UIView {
 		label.layer.opacity = 0.0
 		label.numberOfLines = 1
 		label.font = .r12
-
+		
 		return label
 	}()
 	
@@ -93,6 +93,8 @@ public final class GMDTextField: UIView {
 	}
 	
 	private func setupUI() {
+		self.textField.setPlaceholdColor(.gray90)
+		
 		addSubview(stackView)
 		stackView.addArrangedSubview(titleLabel)
 		stackView.addArrangedSubview(textField)
@@ -113,11 +115,7 @@ private extension GMDTextField {
 			return
 		}
 		
-		if text.isEmpty {
-			hasContent = false
-		} else {
-			hasContent = true
-		}
+		hasContent = !text.isEmpty
 	}
 	
 	func changeNormalMode() {
