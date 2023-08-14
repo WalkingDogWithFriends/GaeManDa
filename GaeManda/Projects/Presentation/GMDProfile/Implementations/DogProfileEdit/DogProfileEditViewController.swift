@@ -357,49 +357,32 @@ private extension DogProfileEditViewController {
 		else {
 			return
 		}
-		/// give extra space for ScrollView
-		// 이거 추가하면 스크롤 뷰가 잠시 위로 올라가서 원하는 위치만큼 이동이 안됨
-		scrollView.contentInset.bottom = keyboardSize.height + 20
-		let firstResponder = UIResponder.currentFirstResponder
-		let topOfKeyBoard = view.frame.height - keyboardSize.height
-		var moveValue: CGFloat = 0
-
-		if let textField = firstResponder as? UITextField {
-			moveValue = getTextFieldMoveValue(textField, topOfKeyBoard: topOfKeyBoard)
-		} else if let textView = firstResponder as? UITextView {
-			moveValue = getTextViewMoveValue(textView, topOfKeyBoard: topOfKeyBoard)
-		}
-	
-		let point = CGPoint(x: 0, y: scrollView.bounds.origin.y + moveValue)
-		let rect = CGRect(
-			origin: point,
-			size: scrollView.frame.size
-		)
+		let keyboardHeight = keyboardSize.height
+		let scrollviewBottom = scrollView.convert(scrollView.bounds, to: view).maxY
+		let bottomFromSuperView = view.frame.size.height - scrollviewBottom
+		let padding: CGFloat = 20
 		
-		if moveValue > 0 {
-			scrollView.scrollRectToVisible(rect, animated: true)
+		/// add Padding from Scroll View Bottom to enable scroll all contents
+		scrollView.contentInset.bottom = keyboardHeight - bottomFromSuperView + padding
+		
+		let firstResponder = UIResponder.currentFirstResponder
+		
+		/// TextField
+		if let textField = firstResponder as? UITextField {
+			self.scrollView.scrollRectToVisible(textField.frame, animated: false)
+		/// TextView
+		} else if let textView = firstResponder as? UITextView {
+			let textViewTopFromScrollView = textView.convert(textView.frame, to: scrollView).maxY
+			// locate textView Top to top of scrollView
+			let moveValue = textViewTopFromScrollView - (scrollView.bounds.size.height / 2)
+			
+			let point = CGPoint(x: 0, y: moveValue - padding)
+			scrollView.setContentOffset(point, animated: true)
 		}
 	}
 	
 	@objc func keyboardWillHide() {
-		let contentInset = UIEdgeInsets.zero
-		scrollView.contentInset = contentInset
-		scrollView.scrollIndicatorInsets = contentInset
-	}
-	
-	func getTextFieldMoveValue(
-		_ textField: UITextField,
-		topOfKeyBoard: CGFloat
-	) -> CGFloat {
-		let viewBottom = textField.convert(textField.bounds, to: view).maxY
-		return viewBottom - topOfKeyBoard + 20
-	}
-	
-	func getTextViewMoveValue(
-		_ textView: UITextView,
-		topOfKeyBoard: CGFloat
-	) -> CGFloat {
-		let viewTop = textView.convert(textView.bounds, to: view).minY
-		return viewTop - topOfKeyBoard + 20
+		print("willHide")
+		scrollView.contentInset = .zero
 	}
 }

@@ -200,6 +200,10 @@ private extension DogProfileEditScrollView {
 			make.width.equalToSuperview()
 		}
 		
+		nickNameTextField.snp.makeConstraints { make in
+			make.top.equalToSuperview()
+		}
+		
 		genderButtonStackView.snp.makeConstraints { make in
 			make.height.equalTo(40)
 			make.width.equalToSuperview()
