@@ -2,13 +2,14 @@ import UIKit
 import GMDExtensions
 
 public class GMDRadioButton: UIButton {
-	public var buttonIsSelected: Bool = false {
+	public override var isSelected: Bool {
 		didSet {
-			if buttonIsSelected == false {
-				buttonDisSelected()
-			} else {
-				buttonSeleceted()
-			}
+			isSelected ? buttonSeleceted() : buttonDisSelected()
+//			if isSelected == false {
+//				buttonDisSelected()
+//			} else {
+//				buttonSeleceted()
+//			}
 		}
 	}
 	

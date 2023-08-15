@@ -97,7 +97,7 @@ final class UserProfileEditViewController:
 	
 	private let maleButton: GMDRadioButton = {
 		let button = GMDRadioButton(title: "남")
-		button.buttonIsSelected = true
+		button.isSelected = true
 		
 		return button
 	}()
@@ -269,16 +269,16 @@ private extension UserProfileEditViewController {
 	}
 	
 	func maleButtonDidTap() {
-		if maleButton.buttonIsSelected == true { return }
+		if maleButton.isSelected == true { return }
 		
-		maleButton.buttonIsSelected.toggle()
-		femaleButton.buttonIsSelected = false
+		maleButton.isSelected = true
+		femaleButton.isSelected = false
 	}
 	
 	func femaleButtonDidTap() {
-		if femaleButton.buttonIsSelected == true { return }
+		if femaleButton.isSelected == true { return }
 		
-		femaleButton.buttonIsSelected.toggle()
-		maleButton.buttonIsSelected = false
+		femaleButton.isSelected = true
+		maleButton.isSelected = false
 	}
 }

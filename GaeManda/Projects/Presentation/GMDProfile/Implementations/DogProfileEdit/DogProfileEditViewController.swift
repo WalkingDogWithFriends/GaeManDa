@@ -252,17 +252,17 @@ private extension DogProfileEditViewController {
 	}
 	
 	func maleButtonDidTap() {
-		if scrollView.maleButton.buttonIsSelected == true { return }
+		if scrollView.maleButton.isSelected == true { return }
 		
-		scrollView.maleButton.buttonIsSelected.toggle()
-		scrollView.femaleButton.buttonIsSelected = false
+		scrollView.maleButton.isSelected.toggle()
+		scrollView.femaleButton.isSelected = false
 	}
 	
 	func femaleButtonDidTap() {
-		if scrollView.femaleButton.buttonIsSelected == true { return }
+		if scrollView.femaleButton.isSelected == true { return }
 		
-		scrollView.femaleButton.buttonIsSelected.toggle()
-		scrollView.maleButton.buttonIsSelected = false
+		scrollView.femaleButton.isSelected = true
+		scrollView.maleButton.isSelected = false
 	}
 	
 	/// add Suffix in Weight TextField
@@ -319,17 +319,17 @@ private extension DogProfileEditViewController {
 	}
 	
 	func didNeuterButtonDidTap() {
-		if scrollView.didNeuterButton.buttonIsSelected == true { return }
+		if scrollView.didNeuterButton.isSelected == true { return }
 		
-		scrollView.didNeuterButton.buttonIsSelected.toggle()
-		scrollView.didNotNeuterButton.buttonIsSelected = false
+		scrollView.didNeuterButton.isSelected.toggle()
+		scrollView.didNotNeuterButton.isSelected = false
 	}
 	
 	func didNotNeuterButtonDidTap() {
-		if scrollView.didNotNeuterButton.buttonIsSelected == true { return }
+		if scrollView.didNotNeuterButton.isSelected == true { return }
 		
-		scrollView.didNotNeuterButton.buttonIsSelected.toggle()
-		scrollView.didNeuterButton.buttonIsSelected = false
+		scrollView.didNotNeuterButton.isSelected.toggle()
+		scrollView.didNeuterButton.isSelected = false
 	}
 }
 

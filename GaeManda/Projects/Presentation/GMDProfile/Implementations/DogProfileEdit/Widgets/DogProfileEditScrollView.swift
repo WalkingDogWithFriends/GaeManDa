@@ -73,7 +73,7 @@ final class DogProfileEditScrollView: UIScrollView {
 	
 	let maleButton: GMDRadioButton = {
 		let button = GMDRadioButton(title: "남")
-		button.buttonIsSelected = true
+		button.isSelected = true
 		
 		return button
 	}()
@@ -133,7 +133,7 @@ final class DogProfileEditScrollView: UIScrollView {
 	
 	let didNeuterButton: GMDRadioButton = {
 		let button = GMDRadioButton(title: "했어요")
-		button.buttonIsSelected = true
+		button.isSelected = true
 		
 		return button
 	}()
