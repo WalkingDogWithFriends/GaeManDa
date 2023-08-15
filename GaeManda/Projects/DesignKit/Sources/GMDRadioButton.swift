@@ -5,11 +5,6 @@ public class GMDRadioButton: UIButton {
 	public override var isSelected: Bool {
 		didSet {
 			isSelected ? buttonSeleceted() : buttonDisSelected()
-//			if isSelected == false {
-//				buttonDisSelected()
-//			} else {
-//				buttonSeleceted()
-//			}
 		}
 	}
 	
