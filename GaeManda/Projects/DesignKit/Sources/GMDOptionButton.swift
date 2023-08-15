@@ -1,7 +1,7 @@
 import UIKit
 import GMDExtensions
 
-public class GMDRadioButton: UIButton {
+public class GMDOptionButton: UIButton {
 	public override var isSelected: Bool {
 		didSet {
 			isSelected ? buttonSeleceted() : buttonDisSelected()

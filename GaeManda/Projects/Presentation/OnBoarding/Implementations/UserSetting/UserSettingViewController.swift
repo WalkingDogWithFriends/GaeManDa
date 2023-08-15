@@ -85,15 +85,15 @@ final class UserSettingViewController:
 		return stackView
 	}()
 	
-	private let maleButton: GMDRadioButton = {
-		let button = GMDRadioButton(title: "남")
-		button.buttonIsSelected = true
+	private let maleButton: GMDOptionButton = {
+		let button = GMDOptionButton(title: "남")
+		button.isSelected = true
 		
 		return button
 	}()
 	
-	private let femaleButton: GMDRadioButton = {
-		let button = GMDRadioButton(title: "여")
+	private let femaleButton: GMDOptionButton = {
+		let button = GMDOptionButton(title: "여")
 		
 		return button
 	}()
@@ -237,21 +237,17 @@ private extension UserSettingViewController {
 	}
 	
 	func maleButtonDidTap() {
-		if maleButton.buttonIsSelected == true { return }
+		if maleButton.isSelected == true { return }
 		
-		maleButton.buttonIsSelected.toggle()
-		if femaleButton.buttonIsSelected == true {
-			femaleButton.buttonIsSelected = false
-		}
+		maleButton.isSelected = true
+		femaleButton.isSelected = false
 	}
 	
 	func femaleButtonDidTap() {
-		if femaleButton.buttonIsSelected == true { return }
+		if femaleButton.isSelected == true { return }
 		
-		femaleButton.buttonIsSelected.toggle()
-		if maleButton.buttonIsSelected == true {
-			maleButton.buttonIsSelected = false
-		}
+		femaleButton.isSelected = true
+		maleButton.isSelected = false
 	}
 	
 	@objc func backButtonDidTap() {

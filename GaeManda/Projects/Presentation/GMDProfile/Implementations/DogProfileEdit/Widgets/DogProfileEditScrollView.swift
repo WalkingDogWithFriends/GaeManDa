@@ -71,14 +71,14 @@ final class DogProfileEditScrollView: UIScrollView {
 		return stackView
 	}()
 	
-	let maleButton: GMDRadioButton = {
-		let button = GMDRadioButton(title: "남")
+	let maleButton: GMDOptionButton = {
+		let button = GMDOptionButton(title: "남")
 		button.isSelected = true
 		
 		return button
 	}()
 	
-	let femaleButton = GMDRadioButton(title: "여")
+	let femaleButton = GMDOptionButton(title: "여")
 	
 	let dogBreedTextField: GMDTextField = {
 		let gmdTextField = GMDTextField(
@@ -131,14 +131,14 @@ final class DogProfileEditScrollView: UIScrollView {
 		return stackView
 	}()
 	
-	let didNeuterButton: GMDRadioButton = {
-		let button = GMDRadioButton(title: "했어요")
+	let didNeuterButton: GMDOptionButton = {
+		let button = GMDOptionButton(title: "했어요")
 		button.isSelected = true
 		
 		return button
 	}()
 	
-	let didNotNeuterButton = GMDRadioButton(title: "안 했어요")
+	let didNotNeuterButton = GMDOptionButton(title: "안 했어요")
 	
 	let characterTextView = GMDTextView(title: "우리 아이 성격 (선택)")
 	

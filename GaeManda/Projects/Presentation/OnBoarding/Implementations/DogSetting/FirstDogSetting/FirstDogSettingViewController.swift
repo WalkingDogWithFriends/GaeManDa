@@ -17,7 +17,7 @@ final class FirstDogSettingViewController:
 	FirstDogSettingViewControllable {
 	weak var listener: FirstDogSettingPresentableListener?
 	private let disposeBag = DisposeBag()
-
+	
 	private let onBoardingView: OnBoardingView = {
 		let onBoardingView = OnBoardingView(
 			willDisplayImageView: true,
@@ -42,7 +42,7 @@ final class FirstDogSettingViewController:
 			title: "우리 아이 이름",
 			warningText: "우리 아이 이름을 작성해주세요"
 		)
-
+		
 		return gmdTextField
 	}()
 	
@@ -61,7 +61,7 @@ final class FirstDogSettingViewController:
 			title: "우리 아이 생년월일",
 			warningText: "우리아이 생년월일을 입력해주세요."
 		)
-
+		
 		return gmdTextField
 	}()
 	
@@ -84,16 +84,16 @@ final class FirstDogSettingViewController:
 		return stackView
 	}()
 	
-	private let maleButton: GMDRadioButton = {
-		let button = GMDRadioButton(title: "남")
-		button.buttonIsSelected = true
-
+	private let maleButton: GMDOptionButton = {
+		let button = GMDOptionButton(title: "남")
+		button.isSelected = true
+		
 		return button
 	}()
 	
-	private let femaleButton: GMDRadioButton = {
-		let button = GMDRadioButton(title: "여")
-
+	private let femaleButton: GMDOptionButton = {
+		let button = GMDOptionButton(title: "여")
+		
 		return button
 	}()
 	
@@ -146,29 +146,29 @@ final class FirstDogSettingViewController:
 	
 	private func setConstraints() {
 		onBoardingView.snp.makeConstraints { make in
-				make.leading.equalToSuperview()
-				make.trailing.equalToSuperview()
-				make.top.equalToSuperview()
+			make.leading.equalToSuperview()
+			make.trailing.equalToSuperview()
+			make.top.equalToSuperview()
 		}
-
+		
 		textStackView.snp.makeConstraints { make in
-				make.top.equalTo(onBoardingView.snp.bottom).offset(48)
-				make.leading.equalToSuperview().offset(32)
-				make.trailing.equalToSuperview().offset(-32)
+			make.top.equalTo(onBoardingView.snp.bottom).offset(48)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
 		}
-
+		
 		buttonStackView.snp.makeConstraints { make in
-				make.top.equalTo(textStackView.snp.bottom).offset(44)
-				make.leading.equalToSuperview().offset(32)
-				make.trailing.equalToSuperview().offset(-32)
-				make.height.equalTo(40)
+			make.top.equalTo(textStackView.snp.bottom).offset(44)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.height.equalTo(40)
 		}
-
+		
 		confirmButton.snp.makeConstraints { make in
-				make.leading.equalToSuperview().offset(32)
-				make.trailing.equalToSuperview().offset(-32)
-				make.bottom.equalToSuperview().offset(-54)
-				make.height.equalTo(40)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.bottom.equalToSuperview().offset(-54)
+			make.height.equalTo(40)
 		}
 	}
 	
@@ -236,21 +236,17 @@ private extension FirstDogSettingViewController {
 	}
 	
 	func maleButtonDidTap() {
-		if maleButton.buttonIsSelected == true { return }
+		if maleButton.isSelected == true { return }
 		
-		maleButton.buttonIsSelected.toggle()
-		if femaleButton.buttonIsSelected == true {
-			femaleButton.buttonIsSelected = false
-		}
+		maleButton.isSelected = true
+		femaleButton.isSelected = false
 	}
 	
 	func femaleButtonDidTap() {
-		if femaleButton.buttonIsSelected == true { return }
+		if femaleButton.isSelected == true { return }
 		
-		femaleButton.buttonIsSelected.toggle()
-		if maleButton.buttonIsSelected == true {
-			maleButton.buttonIsSelected = false
-		}
+		femaleButton.isSelected = true
+		maleButton.isSelected = false
 	}
 	
 	@objc func backButtonDidTap() {

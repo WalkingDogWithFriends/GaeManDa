@@ -95,15 +95,15 @@ final class UserProfileEditViewController:
 		return stackView
 	}()
 	
-	private let maleButton: GMDRadioButton = {
-		let button = GMDRadioButton(title: "남")
+	private let maleButton: GMDOptionButton = {
+		let button = GMDOptionButton(title: "남")
 		button.isSelected = true
 		
 		return button
 	}()
 	
-	private let femaleButton: GMDRadioButton = {
-		let button = GMDRadioButton(title: "여")
+	private let femaleButton: GMDOptionButton = {
+		let button = GMDOptionButton(title: "여")
 		
 		return button
 	}()

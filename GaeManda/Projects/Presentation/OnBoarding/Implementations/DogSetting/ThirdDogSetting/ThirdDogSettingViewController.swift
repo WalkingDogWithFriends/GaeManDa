@@ -47,15 +47,15 @@ final class ThirdDogSettingViewController:
 		return stackView
 	}()
 	
-	private let didNeuterButton: GMDRadioButton = {
-		let button = GMDRadioButton(title: "했어요")
-		button.buttonIsSelected = true
+	private let didNeuterButton: GMDOptionButton = {
+		let button = GMDOptionButton(title: "했어요")
+		button.isSelected = true
 		
 		return button
 	}()
 	
-	private let didNotNeuterButton: GMDRadioButton = {
-		let button = GMDRadioButton(title: "안 했어요")
+	private let didNotNeuterButton: GMDOptionButton = {
+		let button = GMDOptionButton(title: "안 했어요")
 		
 		return button
 	}()
@@ -221,21 +221,17 @@ private extension ThirdDogSettingViewController {
 	}
 	
 	func didNeuterButtonDidTap() {
-		if didNeuterButton.buttonIsSelected == true { return }
+		if didNeuterButton.isSelected == true { return }
 		
-		didNeuterButton.buttonIsSelected.toggle()
-		if didNotNeuterButton.buttonIsSelected == true {
-			didNotNeuterButton.buttonIsSelected = false
-		}
+		didNeuterButton.isSelected = true
+		didNotNeuterButton.isSelected = false
 	}
 	
 	func didNotNeuterButtonDidTap() {
-		if didNotNeuterButton.buttonIsSelected == true { return }
+		if didNotNeuterButton.isSelected == true { return }
 		
-		didNotNeuterButton.buttonIsSelected.toggle()
-		if didNeuterButton.buttonIsSelected == true {
-			didNeuterButton.buttonIsSelected = false
-		}
+		didNotNeuterButton.isSelected = true
+		didNeuterButton.isSelected = false
 	}
 	
 	@objc func backButtonDidTap() {

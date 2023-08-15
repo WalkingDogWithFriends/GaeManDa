@@ -4,11 +4,7 @@ import SnapKit
 public final class GMDTextView: UIView {
 	public lazy var isWarning = false {
 		didSet {
-			if isWarning == true {
-				changeWarningMode()
-			} else {
-				changeNormalMode()
-			}
+			isWarning ? changeWarningMode() : changeNormalMode()
 		}
 	}
 	

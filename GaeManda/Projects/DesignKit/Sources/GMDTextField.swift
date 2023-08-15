@@ -5,11 +5,7 @@ import GMDExtensions
 public final class GMDTextField: UIView {
 	public lazy var isWarning = false {
 		didSet {
-			if isWarning == true {
-				changeWarningMode()
-			} else {
-				changeNormalMode()
-			}
+			isWarning ? changeWarningMode() : changeNormalMode()
 		}
 	}
 	
