@@ -20,14 +20,14 @@ import UseCaseImpl
 
 final class LoggedInComponent:
 	Component<LoggedInDependency>,
-	ChattingDependency,
+	ChattingListDependency,
 	DogsOnAroundDependency,
 	UserProfileDependency,
 	UserProfileEditDependency,
 	DogProfileEditDependency {	
 	// MARK: Buildable
-	lazy var chattingBuildable: ChattingBuildable = {
-		return ChattingBuilder(dependency: self)
+	lazy var chattingListBuildable: ChattingListBuildable = {
+		return ChattingListBuilder(dependency: self)
 	}()
 	
 	lazy var dogsOnAroundBuildable: DogsOnAroundBuildable = {

@@ -30,7 +30,7 @@ final class LoggedInBuilder:
 		return LoggedInRouter(
 			interactor: interactor,
 			viewController: viewController,
-			chattingBuildable: component.chattingBuildable,
+			chattingListBuildable: component.chattingListBuildable,
 			dogsOnAroundBuildable: component.dogsOnAroundBuildable,
 			userSettingBuildable: component.userProfileBuildable
 		)
