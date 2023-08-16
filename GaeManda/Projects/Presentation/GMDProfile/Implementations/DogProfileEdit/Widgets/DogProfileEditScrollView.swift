@@ -9,6 +9,11 @@
 import UIKit
 import DesignKit
 
+enum ScrollViewConstant {
+	static let maximumTextFieldCount = 20
+	static let maximumTextViewCount = 100
+}
+
 final class DogProfileEditScrollView: UIScrollView {
 	// MARK: UI Property
 	let contentView: UIStackView = {
@@ -31,10 +36,8 @@ final class DogProfileEditScrollView: UIScrollView {
 		return gmdTextField
 	}()
 	
-	var maximumTextFieldCount = 20
-	
 	/// Display Max Count Text in nickNameTextField
-	lazy var maximumTextCountLabel: UILabel = {
+	let maximumTextCountLabel: UILabel = {
 		let label = UILabel()
 		label.textColor = .gray90
 		label.font = .r15
@@ -141,9 +144,7 @@ final class DogProfileEditScrollView: UIScrollView {
 	let didNotNeuterButton = GMDOptionButton(title: "안 했어요")
 	
 	let characterTextView = GMDTextView(title: "우리 아이 성격 (선택)")
-	
-	var maximumTextViewCount: Int = 100
-	
+
 	// MARK: Initializer
 	init() {
 		super.init(frame: .zero)
@@ -167,8 +168,8 @@ private extension DogProfileEditScrollView {
 		calenderTextField.textField.rightView = calenderButton
 		calenderTextField.textField.rightViewMode = .always
 		
-		characterTextView.warningText = "\(maximumTextViewCount)자 이내로 입력 가능합니다."
-		characterTextView.maximumTextCountLabel.text = "0/\(maximumTextViewCount)"
+		characterTextView.warningText = "\(ScrollViewConstant.maximumTextViewCount)자 이내로 입력 가능합니다."
+		characterTextView.maximumTextCountLabel.text = "0/\(ScrollViewConstant.maximumTextViewCount)"
 		
 		setupSubviews()
 		setConstraints()

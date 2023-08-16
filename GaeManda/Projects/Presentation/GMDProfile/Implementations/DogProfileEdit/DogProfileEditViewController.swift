@@ -60,7 +60,7 @@ final class DogProfileEditViewController:
 	// MARK: Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
+		
 		setupUI()
 		addKeyboardObserver()
 	}
@@ -154,9 +154,17 @@ private extension DogProfileEditViewController {
 		scrollView.nickNameTextField.textField.rx.text
 			.orEmpty
 			.withUnretained(self)
-			.bind { owner, text in
-				owner.setTextCountLabel(text)
+			.map { owner, text -> String in
+				let maxTextCount = ScrollViewConstant.maximumTextFieldCount
+				return owner.setText(text, maximumTextCount: maxTextCount)
 			}
+			.bind(to: scrollView.nickNameTextField.textField.rx.text)
+			.disposed(by: disposeBag)
+		
+		scrollView.nickNameTextField.textField.rx.text
+			.orEmpty
+			.map { "\($0.count)/\(ScrollViewConstant.maximumTextFieldCount)" }
+			.bind(to: scrollView.maximumTextCountLabel.rx.text)
 			.disposed(by: disposeBag)
 		
 		scrollView.calenderTextField.textField.rx.controlEvent(.editingDidBegin)
@@ -182,11 +190,14 @@ private extension DogProfileEditViewController {
 		
 		scrollView.characterTextView.textView.rx.text
 			.orEmpty
-			.map { $0.count }
-			.withUnretained(self)
-			.bind { owner, count in
-				owner.setTextCountLabel(count)
-			}
+			.map { "\($0.count)/\(ScrollViewConstant.maximumTextViewCount)" }
+			.bind(to: scrollView.characterTextView.maximumTextCountLabel.rx.text)
+			.disposed(by: disposeBag)
+		
+		scrollView.characterTextView.textView.rx.text
+			.orEmpty
+			.map { $0.count > ScrollViewConstant.maximumTextViewCount }
+			.bind(to: scrollView.characterTextView.rx.isWarning)
 			.disposed(by: disposeBag)
 	}
 	
@@ -235,16 +246,13 @@ private extension DogProfileEditViewController {
 		listener?.backbuttonDidTap()
 	}
 	
-	func setTextCountLabel(_ text: String) {
-		var newText = text
-		let textCount = scrollView.maximumTextFieldCount
-		
-		if text.count >= textCount {
-			let index = text.index(text.startIndex, offsetBy: textCount)
-			newText = String(text[..<index])
-			scrollView.nickNameTextField.textField.text = newText
+	// TODO: 이름
+	func setText(_ text: String, maximumTextCount: Int) -> String {
+		if text.count >= maximumTextCount {
+			let index = text.index(text.startIndex, offsetBy: maximumTextCount)
+			return String(text[..<index])
 		}
-		scrollView.maximumTextCountLabel.text = "\(newText.count)/\(textCount)"
+		return text
 	}
 	
 	func calenderButtonDidTap() {
@@ -308,27 +316,18 @@ private extension DogProfileEditViewController {
 			)
 		}
 	}
-	
-	func setTextCountLabel(_ textCount: Int) {
-		let textView = scrollView.characterTextView
-		let maxTextCount = scrollView.maximumTextViewCount
 		
-		textView.maximumTextCountLabel.text = "\(textCount)/\(maxTextCount)"
-		
-		textView.isWarning = textCount > maxTextCount ? true : false
-	}
-	
 	func didNeuterButtonDidTap() {
 		if scrollView.didNeuterButton.isSelected == true { return }
 		
-		scrollView.didNeuterButton.isSelected.toggle()
+		scrollView.didNeuterButton.isSelected = true
 		scrollView.didNotNeuterButton.isSelected = false
 	}
 	
 	func didNotNeuterButtonDidTap() {
 		if scrollView.didNotNeuterButton.isSelected == true { return }
 		
-		scrollView.didNotNeuterButton.isSelected.toggle()
+		scrollView.didNotNeuterButton.isSelected = true
 		scrollView.didNeuterButton.isSelected = false
 	}
 }

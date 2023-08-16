@@ -55,10 +55,10 @@ final class UserProfileEditViewController:
 		return gmdTextField
 	}()
 	
-	private var maximumTextCount = 20
+	private let maximumTextCount = 20
 	
 	/// Display Max Count Text in nickNameTextField
-	private lazy var maximumTextCountLabel: UILabel = {
+	private let maximumTextCountLabel: UILabel = {
 		let label = UILabel()
 		label.textColor = .gray90
 		label.font = .r15

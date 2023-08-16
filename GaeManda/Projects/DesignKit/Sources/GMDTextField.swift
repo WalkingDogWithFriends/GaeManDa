@@ -15,7 +15,7 @@ public final class GMDTextField: UIView {
 		}
 	}
 	
-	public lazy var text: String = "" {
+	public var text: String = "" {
 		didSet {
 			textField.text = text
 			hasContent = !(textField.text?.isEmpty ?? false)
