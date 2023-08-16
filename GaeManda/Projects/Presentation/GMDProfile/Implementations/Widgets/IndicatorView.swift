@@ -79,11 +79,7 @@ extension IndicatorView {
 		guard index >= 0, index < indicatorCount else { return }
 		
 		for (idx, item) in indicators.enumerated() {
-			if idx == index {
-				item.backgroundColor = .green60
-			} else {
-				item.backgroundColor = .gray40
-			}
+			item.backgroundColor = idx == index ? .green60 : .gray40
 		}
 	}
 }

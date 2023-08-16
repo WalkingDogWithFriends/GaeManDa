@@ -10,6 +10,7 @@ import UIKit
 import RIBs
 import RxCocoa
 import RxSwift
+import SnapKit
 import DesignKit
 import GMDExtensions
 import GMDUtils
@@ -23,7 +24,7 @@ protocol DetailAddressSettingPresentableListener: AnyObject {
 final class DetailAddressSettingViewController:
 	UIViewController,
 	DetailAddressSettingPresentable,
-	DetailAddressSettingViewControllable {	
+	DetailAddressSettingViewControllable {
 	weak var listener: DetailAddressSettingPresentableListener?
 	private let disposeBag = DisposeBag()
 	
@@ -116,7 +117,7 @@ final class DetailAddressSettingViewController:
 		
 		return view
 	}()
-
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
@@ -124,7 +125,7 @@ final class DetailAddressSettingViewController:
 	
 	private func setupUI() {
 		view.backgroundColor = .white
-
+		
 		setupSubviews()
 		setConstraints()
 		bind()
@@ -143,25 +144,35 @@ final class DetailAddressSettingViewController:
 	}
 	
 	private func setConstraints() {
-		let safeArea = view.safeAreaLayoutGuide
-		NSLayoutConstraint.activate([
-			topStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 36),
-			topStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-			topStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-			
-			topBarView.heightAnchor.constraint(equalToConstant: 28),
-			titleLabel.leadingAnchor.constraint(equalTo: topBarView.leadingAnchor),
-			titleLabel.topAnchor.constraint(equalTo: topBarView.topAnchor),
-			closeButton.trailingAnchor.constraint(equalTo: topBarView.trailingAnchor),
-			closeButton.topAnchor.constraint(equalTo: topBarView.topAnchor),
-			textField.heightAnchor.constraint(equalToConstant: 32),
-			loadLocationButton.heightAnchor.constraint(equalToConstant: 28),
-			
-			bottomView.topAnchor.constraint(equalTo: topStackView.bottomAnchor, constant: 36),
-			bottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-			bottomView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-			bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-		])
+		topStackView.snp.makeConstraints { make in
+			make.top.equalToSuperview().offset(36)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+		}
+		
+		topBarView.snp.makeConstraints {  make in make.height.equalTo(28)
+		}
+		
+		titleLabel.snp.makeConstraints { make in
+			make.leading.top.equalTo(topBarView)
+		}
+		
+		closeButton.snp.makeConstraints { make in
+			make.trailing.top.equalTo(topBarView)
+		}
+		
+		textField.snp.makeConstraints { make in
+			make.height.equalTo(32)
+		}
+		
+		loadLocationButton.snp.makeConstraints { make in
+			make.height.equalTo(28)
+		}
+		
+		bottomView.snp.makeConstraints { make in
+			make.top.equalTo(topStackView.snp.bottom).offset(36)
+			make.leading.trailing.bottom.equalToSuperview()
+		}
 	}
 	
 	private func bind() {

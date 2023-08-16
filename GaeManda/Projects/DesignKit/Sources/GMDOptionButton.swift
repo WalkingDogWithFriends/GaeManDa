@@ -1,19 +1,14 @@
 import UIKit
-import DesignKit
 import GMDExtensions
 
-class OnBoardingButton: UIButton {
-	var buttonIsSelected: Bool = false {
+public class GMDOptionButton: UIButton {
+	public override var isSelected: Bool {
 		didSet {
-			if buttonIsSelected == false {
-				buttonDisSelected()
-			} else {
-				buttonSeleceted()
-			}
+			isSelected ? buttonSeleceted() : buttonDisSelected()
 		}
 	}
 	
-	init(title: String) {
+	public init(title: String) {
 		super.init(frame: .zero)
 		
 		self.layer.cornerRadius = 4

@@ -14,7 +14,12 @@ import GMDProfile
 import GMDUtils
 import UseCase
 
-protocol UserProfileRouting: ViewableRouting { }
+protocol UserProfileRouting: ViewableRouting {
+	func userProfileEditAttach()
+	func userProfileEditDetach()
+	func dogProfileEditAttach()
+	func dogProfileEditDetach()
+}
 
 protocol UserProfilePresentable: Presentable {
 	var listener: UserProfilePresentableListener? { get set }
@@ -59,7 +64,7 @@ final class UserProfileInteractor:
 			.asDriver(onErrorJustReturn: User.defaultUser)
 		
 		self.userName = users.map { $0.name }
-		self.userSexAndAge = users.map { "\($0.sex) \($0.age)세"}
+		self.userSexAndAge = users.map { "\($0.sex) \($0.age)세" }
 		
 		super.init(presenter: presenter)
 		presenter.listener = self
@@ -71,5 +76,34 @@ final class UserProfileInteractor:
 	
 	override func willResignActive() {
 		super.willResignActive()
+	}
+}
+
+// MARK: PresentableListener
+extension UserProfileInteractor {
+	func dogProfileEditButtonDidTap() {
+		router?.dogProfileEditAttach()
+	}
+	
+	func userProfileEditButtonDidTap() {
+		router?.userProfileEditAttach()
+	}
+}
+
+// MARK: UserProfileEditListener
+extension UserProfileInteractor {
+	func userProfileEditBackButtonDidTap() {
+		router?.userProfileEditDetach()
+	}
+	
+	func userProfileEndEditing() {
+		router?.userProfileEditDetach()
+	}
+}
+
+// MARK: DogProfileEditListener
+extension UserProfileInteractor {
+	func dogProfileEditBackButtonDidTap() {
+		router?.dogProfileEditDetach()
 	}
 }

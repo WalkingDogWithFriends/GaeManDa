@@ -47,23 +47,23 @@ final class ThirdDogSettingViewController:
 		return stackView
 	}()
 	
-	private let didNeuterButton: OnBoardingButton = {
-		let button = OnBoardingButton(title: "했어요")
-		button.buttonIsSelected = true
+	private let didNeuterButton: GMDOptionButton = {
+		let button = GMDOptionButton(title: "했어요")
+		button.isSelected = true
 		
 		return button
 	}()
 	
-	private let didNotNeuterButton: OnBoardingButton = {
-		let button = OnBoardingButton(title: "안 했어요")
+	private let didNotNeuterButton: GMDOptionButton = {
+		let button = GMDOptionButton(title: "안 했어요")
 		
 		return button
 	}()
 	
-	private let characterTextView: OnBoardingTextView = {
-		let onBoardingTextView = OnBoardingTextView(title: "우리 아이 성격 (선택)")
+	private let characterTextView: GMDTextView = {
+		let gmdTextView = GMDTextView(title: "우리 아이 성격 (선택)")
 		
-		return onBoardingTextView
+		return gmdTextView
 	}()
 	
 	private var maximumTextCount: Int = 100
@@ -221,21 +221,17 @@ private extension ThirdDogSettingViewController {
 	}
 	
 	func didNeuterButtonDidTap() {
-		if didNeuterButton.buttonIsSelected == true { return }
+		if didNeuterButton.isSelected == true { return }
 		
-		didNeuterButton.buttonIsSelected.toggle()
-		if didNotNeuterButton.buttonIsSelected == true {
-			didNotNeuterButton.buttonIsSelected = false
-		}
+		didNeuterButton.isSelected = true
+		didNotNeuterButton.isSelected = false
 	}
 	
 	func didNotNeuterButtonDidTap() {
-		if didNotNeuterButton.buttonIsSelected == true { return }
+		if didNotNeuterButton.isSelected == true { return }
 		
-		didNotNeuterButton.buttonIsSelected.toggle()
-		if didNeuterButton.buttonIsSelected == true {
-			didNeuterButton.buttonIsSelected = false
-		}
+		didNotNeuterButton.isSelected = true
+		didNeuterButton.isSelected = false
 	}
 	
 	@objc func backButtonDidTap() {

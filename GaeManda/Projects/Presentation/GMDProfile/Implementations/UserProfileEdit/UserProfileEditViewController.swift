@@ -1,3 +1,11 @@
+//
+//  UserProfileEditViewController.swift
+//  GMDProfileImpl
+//
+//  Created by jung on 2023/07/30.
+//  Copyright © 2023 com.gaemanda. All rights reserved.
+//
+
 import UIKit
 import RIBs
 import RxCocoa
@@ -7,27 +15,27 @@ import DesignKit
 import GMDExtensions
 import GMDUtils
 
-protocol UserSettingPresentableListener: AnyObject {
-	func confirmButtonDidTap()
-	func backButtonDidTap()
+protocol UserProfileEditPresentableListener: AnyObject {
+	func backbuttonDidTap()
+	func endEditingButtonDidTap()
 }
 
-final class UserSettingViewController:
+final class UserProfileEditViewController:
 	UIViewController,
-	UserSettingPresentable,
-	UserSettingViewControllable {
-	weak var listener: UserSettingPresentableListener?
+	UserProfileEditPresentable,
+	UserProfileEditViewControllable {
+	weak var listener: UserProfileEditPresentableListener?
 	private let disposeBag = DisposeBag()
 	
-	private let onBoardingView: OnBoardingView = {
-		let onBoardingView = OnBoardingView(
-			willDisplayImageView: true,
-			title: "보호자의 프로필을 설정해주세요!"
-		)
+	// MARK: UI Property
+	private let profileImageView: RoundImageView = {
+		let roundImageView = RoundImageView()
+		roundImageView.backgroundColor = .gray40
 		
-		return onBoardingView
+		return roundImageView
 	}()
 	
+	/// GMDTextField StackView
 	private let textStackView: UIStackView = {
 		let stackView = UIStackView()
 		stackView.axis = .vertical
@@ -47,9 +55,10 @@ final class UserSettingViewController:
 		return gmdTextField
 	}()
 	
-	private var maximumTextCount = 20
+	private let maximumTextCount = 20
 	
-	private lazy var maximumTextCountLabel: UILabel = {
+	/// Display Max Count Text in nickNameTextField
+	private let maximumTextCountLabel: UILabel = {
 		let label = UILabel()
 		label.textColor = .gray90
 		label.font = .r15
@@ -71,10 +80,11 @@ final class UserSettingViewController:
 		let image = UIImage(systemName: "calendar")
 		button.tintColor = .black
 		button.setImage(image, for: .normal)
-	
+		
 		return button
 	}()
 	
+	/// GMDRadioButton StackView
 	private let buttonStackView: UIStackView = {
 		let stackView = UIStackView()
 		stackView.axis = .horizontal
@@ -98,29 +108,44 @@ final class UserSettingViewController:
 		return button
 	}()
 	
-	private let confirmButton: UIButton = {
+	private let endEditingButton: UIButton = {
 		let button = UIButton()
-		button.setTitle("확인", for: .normal)
+		button.setTitle("수정 완료", for: .normal)
 		button.setTitleColor(.white, for: .normal)
 		button.layer.cornerRadius = 4
 		button.backgroundColor = .green100
 		button.titleLabel?.font = .b16
-
+		
 		return button
 	}()
 	
+	// MARK: Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		
 		setupUI()
 	}
 	
-	private func setupUI() {
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		
+		hideTabBar()
+	}
+}
+
+// MARK: Setting UI
+private extension UserProfileEditViewController {
+	func setupUI() {
 		view.backgroundColor = .white
 		self.setupBackNavigationButton(
 			target: self,
-			action: #selector(backButtonDidTap)
+			action: #selector(backbuttonDidTap)
 		)
 		
+		title = "프로필 수정"
+		setNavigationTitleFont(.b20)
+		
+		/// Set TextField Right View
 		nickNameTextField.textField.rightView = maximumTextCountLabel
 		nickNameTextField.textField.rightViewMode = .always
 		
@@ -132,11 +157,11 @@ final class UserSettingViewController:
 		bind()
 	}
 	
-	private func setupSubviews() {
-		view.addSubview(onBoardingView)
+	func setupSubviews() {
+		view.addSubview(profileImageView)
 		view.addSubview(textStackView)
 		view.addSubview(buttonStackView)
-		view.addSubview(confirmButton)
+		view.addSubview(endEditingButton)
 		
 		textStackView.addArrangedSubview(nickNameTextField)
 		textStackView.addArrangedSubview(calenderTextField)
@@ -145,15 +170,15 @@ final class UserSettingViewController:
 		buttonStackView.addArrangedSubview(femaleButton)
 	}
 	
-	private func setConstraints() {
-		onBoardingView.snp.makeConstraints { make in
-			make.leading.equalToSuperview()
-			make.trailing.equalToSuperview()
-			make.top.equalToSuperview()
+	func setConstraints() {
+		profileImageView.snp.makeConstraints { make in
+			make.top.equalToSuperview().offset(186)
+			make.centerX.equalToSuperview()
+			make.height.width.equalTo(140)
 		}
 		
 		textStackView.snp.makeConstraints { make in
-			make.top.equalTo(onBoardingView.snp.bottom).offset(48)
+			make.top.equalTo(profileImageView.snp.bottom).offset(58)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 		}
@@ -165,15 +190,18 @@ final class UserSettingViewController:
 			make.height.equalTo(40)
 		}
 		
-		confirmButton.snp.makeConstraints { make in
+		endEditingButton.snp.makeConstraints { make in
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 			make.bottom.equalToSuperview().offset(-54)
 			make.height.equalTo(40)
 		}
 	}
-	
-	private func bind() {
+}
+
+// MARK: Bind
+private extension UserProfileEditViewController {
+	func bind() {
 		nickNameTextField.textField.rx.text
 			.orEmpty
 			.withUnretained(self)
@@ -210,17 +238,21 @@ final class UserSettingViewController:
 			}
 			.disposed(by: disposeBag)
 		
-		confirmButton.rx.tap
+		endEditingButton.rx.tap
 			.withUnretained(self)
 			.bind { owner, _ in
-				owner.listener?.confirmButtonDidTap()
+				owner.listener?.endEditingButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 	}
 }
 
-// MARK: - Action
-private extension UserSettingViewController {
+// MARK: Action
+private extension UserProfileEditViewController {
+	@objc func backbuttonDidTap() {
+		listener?.backbuttonDidTap()
+	}
+	
 	func setTextCountLabel(_ text: String) {
 		var newText = text
 		
@@ -248,9 +280,5 @@ private extension UserSettingViewController {
 		
 		femaleButton.isSelected = true
 		maleButton.isSelected = false
-	}
-	
-	@objc func backButtonDidTap() {
-		listener?.backButtonDidTap()
 	}
 }

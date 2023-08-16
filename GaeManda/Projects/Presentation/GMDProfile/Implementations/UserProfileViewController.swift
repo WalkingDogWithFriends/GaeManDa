@@ -13,12 +13,16 @@ import RxSwift
 import SnapKit
 import DesignKit
 import Entity
+import GMDExtensions
 import GMDUtils
 
 protocol UserProfilePresentableListener: AnyObject {
 	var dogProfiles: Driver<[Dog]> { get set }
 	var userName: Driver<String> { get set }
 	var userSexAndAge: Driver<String> { get set }
+	
+	func dogProfileEditButtonDidTap()
+	func userProfileEditButtonDidTap()
 }
 
 final class UserProfileViewController:
@@ -67,7 +71,7 @@ final class UserProfileViewController:
 		let button = UIButton()
 		button.setTitle("수정", for: .normal)
 		button.setTitleColor(.black, for: .normal)
-		button.titleLabel?.font = .r8
+		button.titleLabel?.font = .r12
 		button.layer.borderColor = UIColor.gray50.cgColor
 		button.layer.cornerRadius = 10
 		button.layer.borderWidth = 1
@@ -117,10 +121,17 @@ final class UserProfileViewController:
 		return collectionView
 	}()
 	
+	// MARK: Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		collectionView.delegate = self
 		setupUI()
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		
+		showTabBar()
 	}
 }
 
@@ -164,8 +175,8 @@ private extension UserProfileViewController {
 		profileEditButton.snp.makeConstraints { make in
 			make.leading.equalTo(nickNameLabel.snp.trailing).offset(12)
 			make.centerY.equalTo(nickNameLabel)
-			make.width.equalTo(36)
-			make.height.equalTo(16)
+			make.width.equalTo(40)
+			make.height.equalTo(20)
 		}
 		
 		sexAndAgeLabel.snp.makeConstraints { make in
@@ -213,12 +224,19 @@ private extension UserProfileViewController {
 			.disposed(by: disposeBag)
 		
 		listener?.userSexAndAge
-		.drive(with: self) { owner, sexAndAge in
-			owner.sexAndAgeLabel.text = sexAndAge
-		}
-		.disposed(by: disposeBag)
+			.drive(with: self) { owner, sexAndAge in
+				owner.sexAndAgeLabel.text = sexAndAge
+			}
+			.disposed(by: disposeBag)
 		
 		collectionViewBind()
+		
+		profileEditButton.rx.tap
+			.withUnretained(self)
+			.bind { owner, _ in
+				owner.listener?.userProfileEditButtonDidTap()
+			}
+			.disposed(by: disposeBag)
 	}
 	
 	private func collectionViewBind() {
@@ -246,6 +264,13 @@ private extension UserProfileViewController {
 				cellType: DogsCollectionViewCell.self
 			)) { (_, item, cell) in
 				cell.configuration(item)
+				
+				cell.editButtonTap
+					.withUnretained(self)
+					.bind { owner, _ in
+						owner.listener?.dogProfileEditButtonDidTap()
+					}
+					.disposed(by: cell.disposeBag)
 			}
 			.disposed(by: disposeBag)
 		

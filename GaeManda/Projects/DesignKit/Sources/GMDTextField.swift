@@ -1,24 +1,24 @@
 import UIKit
+import SnapKit
 import GMDExtensions
 
-public final class OnBoardingTextField: UIView {
+public final class GMDTextField: UIView {
 	public lazy var isWarning = false {
 		didSet {
-			if isWarning == true {
-				changeWarningMode()
-			} else {
-				changeNormalMode()
-			}
+			isWarning ? changeWarningMode() : changeNormalMode()
 		}
 	}
 	
 	private lazy var hasContent = false {
 		didSet {
-			if hasContent == true {
-				titleLabel.layer.opacity = 1.0
-			} else {
-				titleLabel.layer.opacity = 0.0
-			}
+			titleLabel.layer.opacity = hasContent ? 1.0 : 0.0
+		}
+	}
+	
+	public var text: String = "" {
+		didSet {
+			textField.text = text
+			hasContent = !(textField.text?.isEmpty ?? false)
 		}
 	}
 	
@@ -38,7 +38,7 @@ public final class OnBoardingTextField: UIView {
 		label.layer.opacity = 0.0
 		label.numberOfLines = 1
 		label.font = .r12
-
+		
 		return label
 	}()
 	
@@ -89,21 +89,20 @@ public final class OnBoardingTextField: UIView {
 	}
 	
 	private func setupUI() {
+		self.textField.setPlaceholdColor(.gray90)
+		
 		addSubview(stackView)
 		stackView.addArrangedSubview(titleLabel)
 		stackView.addArrangedSubview(textField)
 		stackView.addArrangedSubview(warningLabel)
 		
-		NSLayoutConstraint.activate([
-			stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-			stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-			stackView.topAnchor.constraint(equalTo: self.topAnchor),
-			stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
-		])
+		stackView.snp.makeConstraints { make in
+			make.leading.trailing.top.bottom.equalToSuperview()
+		}
 	}
 }
 
-private extension OnBoardingTextField {
+private extension GMDTextField {
 	@objc func textDidChange(_ notification: Notification) {
 		guard
 			let textField = notification.object as? UITextField,
@@ -112,11 +111,7 @@ private extension OnBoardingTextField {
 			return
 		}
 		
-		if text.isEmpty {
-			hasContent = false
-		} else {
-			hasContent = true
-		}
+		hasContent = !text.isEmpty
 	}
 	
 	func changeNormalMode() {

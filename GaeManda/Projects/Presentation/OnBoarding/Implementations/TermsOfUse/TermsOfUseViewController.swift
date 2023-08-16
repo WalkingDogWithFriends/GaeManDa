@@ -90,7 +90,7 @@ final class TermsOfUseViewController:
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 		}
-		
+
 		tableView.snp.makeConstraints { make in
 			make.height.equalTo(192)
 			make.leading.equalToSuperview().offset(32)

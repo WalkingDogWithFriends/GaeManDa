@@ -9,6 +9,7 @@
 import UIKit
 import RxCocoa
 import RxSwift
+import SnapKit
 import DesignKit
 import Entity
 import GMDUtils
@@ -45,13 +46,7 @@ final class TermsOfUseCell: UITableViewCell {
 	}
 	
 	private func setupUI(termsOfUse: TermsOfUse) {
-		var prefix: String = ""
-		
-		if termsOfUse.isRequired {
-			prefix = "[필수]"
-		} else {
-			prefix = "[선택]"
-		}
+		let prefix = termsOfUse.isRequired ? "[필수]" : "[선택]"
 		
 		termsOfUseButton.setTitle("\(prefix) \(termsOfUse.title)")
 		subTitleLabel.text = termsOfUse.subTitle
@@ -66,15 +61,15 @@ final class TermsOfUseCell: UITableViewCell {
 	}
 	
 	private func setConstraints() {
-		NSLayoutConstraint.activate([
-			termsOfUseButton.topAnchor.constraint(equalTo: contentView.topAnchor),
-			termsOfUseButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-			termsOfUseButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-			
-			subTitleLabel.topAnchor.constraint(equalTo: termsOfUseButton.bottomAnchor),
-			subTitleLabel.leadingAnchor.constraint(equalTo: termsOfUseButton.titleLabel.leadingAnchor),
-			subTitleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-		])
+		termsOfUseButton.snp.makeConstraints { make in
+			make.top.leading.trailing.equalToSuperview()
+		}
+		
+		subTitleLabel.snp.makeConstraints { make in
+			make.top.equalTo(termsOfUseButton.snp.bottom)
+			make.bottom.equalToSuperview()
+			make.leading.equalTo(termsOfUseButton.snp.leading)
+		}
 	}
 	
 	override func prepareForReuse() {
