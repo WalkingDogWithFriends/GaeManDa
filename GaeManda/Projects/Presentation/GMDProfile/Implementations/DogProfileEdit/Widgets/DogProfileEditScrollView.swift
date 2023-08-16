@@ -124,7 +124,7 @@ final class DogProfileEditScrollView: UIScrollView {
 		return stackView
 	}()
 	
-	private let neuterRadioButtonLabel: UILabel = {
+	private let neuterStackViewLabel: UILabel = {
 		let label = UILabel()
 		label.text = "중성화"
 		label.font = .r12
@@ -197,7 +197,7 @@ private extension DogProfileEditScrollView {
 		genderButtonStackView.addArrangedSubview(maleButton)
 		genderButtonStackView.addArrangedSubview(femaleButton)
 		
-		neuterStackView.addArrangedSubview(neuterRadioButtonLabel)
+		neuterStackView.addArrangedSubview(neuterStackViewLabel)
 		neuterStackView.addArrangedSubview(neuterButtonStackView)
 		
 		neuterButtonStackView.addArrangedSubview(didNeuterButton)
