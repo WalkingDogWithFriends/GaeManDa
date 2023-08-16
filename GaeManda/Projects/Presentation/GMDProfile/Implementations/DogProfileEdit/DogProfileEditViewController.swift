@@ -156,7 +156,7 @@ private extension DogProfileEditViewController {
 			.withUnretained(self)
 			.map { owner, text -> String in
 				let maxTextCount = ScrollViewConstant.maximumTextFieldCount
-				return owner.trimmingWithMaximunTextCount(text, maximumTextCount: maxTextCount)
+				return owner.trimmingSuffix(text, maxCount: maxTextCount)
 			}
 			.bind(to: scrollView.nickNameTextField.textField.rx.text)
 			.disposed(by: disposeBag)
@@ -246,9 +246,9 @@ private extension DogProfileEditViewController {
 		listener?.backbuttonDidTap()
 	}
 	
-	func trimmingWithMaximunTextCount(_ text: String, maximumTextCount: Int) -> String {
-		if text.count >= maximumTextCount {
-			let index = text.index(text.startIndex, offsetBy: maximumTextCount)
+	func trimmingSuffix(_ text: String, maxCount: Int) -> String {
+		if text.count >= maxCount {
+			let index = text.index(text.startIndex, offsetBy: maxCount)
 			return String(text[..<index])
 		}
 		return text
