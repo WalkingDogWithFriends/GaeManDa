@@ -145,192 +145,27 @@ private extension DogProfileEditViewController {
 			}
 			.disposed(by: disposeBag)
 		
-		scrollViewTextFieldBind()
-		scrollViewButtonBind()
-	}
-	
-	/// ScrollView TextField Bind
-	func scrollViewTextFieldBind() {
-		scrollView.nickNameTextField.textField.rx.text
-			.orEmpty
-			.withUnretained(self)
-			.map { owner, text -> String in
-				let maxTextCount = ScrollViewConstant.maximumTextFieldCount
-				return owner.trimmingSuffix(text, maxCount: maxTextCount)
-			}
-			.bind(to: scrollView.nickNameTextField.textField.rx.text)
-			.disposed(by: disposeBag)
-		
-		scrollView.nickNameTextField.textField.rx.text
-			.orEmpty
-			.map { "\($0.count)/\(ScrollViewConstant.maximumTextFieldCount)" }
-			.bind(to: scrollView.maximumTextCountLabel.rx.text)
-			.disposed(by: disposeBag)
-		
-		scrollView.calenderTextField.textField.rx.controlEvent(.editingDidBegin)
-			.withUnretained(self)
-			.bind { owner, _ in
-				owner.scrollView.calenderTextField.textField.endEditing(true)
-			}
-			.disposed(by: disposeBag)
-		
-		scrollView.weightTextField.textField.rx.controlEvent(.editingChanged)
-			.withUnretained(self)
-			.bind { owner, _ in
-				owner.addSuffixForWeightTextField()
-			}
-			.disposed(by: disposeBag)
-		
-		scrollView.weightTextField.textField.rx.cursorChanged
-			.withUnretained(self)
-			.bind { owner, range in
-				owner.setUneditableSuffix(range)
-			}
-			.disposed(by: disposeBag)
-		
-		scrollView.characterTextView.textView.rx.text
-			.orEmpty
-			.map { "\($0.count)/\(ScrollViewConstant.maximumTextViewCount)" }
-			.bind(to: scrollView.characterTextView.maximumTextCountLabel.rx.text)
-			.disposed(by: disposeBag)
-		
-		scrollView.characterTextView.textView.rx.text
-			.orEmpty
-			.map { $0.count > ScrollViewConstant.maximumTextViewCount }
-			.bind(to: scrollView.characterTextView.rx.isWarning)
-			.disposed(by: disposeBag)
-	}
-	
-	/// ScrollView Button Action Bind
-	func scrollViewButtonBind() {
-		scrollView.calenderButton.rx.tap
+		scrollView.rx.didTapCalenderButton
 			.withUnretained(self)
 			.bind { owner, _ in
 				owner.calenderButtonDidTap()
-			}
-			.disposed(by: disposeBag)
-		
-		scrollView.maleButton.rx.tap
-			.withUnretained(self)
-			.bind { owner, _ in
-				owner.maleButtonDidTap()
-			}
-			.disposed(by: disposeBag)
-		
-		scrollView.femaleButton.rx.tap
-			.withUnretained(self)
-			.bind { owner, _ in
-				owner.femaleButtonDidTap()
-			}
-			.disposed(by: disposeBag)
-		
-		scrollView.didNeuterButton.rx.tap
-			.withUnretained(self)
-			.bind { owner, _ in
-				owner.didNeuterButtonDidTap()
-			}
-			.disposed(by: disposeBag)
-		
-		scrollView.didNotNeuterButton.rx.tap
-			.withUnretained(self)
-			.bind { owner, _ in
-				owner.didNotNeuterButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 	}
 }
 
 // MARK: Action
+
 private extension DogProfileEditViewController {
 	@objc func backbuttonDidTap() {
 		listener?.backbuttonDidTap()
 	}
 	
-	func trimmingSuffix(_ text: String, maxCount: Int) -> String {
-		if text.count >= maxCount {
-			let index = text.index(text.startIndex, offsetBy: maxCount)
-			return String(text[..<index])
-		}
-		return text
-	}
-	
 	func calenderButtonDidTap() {
 		print("calenderButtonDidTap")
 	}
-	
-	func maleButtonDidTap() {
-		if scrollView.maleButton.isSelected == true { return }
-		
-		scrollView.maleButton.isSelected.toggle()
-		scrollView.femaleButton.isSelected = false
-	}
-	
-	func femaleButtonDidTap() {
-		if scrollView.femaleButton.isSelected == true { return }
-		
-		scrollView.femaleButton.isSelected = true
-		scrollView.maleButton.isSelected = false
-	}
-	
-	/// add Suffix in Weight TextField
-	func addSuffixForWeightTextField() {
-		let textField = scrollView.weightTextField.textField
-		guard let text = textField.text else { return }
-		
-		let suffix = scrollView.suffix
-		
-		if text.contains(suffix), text.count == suffix.count {
-			textField.text = ""
-		} else if !text.contains(suffix) {
-			textField.text = text + suffix
-		}
-	}
-	
-	/// uneditable suffic in Weight TextField
-	func setUneditableSuffix(_ selectedRange: UITextRange?) {
-		let textField = scrollView.weightTextField.textField
-		let suffix = scrollView.suffix
-		guard
-			let text = textField.text,
-			let selectedRange = selectedRange,
-			let suffixRange = text.range(of: suffix)
-		else {
-			return
-		}
-		let suffixStartIndex = text.distance(
-			from: text.startIndex,
-			to: suffixRange.lowerBound
-		)
-		let cursorEndPosition = textField.offset(
-			from: textField.beginningOfDocument,
-			to: selectedRange.end
-		)
-		
-		if
-			cursorEndPosition > suffixStartIndex,
-			let newPosition = textField.position(from: selectedRange.end, offset: -2) {
-			textField.selectedTextRange = textField.textRange(
-				from: newPosition,
-				to: newPosition
-			)
-		}
-	}
-		
-	func didNeuterButtonDidTap() {
-		if scrollView.didNeuterButton.isSelected == true { return }
-		
-		scrollView.didNeuterButton.isSelected = true
-		scrollView.didNotNeuterButton.isSelected = false
-	}
-	
-	func didNotNeuterButtonDidTap() {
-		if scrollView.didNotNeuterButton.isSelected == true { return }
-		
-		scrollView.didNotNeuterButton.isSelected = true
-		scrollView.didNeuterButton.isSelected = false
-	}
 }
-
+ 
 // MARK: Keyboard Respond
 private extension DogProfileEditViewController {
 	/// Register Keyboard notifications
@@ -380,7 +215,6 @@ private extension DogProfileEditViewController {
 	}
 	
 	@objc func keyboardWillHide() {
-		print("willHide")
 		scrollView.contentInset = .zero
 	}
 }

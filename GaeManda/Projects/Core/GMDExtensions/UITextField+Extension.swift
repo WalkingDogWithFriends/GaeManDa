@@ -55,4 +55,16 @@ public extension Reactive where Base: UITextField {
 			}
 		)
 	}
+	
+	var isEditing: ControlProperty<Bool> {
+		return base.rx.controlProperty(
+			editingEvents: [],
+			getter: { textField in
+				textField.isEditing
+			},
+			setter: { textField, value in
+				textField.endEditing(value)
+			}
+		)
+	}
 }
