@@ -8,11 +8,6 @@
 
 import Foundation
 
-public enum Sex {
-	case male
-	case female
-}
-
 public struct Dog {
 	public let name: String
 	public let sex: String
