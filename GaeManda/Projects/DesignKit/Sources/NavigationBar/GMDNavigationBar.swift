@@ -41,9 +41,10 @@ public final class GMDNavigationBar: UIView {
 		
 		titleLabel.text = title
 		setViewHierarchy()
-		setConstraints()
+		setViewConstraints()
 	}
 	
+	@available(*, unavailable)
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
@@ -57,7 +58,7 @@ private extension GMDNavigationBar {
 		addSubviews(titleLabel, backButton, rightView)
 	}
 	
-	func setConstraints() {
+	func setViewConstraints() {
 		titleLabel.snp.makeConstraints { make in
 			make.centerX.centerY.equalToSuperview()
 		}

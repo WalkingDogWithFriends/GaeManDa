@@ -50,8 +50,8 @@ open class BottomSheetViewController: UIViewController {
 	// MARK: - Life Cycles
 	public override func viewDidLoad() {
 		super.viewDidLoad()
-		setHierarchy()
-		setConstraints()
+		setViewHierarchy()
+		setViewConstraints()
 	}
 	
 	public override func viewDidAppear(_ animated: Bool) {
@@ -63,13 +63,13 @@ open class BottomSheetViewController: UIViewController {
 
 // MARK: - View Methods
 private extension BottomSheetViewController {
-	func setHierarchy() {
+	func setViewHierarchy() {
 		view.addSubview(dimmedView)
 		view.addSubview(contentRootView)
 		contentRootView.addSubview(contentView)
 	}
 	
-	func setConstraints() {
+	func setViewConstraints() {
 		dimmedView.snp.makeConstraints { make in
 			make.edges.equalToSuperview()
 		}
