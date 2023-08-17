@@ -65,7 +65,7 @@ open class BaseViewController: UIViewController {
 extension BaseViewController {
 	@objc func keyboardWillShow(notification: NSNotification) {
 		if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-			scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
+			scrollView.contentInset.bottom = keyboardSize.height
 		}
 	}
 	
