@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SnapKit
 
 public enum GMDNavigationItemType {
 	case setting
@@ -24,6 +25,7 @@ public final class GMDNavigationItem: UIButton {
 		setImage()
 	}
 	
+	@available(*, unavailable)
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
@@ -32,10 +34,9 @@ public final class GMDNavigationItem: UIButton {
 // MARK: Private Methods
 private extension GMDNavigationItem {
 	func setConstraints() {
-		NSLayoutConstraint.activate([
-			widthAnchor.constraint(equalToConstant: 20),
-			heightAnchor.constraint(equalToConstant: 20)
-		])
+		self.snp.makeConstraints { make in
+			make.width.height.equalTo(20)
+		}		
 	}
 	
 	func setImage() {
