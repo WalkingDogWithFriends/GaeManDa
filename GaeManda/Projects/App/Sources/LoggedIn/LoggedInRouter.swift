@@ -14,7 +14,7 @@ import GMDUtils
 
 protocol LoggedInInteractable:
 	Interactable,
-	ChattingListener,
+	ChattingListListener,
 	DogsOnAroundListener,
 	UserProfileListener {
 	var router: LoggedInRouting? { get set }
@@ -28,8 +28,8 @@ protocol LoggedInViewControllable: ViewControllable {
 final class LoggedInRouter:
 	ViewableRouter<LoggedInInteractable, LoggedInViewControllable>,
 	LoggedInRouting {
-	private let chattingBuildable: ChattingBuildable
-	private var chattingRouting: ViewableRouting?
+	private let chattingListBuildable: ChattingListBuildable
+	private var chattingListRouting: ViewableRouting?
 	
 	private let dogsOnAroundBuildable: DogsOnAroundBuildable
 	private var dogsOnAroundRouting: ViewableRouting?
@@ -40,11 +40,11 @@ final class LoggedInRouter:
 	init(
 		interactor: LoggedInInteractable,
 		viewController: LoggedInViewControllable,
-		chattingBuildable: ChattingBuildable,
+		chattingListBuildable: ChattingListBuildable,
 		dogsOnAroundBuildable: DogsOnAroundBuildable,
 		userSettingBuildable: UserProfileBuildable
 	) {
-		self.chattingBuildable = chattingBuildable
+		self.chattingListBuildable = chattingListBuildable
 		self.dogsOnAroundBuildable = dogsOnAroundBuildable
 		self.userSettingBuildable = userSettingBuildable
 		
@@ -53,18 +53,18 @@ final class LoggedInRouter:
 	}
 	
 	func attachTabs() {
-		let chattingRouting = chattingBuildable.build(withListener: interactor)
+		let chattingListRouting = chattingListBuildable.build(withListener: interactor)
 		let dogsOnAroundRouting = dogsOnAroundBuildable.build(withListener: interactor)
 		let userSettingRouting = userSettingBuildable.build(withListener: interactor)
 		
-		attachChild(chattingRouting)
+		attachChild(chattingListRouting)
 		attachChild(dogsOnAroundRouting)
 		attachChild(userSettingRouting)
 
 		let viewControllers = [
 			NavigationControllerable(root: dogsOnAroundRouting.viewControllable),
 			NavigationControllerable(root: userSettingRouting.viewControllable),
-			NavigationControllerable(root: chattingRouting.viewControllable)
+			NavigationControllerable(root: chattingListRouting.viewControllable)
 		]
 		
 		viewController.setViewControllers(viewControllers)
