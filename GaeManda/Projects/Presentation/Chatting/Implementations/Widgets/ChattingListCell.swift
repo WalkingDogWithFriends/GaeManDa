@@ -17,35 +17,11 @@ final class ChattingListCell: UITableViewCell {
 	let disposeBag = DisposeBag()
 	
 	// MARK: UI Components
-	private let view1: UIView = {
-		let view = UIView()
-		view.backgroundColor = .blue
-		
-		return view
-	}()
-	
 	private let profileImageView: RoundImageView = {
 		let imageView = RoundImageView()
 		imageView.backgroundColor = .gray40
 		
 		return imageView
-	}()
-	
-	private let line: UIView = {
-		let view = UIView()
-		view.backgroundColor = .red
-		
-		return view
-	}()
-	
-	private let topStackView: UIStackView = {
-		let stackView = UIStackView()
-		stackView.axis = .horizontal
-		stackView.spacing = 12
-		stackView.alignment = .center
-		stackView.distribution = .fillProportionally
-		
-		return stackView
 	}()
 	
 	private let nickNameLabel: UILabel = {
