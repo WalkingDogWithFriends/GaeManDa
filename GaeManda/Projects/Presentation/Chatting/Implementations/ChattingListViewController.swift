@@ -31,6 +31,8 @@ final class ChattingListViewController:
 			ChattingListCell.self,
 			forCellReuseIdentifier: ChattingListCell.identifier
 		)
+		// remove Top Seperator
+		tableView.tableHeaderView = UIView()
 
 		return tableView
 	}()
