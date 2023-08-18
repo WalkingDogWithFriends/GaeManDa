@@ -57,9 +57,6 @@ opt_in_rules:
 # range(of:) == nil 체크 대신 contains 사용 권장 (https://realm.github.io/SwiftLint/contains_over_range_nil_comparison.html)
 - contains_over_range_nil_comparison
 
-# optional collection을 선언하기 보다 empty collection으로 선언 권장discouraged_optional_collection
-- discouraged_optional_collection
-
 # if, for, guard, switch, while, catch 사용 시 () 사용 권장하지 않음
 - control_statement
 
