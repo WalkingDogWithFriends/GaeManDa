@@ -181,7 +181,8 @@ private extension DogProfileEditScrollView {
 		
 		setupSubviews()
 		setConstraints()
-		bind()
+		textBind()
+		buttonBind()
 	}
 	
 	func setupSubviews() {
@@ -232,7 +233,7 @@ private extension DogProfileEditScrollView {
 
 // MARK: Bind
 private extension DogProfileEditScrollView {
-	func bind() {
+	func textBind() {
 		rx.nickNameTextFieldText
 			.orEmpty
 			.withUnretained(self)
@@ -278,6 +279,40 @@ private extension DogProfileEditScrollView {
 			.orEmpty
 			.map { $0.count > ScrollViewConstant.maximumTextViewCount }
 			.bind(to: characterTextView.rx.isWarning)
+			.disposed(by: disposeBag)
+	}
+	
+	func buttonBind() {
+		maleButton.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.genderDidChanged.accept(.male)
+				owner.maleButton.rx.isSelected.onNext(true)
+				owner.femaleButton.rx.isSelected.onNext(false)
+			}
+			.disposed(by: disposeBag)
+		
+		femaleButton.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.genderDidChanged.accept(.female)
+				owner.femaleButton.rx.isSelected.onNext(true)
+				owner.maleButton.rx.isSelected.onNext(false)
+			}
+			.disposed(by: disposeBag)
+		
+		didNeuterButton.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.neuterDidChanged.accept(true)
+				owner.didNeuterButton.rx.isSelected.onNext(true)
+				owner.didNotNeuterButton.rx.isSelected.onNext(false)
+			}
+			.disposed(by: disposeBag)
+		
+		didNotNeuterButton.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.neuterDidChanged.accept(false)
+				owner.didNotNeuterButton.rx.isSelected.onNext(true)
+				owner.didNeuterButton.rx.isSelected.onNext(false)
+			}
 			.disposed(by: disposeBag)
 	}
 }
@@ -334,38 +369,6 @@ private extension DogProfileEditScrollView {
 				to: newPosition
 			)
 		}
-	}
-	
-	func maleButtonDidTap() {
-		if maleButton.isSelected == true { return }
-		
-		genderDidChanged.accept(.male)
-		maleButton.isSelected = true
-		femaleButton.isSelected = false
-	}
-	
-	func femaleButtonDidTap() {
-		if femaleButton.isSelected == true { return }
-		
-		genderDidChanged.accept(.female)
-		femaleButton.isSelected = true
-		maleButton.isSelected = false
-	}
-		
-	func didNeuterButtonDidTap() {
-		if didNeuterButton.isSelected == true { return }
-		
-		neuterDidChanged.accept(true)
-		didNeuterButton.isSelected = true
-		didNotNeuterButton.isSelected = false
-	}
-	
-	func didNotNeuterButtonDidTap() {
-		if didNotNeuterButton.isSelected == true { return }
-		
-		neuterDidChanged.accept(false)
-		didNotNeuterButton.isSelected = true
-		didNeuterButton.isSelected = false
 	}
 }
 
