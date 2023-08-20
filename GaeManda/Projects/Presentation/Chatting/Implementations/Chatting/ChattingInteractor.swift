@@ -35,3 +35,10 @@ final class ChattingInteractor:
 		super.willResignActive()
 	}
 }
+
+// MARK: - PresentableListener
+extension ChattingInteractor {
+	func didTapBackButton() {
+		listener?.chattingDidTapBackButton()
+	}
+}

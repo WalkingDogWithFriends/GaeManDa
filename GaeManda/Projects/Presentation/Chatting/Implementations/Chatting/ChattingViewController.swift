@@ -15,7 +15,9 @@ import DesignKit
 import GMDExtensions
 import GMDUtils
 
-protocol ChattingPresentableListener: AnyObject { }
+protocol ChattingPresentableListener: AnyObject {
+	func didTapBackButton()
+}
 
 final class ChattingViewController:
 	UIViewController,
@@ -84,7 +86,7 @@ private extension ChattingViewController {
 	func bind() {
 		navigationBar.backButton.rx.tap
 			.bind(with: self) { owner, _ in
-				print("backButton DidTap")
+				owner.listener?.didTapBackButton()
 			}
 			.disposed(by: disposeBag)
 	}

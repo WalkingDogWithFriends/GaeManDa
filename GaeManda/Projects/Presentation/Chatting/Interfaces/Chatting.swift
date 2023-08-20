@@ -12,4 +12,6 @@ public protocol ChattingBuildable: Buildable {
 	func build(withListener listener: ChattingListener) -> ViewableRouting
 }
 
-public protocol ChattingListener: AnyObject { }
+public protocol ChattingListener: AnyObject {
+	func chattingDidTapBackButton()
+}

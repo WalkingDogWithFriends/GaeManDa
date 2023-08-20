@@ -45,3 +45,10 @@ extension ChattingListInteractor {
 		router?.attachChatting(with: user)
 	}
 }
+
+// MARK: - Chatting Listener
+extension ChattingListInteractor {
+	func chattingDidTapBackButton() {
+		router?.detachChatting()
+	}
+}
