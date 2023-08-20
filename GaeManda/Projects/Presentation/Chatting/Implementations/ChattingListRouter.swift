@@ -9,7 +9,9 @@
 import RIBs
 import Chatting
 
-protocol ChattingListInteractable: Interactable {
+protocol ChattingListInteractable:
+	Interactable,
+	ChattingListener {
 	var router: ChattingListRouting? { get set }
 	var listener: ChattingListListener? { get set }
 }
@@ -19,9 +21,10 @@ protocol ChattingListViewControllable: ViewControllable { }
 final class ChattingListRouter:
 	ViewableRouter<ChattingListInteractable, ChattingListViewControllable>,
 	ChattingListRouting {
-	override init(
+	init(
 		interactor: ChattingListInteractable,
-		viewController: ChattingListViewControllable
+		viewController: ChattingListViewControllable,
+		chattingBuildable: ChattingBuildable
 	) {
 		super.init(interactor: interactor, viewController: viewController)
 		interactor.router = self
