@@ -24,13 +24,17 @@ final class ChattingListViewController:
 	weak var listener: ChattingListPresentableListener?
 	private let disposeBag = DisposeBag()
 	
-	// MARK: UI Components
+	// MARK: - UI Components
+	private let navigationBar: GMDNavigationBar = {
+		let navigationBar = GMDNavigationBar(title: "채팅")
+		navigationBar.backButton.isHidden = true
+		
+		return navigationBar
+	}()
+	
 	private let chattingListTableView: UITableView = {
 		let tableView = UITableView()
-		tableView.register(
-			ChattingListCell.self,
-			forCellReuseIdentifier: ChattingListCell.identifier
-		)
+		tableView.registerCell(ChattingListCell.self)
 		// remove Top Seperator
 		tableView.tableHeaderView = UIView()
 
@@ -44,15 +48,21 @@ final class ChattingListViewController:
 		return refreshControl
 	}()
 	
-	// MARK: Life Cycle
+	// MARK: - Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		navigationController?.navigationBar.isHidden = true
 		
 		setupUI()
 	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		showTabBar()
+	}
 }
 
-// MARK: UI Setting
+// MARK: - UI Setting
 private extension ChattingListViewController {
 	func setupUI() {
 		title = "채팅"
@@ -67,12 +77,19 @@ private extension ChattingListViewController {
 	}
 	
 	func setupSubviews() {
+		view.addSubview(navigationBar)
 		view.addSubview(chattingListTableView)
 	}
 	
 	func setConstraints() {
-		chattingListTableView.snp.makeConstraints { make in
+		navigationBar.snp.makeConstraints { make in
+			make.leading.trailing.equalToSuperview()
 			make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+			make.height.equalTo(44)
+		}
+		
+		chattingListTableView.snp.makeConstraints { make in
+			make.top.equalTo(navigationBar.snp.bottom)
 			make.leading.trailing.equalToSuperview()
 			make.bottom.equalToSuperview().offset(152)
 		}

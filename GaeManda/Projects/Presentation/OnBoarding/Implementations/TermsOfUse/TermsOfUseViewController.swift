@@ -37,10 +37,7 @@ final class TermsOfUseViewController:
 	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
-		tableView.register(
-			TermsOfUseCell.self,
-			forCellReuseIdentifier: TermsOfUseCell.identifier
-		)
+		tableView.registerCell(TermsOfUseCell.self)
 		tableView.rowHeight = UITableView.automaticDimension
 		tableView.estimatedRowHeight = 46
 		tableView.separatorStyle = .none
