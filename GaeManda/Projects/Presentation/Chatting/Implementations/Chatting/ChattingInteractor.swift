@@ -41,4 +41,12 @@ extension ChattingInteractor {
 	func didTapBackButton() {
 		listener?.chattingDidTapBackButton()
 	}
+	
+	func didTapOffAlarm() {
+		print("didTapOffAlarm")
+	}
+	
+	func didTapLeaveChatting() {
+		print("didTapLeaveChatting")
+	}
 }

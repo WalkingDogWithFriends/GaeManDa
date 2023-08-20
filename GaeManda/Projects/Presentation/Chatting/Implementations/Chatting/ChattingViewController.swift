@@ -17,6 +17,8 @@ import GMDUtils
 
 protocol ChattingPresentableListener: AnyObject {
 	func didTapBackButton()
+	func didTapOffAlarm()
+	func didTapLeaveChatting()
 }
 
 final class ChattingViewController:
@@ -40,6 +42,9 @@ final class ChattingViewController:
 		return view
 	}()
 	
+	/// display when the use click navigation right Button
+	private let optionsButton = ChattingOptionsButton()
+	
 	private let tableView = UITableView()
 	
 	// MARK: - Life Cycle
@@ -61,10 +66,12 @@ private extension ChattingViewController {
 		setupSubViews()
 		setConstraints()
 		bind()
+		optionButtonBind()
+		optionsButton.isHidden = true
 	}
 	
 	func setupSubViews() {
-		view.addSubviews(navigationBar, underLineView)
+		view.addSubviews(navigationBar, underLineView, optionsButton)
 	}
 	
 	func setConstraints() {
@@ -78,7 +85,14 @@ private extension ChattingViewController {
 			make.leading.trailing.equalToSuperview()
 			make.top.equalTo(navigationBar.snp.bottom)
 			make.height.equalTo(1)
-		}	}
+		}
+		
+		optionsButton.snp.makeConstraints { make in
+			make.leading.equalToSuperview().offset(60)
+			make.trailing.equalToSuperview().offset(-22)
+			make.top.equalToSuperview().offset(122)
+		}
+	}
 }
 
 // MARK: - Bind
@@ -89,5 +103,63 @@ private extension ChattingViewController {
 				owner.listener?.didTapBackButton()
 			}
 			.disposed(by: disposeBag)
+		
+		navigationBar.rightItems?.first?.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.optionsButton.isHidden = false
+			}
+			.disposed(by: disposeBag)
+	}
+	
+	/// when click option Button
+	func optionButtonBind() {
+		/// when option Button display and tap backGround, dismiss optionsButton
+		view.rx.tapGesture()
+			.when(.recognized)
+			.throttle(
+				.milliseconds(400),
+				latest: false,
+				scheduler: MainScheduler.instance
+			)
+			.bind(with: self) { owner, _ in
+				guard owner.optionsButton.isHidden == false else { return }
+				owner.optionsButton.isHidden = true
+			}
+			.disposed(by: disposeBag)
+		
+		optionsButton.rx.offAlarmButtonDidTapped
+			.bind(with: self) { owner, _ in
+				owner.listener?.didTapOffAlarm()
+				owner.optionsButton.isHidden = true
+			}
+			.disposed(by: disposeBag)
+		
+		optionsButton.rx.leaveChattingButtonDidTapped
+			.bind(with: self) { owner, _ in
+				owner.displayLeaveChattingAlertController()
+				owner.optionsButton.isHidden = true
+			}
+			.disposed(by: disposeBag)
+	}
+}
+
+// MARK: - AlertController
+private extension ChattingViewController {
+	func displayLeaveChattingAlertController() {
+		let alert = UIAlertController(
+			title: "채팅방 나가기",
+			message: "나가기를 하면 대화내용이 모두 삭제되고 채팅 목록에서도 삭제됩니다.",
+			preferredStyle: .alert
+		)
+		
+		let cancel = UIAlertAction(title: "취소", style: .default)
+		let confirm = UIAlertAction(title: "나가기", style: .destructive) { [weak self] _ in
+			self?.listener?.didTapLeaveChatting()
+		}
+		
+		alert.addAction(cancel)
+		alert.addAction(confirm)
+		
+		present(alert, animated: true)
 	}
 }
