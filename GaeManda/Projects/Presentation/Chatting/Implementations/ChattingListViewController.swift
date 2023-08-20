@@ -15,7 +15,9 @@ import DesignKit
 import GMDExtensions
 import GMDUtils
 
-protocol ChattingListPresentableListener: AnyObject { }
+protocol ChattingListPresentableListener: AnyObject {
+	func didTapChatting(with user: String)
+}
 
 final class ChattingListViewController:
 	UIViewController,

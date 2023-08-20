@@ -9,7 +9,10 @@
 import RIBs
 import Chatting
 
-protocol ChattingListRouting: ViewableRouting { }
+protocol ChattingListRouting: ViewableRouting {
+	func attachChatting(with user: String)
+	func detachChatting()
+}
 
 protocol ChattingListPresentable: Presentable {
 	var listener: ChattingListPresentableListener? { get set }
@@ -33,5 +36,12 @@ final class ChattingListInteractor:
 	
 	override func willResignActive() {
 		super.willResignActive()
+	}
+}
+
+// MARK: - PresentableListener
+extension ChattingListInteractor {
+	func didTapChatting(with user: String) {
+		router?.attachChatting(with: user)
 	}
 }
