@@ -11,8 +11,6 @@ import SnapKit
 import DesignKit
 
 final class DogProfileDashBoardCell: UICollectionViewCell {
-	static let identifier = "DogProfileDashBoardCell"
-	
 	lazy var isEdited: Bool = false {
 		didSet {
 			imageView.layer.borderWidth = isEdited ? 1 : 0

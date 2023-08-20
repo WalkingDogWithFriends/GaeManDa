@@ -15,7 +15,6 @@ import Entity
 import GMDUtils
 
 final class TermsOfUseCell: UITableViewCell {
-	static let identifier = "TermsOfUseCell"
 	var disposeBag = DisposeBag()
 	
 	lazy var checkBoxButtonTap: Observable<Void> = {
