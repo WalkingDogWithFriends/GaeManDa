@@ -76,6 +76,7 @@ private extension ChattingViewController {
 		setConstraints()
 		bind()
 		optionButtonBind()
+		chattingTextViewBind()
 		optionsButton.isHidden = true
 	}
 	
@@ -168,6 +169,16 @@ private extension ChattingViewController {
 			.bind(with: self) { owner, _ in
 				owner.displayLeaveChattingAlertController()
 				owner.optionsButton.isHidden = true
+			}
+			.disposed(by: disposeBag)
+	}
+	
+	func chattingTextViewBind() {
+		chattingTextView.rx.text
+			.orEmpty
+			.map { $0.isEmpty }
+			.bind(with: self) { owner, isEmpty in
+				owner.chattingTextView.buttonIsHidden = isEmpty
 			}
 			.disposed(by: disposeBag)
 	}

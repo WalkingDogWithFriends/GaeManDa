@@ -109,6 +109,10 @@ extension Reactive where Base: ChattingTextView {
 		base.sendButton.rx.tap
 	}
 	
+	var cameraButtonDidTapped: ControlEvent<Void> {
+		base.cameraButton.rx.tap
+	}
+	
 	var text: ControlProperty<String?> {
 		base.textField.rx.text
 	}
