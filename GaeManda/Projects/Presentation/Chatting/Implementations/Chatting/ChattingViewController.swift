@@ -47,7 +47,21 @@ final class ChattingViewController:
 	/// display when the use click navigation right Button
 	private let optionsButton = ChattingOptionsButton()
 	
-	private let tableView = UITableView()
+	private let tableView: UITableView = {
+		let tableView = UITableView()
+		tableView.registerCell(DateCell.self)
+		tableView.registerCell(ReceiveCell.self)
+		tableView.registerCell(ReceiveWithProfileImageCell.self)
+		tableView.registerCell(SendCell.self)
+
+		tableView.showsVerticalScrollIndicator = false
+		tableView.rowHeight = UITableView.automaticDimension
+		tableView.separatorStyle = .none
+		tableView.separatorColor = .clear
+		
+		return tableView
+	}()
+
 	private let chattingTextView = ChattingTextView()
 	
 	// MARK: - Life Cycle
@@ -78,6 +92,7 @@ private extension ChattingViewController {
 		optionButtonBind()
 		chattingTextViewBind()
 		optionsButton.isHidden = true
+		scrollToBottom()
 	}
 	
 	func setViewHierarchy() {
@@ -238,11 +253,25 @@ private extension ChattingViewController {
 			make.bottom.equalToSuperview().offset(-offset)
 		}
 		contentView.layoutSubviews()
+		scrollToBottom()
 	}
 	
 	@objc func keyboardWillHide() {
 		contentView.snp.updateConstraints { make in
 			make.bottom.equalToSuperview()
+		}
+	}
+}
+
+// MARK: - TableView
+private extension ChattingViewController {
+	func scrollToBottom() {
+		let count = tableView.numberOfRows(inSection: 0)
+		guard count > 0 else { return }
+		let lastIndexPath = IndexPath(row: count - 1, section: 0)
+		print(lastIndexPath)
+		DispatchQueue.main.async { [weak self] in
+			self?.tableView.scrollToRow(at: lastIndexPath, at: .bottom, animated: false)
 		}
 	}
 }
