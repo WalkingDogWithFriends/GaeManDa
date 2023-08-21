@@ -22,10 +22,11 @@ protocol ChattingPresentableListener: AnyObject {
 }
 
 final class ChattingViewController:
-	BaseViewController,
+	UIViewController,
 	ChattingPresentable,
 	ChattingViewControllable {
 	weak var listener: ChattingPresentableListener?
+	private let disposeBag = DisposeBag()
 	
 	// MARK: - UI Components
 	private lazy var navigationBar = GMDNavigationBar(
@@ -54,6 +55,7 @@ final class ChattingViewController:
 		super.viewDidLoad()
 		navigationBar.titleLabel.font = .r16
 		setupUI()
+		addKeyboardObserver()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -61,36 +63,36 @@ final class ChattingViewController:
 		hideTabBar()
 	}
 	
-	// MARK: - UI Setting
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		removeKeyboardObserver()
+	}
+}
+// MARK: - UI Setting
+
+private extension ChattingViewController {
 	func setupUI() {
 		setViewHierarchy()
 		setConstraints()
 		bind()
 		optionButtonBind()
 		optionsButton.isHidden = true
-		scrollView.isScrollEnabled = false
 	}
 	
-	override func setViewHierarchy() {
-		super.setViewHierarchy()
+	func setViewHierarchy() {
 		view.addSubview(navigationBar)
 		view.addSubview(underLineView)
+		view.addSubview(contentView)
 		view.addSubview(optionsButton)
 		
-		scrollView.addSubview(contentView)
 		contentView.addSubview(tableView)
 		contentView.addSubview(chattingTextView)
 	}
 	
-	override func setConstraints() {
-		scrollView.snp.makeConstraints { make in
+	func setConstraints() {
+		contentView.snp.makeConstraints { make in
 			make.leading.trailing.bottom.equalToSuperview()
 			make.top.equalTo(underLineView.snp.bottom)
-		}
-		
-		contentView.snp.makeConstraints { make in
-			make.edges.equalTo(scrollView)
-			make.width.equalToSuperview()
 		}
 		
 		navigationBar.snp.makeConstraints { make in
@@ -113,18 +115,19 @@ final class ChattingViewController:
 		
 		tableView.snp.makeConstraints { make in
 			make.leading.trailing.top.equalToSuperview()
-			make.bottom.equalTo(view).offset(-79)
+			make.bottom.equalTo(chattingTextView.snp.top)
 		}
-
+		
 		chattingTextView.snp.makeConstraints { make in
-			make.leading.trailing.equalToSuperview()
-			make.top.equalTo(tableView.snp.bottom)
+			make.leading.trailing.bottom.equalToSuperview()
 			make.height.equalTo(79)
 		}
 	}
-	
-	// MARK: - Bind
-	override func bind() {
+}
+
+// MARK: - Bind
+private extension ChattingViewController {
+	func bind() {
 		navigationBar.backButton.rx.tap
 			.bind(with: self) { owner, _ in
 				owner.listener?.didTapBackButton()
@@ -188,5 +191,47 @@ private extension ChattingViewController {
 		alert.addAction(confirm)
 		
 		present(alert, animated: true)
+	}
+}
+
+// MARK: Keyboard Respond
+private extension ChattingViewController {
+	func addKeyboardObserver() {
+		NotificationCenter.default.addObserver(
+			self,
+			selector: #selector(keyboardWillShow),
+			name: UIResponder.keyboardWillShowNotification,
+			object: nil
+		)
+		NotificationCenter.default.addObserver(
+			self,
+			selector: #selector(keyboardWillHide),
+			name: UIResponder.keyboardWillHideNotification,
+			object: nil
+		)
+	}
+	
+	func removeKeyboardObserver() {
+		NotificationCenter.default.removeObserver(UIResponder.keyboardWillShowNotification)
+		NotificationCenter.default.removeObserver(UIResponder.keyboardWillHideNotification)
+	}
+	
+	@objc func keyboardWillShow(_ notification: Notification) {
+		guard let userInfo = notification.userInfo,
+					let keyboardSize = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
+		else {
+			return
+		}
+		let offset = keyboardSize.height - 22
+		contentView.snp.updateConstraints { make in
+			make.bottom.equalToSuperview().offset(-offset)
+		}
+		contentView.layoutSubviews()
+	}
+	
+	@objc func keyboardWillHide() {
+		contentView.snp.updateConstraints { make in
+			make.bottom.equalToSuperview()
+		}
 	}
 }
