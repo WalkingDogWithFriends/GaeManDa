@@ -42,7 +42,7 @@ final class ChattingTextView: UIView {
 			for: .normal
 		)
 		button.tintColor = .green100
-		button.isHidden = true
+//		sendButton.isHidden = true
 		
 		return button
 	}()
@@ -67,7 +67,7 @@ private extension ChattingTextView {
 		setupSubviews()
 		setConstraints()
 		
-		textField.rightView = sendButton
+		textField.setRightView(sendButton, size: 24, padding: 12)
 		textField.rightViewMode = .always
 	}
 	
@@ -88,5 +88,16 @@ private extension ChattingTextView {
 			make.bottom.equalTo(safeAreaLayoutGuide)
 			make.trailing.equalToSuperview().offset(-12)
 		}
+	}
+}
+
+// MARK: - Reactive Extension
+extension Reactive where Base: ChattingTextView {
+	var sendButtonDidTapped: ControlEvent<Void> {
+		base.sendButton.rx.tap
+	}
+	
+	var text: ControlProperty<String?> {
+		base.textField.rx.text
 	}
 }

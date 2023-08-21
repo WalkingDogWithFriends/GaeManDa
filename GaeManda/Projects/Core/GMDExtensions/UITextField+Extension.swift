@@ -27,6 +27,18 @@ public extension UITextField {
 		leftViewMode = .always
 	}
 	
+	func setRightView<T: UIView>(
+		_ view: T,
+		size: CGFloat,
+		padding: CGFloat
+	) {
+		let paddingViewWith = size + padding
+		let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: paddingViewWith, height: size))
+		view.frame = CGRect(x: 0, y: 0, width: size, height: size)
+		paddingView.addSubview(view)
+		self.rightView = paddingView
+	}
+	
 	func setPlaceholdColor(_ color: UIColor) {
 		guard let placeholder = self.placeholder else { return }
 
