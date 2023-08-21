@@ -22,11 +22,10 @@ protocol ChattingPresentableListener: AnyObject {
 }
 
 final class ChattingViewController:
-	UIViewController,
+	BaseViewController,
 	ChattingPresentable,
 	ChattingViewControllable {
 	weak var listener: ChattingPresentableListener?
-	private let disposeBag = DisposeBag()
 	
 	// MARK: - UI Components
 	private lazy var navigationBar = GMDNavigationBar(
@@ -41,6 +40,8 @@ final class ChattingViewController:
 		
 		return view
 	}()
+	
+	private let contentView = UIView()
 	
 	/// display when the use click navigation right Button
 	private let optionsButton = ChattingOptionsButton()
@@ -59,23 +60,39 @@ final class ChattingViewController:
 		super.viewWillAppear(animated)
 		hideTabBar()
 	}
-}
-
-// MARK: - Setting UI
-private extension ChattingViewController {
+	
+	// MARK: - UI Setting
 	func setupUI() {
-		setupSubViews()
+		setViewHierarchy()
 		setConstraints()
 		bind()
 		optionButtonBind()
 		optionsButton.isHidden = true
+		scrollView.isScrollEnabled = false
 	}
 	
-	func setupSubViews() {
-		view.addSubviews(navigationBar, underLineView, optionsButton, chattingTextView)
+	override func setViewHierarchy() {
+		super.setViewHierarchy()
+		view.addSubview(navigationBar)
+		view.addSubview(underLineView)
+		view.addSubview(optionsButton)
+		
+		scrollView.addSubview(contentView)
+		contentView.addSubview(tableView)
+		contentView.addSubview(chattingTextView)
 	}
 	
-	func setConstraints() {
+	override func setConstraints() {
+		scrollView.snp.makeConstraints { make in
+			make.leading.trailing.bottom.equalToSuperview()
+			make.top.equalTo(underLineView.snp.bottom)
+		}
+		
+		contentView.snp.makeConstraints { make in
+			make.edges.equalTo(scrollView)
+			make.width.equalToSuperview()
+		}
+		
 		navigationBar.snp.makeConstraints { make in
 			make.leading.trailing.equalToSuperview()
 			make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -94,16 +111,20 @@ private extension ChattingViewController {
 			make.top.equalToSuperview().offset(122)
 		}
 		
+		tableView.snp.makeConstraints { make in
+			make.leading.trailing.top.equalToSuperview()
+			make.bottom.equalTo(view).offset(-79)
+		}
+
 		chattingTextView.snp.makeConstraints { make in
-			make.leading.trailing.bottom.equalToSuperview()
+			make.leading.trailing.equalToSuperview()
+			make.top.equalTo(tableView.snp.bottom)
 			make.height.equalTo(79)
 		}
 	}
-}
-
-// MARK: - Bind
-private extension ChattingViewController {
-	func bind() {
+	
+	// MARK: - Bind
+	override func bind() {
 		navigationBar.backButton.rx.tap
 			.bind(with: self) { owner, _ in
 				owner.listener?.didTapBackButton()
