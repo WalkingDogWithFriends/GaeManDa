@@ -47,6 +47,6 @@ extension ChattingInteractor {
 	}
 	
 	func didTapLeaveChatting() {
-		print("didTapLeaveChatting")
+		listener?.didTapLeaveChatting()
 	}
 }

@@ -51,4 +51,9 @@ extension ChattingListInteractor {
 	func chattingDidTapBackButton() {
 		router?.detachChatting()
 	}
+	
+	func didTapLeaveChatting() {
+		router?.detachChatting()
+		// 이후에 이 채팅 삭제 해야하는 코드 추가.
+	}
 }

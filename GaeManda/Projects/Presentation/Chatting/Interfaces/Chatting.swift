@@ -14,4 +14,5 @@ public protocol ChattingBuildable: Buildable {
 
 public protocol ChattingListener: AnyObject {
 	func chattingDidTapBackButton()
+	func didTapLeaveChatting()
 }
