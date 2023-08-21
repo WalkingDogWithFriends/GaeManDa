@@ -46,6 +46,7 @@ final class ChattingViewController:
 	private let optionsButton = ChattingOptionsButton()
 	
 	private let tableView = UITableView()
+	private let chattingTextView = ChattingTextView()
 	
 	// MARK: - Life Cycle
 	override func viewDidLoad() {
@@ -71,7 +72,7 @@ private extension ChattingViewController {
 	}
 	
 	func setupSubViews() {
-		view.addSubviews(navigationBar, underLineView, optionsButton)
+		view.addSubviews(navigationBar, underLineView, optionsButton, chattingTextView)
 	}
 	
 	func setConstraints() {
@@ -91,6 +92,11 @@ private extension ChattingViewController {
 			make.leading.equalToSuperview().offset(60)
 			make.trailing.equalToSuperview().offset(-22)
 			make.top.equalToSuperview().offset(122)
+		}
+		
+		chattingTextView.snp.makeConstraints { make in
+			make.leading.trailing.bottom.equalToSuperview()
+			make.height.equalTo(79)
 		}
 	}
 }
