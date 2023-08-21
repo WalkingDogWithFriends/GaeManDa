@@ -42,10 +42,17 @@ final class ChattingTextView: UIView {
 			for: .normal
 		)
 		button.tintColor = .green100
-//		sendButton.isHidden = true
+		button.isHidden = true
 		
 		return button
 	}()
+	
+	// MARK: - Property
+	var buttonIsHidden: Bool = true {
+		didSet {
+			sendButton.isHidden = buttonIsHidden
+		}
+	}
 	
 	// MARK: - Initializer
 	init() {
@@ -67,6 +74,11 @@ private extension ChattingTextView {
 		setupSubviews()
 		setConstraints()
 		
+		/// set padding for textField left
+		let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 1))
+		textField.leftView = paddingView
+		textField.leftViewMode = .always
+		
 		textField.setRightView(sendButton, size: 24, padding: 12)
 		textField.rightViewMode = .always
 	}
@@ -85,7 +97,7 @@ private extension ChattingTextView {
 		textField.snp.makeConstraints { make in
 			make.top.equalToSuperview().offset(10)
 			make.leading.equalTo(cameraButton.snp.trailing).offset(12)
-			make.bottom.equalTo(safeAreaLayoutGuide)
+			make.bottom.equalToSuperview().offset(-30)
 			make.trailing.equalToSuperview().offset(-12)
 		}
 	}
