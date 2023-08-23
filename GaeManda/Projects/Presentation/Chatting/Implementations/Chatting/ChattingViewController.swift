@@ -265,7 +265,7 @@ private extension ChattingViewController {
 		let count = tableView.numberOfRows(inSection: 0)
 		guard count > 0 else { return }
 		let lastIndexPath = IndexPath(row: count - 1, section: 0)
-		print(lastIndexPath)
+
 		DispatchQueue.main.async { [weak self] in
 			self?.tableView.scrollToRow(at: lastIndexPath, at: .bottom, animated: false)
 		}
