@@ -96,13 +96,9 @@ private extension ChattingViewController {
 	}
 	
 	func setViewHierarchy() {
-		view.addSubview(navigationBar)
-		view.addSubview(underLineView)
-		view.addSubview(contentView)
-		view.addSubview(optionsButton)
+		view.addSubviews(navigationBar, underLineView, contentView, optionsButton)
 		
-		contentView.addSubview(tableView)
-		contentView.addSubview(chattingTextView)
+		contentView.addSubviews(tableView, chattingTextView)
 	}
 	
 	func setConstraints() {

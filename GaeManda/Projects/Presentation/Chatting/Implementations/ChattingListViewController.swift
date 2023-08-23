@@ -79,8 +79,7 @@ private extension ChattingListViewController {
 	}
 	
 	func setupSubviews() {
-		view.addSubview(navigationBar)
-		view.addSubview(chattingListTableView)
+		view.addSubviews(navigationBar, chattingListTableView)
 	}
 	
 	func setConstraints() {
