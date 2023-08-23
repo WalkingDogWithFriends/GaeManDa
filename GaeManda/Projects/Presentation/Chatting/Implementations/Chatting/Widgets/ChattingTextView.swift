@@ -95,10 +95,11 @@ private extension ChattingTextView {
 		}
 		
 		textField.snp.makeConstraints { make in
-			make.top.equalToSuperview().offset(10)
+			make.top.equalToSuperview().offset(8)
 			make.leading.equalTo(cameraButton.snp.trailing).offset(12)
-			make.bottom.equalToSuperview().offset(-30)
+			make.bottom.equalToSuperview().offset(-8)
 			make.trailing.equalToSuperview().offset(-12)
+			make.height.equalTo(40)
 		}
 	}
 }

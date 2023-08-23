@@ -67,6 +67,7 @@ final class ChattingViewController:
 	// MARK: - Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		view.backgroundColor = .gray20
 		navigationBar.titleLabel.font = .r16
 		setupUI()
 		addKeyboardObserver()
@@ -131,8 +132,8 @@ private extension ChattingViewController {
 		}
 		
 		chattingTextView.snp.makeConstraints { make in
-			make.leading.trailing.bottom.equalToSuperview()
-			make.height.equalTo(79)
+			make.leading.trailing.equalToSuperview()
+			make.bottom.equalTo(contentView.safeAreaLayoutGuide)
 		}
 	}
 }
@@ -244,7 +245,7 @@ private extension ChattingViewController {
 		else {
 			return
 		}
-		let offset = keyboardSize.height - 22
+		let offset = keyboardSize.height
 		contentView.snp.updateConstraints { make in
 			make.bottom.equalToSuperview().offset(-offset)
 		}
