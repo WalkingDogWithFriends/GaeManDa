@@ -70,7 +70,7 @@ final class ChattingViewController:
 		view.backgroundColor = .gray20
 		navigationBar.titleLabel.font = .r16
 		setupUI()
-		addKeyboardObserver()
+		registerKeyboardNotification()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -80,7 +80,7 @@ final class ChattingViewController:
 	
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
-		removeKeyboardObserver()
+		removeKeyboardNotification()
 	}
 }
 // MARK: - UI Setting
@@ -217,45 +217,24 @@ private extension ChattingViewController {
 	}
 }
 
-// MARK: Keyboard Respond
-private extension ChattingViewController {
-	func addKeyboardObserver() {
-		NotificationCenter.default.addObserver(
-			self,
-			selector: #selector(keyboardWillShow),
-			name: UIResponder.keyboardWillShowNotification,
-			object: nil
-		)
-		NotificationCenter.default.addObserver(
-			self,
-			selector: #selector(keyboardWillHide),
-			name: UIResponder.keyboardWillHideNotification,
-			object: nil
-		)
-	}
-	
-	func removeKeyboardObserver() {
-		NotificationCenter.default.removeObserver(UIResponder.keyboardWillShowNotification)
-		NotificationCenter.default.removeObserver(UIResponder.keyboardWillHideNotification)
-	}
-	
-	@objc func keyboardWillShow(_ notification: Notification) {
-		guard let userInfo = notification.userInfo,
-					let keyboardSize = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
-		else {
-			return
+// MARK: - KeyboardListener
+extension ChattingViewController: KeyboardListener {
+	func keyboardWillShow(height: CGFloat) {
+		UIView.animate(withDuration: 0.3) {
+			self.contentView.snp.updateConstraints { make in
+				make.bottom.equalToSuperview().offset(-height)
+			}
+			self.view.layoutIfNeeded()
+			self.scrollToBottom()
 		}
-		let offset = keyboardSize.height
-		contentView.snp.updateConstraints { make in
-			make.bottom.equalToSuperview().offset(-offset)
-		}
-		contentView.layoutSubviews()
-		scrollToBottom()
 	}
 	
-	@objc func keyboardWillHide() {
-		contentView.snp.updateConstraints { make in
-			make.bottom.equalToSuperview()
+	func keyboardWillHide() {
+		UIView.animate(withDuration: 0.3) {
+			self.contentView.snp.updateConstraints { make in
+				make.bottom.equalToSuperview()
+			}
+			self.view.layoutIfNeeded()
 		}
 	}
 }
