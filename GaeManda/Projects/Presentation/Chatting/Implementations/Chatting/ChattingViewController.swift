@@ -165,6 +165,7 @@ private extension ChattingViewController {
 				scheduler: MainScheduler.instance
 			)
 			.bind(with: self) { owner, _ in
+				owner.chattingTextView.endEditing(true)
 				guard owner.optionsButton.isHidden == false else { return }
 				owner.optionsButton.isHidden = true
 			}
@@ -225,8 +226,8 @@ extension ChattingViewController: KeyboardListener {
 				make.bottom.equalToSuperview().offset(-height)
 			}
 			self.view.layoutIfNeeded()
-			self.scrollToBottom()
 		}
+		scrollToBottom()
 	}
 	
 	func keyboardWillHide() {
@@ -247,7 +248,7 @@ private extension ChattingViewController {
 		let lastIndexPath = IndexPath(row: count - 1, section: 0)
 
 		DispatchQueue.main.async { [weak self] in
-			self?.tableView.scrollToRow(at: lastIndexPath, at: .bottom, animated: false)
+			self?.tableView.scrollToRow(at: lastIndexPath, at: .bottom, animated: true)
 		}
 	}
 }
