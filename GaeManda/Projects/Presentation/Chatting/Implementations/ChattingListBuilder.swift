@@ -9,9 +9,15 @@
 import RIBs
 import Chatting
 
-public protocol ChattingListDependency: Dependency { }
+public protocol ChattingListDependency: Dependency {
+	var chattingBuildable: ChattingBuildable { get }
+}
 
-final class ChattingListComponent: Component<ChattingListDependency> { }
+final class ChattingListComponent: Component<ChattingListDependency> {
+	var chattingBuildable: ChattingBuildable {
+		return dependency.chattingBuildable
+	}
+}
 
 public final class ChattingListBuilder:
 	Builder<ChattingListDependency>,
@@ -27,7 +33,8 @@ public final class ChattingListBuilder:
 		interactor.listener = listener
 		return ChattingListRouter(
 			interactor: interactor,
-			viewController: viewController
+			viewController: viewController,
+			chattingBuildable: component.chattingBuildable
 		)
 	}
 }

@@ -9,7 +9,10 @@
 import RIBs
 import Chatting
 
-protocol ChattingListRouting: ViewableRouting { }
+protocol ChattingListRouting: ViewableRouting {
+	func attachChatting(with user: String)
+	func detachChatting()
+}
 
 protocol ChattingListPresentable: Presentable {
 	var listener: ChattingListPresentableListener? { get set }
@@ -33,5 +36,24 @@ final class ChattingListInteractor:
 	
 	override func willResignActive() {
 		super.willResignActive()
+	}
+}
+
+// MARK: - PresentableListener
+extension ChattingListInteractor {
+	func didTapChatting(with user: String) {
+		router?.attachChatting(with: user)
+	}
+}
+
+// MARK: - Chatting Listener
+extension ChattingListInteractor {
+	func chattingDidTapBackButton() {
+		router?.detachChatting()
+	}
+	
+	func didTapLeaveChatting() {
+		router?.detachChatting()
+		// 이후에 이 채팅 삭제 해야하는 코드 추가.
 	}
 }

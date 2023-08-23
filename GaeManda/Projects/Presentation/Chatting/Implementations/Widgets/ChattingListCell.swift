@@ -11,9 +11,9 @@ import RxCocoa
 import RxSwift
 import SnapKit
 import DesignKit
+import GMDExtensions
 
 final class ChattingListCell: UITableViewCell {
-	static let identifier = "ChattingListCell"
 	let disposeBag = DisposeBag()
 	
 	// MARK: UI Components

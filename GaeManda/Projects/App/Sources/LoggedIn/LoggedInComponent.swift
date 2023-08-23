@@ -21,13 +21,18 @@ import UseCaseImpl
 final class LoggedInComponent:
 	Component<LoggedInDependency>,
 	ChattingListDependency,
+	ChattingDependency,
 	DogsOnAroundDependency,
 	UserProfileDependency,
 	UserProfileEditDependency,
 	DogProfileEditDependency {	
-	// MARK: Buildable
+	// MARK: - Buildable
 	lazy var chattingListBuildable: ChattingListBuildable = {
 		return ChattingListBuilder(dependency: self)
+	}()
+	
+	lazy var chattingBuildable: ChattingBuildable = {
+		return ChattingBuilder(dependency: self)
 	}()
 	
 	lazy var dogsOnAroundBuildable: DogsOnAroundBuildable = {
@@ -46,7 +51,7 @@ final class LoggedInComponent:
 		return DogProfileEditBuilder(dependency: self)
 	}()
 	
-	// MARK: Repository
+	// MARK: - Repository
 	lazy var dogRepository: DogRepository = {
 		return DogRepositoryImpl()
 	}()
@@ -55,7 +60,7 @@ final class LoggedInComponent:
 		return UserRepositoryImpl()
 	}()
 	
-	// MARK: UseCase
+	// MARK: - UseCase
 	lazy var userProfileUseCase: UserProfileUseCase = {
 		return UserProfileUseCaseImpl(
 			dogDependecy: dogRepository,

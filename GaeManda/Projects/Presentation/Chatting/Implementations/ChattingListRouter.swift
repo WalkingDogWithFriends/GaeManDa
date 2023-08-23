@@ -9,7 +9,9 @@
 import RIBs
 import Chatting
 
-protocol ChattingListInteractable: Interactable {
+protocol ChattingListInteractable:
+	Interactable,
+	ChattingListener {
 	var router: ChattingListRouting? { get set }
 	var listener: ChattingListListener? { get set }
 }
@@ -19,11 +21,39 @@ protocol ChattingListViewControllable: ViewControllable { }
 final class ChattingListRouter:
 	ViewableRouter<ChattingListInteractable, ChattingListViewControllable>,
 	ChattingListRouting {
-	override init(
+	private let chattingBuildable: ChattingBuildable
+	private var chattingRouting: ViewableRouting?
+	
+	init(
 		interactor: ChattingListInteractable,
-		viewController: ChattingListViewControllable
+		viewController: ChattingListViewControllable,
+		chattingBuildable: ChattingBuildable
 	) {
+		self.chattingBuildable = chattingBuildable
 		super.init(interactor: interactor, viewController: viewController)
 		interactor.router = self
+	}
+}
+
+// MARK: - Chatting
+extension ChattingListRouter {
+	func attachChatting(with user: String) {
+		if chattingRouting != nil { return }
+		
+		let router = chattingBuildable.build(withListener: interactor)
+		viewControllable.pushViewController(
+			router.viewControllable,
+			animated: true
+		)
+		chattingRouting = router
+		attachChild(router)
+	}
+	
+	func detachChatting() {
+		guard let router = chattingRouting else { return }
+		
+		viewControllable.popViewController(animated: true)
+		chattingRouting = nil
+		detachChild(router)
 	}
 }
