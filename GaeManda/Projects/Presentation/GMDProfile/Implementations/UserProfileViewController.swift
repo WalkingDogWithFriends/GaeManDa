@@ -28,7 +28,7 @@ final class UserProfileViewController:
 	UserProfileViewControllable {
 	weak var listener: UserProfilePresentableListener?
 	private let disposeBag = DisposeBag()
-	private var dogsCount = 0
+	private var dogs: [Dog] = []
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "프로필")
@@ -96,6 +96,8 @@ final class UserProfileViewController:
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		collectionView.delegate = self
+		collectionView.dataSource = self
+		
 		setupUI()
 	}
 	
@@ -184,6 +186,12 @@ extension UserProfileViewController {
 	func updateUserSexAndAge(_ sexAndAge: String) {
 		sexAndAgeLabel.text = sexAndAge
 	}
+	
+	func updateDogs(_ dogs: [Dog]) {
+		self.dogs = getInfiniteCarouselCellData(by: dogs)
+		collectionView.reloadData()
+		collectionView.isScrollEnabled = dogs.count == 1 ? false : true
+	}
 }
 
 // MARK: - Action Bind
@@ -196,43 +204,45 @@ private extension UserProfileViewController {
 			}
 			.disposed(by: disposeBag)
 	}
+}
+
+// MARK: - UICollectionViewDataSource
+extension UserProfileViewController: UICollectionViewDataSource {
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		return dogs.count
+	}
 	
-	private func collectionViewBind() {
-		collectionView.rx.didEndDecelerating
-			.withUnretained(self)
-			.observe(on: MainScheduler.asyncInstance)
-			.bind { owner, _ in
-				/// move Page When the page in boundary
-				owner.movePageInBoundary()
-			}
-			.disposed(by: disposeBag)
+	func collectionView(
+		_ collectionView: UICollectionView,
+		cellForItemAt indexPath: IndexPath
+	) -> UICollectionViewCell {
+		let cell = collectionView.dequeueCell(
+			DogsCollectionViewCell.self,
+			for: indexPath
+		)
+		let data = dogs[indexPath.row]
+		
+		cell.configuration(data)
+		
+		return cell
 	}
 }
 
 // MARK: - CollectionView Infinite Carousel
 private extension UserProfileViewController {
-	func movePageInBoundary() {
-		let page = Int(collectionView.contentOffset.x / collectionView.frame.width)
-		var index = page
-		
-		if page == 0 {
-			collectionView.scrollToItem(
-				at: IndexPath(row: dogsCount, section: 0),
-				at: .right,
-				animated: false
-			)
-			index = dogsCount
-		} else if page == dogsCount + 1 {
-			collectionView.scrollToItem(
-				at: IndexPath(row: 1, section: 0),
-				at: .right,
-				animated: false
-			)
-			index = 1
+	func getInfiniteCarouselCellData(by dogs: [Dog]) -> [Dog] {
+		guard
+			let last = dogs.last,
+			let first = dogs.first
+		else {
+			return dogs
 		}
+		var dogsForCell = dogs
 		
-		/// Indicator UI Change
-		indicatorView.indicatorDidChange(index - 1)
+		dogsForCell.insert(last, at: 0)
+		dogsForCell.append(first)
+		
+		return dogsForCell
 	}
 }
 
