@@ -146,12 +146,12 @@ private extension UserProfileViewController {
 		
 		nickNameLabel.snp.makeConstraints { make in
 			make.centerX.equalToSuperview()
-			make.top.equalTo(navigationBar.snp.bottom).offset(70)
+			make.top.equalTo(navigationBar.snp.bottom).offset(72)
 		}
 		
 		profileEditButton.snp.makeConstraints { make in
 			make.leading.equalTo(nickNameLabel.snp.trailing).offset(12)
-			make.centerY.equalTo(nickNameLabel)
+			make.top.equalTo(nickNameLabel)
 			make.width.equalTo(40)
 			make.height.equalTo(20)
 		}
@@ -164,7 +164,7 @@ private extension UserProfileViewController {
 		profileImageView.snp.makeConstraints { make in
 			make.centerX.equalToSuperview()
 			make.top.equalTo(sexAndAgeLabel.snp.bottom).offset(12)
-			make.height.width.equalTo(160)
+			make.height.width.equalTo(140)
 		}
 		
 		indicatorView.snp.makeConstraints { make in
@@ -174,8 +174,8 @@ private extension UserProfileViewController {
 		
 		collectionView.snp.makeConstraints { make in
 			make.top.equalTo(indicatorView.snp.bottom).offset(8)
-			make.leading.equalToSuperview().offset(29)
-			make.trailing.equalToSuperview().offset(-29)
+			make.leading.equalToSuperview().offset(28)
+			make.trailing.equalToSuperview().offset(-28)
 			make.height.equalTo(102)
 		}
 	}
