@@ -49,11 +49,11 @@ final class UserProfileEditInteractor:
 
 // MARK: PresentableListener
 extension UserProfileEditInteractor {
-	func backbuttonDidTap() {
+	func didTapBackbutton() {
 		listener?.userProfileEditBackButtonDidTap()
 	}
 	
-	func endEditingButtonDidTap() {
+	func didTapEndEditingButton() {
 		listener?.userProfileEndEditing()
 	}
 }

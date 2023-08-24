@@ -16,8 +16,8 @@ import GMDExtensions
 import GMDUtils
 
 protocol UserProfileEditPresentableListener: AnyObject {
-	func backbuttonDidTap()
-	func endEditingButtonDidTap()
+	func didTapBackbutton()
+	func didTapEndEditingButton()
 }
 
 final class UserProfileEditViewController:
@@ -208,7 +208,7 @@ private extension UserProfileEditViewController {
 	func bind() {
 		navigationBar.backButton.rx.tap
 			.bind(with: self) { owner, _ in
-				owner.listener?.backbuttonDidTap()
+				owner.listener?.didTapBackbutton()
 			}
 			.disposed(by: disposeBag)
 		
@@ -251,7 +251,7 @@ private extension UserProfileEditViewController {
 		endEditingButton.rx.tap
 			.withUnretained(self)
 			.bind { owner, _ in
-				owner.listener?.endEditingButtonDidTap()
+				owner.listener?.didTapEndEditingButton()
 			}
 			.disposed(by: disposeBag)
 	}
@@ -259,10 +259,6 @@ private extension UserProfileEditViewController {
 
 // MARK: - UI Logic
 private extension UserProfileEditViewController {
-	@objc func backbuttonDidTap() {
-		listener?.backbuttonDidTap()
-	}
-	
 	func setTextCountLabel(_ text: String) {
 		var newText = text
 		
