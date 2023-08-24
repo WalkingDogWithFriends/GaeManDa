@@ -188,7 +188,7 @@ private extension DogsCollectionViewCell {
 		
 		bottomStackView.snp.makeConstraints { make in
 			make.leading.equalToSuperview().offset(8)
-			make.top.equalTo(profileImageView.snp.bottom).offset(-8)
+			make.top.equalTo(profileImageView.snp.bottom).offset(8)
 			make.bottom.equalToSuperview().offset(-12)
 		}
 	}
