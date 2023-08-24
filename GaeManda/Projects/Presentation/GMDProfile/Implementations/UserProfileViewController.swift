@@ -24,6 +24,7 @@ protocol UserProfilePresentableListener: AnyObject {
 
 final class UserProfileViewController:
 	UIViewController,
+	UserProfilePresentable,
 	UserProfileViewControllable {
 	weak var listener: UserProfilePresentableListener?
 	private let disposeBag = DisposeBag()
@@ -110,7 +111,9 @@ final class UserProfileViewController:
 private extension UserProfileViewController {
 	func setupUI() {
 		navigationController?.navigationBar.isHidden = true
+		navigationBar.backButton.isHidden = true
 		view.backgroundColor = .white
+		
 		setViewHierarchy()
 		setConstraints()
 		bind()
@@ -172,11 +175,20 @@ private extension UserProfileViewController {
 	}
 }
 
-// MARK: - Bind
+// MARK: - UI Update
+extension UserProfileViewController {
+	func updateUserName(_ name: String) {
+		nickNameLabel.text = name
+	}
+	
+	func updateUserSexAndAge(_ sexAndAge: String) {
+		sexAndAgeLabel.text = sexAndAge
+	}
+}
+
+// MARK: - Action Bind
 private extension UserProfileViewController {
 	private func bind() {
-		collectionViewBind()
-		
 		profileEditButton.rx.tap
 			.withUnretained(self)
 			.bind { owner, _ in
@@ -194,17 +206,6 @@ private extension UserProfileViewController {
 				owner.movePageInBoundary()
 			}
 			.disposed(by: disposeBag)
-	}
-}
-
-// MARK: - UserProfilePresentable
-extension UserProfileViewController: UserProfilePresentable {
-	func updateUserName(_ name: String) {
-		nickNameLabel.text = name
-	}
-	
-	func updateUserSexAndAge(_ sexAndAge: String) {
-		sexAndAgeLabel.text = sexAndAge
 	}
 }
 
