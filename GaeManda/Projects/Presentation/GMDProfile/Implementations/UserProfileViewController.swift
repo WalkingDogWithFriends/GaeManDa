@@ -29,6 +29,9 @@ final class UserProfileViewController:
 	weak var listener: UserProfilePresentableListener?
 	private let disposeBag = DisposeBag()
 	private var dogs: [Dog] = []
+	var dogsCount: Int {
+		dogs.isEmpty ? 0 : dogs.count - 2
+	}
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "프로필")
@@ -221,10 +224,38 @@ extension UserProfileViewController: UICollectionViewDataSource {
 			for: indexPath
 		)
 		let dog = dogs[indexPath.row]
-		
 		cell.configure(with: dog)
 		
 		return cell
+	}
+}
+
+// MARK: - UIScrollViewDelegate
+extension UserProfileViewController: UIScrollViewDelegate {
+	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+		guard let collectionView = scrollView as? UICollectionView else { return }
+		
+		let page = Int(collectionView.contentOffset.x / collectionView.frame.width)
+		var index = page
+		
+		if page == 0 {
+			collectionView.scrollToItem(
+				at: IndexPath(row: dogsCount, section: 0),
+				at: .right,
+				animated: false
+			)
+			index = dogsCount
+		} else if page == dogsCount + 1 {
+			collectionView.scrollToItem(
+				at: IndexPath(row: 1, section: 0),
+				at: .right,
+				animated: false
+			)
+			index = 1
+		}
+		
+		/// Indicator UI Change
+		indicatorView.collectionViewDidChange(index: index - 1)
 	}
 }
 
