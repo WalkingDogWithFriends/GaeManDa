@@ -18,6 +18,10 @@ final class IndicatorView: UIStackView {
 		}
 	}
 	
+	private lazy var indicatorViews = [firstView, secondView, thirdView]
+	private var indicators: [UIView] = []
+	
+	// MARK: - UI Components
 	private let firstView: UIView = {
 		let view = UIView()
 		view.clipsToBounds = true
@@ -42,9 +46,7 @@ final class IndicatorView: UIStackView {
 		return view
 	}()
 	
-	private lazy var indicatorViews = [firstView, secondView, thirdView]
-	private var indicators: [UIView] = []
-	
+	// MARK: - Initializers
 	init() {
 		super.init(frame: .zero)
 		axis = .horizontal
@@ -53,31 +55,47 @@ final class IndicatorView: UIStackView {
 		distribution = .fillEqually
 	}
 	
+	@available(*, unavailable)
 	required init(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
+		fatalError()
 	}
 	
-	private func setupUI() {
-		indicators.forEach { addArrangedSubview($0) }
+	// MARK: - layoutSubviews
+	override func layoutSubviews() {
+		super.layoutSubviews()
 		
+		// make Indicator views round
+		indicators.forEach { $0.layer.cornerRadius = $0.bounds.width / 2 }
+	}
+}
+
+// MARK: - UI Setting
+private extension IndicatorView {
+	func setupUI() {
+		setViewHierarchy()
+		setConstraints()
+	}
+	
+	func setViewHierarchy() {
+		indicators.forEach { addArrangedSubview($0) }
+	}
+	
+	func setConstraints() {
 		indicators.forEach {
 			$0.snp.makeConstraints { make in
 				make.width.height.equalTo(19)
 			}
 		}
 	}
-	override func layoutSubviews() {
-		super.layoutSubviews()
-		
-		indicators.forEach { $0.layer.cornerRadius = $0.bounds.width / 2 }
-	}
 }
 
 // MARK: indicatorView Action
 extension IndicatorView {
-	func indicatorDidChange(_ index: Int) {
+	func collectionViewDidChange(index: Int) {
 		guard index >= 0, index < indicatorCount else { return }
 		
+		// adopt green60 to selected Index View,
+		// else adopt gray40
 		for (idx, item) in indicators.enumerated() {
 			item.backgroundColor = idx == index ? .green60 : .gray40
 		}
