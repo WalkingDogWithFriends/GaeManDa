@@ -30,31 +30,7 @@ final class UserProfileViewController:
 	private var dogsCount = 0
 	
 	// MARK: - UI Components
-	private let notificationButton: UIButton = {
-		let button = UIButton()
-		let image = UIImage(
-			systemName: "bell",
-			withConfiguration: UIImage.SymbolConfiguration(pointSize: 22)
-		)
-		
-		button.setImage(image, for: .normal)
-		button.tintColor = .black
-		
-		return button
-	}()
-	
-	private let settingButton: UIButton = {
-		let button = UIButton()
-		let image = UIImage(
-			systemName: "gearshape",
-			withConfiguration: UIImage.SymbolConfiguration(pointSize: 22)
-		)
-		
-		button.setImage(image, for: .normal)
-		button.tintColor = .black
-		
-		return button
-	}()
+	private let navigationBar = GMDNavigationBar(title: "프로필")
 	
 	private let nickNameLabel: UILabel = {
 		let label = UILabel()
@@ -133,25 +109,35 @@ final class UserProfileViewController:
 // MARK: - UI Setting
 private extension UserProfileViewController {
 	func setupUI() {
+		navigationController?.navigationBar.isHidden = true
 		view.backgroundColor = .white
-		title = "프로필"
-		
-		setNavigationTitleFont(.b20)
-		
 		setViewHierarchy()
 		setConstraints()
-		setNavigationBarButton()
 		bind()
 	}
-
+	
 	func setViewHierarchy() {
-		view.addSubviews(nickNameLabel, profileEditButton, sexAndAgeLabel, profileImageView, indicatorView, collectionView)
+		view.addSubviews(
+			navigationBar,
+			nickNameLabel,
+			profileEditButton,
+			sexAndAgeLabel,
+			profileImageView,
+			indicatorView,
+			collectionView
+		)
 	}
 	
 	func setConstraints() {
+		navigationBar.snp.makeConstraints { make in
+			make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+			make.leading.trailing.equalToSuperview()
+			make.height.equalTo(44)
+		}
+		
 		nickNameLabel.snp.makeConstraints { make in
 			make.centerX.equalToSuperview()
-			make.top.equalToSuperview().offset(160)
+			make.top.equalTo(navigationBar.snp.bottom).offset(70)
 		}
 		
 		profileEditButton.snp.makeConstraints { make in
@@ -183,16 +169,6 @@ private extension UserProfileViewController {
 			make.trailing.equalToSuperview().offset(-29)
 			make.height.equalTo(102)
 		}
-	}
-}
-
-// MARK: - Navigation Button Setting
-private extension UserProfileViewController {
-	func setNavigationBarButton() {
-		let notificationBarButton = UIBarButtonItem(customView: notificationButton)
-		let settingBarButton = UIBarButtonItem(customView: settingButton)
-		
-		navigationItem.rightBarButtonItems = [settingBarButton, notificationBarButton]
 	}
 }
 
