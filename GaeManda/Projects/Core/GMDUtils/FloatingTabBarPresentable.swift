@@ -6,9 +6,23 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 public protocol FloatingTabBarPresentable {
 	func presentTabBar()
 	func dismissTabBar()
+}
+
+public extension UIViewController {
+	func hideTabBar() {
+		guard let parent = navigationController?.parent as? FloatingTabBarPresentable else { return }
+
+		parent.dismissTabBar()
+	}
+	
+	func showTabBar() {
+		guard let parent = navigationController?.parent as? FloatingTabBarPresentable else { return }
+		
+		parent.presentTabBar()
+	}
 }

@@ -9,7 +9,8 @@ let project = Project.createProject(
 			product: .staticLibrary,
 			sources: ["GMDExtensions/**"],
 			dependencies: [
-				.Project.CoreLayer.GMDUtils,
+				.SPM.RIBs,
+				.SPM.RxSwift,
 				.SPM.RxCocoa
 			]
 		),
@@ -18,7 +19,7 @@ let project = Project.createProject(
 			product: .staticLibrary,
 			sources: ["GMDUtils/**"],
 			dependencies: [
-				.SPM.RIBs
+				.Project.CoreLayer.GMDExtensions
 			]
 		)
 	]
