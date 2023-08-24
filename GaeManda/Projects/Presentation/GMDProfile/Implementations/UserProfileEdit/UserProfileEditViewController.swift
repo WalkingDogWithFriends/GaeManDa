@@ -206,6 +206,12 @@ private extension UserProfileEditViewController {
 // MARK: - Action Bind
 private extension UserProfileEditViewController {
 	func bind() {
+		navigationBar.backButton.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.listener?.backbuttonDidTap()
+			}
+			.disposed(by: disposeBag)
+		
 		nickNameTextField.textField.rx.text
 			.orEmpty
 			.withUnretained(self)
@@ -251,7 +257,7 @@ private extension UserProfileEditViewController {
 	}
 }
 
-// MARK: Action
+// MARK: - UI Logic
 private extension UserProfileEditViewController {
 	@objc func backbuttonDidTap() {
 		listener?.backbuttonDidTap()
