@@ -18,9 +18,9 @@ import GMDUtils
 
 protocol UserProfilePresentableListener: AnyObject {
 	func viewWillAppear()
-	func dogProfileEditButtonDidTap()
+	func didTapDogProfileEditButton()
 	func didTapDogProfileDeleteButton()
-	func userProfileEditButtonDidTap()
+	func didTapUserProfileEditButton()
 }
 
 final class UserProfileViewController:
@@ -206,7 +206,7 @@ private extension UserProfileViewController {
 		profileEditButton.rx.tap
 			.withUnretained(self)
 			.bind { owner, _ in
-				owner.listener?.userProfileEditButtonDidTap()
+				owner.listener?.didTapUserProfileEditButton()
 			}
 			.disposed(by: disposeBag)
 	}
@@ -214,7 +214,7 @@ private extension UserProfileViewController {
 	func bind(to cell: DogsCollectionViewCell) {
 		cell.rx.editButtonDidTapped
 			.bind(with: self) { owner, _ in
-				owner.listener?.dogProfileEditButtonDidTap()
+				owner.listener?.didTapDogProfileEditButton()
 			}
 			.disposed(by: disposeBag)
 		
@@ -224,7 +224,6 @@ private extension UserProfileViewController {
 			}
 			.disposed(by: disposeBag)
 	}
-	
 }
 
 // MARK: - UICollectionViewDataSource

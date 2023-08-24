@@ -65,13 +65,13 @@ extension UserProfileInteractor {
 		fetchDogs()
 	}
 	
-	func dogProfileEditButtonDidTap() {
+	func didTapDogProfileEditButton() {
 		router?.dogProfileEditAttach()
 	}
 	
 	func didTapDogProfileDeleteButton() { }
 	
-	func userProfileEditButtonDidTap() {
+	func didTapUserProfileEditButton() {
 		router?.userProfileEditAttach()
 	}
 }
