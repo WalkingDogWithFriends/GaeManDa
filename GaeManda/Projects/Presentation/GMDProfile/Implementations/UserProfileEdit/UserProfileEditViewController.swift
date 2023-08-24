@@ -28,7 +28,7 @@ final class UserProfileEditViewController:
 	private let disposeBag = DisposeBag()
 	
 	// MARK: - Constant Properties
-	let maximumTextCount = 20
+	let maxTextCount = 20
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "프로필 수정")
@@ -51,17 +51,13 @@ final class UserProfileEditViewController:
 		return stackView
 	}()
 	
-	private let nickNameTextField: GMDTextField = {
-		let gmdTextField = GMDTextField(
-			title: "닉네임",
-			warningText: "닉네임을 입력해주세요."
-		)
-		
-		return gmdTextField
-	}()
-
+	private let nickNameTextField = GMDTextField(
+		title: "닉네임",
+		warningText: "닉네임을 입력해주세요."
+	)
+	
 	/// Display Max Count Text in nickNameTextField
-	private let maximumTextCountLabel: UILabel = {
+	private let maxTextCountLabel: UILabel = {
 		let label = UILabel()
 		label.textColor = .gray90
 		label.font = .r15
@@ -69,14 +65,10 @@ final class UserProfileEditViewController:
 		return label
 	}()
 	
-	private let calenderTextField: GMDTextField = {
-		let gmdTextField = GMDTextField(
-			title: "생년월일",
-			warningText: "생년월일을 입력해주세요."
-		)
-		
-		return gmdTextField
-	}()
+	private let calenderTextField = GMDTextField(
+		title: "생년월일",
+		warningText: "생년월일을 입력해주세요."
+	)
 	
 	private let calenderButton: UIButton = {
 		let button = UIButton()
@@ -143,7 +135,7 @@ private extension UserProfileEditViewController {
 		self.navigationController?.navigationBar.isHidden = true
 		
 		/// Set TextField Right View
-		nickNameTextField.textField.rightView = maximumTextCountLabel
+		nickNameTextField.textField.rightView = maxTextCountLabel
 		nickNameTextField.textField.rightViewMode = .always
 		
 		calenderTextField.textField.rightView = calenderButton
@@ -212,45 +204,50 @@ private extension UserProfileEditViewController {
 			}
 			.disposed(by: disposeBag)
 		
-		nickNameTextField.textField.rx.text
+		nickNameTextField.rx.text
 			.orEmpty
 			.withUnretained(self)
-			.bind { owner, text in
-				owner.setTextCountLabel(text)
+			.map { owner, text -> String in
+				let maxCount = owner.maxTextCount
+				return owner.trimmingSuffix(text, maxCount: maxCount)
 			}
+			.bind(to: nickNameTextField.textField.rx.text)
+			.disposed(by: disposeBag)
+		
+		nickNameTextField.rx.text
+			.orEmpty
+			.withUnretained(self)
+			.map { "\($1.count)/\($0.maxTextCount)" }
+			.bind(to: maxTextCountLabel.rx.text)
 			.disposed(by: disposeBag)
 		
 		calenderTextField.textField.rx.controlEvent(.editingDidBegin)
-			.withUnretained(self)
-			.bind { owner, _ in
-				owner.calenderTextField.textField.endEditing(true)
-			}
+			.map { true }
+			.bind(to: calenderTextField.textField.rx.isEditing)
 			.disposed(by: disposeBag)
 		
 		calenderButton.rx.tap
-			.withUnretained(self)
-			.bind { owner, _ in
+			.bind(with: self) { owner, _ in
 				owner.calenderButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 		
 		maleButton.rx.tap
-			.withUnretained(self)
-			.bind { owner, _ in
-				owner.maleButtonDidTap()
+			.bind(with: self) { owner, _ in
+				owner.maleButton.rx.isSelected.onNext(true)
+				owner.femaleButton.rx.isSelected.onNext(false)
 			}
 			.disposed(by: disposeBag)
 		
 		femaleButton.rx.tap
-			.withUnretained(self)
-			.bind { owner, _ in
-				owner.femaleButtonDidTap()
+			.bind(with: self) { owner, _ in
+				owner.femaleButton.rx.isSelected.onNext(true)
+				owner.maleButton.rx.isSelected.onNext(false)
 			}
 			.disposed(by: disposeBag)
 		
 		endEditingButton.rx.tap
-			.withUnretained(self)
-			.bind { owner, _ in
+			.bind(with: self) { owner, _ in
 				owner.listener?.didTapEndEditingButton()
 			}
 			.disposed(by: disposeBag)
@@ -259,32 +256,15 @@ private extension UserProfileEditViewController {
 
 // MARK: - UI Logic
 private extension UserProfileEditViewController {
-	func setTextCountLabel(_ text: String) {
-		var newText = text
-		
-		if text.count >= maximumTextCount {
-			let index = text.index(text.startIndex, offsetBy: maximumTextCount)
-			newText = String(text[..<index])
-			nickNameTextField.textField.text = newText
+	func trimmingSuffix(_ text: String, maxCount: Int) -> String {
+		if text.count >= maxCount {
+			let index = text.index(text.startIndex, offsetBy: maxCount)
+			return String(text[..<index])
 		}
-		maximumTextCountLabel.text = "\(newText.count)/\(maximumTextCount)"
+		return text
 	}
 	
 	func calenderButtonDidTap() {
 		print("calenderButtonDidTap")
-	}
-	
-	func maleButtonDidTap() {
-		if maleButton.isSelected == true { return }
-		
-		maleButton.isSelected = true
-		femaleButton.isSelected = false
-	}
-	
-	func femaleButtonDidTap() {
-		if femaleButton.isSelected == true { return }
-		
-		femaleButton.isSelected = true
-		maleButton.isSelected = false
 	}
 }
