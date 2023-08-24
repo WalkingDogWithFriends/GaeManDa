@@ -37,7 +37,6 @@ public final class GMDTextField: UIView {
 	private let titleLabel: UILabel = {
 		let label = UILabel()
 		label.textColor = .gray90
-//		label.layer.opacity = 0.0
 		label.numberOfLines = 1
 		label.font = .r12
 		
@@ -93,7 +92,6 @@ private extension GMDTextField {
 		
 		setViewHierarchy()
 		setConstraints()
-//		titleLabel.isOpaque = false
 		bind()
 	}
 	
