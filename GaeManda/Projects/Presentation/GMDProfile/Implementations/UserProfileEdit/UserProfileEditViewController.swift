@@ -27,7 +27,12 @@ final class UserProfileEditViewController:
 	weak var listener: UserProfileEditPresentableListener?
 	private let disposeBag = DisposeBag()
 	
-	// MARK: UI Property
+	// MARK: - Constant Properties
+	let maximumTextCount = 20
+	
+	// MARK: - UI Components
+	private let navigationBar = GMDNavigationBar(title: "프로필 수정")
+	
 	private let profileImageView: RoundImageView = {
 		let roundImageView = RoundImageView()
 		roundImageView.backgroundColor = .gray40
@@ -54,9 +59,7 @@ final class UserProfileEditViewController:
 		
 		return gmdTextField
 	}()
-	
-	private let maximumTextCount = 20
-	
+
 	/// Display Max Count Text in nickNameTextField
 	private let maximumTextCountLabel: UILabel = {
 		let label = UILabel()
@@ -119,7 +122,7 @@ final class UserProfileEditViewController:
 		return button
 	}()
 	
-	// MARK: Life Cycle
+	// MARK: - Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
@@ -133,17 +136,11 @@ final class UserProfileEditViewController:
 	}
 }
 
-// MARK: Setting UI
+// MARK: - UI Setting
 private extension UserProfileEditViewController {
 	func setupUI() {
 		view.backgroundColor = .white
-		self.setupBackNavigationButton(
-			target: self,
-			action: #selector(backbuttonDidTap)
-		)
-		
-		title = "프로필 수정"
-		setNavigationTitleFont(.b20)
+		self.navigationController?.navigationBar.isHidden = true
 		
 		/// Set TextField Right View
 		nickNameTextField.textField.rightView = maximumTextCountLabel
@@ -152,33 +149,40 @@ private extension UserProfileEditViewController {
 		calenderTextField.textField.rightView = calenderButton
 		calenderTextField.textField.rightViewMode = .always
 		
-		setupSubviews()
+		setViewHierarchy()
 		setConstraints()
 		bind()
 	}
 	
-	func setupSubviews() {
-		view.addSubview(profileImageView)
-		view.addSubview(textStackView)
-		view.addSubview(buttonStackView)
-		view.addSubview(endEditingButton)
+	func setViewHierarchy() {
+		view.addSubviews(
+			navigationBar,
+			profileImageView,
+			textStackView,
+			buttonStackView,
+			endEditingButton
+		)
 		
-		textStackView.addArrangedSubview(nickNameTextField)
-		textStackView.addArrangedSubview(calenderTextField)
+		textStackView.addArrangedSubviews(nickNameTextField, calenderTextField)
 		
-		buttonStackView.addArrangedSubview(maleButton)
-		buttonStackView.addArrangedSubview(femaleButton)
+		buttonStackView.addArrangedSubviews(maleButton, femaleButton)
 	}
 	
 	func setConstraints() {
+		navigationBar.snp.makeConstraints { make in
+			make.top.equalTo(view.safeAreaLayoutGuide)
+			make.leading.trailing.equalToSuperview()
+			make.height.equalTo(44)
+		}
+		
 		profileImageView.snp.makeConstraints { make in
-			make.top.equalToSuperview().offset(186)
+			make.top.equalTo(navigationBar.snp.bottom).offset(88)
 			make.centerX.equalToSuperview()
 			make.height.width.equalTo(140)
 		}
 		
 		textStackView.snp.makeConstraints { make in
-			make.top.equalTo(profileImageView.snp.bottom).offset(58)
+			make.top.equalTo(profileImageView.snp.bottom).offset(60)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 		}
@@ -199,7 +203,7 @@ private extension UserProfileEditViewController {
 	}
 }
 
-// MARK: Bind
+// MARK: - Action Bind
 private extension UserProfileEditViewController {
 	func bind() {
 		nickNameTextField.textField.rx.text
