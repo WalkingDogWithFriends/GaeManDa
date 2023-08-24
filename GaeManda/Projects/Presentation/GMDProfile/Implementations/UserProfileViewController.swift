@@ -194,6 +194,8 @@ extension UserProfileViewController {
 		self.dogs = getInfiniteCarouselCellData(by: dogs)
 		collectionView.reloadData()
 		collectionView.isScrollEnabled = dogs.count == 1 ? false : true
+		scrollCollectionView(at: 1, at: .right)
+		indicatorView.indicatorCount = dogs.count
 	}
 }
 
@@ -239,22 +241,14 @@ extension UserProfileViewController: UIScrollViewDelegate {
 		var index = page
 		
 		if page == 0 {
-			collectionView.scrollToItem(
-				at: IndexPath(row: dogsCount, section: 0),
-				at: .right,
-				animated: false
-			)
+			scrollCollectionView(at: dogsCount, at: .right)
 			index = dogsCount
 		} else if page == dogsCount + 1 {
-			collectionView.scrollToItem(
-				at: IndexPath(row: 1, section: 0),
-				at: .right,
-				animated: false
-			)
+			scrollCollectionView(at: 1, at: .left)
 			index = 1
 		}
 		
-		/// Indicator UI Change
+		/// Indicator UI Update
 		indicatorView.collectionViewDidChange(index: index - 1)
 	}
 }
@@ -274,6 +268,22 @@ private extension UserProfileViewController {
 		dogsForCell.append(first)
 		
 		return dogsForCell
+	}
+	
+	func scrollCollectionView(
+		at row: Int,
+		at position: UICollectionView.ScrollPosition,
+		animated: Bool = false
+	) {
+		guard row >= 0 && row < dogs.count else { return }
+		
+		DispatchQueue.main.async { [weak self] in
+			self?.collectionView.scrollToItem(
+				at: IndexPath(row: row, section: 0),
+				at: position,
+				animated: false
+			)
+		}
 	}
 }
 
