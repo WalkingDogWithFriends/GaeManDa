@@ -69,6 +69,8 @@ extension UserProfileInteractor {
 		router?.dogProfileEditAttach()
 	}
 	
+	func didTapDogProfileDeleteButton() { }
+	
 	func userProfileEditButtonDidTap() {
 		router?.userProfileEditAttach()
 	}
