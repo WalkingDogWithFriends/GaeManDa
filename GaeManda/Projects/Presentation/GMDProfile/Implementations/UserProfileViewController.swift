@@ -109,10 +109,7 @@ final class UserProfileViewController:
 		collectionView.showsHorizontalScrollIndicator = false
 		collectionView.isPagingEnabled = true
 		collectionView.backgroundColor = .gray40
-		collectionView.register(
-			DogsCollectionViewCell.self,
-			forCellWithReuseIdentifier: DogsCollectionViewCell.idenfier
-		)
+		collectionView.registerCell(DogsCollectionViewCell.self)
 		collectionView.layer.cornerRadius = 4
 		
 		return collectionView
@@ -141,19 +138,14 @@ private extension UserProfileViewController {
 		
 		setNavigationTitleFont(.b20)
 		
-		setupSubviews()
+		setViewHierarchy()
 		setConstraints()
 		setNavigationBarButton()
 		bind()
 	}
-	
-	func setupSubviews() {
-		view.addSubview(nickNameLabel)
-		view.addSubview(profileEditButton)
-		view.addSubview(sexAndAgeLabel)
-		view.addSubview(profileImageView)
-		view.addSubview(indicatorView)
-		view.addSubview(collectionView)
+
+	func setViewHierarchy() {
+		view.addSubviews(nickNameLabel, profileEditButton, sexAndAgeLabel, profileImageView, indicatorView, collectionView)
 	}
 	
 	func setConstraints() {
