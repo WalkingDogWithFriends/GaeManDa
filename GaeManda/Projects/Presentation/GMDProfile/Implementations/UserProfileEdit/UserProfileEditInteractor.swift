@@ -8,11 +8,16 @@
 
 import RIBs
 import GMDProfile
+import UseCase
 
 protocol UserProfileEditRouting: ViewableRouting { }
 
 protocol UserProfileEditPresentable: Presentable {
 	var listener: UserProfileEditPresentableListener? { get set }
+}
+
+protocol UserProfileEditInteractorDependency {
+	var userProfileUseCase: UserProfileUseCase { get }
 }
 
 final class UserProfileEditInteractor:
@@ -22,7 +27,13 @@ final class UserProfileEditInteractor:
 	weak var router: UserProfileEditRouting?
 	weak var listener: UserProfileEditListener?
 	
-	override init(presenter: UserProfileEditPresentable) {
+	private let dependency: UserProfileEditInteractorDependency
+	
+	init(
+		presenter: UserProfileEditPresentable,
+		dependency: UserProfileEditInteractorDependency
+	) {
+		self.dependency = dependency
 		super.init(presenter: presenter)
 		presenter.listener = self
 	}
