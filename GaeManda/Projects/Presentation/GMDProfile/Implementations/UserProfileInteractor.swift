@@ -57,7 +57,7 @@ final class UserProfileInteractor:
 	}
 }
 
-// MARK: PresentableListener
+// MARK: - PresentableListener
 extension UserProfileInteractor {
 	func viewWillAppear() {
 		fetchUser()
@@ -72,7 +72,7 @@ extension UserProfileInteractor {
 	}
 }
 
-// MARK: UserProfileEditListener
+// MARK: - UserProfileEditListener
 extension UserProfileInteractor {
 	func userProfileEditBackButtonDidTap() {
 		router?.userProfileEditDetach()
@@ -83,14 +83,14 @@ extension UserProfileInteractor {
 	}
 }
 
-// MARK: DogProfileEditListener
+// MARK: - DogProfileEditListener
 extension UserProfileInteractor {
 	func dogProfileEditBackButtonDidTap() {
 		router?.dogProfileEditDetach()
 	}
 }
 
-// MARK: Fetch Data From Dependency
+// MARK: - Fetch Data From Dependency
 private extension UserProfileInteractor {
 	func fetchUser() {
 		dependency.userProfileUseCase

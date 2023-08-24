@@ -29,6 +29,7 @@ final class UserProfileViewController:
 	private let disposeBag = DisposeBag()
 	private var dogsCount = 0
 	
+	// MARK: - UI Components
 	private let notificationButton: UIButton = {
 		let button = UIButton()
 		let image = UIImage(
@@ -117,7 +118,7 @@ final class UserProfileViewController:
 		return collectionView
 	}()
 	
-	// MARK: Life Cycle
+	// MARK: - Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		collectionView.delegate = self
@@ -132,7 +133,7 @@ final class UserProfileViewController:
 	}
 }
 
-// MARK: UI Setting
+// MARK: - UI Setting
 private extension UserProfileViewController {
 	func setupUI() {
 		view.backgroundColor = .white
@@ -193,7 +194,7 @@ private extension UserProfileViewController {
 	}
 }
 
-// MARK: Navigation Button Setting
+// MARK: - Navigation Button Setting
 private extension UserProfileViewController {
 	func setNavigationBarButton() {
 		let notificationBarButton = UIBarButtonItem(customView: notificationButton)
@@ -203,7 +204,7 @@ private extension UserProfileViewController {
 	}
 }
 
-// MARK: Bind
+// MARK: - Bind
 private extension UserProfileViewController {
 	private func bind() {
 		collectionViewBind()
@@ -266,7 +267,7 @@ private extension UserProfileViewController {
 	}
 }
 
-// MARK: UICollectionViewDelegateFlowLayout
+// MARK: - UICollectionViewDelegateFlowLayout
 extension UserProfileViewController: UICollectionViewDelegateFlowLayout {
 	func collectionView(
 		_ collectionView: UICollectionView,
