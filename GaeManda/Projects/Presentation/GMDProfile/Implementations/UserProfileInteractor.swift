@@ -7,8 +7,6 @@
 //
 
 import RIBs
-import RxCocoa
-import RxSwift
 import Entity
 import GMDProfile
 import GMDUtils
@@ -23,6 +21,9 @@ protocol UserProfileRouting: ViewableRouting {
 
 protocol UserProfilePresentable: Presentable {
 	var listener: UserProfilePresentableListener? { get set }
+	
+	func updateUserName(_ name: String)
+	func updateUserSexAndAge(_ sexAndAge: String)
 }
 
 protocol UserProfileInteractorDependency {
@@ -35,37 +36,14 @@ final class UserProfileInteractor:
 	UserProfilePresentableListener {
 	weak var router: UserProfileRouting?
 	weak var listener: UserProfileListener?
-	
-	private let disposeBag: DisposeBag
+
 	private let dependency: UserProfileInteractorDependency
-	
-	// MARK: Interactable Output
-	var dogProfiles: Driver<[Dog]>
-	var userName: Driver<String>
-	var userSexAndAge: Driver<String>
 	
 	init(
 		presenter: UserProfilePresentable,
 		dependency: UserProfileInteractorDependency
 	) {
 		self.dependency = dependency
-		self.disposeBag = DisposeBag()
-		
-		self.dogProfiles = dependency
-			.userProfileUseCase
-			.fetchDogs(id: 0)
-			.ignoreTerminate()
-			.asDriver(onErrorJustReturn: [])
-
-		let users = dependency
-			.userProfileUseCase
-			.fetchUser(id: 0)
-			.ignoreTerminate()
-			.asDriver(onErrorJustReturn: User.defaultUser)
-		
-		self.userName = users.map { $0.name }
-		self.userSexAndAge = users.map { "\($0.sex) \($0.age)세" }
-		
 		super.init(presenter: presenter)
 		presenter.listener = self
 	}
@@ -81,6 +59,10 @@ final class UserProfileInteractor:
 
 // MARK: PresentableListener
 extension UserProfileInteractor {
+	func viewWillAppear() {
+		fetchUser()
+	}
+	
 	func dogProfileEditButtonDidTap() {
 		router?.dogProfileEditAttach()
 	}
@@ -107,3 +89,22 @@ extension UserProfileInteractor {
 		router?.dogProfileEditDetach()
 	}
 }
+
+// MARK: Fetch Data From Dependency
+private extension UserProfileInteractor {
+	func fetchUser() {
+		dependency.userProfileUseCase
+			.userDependency
+			.fetchUser(id: 0)
+			.subscribe(with: self) { owner, user in
+				let sexAndAge = "\(user.sex) \(user.age)세"
+				
+				owner.presenter.updateUserName(user.name)
+				owner.presenter.updateUserSexAndAge(sexAndAge)
+			}
+			.disposeOnDeactivate(interactor: self)
+	}
+	
+	func fetchDogs() { }
+}
+

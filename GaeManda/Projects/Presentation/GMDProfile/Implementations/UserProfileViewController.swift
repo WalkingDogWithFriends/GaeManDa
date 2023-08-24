@@ -17,17 +17,13 @@ import GMDExtensions
 import GMDUtils
 
 protocol UserProfilePresentableListener: AnyObject {
-	var dogProfiles: Driver<[Dog]> { get set }
-	var userName: Driver<String> { get set }
-	var userSexAndAge: Driver<String> { get set }
-	
+	func viewWillAppear()
 	func dogProfileEditButtonDidTap()
 	func userProfileEditButtonDidTap()
 }
 
 final class UserProfileViewController:
 	UIViewController,
-	UserProfilePresentable,
 	UserProfileViewControllable {
 	weak var listener: UserProfilePresentableListener?
 	private let disposeBag = DisposeBag()
@@ -132,6 +128,7 @@ final class UserProfileViewController:
 		super.viewWillAppear(animated)
 		
 		showTabBar()
+		listener?.viewWillAppear()
 	}
 }
 
@@ -140,14 +137,6 @@ private extension UserProfileViewController {
 	func setupUI() {
 		view.backgroundColor = .white
 		title = "프로필"
-		
-		DispatchQueue.main.async {
-			self.collectionView.scrollToItem(
-				at: IndexPath(item: 1, section: 0),
-				at: .right,
-				animated: false
-			)
-		}
 		
 		setNavigationTitleFont(.b20)
 		
@@ -217,18 +206,6 @@ private extension UserProfileViewController {
 // MARK: Bind
 private extension UserProfileViewController {
 	private func bind() {
-		listener?.userName
-			.drive(with: self) { owner, name in
-				owner.nickNameLabel.text = name
-			}
-			.disposed(by: disposeBag)
-		
-		listener?.userSexAndAge
-			.drive(with: self) { owner, sexAndAge in
-				owner.sexAndAgeLabel.text = sexAndAge
-			}
-			.disposed(by: disposeBag)
-		
 		collectionViewBind()
 		
 		profileEditButton.rx.tap
@@ -240,40 +217,6 @@ private extension UserProfileViewController {
 	}
 	
 	private func collectionViewBind() {
-		listener?.dogProfiles
-			.map { $0.count }
-			.drive(with: self) { owner, count in
-				owner.dogsCount = count
-				owner.indicatorView.indicatorCount = count
-				owner.collectionView.isScrollEnabled = count == 1 ? false : true
-			}
-			.disposed(by: disposeBag)
-		
-		listener?.dogProfiles
-			.map { item in
-				guard let last = item.last, let first = item.first else { return item }
-				
-				var dogs = item
-				dogs.insert(last, at: 0)
-				dogs.append(first)
-				
-				return dogs
-			}
-			.drive(collectionView.rx.items(
-				cellIdentifier: DogsCollectionViewCell.idenfier,
-				cellType: DogsCollectionViewCell.self
-			)) { (_, item, cell) in
-				cell.configuration(item)
-				
-				cell.editButtonTap
-					.withUnretained(self)
-					.bind { owner, _ in
-						owner.listener?.dogProfileEditButtonDidTap()
-					}
-					.disposed(by: cell.disposeBag)
-			}
-			.disposed(by: disposeBag)
-		
 		collectionView.rx.didEndDecelerating
 			.withUnretained(self)
 			.observe(on: MainScheduler.asyncInstance)
@@ -285,7 +228,18 @@ private extension UserProfileViewController {
 	}
 }
 
-// MARK: CollectionView Infinite Carousel
+// MARK: - UserProfilePresentable
+extension UserProfileViewController: UserProfilePresentable {
+	func updateUserName(_ name: String) {
+		nickNameLabel.text = name
+	}
+	
+	func updateUserSexAndAge(_ sexAndAge: String) {
+		sexAndAgeLabel.text = sexAndAge
+	}
+}
+
+// MARK: - CollectionView Infinite Carousel
 private extension UserProfileViewController {
 	func movePageInBoundary() {
 		let page = Int(collectionView.contentOffset.x / collectionView.frame.width)
