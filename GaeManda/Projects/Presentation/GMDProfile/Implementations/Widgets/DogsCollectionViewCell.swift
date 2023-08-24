@@ -12,16 +12,11 @@ import RxSwift
 import SnapKit
 import DesignKit
 import Entity
+import GMDExtensions
 
 final class DogsCollectionViewCell: UICollectionViewCell {
-	static let idenfier = "DogsCollectionViewCell"
-	let disposeBag = DisposeBag()
-	
-	lazy var editButtonTap = ControlEvent(events: editButton.rx.tap)
-	
-	lazy var deleteButtonTap = ControlEvent(events: deleteButton.rx.tap)
-	
-	private let roundImageView: RoundImageView = {
+	// MARK: - UI Components
+	private let profileImageView: RoundImageView = {
 		let imageView = RoundImageView()
 		imageView.backgroundColor = .systemGray
 		
@@ -45,30 +40,6 @@ final class DogsCollectionViewCell: UICollectionViewCell {
 		return stackView
 	}()
 	
-	private let editButton: UIButton = {
-		let button = UIButton()
-		let image = UIImage(
-			systemName: "rectangle.and.pencil.and.ellipsis.rtl",
-			withConfiguration: UIImage.SymbolConfiguration(pointSize: 18)
-		)
-		button.setImage(image, for: .normal)
-		button.tintColor = .gray90
-		
-		return button
-	}()
-	
-	private let deleteButton: UIButton = {
-		let button = UIButton()
-		let image = UIImage(
-			systemName: "trash",
-			withConfiguration: UIImage.SymbolConfiguration(pointSize: 18)
-		)
-		button.setImage(image, for: .normal)
-		button.tintColor = .gray90
-		
-		return button
-	}()
-	
 	private let bottomStackView: UIStackView = {
 		let stackView = UIStackView()
 		stackView.axis = .vertical
@@ -87,7 +58,7 @@ final class DogsCollectionViewCell: UICollectionViewCell {
 		stackView.distribution = .fillEqually
 		
 		return stackView
- 	}()
+	}()
 	
 	private let neuteringStackView: UIStackView = {
 		let stackView = UIStackView()
@@ -129,78 +100,107 @@ final class DogsCollectionViewCell: UICollectionViewCell {
 		return label
 	}()
 	
+	// MARK: - UI Components(Button)
+	fileprivate let editButton: UIButton = {
+		let button = UIButton()
+		let image = UIImage(
+			systemName: "rectangle.and.pencil.and.ellipsis.rtl",
+			withConfiguration: UIImage.SymbolConfiguration(pointSize: 18)
+		)
+		button.setImage(image, for: .normal)
+		button.tintColor = .gray90
+		
+		return button
+	}()
+	
+	fileprivate let deleteButton: UIButton = {
+		let button = UIButton()
+		let image = UIImage(
+			systemName: "trash",
+			withConfiguration: UIImage.SymbolConfiguration(pointSize: 18)
+		)
+		button.setImage(image, for: .normal)
+		button.tintColor = .gray90
+		
+		return button
+	}()
+	
+	// MARK: - Initializers
 	override init(frame: CGRect) {
 		super.init(frame: .zero)
 		setupUI()
 	}
 	
+	@available(*, unavailable)
 	required init?(coder: NSCoder) {
-		super.init(coder: coder)
-		setupUI()
+		fatalError()
 	}
 	
-	override func prepareForReuse() {
-		super.prepareForReuse()
+	// MARK: - Configure
+	func configure(with dog: Dog) {
+		titleLabel.text = "\(dog.name) (\(dog.sex) / \(dog.age)세)"
+		
+		weightValueLabel.text = "\(dog.weight)kg"
+		neuteringValueLabel.text = dog.didNeutered == true ? "했어요" : "안 했어요"
 	}
 }
 
-// MARK: UI Setting
+// MARK: - UI Setting
 private extension DogsCollectionViewCell {
 	func setupUI() {
 		self.contentView.backgroundColor = .clear
 		
-		setupSubviews()
+		setViewHierarchy()
 		setConstraints()
 	}
 	
-	func setupSubviews() {
-		contentView.addSubview(roundImageView)
-		contentView.addSubview(titleLabel)
-		contentView.addSubview(buttonStackView)
-		contentView.addSubview(bottomStackView)
+	func setViewHierarchy() {
+		contentView.addSubviews(
+			profileImageView,
+			titleLabel,
+			buttonStackView,
+			bottomStackView
+		)
+		buttonStackView.addArrangedSubviews(editButton, deleteButton)
 		
-		buttonStackView.addArrangedSubview(editButton)
-		buttonStackView.addArrangedSubview(deleteButton)
+		bottomStackView.addArrangedSubviews(weightStackView, neuteringStackView)
 		
-		bottomStackView.addArrangedSubview(weightStackView)
-		bottomStackView.addArrangedSubview(neuteringStackView)
+		weightStackView.addArrangedSubviews(weightLabel, weightValueLabel)
 		
-		weightStackView.addArrangedSubview(weightLabel)
-		weightStackView.addArrangedSubview(weightValueLabel)
-		
-		neuteringStackView.addArrangedSubview(neuteringLabel)
-		neuteringStackView.addArrangedSubview(neuteringValueLabel)
+		neuteringStackView.addArrangedSubviews(neuteringLabel, neuteringValueLabel)
 	}
 	
 	func setConstraints() {
-		roundImageView.snp.makeConstraints { make in
+		profileImageView.snp.makeConstraints { make in
 			make.top.leading.equalToSuperview().offset(8)
 			make.width.height.equalTo(36)
 		}
 		
 		titleLabel.snp.makeConstraints { make in
-			make.centerY.equalTo(roundImageView)
-			make.leading.equalTo(roundImageView.snp.trailing).offset(12)
+			make.centerY.equalTo(profileImageView)
+			make.leading.equalTo(profileImageView.snp.trailing).offset(12)
 		}
 		
 		buttonStackView.snp.makeConstraints { make in
-			make.centerY.equalTo(roundImageView)
+			make.centerY.equalTo(profileImageView)
 			make.trailing.equalToSuperview().offset(-8)
 		}
 		
 		bottomStackView.snp.makeConstraints { make in
 			make.leading.equalToSuperview().offset(8)
-			make.bottom.equalToSuperview().offset(-8)
+			make.top.equalTo(profileImageView.snp.bottom).offset(-8)
+			make.bottom.equalToSuperview().offset(-12)
 		}
 	}
 }
 
-// MARK: Configure
-extension DogsCollectionViewCell {
-	func configuration(_ dog: Dog) {
-		titleLabel.text = "\(dog.name) (\(dog.sex) / \(dog.age)세)"
-		
-		weightValueLabel.text = "\(dog.weight)kg"
-		neuteringValueLabel.text = dog.didNeutered == true ? "했어요" : "안 했어요"
+// MARK: Reactive Extension
+extension Reactive where Base: DogsCollectionViewCell {
+	var editButtonDidTapped: ControlEvent<Void> {
+		base.editButton.rx.tap
+	}
+	
+	var deleteButtonDidTapped: ControlEvent<Void> {
+		base.deleteButton.rx.tap
 	}
 }

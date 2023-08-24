@@ -220,9 +220,9 @@ extension UserProfileViewController: UICollectionViewDataSource {
 			DogsCollectionViewCell.self,
 			for: indexPath
 		)
-		let data = dogs[indexPath.row]
+		let dog = dogs[indexPath.row]
 		
-		cell.configuration(data)
+		cell.configure(with: dog)
 		
 		return cell
 	}
