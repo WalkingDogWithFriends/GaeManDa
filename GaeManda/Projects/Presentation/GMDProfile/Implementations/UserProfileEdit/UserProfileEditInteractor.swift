@@ -75,7 +75,13 @@ extension UserProfileEditInteractor {
 		if name.isEmpty {
 			presenter.userNameIsEmpty()
 		} else {
-			listener?.userProfileEndEditing()
+			dependency.userProfileUseCase
+				.updateUser(nickName: name, age: 20, sex: sex.rawValue)
+				.subscribe(with: self) { owner, result in
+					guard result == "success" else { return }
+					owner.listener?.userProfileEndEditing()
+				}
+				.disposeOnDeactivate(interactor: self)
 		}
 	}
 }
