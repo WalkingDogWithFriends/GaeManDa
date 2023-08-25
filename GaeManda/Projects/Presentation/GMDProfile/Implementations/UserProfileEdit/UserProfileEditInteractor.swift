@@ -17,6 +17,7 @@ protocol UserProfileEditPresentable: Presentable {
 	var listener: UserProfileEditPresentableListener? { get set }
 	
 	func updateUsername(_ name: String)
+	func updateUserSex(_ sex: Sex)
 }
 
 protocol UserProfileEditInteractorDependency {
@@ -58,6 +59,7 @@ extension UserProfileEditInteractor {
 			.fetchUser(id: 0)
 			.subscribe(with: self) { owner, user in
 				owner.presenter.updateUsername(user.name)
+				owner.presenter.updateUserSex(user.sex)
 			}
 			.disposeOnDeactivate(interactor: self)
 	}

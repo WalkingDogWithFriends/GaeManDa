@@ -101,7 +101,7 @@ private extension UserProfileInteractor {
 			.userDependency
 			.fetchUser(id: 0)
 			.subscribe(with: self) { owner, user in
-				let sexAndAge = "\(user.sex) \(user.age)세"
+				let sexAndAge = "\(user.sex.rawValue) \(user.age)세"
 				
 				owner.presenter.updateUserName(user.name)
 				owner.presenter.updateUserSexAndAge(sexAndAge)

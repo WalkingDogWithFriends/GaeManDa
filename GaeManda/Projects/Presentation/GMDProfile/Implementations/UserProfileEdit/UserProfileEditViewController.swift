@@ -137,6 +137,7 @@ private extension UserProfileEditViewController {
 		setViewHierarchy()
 		setConstraints()
 		bind()
+		bindForUI()
 	}
 	
 	func setViewHierarchy() {
@@ -194,6 +195,16 @@ extension UserProfileEditViewController {
 		nickNameTextField.text = name
 		nickNameTextField.titleLabel.alpha = name.isEmpty ? 0.0 : 1.0
 		maxTextCountLabel.text = "\(name.count)/\(maxTextCount)"
+	}
+	
+	func updateUserSex(_ sex: Sex) {
+		if sex.rawValue == "남" {
+			maleButton.rx.isSelected.onNext(true)
+			femaleButton.rx.isSelected.onNext(false)
+		} else {
+			femaleButton.rx.isSelected.onNext(true)
+			maleButton.rx.isSelected.onNext(false)
+		}
 	}
 }
 

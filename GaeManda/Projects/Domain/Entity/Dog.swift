@@ -8,9 +8,9 @@
 
 import Foundation
 
-public enum Sex {
-	case male
-	case female
+public enum Sex: String {
+	case male = "남"
+	case female = "여"
 }
 
 public struct Dog {
