@@ -12,4 +12,10 @@ import Entity
 
 public protocol UserRepository {
 	func fetchUser(id: Int) -> Single<User>
+	
+	func updateUser(
+		nickName: String,
+		age: Int,
+		sex: String
+	) -> Single<String>
 }
