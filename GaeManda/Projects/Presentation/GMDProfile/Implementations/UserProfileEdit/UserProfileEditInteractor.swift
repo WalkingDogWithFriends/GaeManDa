@@ -7,6 +7,7 @@
 //
 
 import RIBs
+import Entity
 import GMDProfile
 import UseCase
 
@@ -14,6 +15,8 @@ protocol UserProfileEditRouting: ViewableRouting { }
 
 protocol UserProfileEditPresentable: Presentable {
 	var listener: UserProfileEditPresentableListener? { get set }
+	
+	func updateUsername(_ name: String)
 }
 
 protocol UserProfileEditInteractorDependency {
@@ -49,6 +52,16 @@ final class UserProfileEditInteractor:
 
 // MARK: PresentableListener
 extension UserProfileEditInteractor {
+	func viewWillAppear() {
+		dependency.userProfileUseCase
+			.userDependency
+			.fetchUser(id: 0)
+			.subscribe(with: self) { owner, user in
+				owner.presenter.updateUsername(user.name)
+			}
+			.disposeOnDeactivate(interactor: self)
+	}
+	
 	func didTapBackbutton() {
 		listener?.userProfileEditBackButtonDidTap()
 	}

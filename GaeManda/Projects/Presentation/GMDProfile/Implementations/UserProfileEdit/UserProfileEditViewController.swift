@@ -12,10 +12,12 @@ import RxCocoa
 import RxSwift
 import SnapKit
 import DesignKit
+import Entity
 import GMDExtensions
 import GMDUtils
 
 protocol UserProfileEditPresentableListener: AnyObject {
+	func viewWillAppear()
 	func didTapBackbutton()
 	func didTapEndEditingButton()
 }
@@ -90,18 +92,8 @@ final class UserProfileEditViewController:
 		return stackView
 	}()
 	
-	private let maleButton: GMDOptionButton = {
-		let button = GMDOptionButton(title: "남")
-		button.isSelected = true
-		
-		return button
-	}()
-	
-	private let femaleButton: GMDOptionButton = {
-		let button = GMDOptionButton(title: "여")
-		
-		return button
-	}()
+	private let maleButton = GMDOptionButton(title: "남")
+	private let femaleButton = GMDOptionButton(title: "여")
 	
 	private let endEditingButton: UIButton = {
 		let button = UIButton()
@@ -117,12 +109,12 @@ final class UserProfileEditViewController:
 	// MARK: - Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
 		setupUI()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+		listener?.viewWillAppear()
 		
 		hideTabBar()
 	}
@@ -133,6 +125,7 @@ private extension UserProfileEditViewController {
 	func setupUI() {
 		view.backgroundColor = .white
 		self.navigationController?.navigationBar.isHidden = true
+		maleButton.isSelected = true
 		
 		/// Set TextField Right View
 		nickNameTextField.textField.rightView = maxTextCountLabel
@@ -195,6 +188,15 @@ private extension UserProfileEditViewController {
 	}
 }
 
+// MARK: - UI Update
+extension UserProfileEditViewController {
+	func updateUsername(_ name: String) {
+		nickNameTextField.text = name
+		nickNameTextField.titleLabel.alpha = name.isEmpty ? 0.0 : 1.0
+		maxTextCountLabel.text = "\(name.count)/\(maxTextCount)"
+	}
+}
+
 // MARK: - Action Bind
 private extension UserProfileEditViewController {
 	func bind() {
@@ -204,6 +206,15 @@ private extension UserProfileEditViewController {
 			}
 			.disposed(by: disposeBag)
 		
+		endEditingButton.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.listener?.didTapEndEditingButton()
+			}
+			.disposed(by: disposeBag)
+	}
+	
+	// MARK: - UI Binding
+	func bindForUI() {
 		nickNameTextField.rx.text
 			.orEmpty
 			.withUnretained(self)
@@ -243,12 +254,6 @@ private extension UserProfileEditViewController {
 			.bind(with: self) { owner, _ in
 				owner.femaleButton.rx.isSelected.onNext(true)
 				owner.maleButton.rx.isSelected.onNext(false)
-			}
-			.disposed(by: disposeBag)
-		
-		endEditingButton.rx.tap
-			.bind(with: self) { owner, _ in
-				owner.listener?.didTapEndEditingButton()
 			}
 			.disposed(by: disposeBag)
 	}

@@ -23,6 +23,12 @@ public final class GMDTextField: UIView {
 		}
 	}
 	
+	public var text: String = "" {
+		didSet {
+			textField.text = text
+		}
+	}
+	
 	// MARK: - UI Components
 	private let stackView: UIStackView = {
 		let stackView = UIStackView()
@@ -34,7 +40,7 @@ public final class GMDTextField: UIView {
 		return stackView
 	}()
 	
-	private let titleLabel: UILabel = {
+	public let titleLabel: UILabel = {
 		let label = UILabel()
 		label.textColor = .gray90
 		label.numberOfLines = 1
