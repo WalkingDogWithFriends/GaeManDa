@@ -18,6 +18,8 @@ protocol UserProfileEditPresentable: Presentable {
 	
 	func updateUsername(_ name: String)
 	func updateUserSex(_ sex: Sex)
+	
+	func userNameIsEmpty()
 }
 
 protocol UserProfileEditInteractorDependency {
@@ -68,7 +70,12 @@ extension UserProfileEditInteractor {
 		listener?.userProfileEditBackButtonDidTap()
 	}
 	
-	func didTapEndEditingButton() {
-		listener?.userProfileEndEditing()
+	func didTapEndEditingButton(name: String, sex: Sex) {
+		print("\(name), \(sex)")
+		if name.isEmpty {
+			presenter.userNameIsEmpty()
+		} else {
+			listener?.userProfileEndEditing()
+		}
 	}
 }

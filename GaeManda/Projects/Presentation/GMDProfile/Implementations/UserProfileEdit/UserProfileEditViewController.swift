@@ -19,7 +19,7 @@ import GMDUtils
 protocol UserProfileEditPresentableListener: AnyObject {
 	func viewWillAppear()
 	func didTapBackbutton()
-	func didTapEndEditingButton()
+	func didTapEndEditingButton(name: String, sex: Sex)
 }
 
 final class UserProfileEditViewController:
@@ -29,6 +29,7 @@ final class UserProfileEditViewController:
 	weak var listener: UserProfileEditPresentableListener?
 	private let disposeBag = DisposeBag()
 	
+	var userGender: Sex = .male
 	// MARK: - Constant Properties
 	let maxTextCount = 20
 	
@@ -199,12 +200,18 @@ extension UserProfileEditViewController {
 	
 	func updateUserSex(_ sex: Sex) {
 		if sex.rawValue == "남" {
+			userGender = .male
 			maleButton.rx.isSelected.onNext(true)
 			femaleButton.rx.isSelected.onNext(false)
 		} else {
+			userGender = .female
 			femaleButton.rx.isSelected.onNext(true)
 			maleButton.rx.isSelected.onNext(false)
 		}
+	}
+	
+	func userNameIsEmpty() {
+		nickNameTextField.mode = .warning
 	}
 }
 
@@ -219,7 +226,10 @@ private extension UserProfileEditViewController {
 		
 		endEditingButton.rx.tap
 			.bind(with: self) { owner, _ in
-				owner.listener?.didTapEndEditingButton()
+				owner.listener?.didTapEndEditingButton(
+					name: owner.nickNameTextField.text,
+					sex: owner.userGender
+				)
 			}
 			.disposed(by: disposeBag)
 	}
@@ -256,6 +266,7 @@ private extension UserProfileEditViewController {
 		
 		maleButton.rx.tap
 			.bind(with: self) { owner, _ in
+				owner.userGender = .male
 				owner.maleButton.rx.isSelected.onNext(true)
 				owner.femaleButton.rx.isSelected.onNext(false)
 			}
@@ -263,6 +274,7 @@ private extension UserProfileEditViewController {
 		
 		femaleButton.rx.tap
 			.bind(with: self) { owner, _ in
+				owner.userGender = .female
 				owner.femaleButton.rx.isSelected.onNext(true)
 				owner.maleButton.rx.isSelected.onNext(false)
 			}

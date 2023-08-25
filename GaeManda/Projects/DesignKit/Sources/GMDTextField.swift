@@ -23,9 +23,12 @@ public final class GMDTextField: UIView {
 		}
 	}
 	
-	public var text: String = "" {
-		didSet {
-			textField.text = text
+	public var text: String {
+		get {
+			textField.text ?? ""
+		}
+		set {
+			textField.text = newValue
 		}
 	}
 	
