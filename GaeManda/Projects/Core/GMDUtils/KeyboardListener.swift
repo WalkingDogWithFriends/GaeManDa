@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import GMDExtensions
 
 public protocol KeyboardListener {
 	func keyboardWillShow(height: CGFloat)
