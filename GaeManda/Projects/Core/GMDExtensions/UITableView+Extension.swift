@@ -7,8 +7,22 @@
 //
 
 import UIKit
+import RxSwift
 
+// MARK: - UIKit
 public extension UITableView {
+	/// Returns a cell for the table view.
+	/// - Parameters:
+	/// 	- type: The type of cell to return. (ex: `MyCell.self`)
+	/// 	- indexPath: The index path of the cell.
+	func cellForRow<T: UITableViewCell>(_ type: T.Type, at indexPath: IndexPath) -> T {
+		let identifier = String(describing: type)
+		guard let cell = cellForRow(at: indexPath) as? T else {
+			fatalError("identifier: \(identifier) could not be row as \(T.self)")
+		}
+		return cell
+	}
+	
 	/// Registers a cell with the table view.
 	/// - Parameter type: The type of cell to register. (ex: `MyCell.self`)
 	func registerCell<T: UITableViewCell>(_ type: T.Type) {
@@ -41,5 +55,20 @@ public extension UITableView {
 			fatalError("identifier: \(identifier) could not be dequeued as \(T.self)")
 		}
 		return headerFooter
+	}
+}
+
+// MARK: - RxSwift
+extension Reactive where Base: UITableView {
+	public func items<
+		Sequence: Swift.Sequence,
+		Cell: UITableViewCell,
+		Source: ObservableType
+	>(cellType: Cell.Type = Cell.self)
+	-> (_ source: Source)
+	-> (_ configureCell: @escaping (Int, Sequence.Element, Cell) -> Void)
+	-> Disposable
+	where Source.Element == Sequence {
+		return self.items(cellIdentifier: cellType.identifier, cellType: cellType)
 	}
 }
