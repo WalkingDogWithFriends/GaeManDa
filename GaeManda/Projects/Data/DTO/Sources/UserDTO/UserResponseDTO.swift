@@ -17,7 +17,7 @@ public struct UserResponseDTO: Decodable {
 	public var toDomain: User {
 		User(
 			name: name,
-			sex: sex,
+			sex: Sex(rawValue: sex) ?? .male,
 			age: age
 		)
 	}
