@@ -25,6 +25,7 @@ protocol UserProfilePresentable: Presentable {
 	
 	func updateUserName(_ name: String)
 	func updateUserSexAndAge(_ sexAndAge: String)
+	func updateDogs(_ dogs: [Dog])
 }
 
 protocol UserProfileInteractorDependency {
@@ -62,13 +63,16 @@ final class UserProfileInteractor:
 extension UserProfileInteractor {
 	func viewWillAppear() {
 		fetchUser()
+		fetchDogs()
 	}
 	
-	func dogProfileEditButtonDidTap() {
+	func didTapDogProfileEditButton() {
 		router?.dogProfileEditAttach()
 	}
 	
-	func userProfileEditButtonDidTap() {
+	func didTapDogProfileDeleteButton() { }
+	
+	func didTapUserProfileEditButton() {
 		router?.userProfileEditAttach()
 	}
 }
@@ -107,5 +111,13 @@ private extension UserProfileInteractor {
 			.disposeOnDeactivate(interactor: self)
 	}
 	
-	func fetchDogs() { }
+	func fetchDogs() {
+		dependency.userProfileUseCase
+			.dogDependency
+			.fetchDogs(id: 0)
+			.subscribe(with: self) { owner, dogs in
+				owner.presenter.updateDogs(dogs)
+			}
+			.disposeOnDeactivate(interactor: self)
+	}
 }
