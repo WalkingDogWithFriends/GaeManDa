@@ -4,6 +4,7 @@ import DesignKit
 import GMDUtils
 
 final class OnBoardingView: UIView {
+	// MARK: - UI Components
 	private let label: UILabel = {
 		let label = UILabel()
 		label.font = .jalnan20
@@ -12,65 +13,62 @@ final class OnBoardingView: UIView {
 		return label
 	}()
 	
-	private lazy var profileImageView: RoundImageView = {
+	private let profileImageView: RoundImageView = {
 		let imageView = RoundImageView()
 		imageView.backgroundColor = .gray30
 		
 		return imageView
 	}()
 	
-	init(willDisplayImageView: Bool) {
+	// MARK: - Initializers
+	init(
+		willDisplayImageView: Bool = false,
+		title: String
+	) {
+		self.label.text = title
 		super.init(frame: .zero)
-		setupSubViews(willDisplayImageView)
+		setViewHierarchy(willDisplayImageView)
 		setConstraints(willDisplayImageView)
 	}
 	
-	convenience init(
-		willDisplayImageView: Bool,
-		title: String
-	) {
-		self.init(willDisplayImageView: willDisplayImageView)
-		self.label.text = title
-	}
-	
+	@available(*, unavailable)
 	required init?(coder: NSCoder) {
 		fatalError()
 	}
-	
-	private func setupSubViews(_ willDisplayImageView: Bool) {
+}
+
+// MARK: - UI Methods
+private extension OnBoardingView {
+	func setViewHierarchy(_ willDisplayImageView: Bool) {
 		addSubview(label)
 		if willDisplayImageView {
 			addSubview(profileImageView)
 		}
 	}
 	
-	private func setConstraints(_ willDisplayImageView: Bool) {
+	func setConstraints(_ willDisplayImageView: Bool) {
 		if willDisplayImageView {
 			label.snp.makeConstraints { make in
-				make.leading.equalToSuperview().offset(33)
-				make.top.equalToSuperview().offset(119)
+				make.top.leading.trailing.equalToSuperview()
 			}
 			profileImageView.snp.makeConstraints { make in
 				make.top.equalTo(label.snp.bottom).offset(48)
-				make.height.equalTo(140)
-				make.width.equalTo(140)
+				make.width.height.equalTo(140)
 				make.centerX.equalToSuperview()
 				make.bottom.equalToSuperview()
 			}
 		} else {
 			label.snp.makeConstraints { make in
-				make.leading.equalToSuperview().offset(33)
-				make.top.equalToSuperview().offset(119)
-				make.bottom.equalToSuperview()
+				make.edges.equalToSuperview()
 			}
 		}
 	}
 }
 
-// MARK: setter
+// MARK: Setter Methods
 extension OnBoardingView {
 	func setTitleLabel(_ title: String) {
-		self.label.text = title
+		self.label.attributedText = title.titlelg()
 	}
 	
 	func setProfileImage(_ image: UIImage?) {
