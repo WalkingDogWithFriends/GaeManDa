@@ -13,7 +13,7 @@ public final class NavigationControllerable: ViewControllable {
 	public init(root: ViewControllable) {
 		let navigation = UINavigationController(rootViewController: root.uiviewController)
 		self.navigationController = navigation
-		setNavigationBarAppearance()
+		self.navigationController.navigationBar.isHidden = true
 	}
 	
 	public func pushViewControllerable(
@@ -28,17 +28,6 @@ public final class NavigationControllerable: ViewControllable {
 	
 	public func popViewControllerable(animated: Bool) {
 		self.navigationController.popViewController(animated: animated)
-	}
-	
-	private func setNavigationBarAppearance() {
-		let apprearance = UINavigationBarAppearance()
-		
-		apprearance.configureWithOpaqueBackground()
-		apprearance.shadowColor = .clear
-		apprearance.backgroundColor = .systemBackground
-		apprearance.shadowImage = UIImage()
-		apprearance.backgroundImage = UIImage()
-		navigationController.navigationBar.standardAppearance = apprearance
 	}
 }
 
