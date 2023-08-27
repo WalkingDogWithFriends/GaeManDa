@@ -115,6 +115,7 @@ private extension UserProfileInteractor {
 		dependency.userProfileUseCase
 			.dogDependency
 			.fetchDogs(id: 0)
+			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, dogs in
 				owner.presenter.updateDogs(dogs)
 			}

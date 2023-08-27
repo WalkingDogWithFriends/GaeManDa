@@ -34,7 +34,7 @@ extension UserAPI: TargetType {
 		case .fetchUser:
 			return .get
 		case .updateUser:
-			return .post
+			return .put
 		}
 	}
 	
@@ -50,10 +50,10 @@ extension UserAPI: TargetType {
 				age: age,
 				sex: sex
 			)
-
+			
 			return .requestParameters(
 				parameters: requestDTO.toDictionary,
-				encoding: .queryString
+				encoding: .jsonBody
 			)
 		}
 	}

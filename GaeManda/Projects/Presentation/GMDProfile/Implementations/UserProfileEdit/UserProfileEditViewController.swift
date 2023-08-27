@@ -241,7 +241,7 @@ private extension UserProfileEditViewController {
 			.withUnretained(self)
 			.map { owner, text -> String in
 				let maxCount = owner.maxTextCount
-				return owner.trimmingSuffix(text, maxCount: maxCount)
+				return text.trimmingSuffix(with: maxCount)
 			}
 			.bind(to: nickNameTextField.textField.rx.text)
 			.disposed(by: disposeBag)
@@ -284,14 +284,6 @@ private extension UserProfileEditViewController {
 
 // MARK: - UI Logic
 private extension UserProfileEditViewController {
-	func trimmingSuffix(_ text: String, maxCount: Int) -> String {
-		if text.count >= maxCount {
-			let index = text.index(text.startIndex, offsetBy: maxCount)
-			return String(text[..<index])
-		}
-		return text
-	}
-	
 	func calenderButtonDidTap() {
 		print("calenderButtonDidTap")
 	}

@@ -7,6 +7,7 @@
 //
 
 import RIBs
+import RxSwift
 import Entity
 import GMDProfile
 import UseCase
@@ -59,6 +60,7 @@ extension UserProfileEditInteractor {
 		dependency.userProfileUseCase
 			.userDependency
 			.fetchUser(id: 0)
+			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, user in
 				owner.presenter.updateUsername(user.name)
 				owner.presenter.updateUserSex(user.sex)
@@ -71,12 +73,13 @@ extension UserProfileEditInteractor {
 	}
 	
 	func didTapEndEditingButton(name: String, sex: Sex) {
-		print("\(name), \(sex)")
+		debugPrint(name, sex)
 		if name.isEmpty {
 			presenter.userNameIsEmpty()
 		} else {
 			dependency.userProfileUseCase
 				.updateUser(nickName: name, age: 20, sex: sex.rawValue)
+				.observe(on: MainScheduler.instance)
 				.subscribe(with: self) { owner, result in
 					guard result == "success" else { return }
 					owner.listener?.userProfileEndEditing()
