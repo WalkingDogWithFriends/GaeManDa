@@ -15,20 +15,16 @@ protocol AddressSettingPresentableListener: AnyObject {
 }
 
 final class AddressSettingViewController:
-	UIViewController,
+	BaseViewController,
 	AddressSettingPresentable,
 	AddressSettingViewControllable {
+	// MARK: - Properties
 	weak var listener: AddressSettingPresentableListener?
-	private let disposeBag = DisposeBag()
 	
-	private let onBoardingView: OnBoardingView = {
-		let onBoardingView = OnBoardingView(
-			willDisplayImageView: false,
-			title: "사생활 보호를 위해\n집 주소를 입력해주세요!"
-		)
-		
-		return onBoardingView
-	}()
+	// MARK: - UI Components
+	private let navigationBar = GMDNavigationBar(title: "")
+	
+	private let onBoardingView = OnBoardingView(title: "사생활 보호를 위해\n집 주소를 입력해주세요!")
 	
 	private let searchTextField: UnderLineTextField = {
 		let underLineTextField = UnderLineTextField()
@@ -41,31 +37,20 @@ final class AddressSettingViewController:
 		return underLineTextField
 	}()
 	
-	private let loadLocationButton: UIButton = {
-		let button = UIButton()
+	private let buttonConfiguration: UIButton.Configuration = {
 		var configuration = UIButton.Configuration.plain()
-		
-		let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 12, weight: .light)
-		let image = UIImage(
-			systemName: "location.north.circle.fill",
-			withConfiguration: imageConfiguration
-		)
-		configuration.image = image
-		configuration.imagePadding = 10
-		
-		var titleAttribute = AttributedString.init("현재 위치 불러오기")
-		titleAttribute.font = .b12
-		configuration.attributedTitle = titleAttribute
-		
-		configuration.contentInsets = NSDirectionalEdgeInsets(
-			top: 4,
-			leading: 0,
-			bottom: 4,
-			trailing: 0
-		)
+		configuration.image = UIImage.iconGps.withTintColor(.gmdWhite)
+		configuration.imagePadding = 12
+		configuration.attributedTitle = AttributedString("현재 위치 불러오기".attributedString(font: .b12, color: .white))
+		configuration.contentInsets = NSDirectionalEdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0)
 		configuration.background.backgroundColor = .black
 		
-		button.configuration = configuration
+		return configuration
+	}()
+	
+	private lazy var loadLocationButton: UIButton = {
+		let button = UIButton()
+		button.configuration = self.buttonConfiguration
 		button.tintColor = .white
 		button.layer.cornerRadius = 4
 		
@@ -82,71 +67,63 @@ final class AddressSettingViewController:
 	
 	private let noticeLabel: UILabel = {
 		let label = UILabel()
-		label.tintColor = .black
 		let text =
-		"""
-		사생활 보호를 위해 등록된 주소에서 반경 500M 내에는 보호자의 위치가 노출되지 않습니다.
-		주소를 비롯한 보호자의 개인정보는 타인에게 공유되지 않으니 안심하고 서비스를 이용해주세요.
-		"""
+ """
+ 사생활 보호를 위해 등록된 주소에서 반경 500M 내에는
+ 보호자의 위치가 노출되지 않습니다.
+ 주소를 비롯한 보호자의 개인정보는 타인에게 공유되지
+ 않으니 안심하고 서비스를 이용해주세요.
+ """
 		
-		label.font = .r12
 		label.numberOfLines = 0
-		label.adaptFontSpecificText(text, specificText: "반경 500M", font: .b12)
-		
+		label.lineBreakMode = .byWordWrapping
+		label.attributedText = text.attributedString(font: .r12, color: .black, lineSpacing: 12, lineHeightMultiple: 0.73)
 		return label
 	}()
 	
-	private let confirmButton: UIButton = {
-		let button = UIButton()
-		button.setTitle("확인", for: .normal)
-		button.setTitleColor(.white, for: .normal)
-		button.layer.cornerRadius = 4
-		button.backgroundColor = .green100
-		button.titleLabel?.font = .b16
-		
-		return button
-	}()
+	private let confirmButton = ConfirmButton(title: "확인")
 	
+	// MARK: - Life Cycles
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
 	}
 	
+	// MARK: - UI Methods
 	private func setupUI() {
-		view.backgroundColor = .white
-		self.setupBackNavigationButton(
-			target: self,
-			action: #selector(backButtonDidTap)
-		)
-		
-		setupSubviews()
+		setViewHierarchy()
 		setConstraints()
 		bind()
 	}
 	
-	private func setupSubviews() {
-		view.addSubview(onBoardingView)
-		view.addSubview(searchTextField)
-		view.addSubview(loadLocationButton)
-		view.addSubview(mapView)
-		view.addSubview(noticeLabel)
-		view.addSubview(confirmButton)
+	override func setViewHierarchy() {
+		super.setViewHierarchy()
+		contentView.addSubviews(
+			navigationBar, onBoardingView, searchTextField, loadLocationButton, mapView, noticeLabel, confirmButton
+		)
 	}
 	
-	private func setConstraints() {
+	override func setConstraints() {
+		super.setConstraints()
+		navigationBar.snp.makeConstraints { make in
+			make.top.leading.trailing.equalToSuperview()
+			make.height.equalTo(44)
+		}
+		
 		onBoardingView.snp.makeConstraints { make in
-			make.leading.equalToSuperview()
-			make.top.equalToSuperview()
+			make.top.equalTo(navigationBar.snp.bottom).offset(28)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
 		}
 		
 		searchTextField.snp.makeConstraints { make in
-			make.top.equalTo(onBoardingView.snp.bottom).offset(61)
+			make.top.equalTo(onBoardingView.snp.bottom).offset(36)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 		}
 		
 		loadLocationButton.snp.makeConstraints { make in
-			make.top.equalTo(searchTextField.snp.bottom).offset(35)
+			make.top.equalTo(searchTextField.snp.bottom).offset(12)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 			make.height.equalTo(28)
@@ -166,47 +143,44 @@ final class AddressSettingViewController:
 		}
 		
 		confirmButton.snp.makeConstraints { make in
+			make.top.equalTo(noticeLabel.snp.bottom).offset(52)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
-			make.bottom.equalToSuperview().offset(-54)
+			make.bottom.equalToSuperview().offset(-(54 - UIDevice.safeAreaBottomHeight))
 			make.height.equalTo(40)
 		}
 	}
 	
-	private func bind() {
+	override func bind() {
+		super.bind()
 		searchTextField.rx.controlEvent(.editingDidBegin)
 			.withUnretained(self)
-			.bind { owner, _ in
-				owner.searchTextField.endEditing(true)
-			}
-			.disposed(by: disposeBag)
-		
-		searchTextField.rx.controlEvent(.touchDown)
-			.withUnretained(self)
-			.bind { owner, _ in
+			.do(onNext: { owner, _ in
+				if owner.searchTextField.canBecomeFirstResponder {
+					owner.searchTextField.resignFirstResponder()
+				}
+			})
+			.bind(onNext: { owner, _ in
 				owner.listener?.searchTextFieldDidTap()
-			}
+			})
 			.disposed(by: disposeBag)
 		
 		loadLocationButton.rx.tap
-			.withUnretained(self)
-			.bind { owner, _ in
+			.bind(with: self) { owner, _ in
 				owner.listener?.loadLocationButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 		
 		confirmButton.rx.tap
-			.withUnretained(self)
-			.bind { owner, _ in
+			.bind(with: self) { owner, _ in
 				owner.listener?.confirmButtonDidTap()
 			}
 			.disposed(by: disposeBag)
-	}
-}
-
-// MARK: Action
-private extension AddressSettingViewController {
-	@objc func backButtonDidTap() {
-		listener?.backButtonDidTap()
+		
+		navigationBar.backButton.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.listener?.backButtonDidTap()
+			}
+			.disposed(by: disposeBag)
 	}
 }
