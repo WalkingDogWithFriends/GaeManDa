@@ -7,6 +7,7 @@
 //
 
 import RIBs
+import RxSwift
 import Entity
 import GMDProfile
 import GMDUtils
@@ -100,9 +101,10 @@ private extension UserProfileInteractor {
 		dependency.userProfileUseCase
 			.userDependency
 			.fetchUser(id: 0)
+			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, user in
 				let sexAndAge = "\(user.sex.rawValue) \(user.age)세"
-				
+
 				owner.presenter.updateUserName(user.name)
 				owner.presenter.updateUserSexAndAge(sexAndAge)
 			}
