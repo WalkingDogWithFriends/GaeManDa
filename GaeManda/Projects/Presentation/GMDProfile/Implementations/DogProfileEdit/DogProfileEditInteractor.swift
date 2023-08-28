@@ -30,11 +30,14 @@ final class DogProfileEditInteractor:
 	weak var listener: DogProfileEditListener?
 	
 	private let dependency: DogProfileEditInteractorDependency
+	private var editDogId: Int
 	
 	init(
 		presenter: DogProfileEditPresentable,
-		dependency: DogProfileEditInteractorDependency
+		dependency: DogProfileEditInteractorDependency,
+		editDogId: Int
 	) {
+		self.editDogId = editDogId
 		self.dependency = dependency
 		super.init(presenter: presenter)
 		presenter.listener = self

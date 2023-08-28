@@ -29,12 +29,16 @@ public final class DogProfileEditBuilder:
 		super.init(dependency: dependency)
 	}
 	
-	public func build(withListener listener: DogProfileEditListener) -> ViewableRouting {
+	public func build(
+		withListener listener: DogProfileEditListener,
+		selectedDogId: Int
+	) -> ViewableRouting {
 		let component = DogProfileEditComponent(dependency: dependency)
 		let viewController = DogProfileEditViewController()
 		let interactor = DogProfileEditInteractor(
 			presenter: viewController,
-			dependency: component
+			dependency: component,
+			editDogId: selectedDogId
 		)
 		interactor.listener = listener
 		

@@ -67,10 +67,13 @@ extension UserProfileRouter {
 
 // MARK: DogProfileEdit
 extension UserProfileRouter {
-	func dogProfileEditAttach() {
+	func dogProfileEditAttach(selectedId: Int) {
 		if dogProfileEditRouting != nil { return }
 		
-		let router = dogProfileEditBuildable.build(withListener: interactor)
+		let router = dogProfileEditBuildable.build(
+			withListener: interactor,
+			selectedDogId: selectedId
+		)
 		viewController.pushViewController(
 			router.viewControllable,
 			animated: true

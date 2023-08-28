@@ -18,7 +18,7 @@ import GMDUtils
 
 protocol UserProfilePresentableListener: AnyObject {
 	func viewWillAppear()
-	func didTapDogProfileEditButton()
+	func didTapDogProfileEditButton(at id: Int)
 	func didTapDogProfileDeleteButton()
 	func didTapUserProfileEditButton()
 }
@@ -214,7 +214,7 @@ private extension UserProfileViewController {
 	func bind(to cell: DogsCollectionViewCell) {
 		cell.rx.editButtonDidTapped
 			.bind(with: self) { owner, _ in
-				owner.listener?.didTapDogProfileEditButton()
+				owner.listener?.didTapDogProfileEditButton(at: cell.dogID)
 			}
 			.disposed(by: disposeBag)
 		
