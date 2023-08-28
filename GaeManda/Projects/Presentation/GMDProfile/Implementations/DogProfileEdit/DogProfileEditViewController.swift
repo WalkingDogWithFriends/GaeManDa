@@ -181,11 +181,7 @@ extension DogProfileEditViewController: KeyboardListener {
 		
 		let firstResponder = UIResponder.currentFirstResponder
 		
-		/// TextField
-		if let textField = firstResponder as? UITextField {
-			self.scrollView.scrollRectToVisible(textField.frame, animated: false)
-			/// TextView
-		} else if let textView = firstResponder as? UITextView {
+		if let textView = firstResponder as? UITextView {
 			let textViewTopFromScrollView = textView.convert(textView.frame, to: scrollView).maxY
 			// locate textView Top to top of scrollView
 			let moveValue = textViewTopFromScrollView - (scrollView.bounds.size.height / 2)
