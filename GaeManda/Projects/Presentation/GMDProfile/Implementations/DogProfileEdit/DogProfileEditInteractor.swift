@@ -16,6 +16,8 @@ protocol DogProfileEditRouting: ViewableRouting { }
 
 protocol DogProfileEditPresentable: Presentable {
 	var listener: DogProfileEditPresentableListener? { get set }
+	
+	func updateDogDashBoard(doges: [Dog], editIndex: Int)
 }
 
 protocol DogProfileEditInteractorDependency {
@@ -54,6 +56,19 @@ final class DogProfileEditInteractor:
 
 // MARK: - PresentableListener
 extension DogProfileEditInteractor {
+	func viewWillAppear() {
+		dependency.userProfileUseCase
+			.fetchDogs(id: 0)
+			.observe(on: MainScheduler.instance)
+			.subscribe(with: self) { owner, dogs in
+				owner.presenter.updateDogDashBoard(
+					doges: dogs,
+					editIndex: owner.editDogId
+				)
+			}
+			.disposeOnDeactivate(interactor: self)
+	}
+	
 	func didTapBackButton() {
 		listener?.dogProfileEditBackButtonDidTap()
 	}

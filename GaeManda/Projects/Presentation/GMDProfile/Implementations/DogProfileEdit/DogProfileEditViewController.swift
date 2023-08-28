@@ -12,10 +12,12 @@ import RxCocoa
 import RxSwift
 import SnapKit
 import DesignKit
+import Entity
 import GMDExtensions
 import GMDUtils
 
 protocol DogProfileEditPresentableListener: AnyObject {
+	func viewWillAppear()
 	func didTapBackButton()
 }
 
@@ -26,6 +28,8 @@ final class DogProfileEditViewController:
 	// MARK: - Properties
 	weak var listener: DogProfileEditPresentableListener?
 	private let disposeBag = DisposeBag()
+	private var dogs: [Dog] = []
+	private var editIndex: Int = 0
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "프로필 수정")
@@ -67,6 +71,7 @@ final class DogProfileEditViewController:
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+		listener?.viewWillAppear()
 		
 		hideTabBar()
 	}
@@ -83,6 +88,7 @@ private extension DogProfileEditViewController {
 	func setupUI() {
 		view.backgroundColor = .white
 		navigationController?.navigationBar.isHidden = true
+		dogProfileDashBoard.rx.setDataSource(self).disposed(by: disposeBag)
 		
 		setViewHierarchy()
 		setConstraints()
@@ -101,8 +107,9 @@ private extension DogProfileEditViewController {
 		}
 		
 		dogProfileDashBoard.snp.makeConstraints { make in
-			make.leading.equalToSuperview().offset(23)
-			make.top.equalToSuperview().offset(107)
+			make.leading.equalToSuperview().offset(24)
+			make.trailing.equalToSuperview()
+			make.top.equalTo(navigationBar.snp.bottom).offset(16)
 			make.height.equalTo(56)
 		}
 		
@@ -128,26 +135,18 @@ private extension DogProfileEditViewController {
 	}
 }
 
+// MARK: - UI Update
+extension DogProfileEditViewController {
+	func updateDogDashBoard(doges: [Dog], editIndex: Int) {
+		self.dogs = doges
+		self.editIndex = editIndex
+		dogProfileDashBoard.reloadData()
+	}
+}
+
 // MARK: - Action Bind
 private extension DogProfileEditViewController {
 	func bind() {
-		let images = [
-			UIImage(systemName: "person.crop.circle"),
-			UIImage(systemName: "person.crop.circle")
-		]
-		
-		Observable<[UIImage?]>.of(images)
-			.bind(to: dogProfileDashBoard.rx.items(
-				cellIdentifier: DogProfileDashBoardCell.identifier,
-				cellType: DogProfileDashBoardCell.self
-			)) { (index, item, cell) in
-				cell.configuration(image: item)
-				if index == 1 {
-					cell.isEdited = true
-				}
-			}
-			.disposed(by: disposeBag)
-		
 		navigationBar.backButton.rx.tap
 			.bind(with: self) { owner, _ in
 				owner.listener?.didTapBackButton()
@@ -166,6 +165,23 @@ private extension DogProfileEditViewController {
 private extension DogProfileEditViewController {
 	func calenderButtonDidTap() {
 		print("calenderButtonDidTap")
+	}
+}
+
+// MARK: UICollectionViewDataSource
+extension DogProfileEditViewController: UICollectionViewDataSource {
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		return dogs.count
+	}
+	
+	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		let cell = collectionView.dequeueCell(DogProfileDashBoardCell.self, for: indexPath)
+		
+		let dog = dogs[indexPath.row]
+		cell.configure(with: dog)
+		cell.isEdited = dog.id == editIndex ? true : false
+		
+		return cell
 	}
 }
 
