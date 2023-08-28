@@ -7,12 +7,19 @@
 //
 
 import RIBs
+import RxSwift
+import Entity
 import GMDProfile
+import UseCase
 
 protocol DogProfileEditRouting: ViewableRouting { }
 
 protocol DogProfileEditPresentable: Presentable {
 	var listener: DogProfileEditPresentableListener? { get set }
+}
+
+protocol DogProfileEditInteractorDependency {
+	var userProfileUseCase: UserProfileUseCase { get }
 }
 
 final class DogProfileEditInteractor:
@@ -22,7 +29,13 @@ final class DogProfileEditInteractor:
 	weak var router: DogProfileEditRouting?
 	weak var listener: DogProfileEditListener?
 	
-	override init(presenter: DogProfileEditPresentable) {
+	private let dependency: DogProfileEditInteractorDependency
+	
+	init(
+		presenter: DogProfileEditPresentable,
+		dependency: DogProfileEditInteractorDependency
+	) {
+		self.dependency = dependency
 		super.init(presenter: presenter)
 		presenter.listener = self
 	}

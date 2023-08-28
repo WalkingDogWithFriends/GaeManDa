@@ -8,10 +8,19 @@
 
 import RIBs
 import GMDProfile
+import UseCase
 
-public protocol DogProfileEditDependency: Dependency { }
+public protocol DogProfileEditDependency: Dependency {
+	var userProfileUseCase: UserProfileUseCase { get }
+}
 
-final class DogProfileEditComponent: Component<DogProfileEditDependency> { }
+final class DogProfileEditComponent:
+	Component<DogProfileEditDependency>,
+	DogProfileEditInteractorDependency {
+	var userProfileUseCase: UserProfileUseCase {
+		dependency.userProfileUseCase
+	}
+}
 
 public final class DogProfileEditBuilder:
 	Builder<DogProfileEditDependency>,
@@ -23,8 +32,12 @@ public final class DogProfileEditBuilder:
 	public func build(withListener listener: DogProfileEditListener) -> ViewableRouting {
 		let component = DogProfileEditComponent(dependency: dependency)
 		let viewController = DogProfileEditViewController()
-		let interactor = DogProfileEditInteractor(presenter: viewController)
+		let interactor = DogProfileEditInteractor(
+			presenter: viewController,
+			dependency: component
+		)
 		interactor.listener = listener
+		
 		return DogProfileEditRouter(
 			interactor: interactor,
 			viewController: viewController
