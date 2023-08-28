@@ -15,6 +15,9 @@ import Entity
 import GMDExtensions
 
 final class DogsCollectionViewCell: UICollectionViewCell {
+	// MARK: - Properties
+	var dogID: Int = 0
+	
 	// MARK: - UI Components
 	private let profileImageView: RoundImageView = {
 		let imageView = RoundImageView()
@@ -138,7 +141,8 @@ final class DogsCollectionViewCell: UICollectionViewCell {
 	
 	// MARK: - Configure
 	func configure(with dog: Dog) {
-		titleLabel.text = "\(dog.name) (\(dog.sex) / \(dog.age)세)"
+		dogID = dog.id
+		titleLabel.text = "\(dog.name) (\(dog.sex.rawValue) / \(dog.age)세)"
 		
 		weightValueLabel.text = "\(dog.weight)kg"
 		neuteringValueLabel.text = dog.didNeutered == true ? "했어요" : "안 했어요"

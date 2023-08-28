@@ -10,19 +10,23 @@ import Foundation
 import Entity
 
 public struct DogResponseDTO: Decodable {
+	public let id: Int
 	public let name: String
 	public let sex: String
 	public let age: String
 	public let weight: String
 	public let didNeutered: Bool
-	
+	public let character: String
+
 	public var toDomain: Dog {
 		Dog(
+			id: id,
 			name: name,
-			sex: sex,
+			sex: Sex(rawValue: sex) ?? .male,
 			age: age,
 			weight: weight,
-			didNeutered: didNeutered
+			didNeutered: didNeutered,
+			character: character
 		)
 	}
 }
@@ -33,25 +37,31 @@ extension DogResponseDTO {
 	"""
 	[
 		{
+			"id": 1,
 			"name": "자몽",
 			"sex": "여",
 			"age": "7",
 			"weight": "30",
-			"didNeutered": false
+			"didNeutered": false,
+			"character": "저희 강아지는 잘 물어요"
 		},
 		{
+			"id": 2,
 			"name": "얌이",
 			"sex": "남",
 			"age": "2",
 			"weight": "12",
-			"didNeutered": true
+			"didNeutered": true,
+			"character": "저희 강아지는 온순해요"
 		},
 		{
+			"id": 3,
 			"name": "루비",
 			"sex": "여",
 			"age": "5",
 			"weight": "22",
-			"didNeutered": false
+			"didNeutered": false,
+			"character": "저희 강아지는 활발해요"
 		}
 	]
 	"""
