@@ -39,7 +39,7 @@ final class DogProfileDashBoardCell: UICollectionViewCell {
 		
 		imageView.snp.makeConstraints { make in
 			make.height.width.equalTo(56)
-			make.top.bottom.leading.trailing.equalToSuperview()
+			make.edges.trailing.equalToSuperview()
 		}
 	}
 }

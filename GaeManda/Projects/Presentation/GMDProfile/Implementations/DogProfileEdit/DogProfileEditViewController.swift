@@ -23,16 +23,16 @@ final class DogProfileEditViewController:
 	UIViewController,
 	DogProfileEditPresentable,
 	DogProfileEditViewControllable {
+	// MARK: - Properties
 	weak var listener: DogProfileEditPresentableListener?
 	private let disposeBag = DisposeBag()
 	
-	// MARK: UI Property
+	// MARK: - UI Components
+	private let navigationBar = GMDNavigationBar(title: "프로필 수정")
+	
 	private let dogProfileDashBoard: DogProfileDashBoard = {
 		let collectionView = DogProfileDashBoard()
-		collectionView.register(
-			DogProfileDashBoardCell.self,
-			forCellWithReuseIdentifier: DogProfileDashBoardCell.identifier
-		)
+		collectionView.registerCell(DogProfileDashBoardCell.self)
 		
 		return collectionView
 	}()
@@ -57,12 +57,12 @@ final class DogProfileEditViewController:
 		return button
 	}()
 	
-	// MARK: Life Cycle
+	// MARK: - Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
 		setupUI()
-		addKeyboardObserver()
+		registerKeyboardNotification()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -70,33 +70,36 @@ final class DogProfileEditViewController:
 		
 		hideTabBar()
 	}
+	
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		
+		removeKeyboardNotification()
+	}
 }
 
-// MARK: Setting UI
+// MARK: - UI Setting
 private extension DogProfileEditViewController {
 	func setupUI() {
 		view.backgroundColor = .white
-		setupBackNavigationButton(
-			target: self,
-			action: #selector(backbuttonDidTap)
-		)
+		navigationController?.navigationBar.isHidden = true
 		
-		title = "프로필 수정"
-		setNavigationTitleFont(.b20)
-		
-		setupSubViews()
+		setViewHierarchy()
 		setConstraints()
 		bind()
 	}
 	
-	func setupSubViews() {
-		view.addSubview(dogProfileDashBoard)
-		view.addSubview(profileImageView)
-		view.addSubview(scrollView)
-		view.addSubview(endEditingButton)
+	func setViewHierarchy() {
+		view.addSubviews(navigationBar, dogProfileDashBoard, profileImageView, scrollView, endEditingButton)
 	}
 	
 	func setConstraints() {
+		navigationBar.snp.makeConstraints { make in
+			make.leading.trailing.equalToSuperview()
+			make.top.equalTo(view.safeAreaLayoutGuide)
+			make.height.equalTo(44)
+		}
+		
 		dogProfileDashBoard.snp.makeConstraints { make in
 			make.leading.equalToSuperview().offset(23)
 			make.top.equalToSuperview().offset(107)
@@ -104,7 +107,7 @@ private extension DogProfileEditViewController {
 		}
 		
 		profileImageView.snp.makeConstraints { make in
-			make.top.equalTo(dogProfileDashBoard.snp.bottom).offset(23)
+			make.top.equalTo(dogProfileDashBoard.snp.bottom).offset(20)
 			make.centerX.equalToSuperview()
 			make.width.height.equalTo(140)
 		}
@@ -113,7 +116,7 @@ private extension DogProfileEditViewController {
 			make.top.equalTo(profileImageView.snp.bottom).offset(32)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
-			make.bottom.equalTo(endEditingButton.snp.top).offset(-26)
+			make.bottom.equalTo(endEditingButton.snp.top).offset(-24)
 		}
 		
 		endEditingButton.snp.makeConstraints { make in
@@ -125,7 +128,7 @@ private extension DogProfileEditViewController {
 	}
 }
 
-// MARK: Bind
+// MARK: - Action Bind
 private extension DogProfileEditViewController {
 	func bind() {
 		let images = [
@@ -145,65 +148,43 @@ private extension DogProfileEditViewController {
 			}
 			.disposed(by: disposeBag)
 		
+		navigationBar.backButton.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.listener?.backbuttonDidTap()
+			}
+			.disposed(by: disposeBag)
+		
 		scrollView.rx.didTapCalenderButton
-			.withUnretained(self)
-			.bind { owner, _ in
+			.bind(with: self) { owner, _ in
 				owner.calenderButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 	}
 }
 
-// MARK: Action
-
+// MARK: - UI Logic
 private extension DogProfileEditViewController {
-	@objc func backbuttonDidTap() {
-		listener?.backbuttonDidTap()
-	}
-	
 	func calenderButtonDidTap() {
 		print("calenderButtonDidTap")
 	}
 }
- 
-// MARK: Keyboard Respond
-private extension DogProfileEditViewController {
-	/// Register Keyboard notifications
-	func addKeyboardObserver() {
-		NotificationCenter.default.addObserver(
-			self,
-			selector: #selector(keyboardWillShow),
-			name: UIResponder.keyboardWillShowNotification,
-			object: nil
-		)
-		NotificationCenter.default.addObserver(
-			self,
-			selector: #selector(keyboardWillHide),
-			name: UIResponder.keyboardWillHideNotification,
-			object: nil
-		)
-	}
-	
-	@objc func keyboardWillShow(_ notification: Notification) {
-		guard let userInfo = notification.userInfo,
-					let keyboardSize = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
-		else {
-			return
-		}
-		let keyboardHeight = keyboardSize.height
+
+// MARK: - KeyboardListener
+extension DogProfileEditViewController: KeyboardListener {
+	func keyboardWillShow(height: CGFloat) {
 		let scrollviewBottom = scrollView.convert(scrollView.bounds, to: view).maxY
 		let bottomFromSuperView = view.frame.size.height - scrollviewBottom
 		let padding: CGFloat = 20
 		
 		/// add Padding from Scroll View Bottom to enable scroll all contents
-		scrollView.contentInset.bottom = keyboardHeight - bottomFromSuperView + padding
+		scrollView.contentInset.bottom = height - bottomFromSuperView + padding
 		
 		let firstResponder = UIResponder.currentFirstResponder
 		
 		/// TextField
 		if let textField = firstResponder as? UITextField {
 			self.scrollView.scrollRectToVisible(textField.frame, animated: false)
-		/// TextView
+			/// TextView
 		} else if let textView = firstResponder as? UITextView {
 			let textViewTopFromScrollView = textView.convert(textView.frame, to: scrollView).maxY
 			// locate textView Top to top of scrollView
@@ -214,7 +195,7 @@ private extension DogProfileEditViewController {
 		}
 	}
 	
-	@objc func keyboardWillHide() {
+	func keyboardWillHide() {
 		scrollView.contentInset = .zero
 	}
 }
