@@ -16,7 +16,7 @@ import GMDExtensions
 import GMDUtils
 
 protocol DogProfileEditPresentableListener: AnyObject {
-	func backbuttonDidTap()
+	func didTapBackButton()
 }
 
 final class DogProfileEditViewController:
@@ -150,7 +150,7 @@ private extension DogProfileEditViewController {
 		
 		navigationBar.backButton.rx.tap
 			.bind(with: self) { owner, _ in
-				owner.listener?.backbuttonDidTap()
+				owner.listener?.didTapBackButton()
 			}
 			.disposed(by: disposeBag)
 		

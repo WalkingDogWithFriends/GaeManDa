@@ -36,9 +36,9 @@ final class DogProfileEditInteractor:
 	}
 }
 
-// MARK: PresentableListener
+// MARK: - PresentableListener
 extension DogProfileEditInteractor {
-	func backbuttonDidTap() {
+	func didTapBackButton() {
 		listener?.dogProfileEditBackButtonDidTap()
 	}
 }
