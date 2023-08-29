@@ -12,14 +12,15 @@ import RxCocoa
 
 public final class ConfirmButton: UIButton {
 	// MARK: - Properties
-	public override var isEnabled: Bool {
+	public var isPositive: Bool {
 		didSet {
-			isEnabled ? buttonEnable() : buttonDisable()
+			isPositive ? setPositiveState() : setNegativeState()
 		}
 	}
 	
 	// MARK: - Initializers
 	public init(title: String) {
+		self.isPositive = false
 		super.init(frame: .zero)
 		
 		self.layer.cornerRadius = 4
@@ -36,24 +37,24 @@ public final class ConfirmButton: UIButton {
 	}
 	
 	// MARK: - Methods
-	private func buttonEnable() {
+	private func setPositiveState() {
 		backgroundColor = .green100
 	}
 	
-	private func buttonDisable() {
+	private func setNegativeState() {
 		backgroundColor = .gray60
 	}
 }
 
 public extension Reactive where Base: ConfirmButton {
-	var isEnabled: ControlProperty<Bool> {
+	var isPositive: ControlProperty<Bool> {
 		return controlProperty(
 			editingEvents: [.allEditingEvents, .valueChanged],
 			getter: { button in
-				button.isEnabled
+				button.isPositive
 			},
-			setter: { button, isEnabled in
-				button.isEnabled = isEnabled
+			setter: { button, isPositive in
+				button.isPositive = isPositive
 			}
 		)
 	}
