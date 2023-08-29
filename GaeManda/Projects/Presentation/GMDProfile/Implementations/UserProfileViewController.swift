@@ -197,6 +197,7 @@ extension UserProfileViewController {
 		collectionView.isScrollEnabled = dogs.count == 1 ? false : true
 		scrollCollectionView(at: 1, at: .right)
 		indicatorView.indicatorCount = dogs.count
+		indicatorView.collectionViewDidChange(index: 0)
 	}
 }
 
