@@ -93,6 +93,10 @@ extension UserProfileInteractor {
 	func dogProfileEditBackButtonDidTap() {
 		router?.dogProfileEditDetach()
 	}
+	
+	func dogProfileEndEditing() {
+		router?.dogProfileEditDetach()
+	}
 }
 
 // MARK: - Fetch Data From Dependency

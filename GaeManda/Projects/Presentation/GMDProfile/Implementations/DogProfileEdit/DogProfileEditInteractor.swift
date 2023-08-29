@@ -23,6 +23,9 @@ protocol DogProfileEditPresentable: Presentable {
 	func updateDogWeight(_ weight: String)
 	func updateDogNeutered(_ isNeutered: Bool)
 	func updateDogCharacter(_ character: String)
+	
+	func dogNameIsEmpty()
+	func dogWeightIsEmpty()
 }
 
 protocol DogProfileEditInteractorDependency {
@@ -67,6 +70,19 @@ extension DogProfileEditInteractor {
 	
 	func didTapBackButton() {
 		listener?.dogProfileEditBackButtonDidTap()
+	}
+	
+	func didTapEndEditButton(dog: Dog) {
+		if !dog.name.isEmpty && !dog.weight.isEmpty {
+			listener?.dogProfileEndEditing()
+		}
+		
+		if dog.name.isEmpty {
+			presenter.dogNameIsEmpty()
+		}
+		if dog.weight.isEmpty {
+			presenter.dogWeightIsEmpty()
+		}
 	}
 }
 

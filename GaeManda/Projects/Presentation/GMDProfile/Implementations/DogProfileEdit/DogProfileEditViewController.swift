@@ -19,6 +19,7 @@ import GMDUtils
 protocol DogProfileEditPresentableListener: AnyObject {
 	func viewWillAppear()
 	func didTapBackButton()
+	func didTapEndEditButton(dog: Dog)
 }
 
 final class DogProfileEditViewController:
@@ -29,11 +30,7 @@ final class DogProfileEditViewController:
 	weak var listener: DogProfileEditPresentableListener?
 	private let disposeBag = DisposeBag()
 	private var dogs: [Dog] = []
-	private var dogSex: Sex = .male
-	private var dogWeight: String = ""
-	private var dogDidNetured: Bool = true
-	private var dogCharacter: String = ""
-	private var editIndex: Int = 0
+	private var editDogId: Int = 0
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "프로필 수정")
@@ -143,7 +140,7 @@ private extension DogProfileEditViewController {
 extension DogProfileEditViewController {
 	func updateDogDashBoard(doges: [Dog], editIndex: Int) {
 		self.dogs = doges
-		self.editIndex = editIndex
+		self.editDogId = editIndex
 		dogProfileDashBoard.reloadData()
 	}
 	
@@ -154,8 +151,8 @@ extension DogProfileEditViewController {
 	}
 	
 	func updateDogSex(_ sex: Sex) {
-		dogSex = sex
-		if dogSex == .male {
+		scrollView.dogSex = sex
+		if sex == .male {
 			scrollView.maleButton.rx.isSelected.onNext(true)
 			scrollView.femaleButton.rx.isSelected.onNext(false)
 		} else {
@@ -170,7 +167,7 @@ extension DogProfileEditViewController {
 	}
 	
 	func updateDogNeutered(_ isNeutered: Bool) {
-		self.dogDidNetured = isNeutered
+		scrollView.dogNeutered = isNeutered
 		if isNeutered == true {
 			scrollView.didNeuterButton.rx.isSelected.onNext(true)
 			scrollView.didNotNeuterButton.rx.isSelected.onNext(false)
@@ -181,9 +178,16 @@ extension DogProfileEditViewController {
 	}
 	
 	func updateDogCharacter(_ character: String) {
-		self.dogCharacter = character
 		// TODO: GMDTextView 리팩토링 후 수정
 		scrollView.characterTextView.textView.text = character
+	}
+	
+	func dogNameIsEmpty() {
+		scrollView.nickNameTextField.mode = .warning
+	}
+	
+	func dogWeightIsEmpty() {
+		scrollView.weightTextField.mode = .warning
 	}
 }
 
@@ -199,6 +203,22 @@ private extension DogProfileEditViewController {
 		scrollView.rx.didTapCalenderButton
 			.bind(with: self) { owner, _ in
 				owner.calenderButtonDidTap()
+			}
+			.disposed(by: disposeBag)
+		
+		endEditingButton.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.listener?.didTapEndEditButton(
+					dog: Dog(
+						id: owner.editDogId,
+						name: owner.scrollView.nickNameTextField.text,
+						sex: owner.scrollView.dogSex,
+						age: "12",
+						weight: owner.scrollView.weightTextField.text,
+						didNeutered: owner.scrollView.dogNeutered,
+						character: owner.scrollView.characterTextView.textView.text
+					)
+				)
 			}
 			.disposed(by: disposeBag)
 	}
@@ -222,7 +242,7 @@ extension DogProfileEditViewController: UICollectionViewDataSource {
 		
 		let dog = dogs[indexPath.row]
 		cell.configure(with: dog)
-		cell.isEdited = dog.id == editIndex ? true : false
+		cell.isEdited = dog.id == editDogId ? true : false
 		
 		return cell
 	}

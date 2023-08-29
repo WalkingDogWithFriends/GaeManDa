@@ -21,8 +21,8 @@ enum ScrollViewConstant {
 final class DogProfileEditScrollView: UIScrollView {
 	private let disposeBag = DisposeBag()
 	
-	var genderDidChanged = BehaviorRelay<Sex>(value: .male)
-	var neuterDidChanged = BehaviorRelay<Bool>(value: true)
+	var dogSex: Sex = .male
+	var dogNeutered: Bool = true
 	
 	// MARK: - UI Components
 	private let contentView: UIStackView = {
@@ -272,7 +272,7 @@ private extension DogProfileEditScrollView {
 	func buttonBind() {
 		maleButton.rx.tap
 			.bind(with: self) { owner, _ in
-				owner.genderDidChanged.accept(.male)
+				owner.dogSex = .male
 				owner.maleButton.rx.isSelected.onNext(true)
 				owner.femaleButton.rx.isSelected.onNext(false)
 			}
@@ -280,7 +280,7 @@ private extension DogProfileEditScrollView {
 		
 		femaleButton.rx.tap
 			.bind(with: self) { owner, _ in
-				owner.genderDidChanged.accept(.female)
+				owner.dogSex = .female
 				owner.femaleButton.rx.isSelected.onNext(true)
 				owner.maleButton.rx.isSelected.onNext(false)
 			}
@@ -288,7 +288,7 @@ private extension DogProfileEditScrollView {
 		
 		didNeuterButton.rx.tap
 			.bind(with: self) { owner, _ in
-				owner.neuterDidChanged.accept(true)
+				owner.dogNeutered = true
 				owner.didNeuterButton.rx.isSelected.onNext(true)
 				owner.didNotNeuterButton.rx.isSelected.onNext(false)
 			}
@@ -296,7 +296,7 @@ private extension DogProfileEditScrollView {
 		
 		didNotNeuterButton.rx.tap
 			.bind(with: self) { owner, _ in
-				owner.neuterDidChanged.accept(false)
+				owner.dogNeutered = false
 				owner.didNotNeuterButton.rx.isSelected.onNext(true)
 				owner.didNeuterButton.rx.isSelected.onNext(false)
 			}
