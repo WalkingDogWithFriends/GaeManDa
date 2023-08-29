@@ -72,6 +72,13 @@ import SwiftUI
 		return font
 	}
 	
+	{{accessModifier}} var _13: UIFont {
+		guard let font = Font(font: self, size: 13) else {
+			fatalError("Unable to initialize font '\\(name)' (\\(family))")
+		}
+		return font
+	}
+	
 	{{accessModifier}} var _12: UIFont {
 		guard let font = Font(font: self, size: 12) else {
 			fatalError("Unable to initialize font '\\(name)' (\\(family))")
@@ -184,6 +191,9 @@ import SwiftUI
 	static var b15: UIFont {
 		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.bold._15
 	}
+	static var b13: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.bold._13
+	}
 	static var b12: UIFont {
 		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.bold._12
 	}
@@ -203,6 +213,9 @@ import SwiftUI
 	static var r15: UIFont {
 		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._15
 	}
+	static var r13: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._13
+	}
 	static var r12: UIFont {
 		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._12
 	}
@@ -211,6 +224,27 @@ import SwiftUI
 	}
 	static var r8: UIFont {
 		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.regular._8
+	}
+	static var l20: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.light._20
+	}
+	static var l16: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.light._16
+	}
+	static var l15: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.light._15
+	}
+	static var l13: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.light._13
+	}
+	static var l12: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.light._12
+	}
+	static var l10: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.light._10
+	}
+	static var l8: UIFont {
+		{{param.name}}FontFamily.{{family.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}.light._8
 	}
 	{% endfor %}
 }

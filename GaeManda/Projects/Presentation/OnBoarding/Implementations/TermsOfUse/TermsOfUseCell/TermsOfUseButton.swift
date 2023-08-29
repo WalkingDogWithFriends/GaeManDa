@@ -7,76 +7,94 @@
 //
 
 import UIKit
+import RxSwift
+import RxGesture
 import SnapKit
 import DesignKit
 
 final class TermsOfUseButton: UIView {
-	lazy var isChecked: Bool = false {
+	// MARK: - Properties
+	var isChecked: Bool {
 		didSet {
 			checkButton.tintColor = isChecked ? .green100 : .gray70
 		}
 	}
 	
-	let checkButton: UIButton = {
+	// MARK: - UI Components
+	private let stackView: UIStackView = {
+		let stackView = UIStackView()
+		stackView.axis = .horizontal
+		stackView.spacing = 12
+		stackView.alignment = .leading
+		
+		return stackView
+	}()
+	
+	private let checkButton: UIButton = {
 		let button = UIButton()
 		let image = UIImage(systemName: "checkmark.circle")
 		button.setImage(image, for: .normal)
 		button.tintColor = .gray70
+		button.isUserInteractionEnabled = false
 		
 		return button
 	}()
 	
-	let titleLabel: UILabel = {
-		let label = UILabel()
-		label.tintColor = .black
-		label.font = .r16
-		
-		return label
-	}()
+	private	let titleLabel = UILabel()
 	
-	init() {
+	// MARK: - Initializers
+	init(title: String = "") {
+		self.isChecked = false
 		super.init(frame: .zero)
-		setupUI()
-	}
-	
-	convenience init(title: String) {
-		self.init()
 		setTitle(title)
-	}
-	
-	required init?(coder: NSCoder) {
-		super.init(coder: coder)
 		setupUI()
 	}
 	
-	private func setupUI() {
+	@available(*, unavailable)
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+}
+
+// MARK: - UI Methods
+private extension TermsOfUseButton {
+	func setupUI() {
 		layer.cornerRadius = 4
-		setupSubviews()
+		setViewHierarchy()
 		setConstraints()
 	}
 	
-	private func setupSubviews() {
-		addSubview(checkButton)
-		addSubview(titleLabel)
+	func setViewHierarchy() {
+		addSubview(stackView)
+		stackView.addArrangedSubviews(checkButton, titleLabel)
 	}
-			
-	private func setConstraints() {
-		checkButton.snp.makeConstraints { make in
-			make.leading.equalToSuperview().offset(12)
-			make.width.height.equalTo(24)
+	
+	func setConstraints() {
+		stackView.snp.makeConstraints { make in
 			make.top.equalToSuperview().offset(8)
 			make.bottom.equalToSuperview().offset(-8)
+			make.leading.equalToSuperview().offset(12)
+			make.trailing.equalToSuperview().offset(-12)
+		}
+		
+		checkButton.snp.makeConstraints { make in
+			make.width.equalTo(checkButton.snp.height)
+			make.centerY.equalToSuperview()
 		}
 		
 		titleLabel.snp.makeConstraints { make in
-			make.leading.equalTo(checkButton.snp.trailing).offset(12)
 			make.centerY.equalToSuperview()
 		}
 	}
 }
 
+// MARK: - Internal Methods
 extension TermsOfUseButton {
 	func setTitle(_ title: String) {
-		self.titleLabel.text = title
+		self.titleLabel.attributedText = title.attributedString(
+			font: .r16,
+			color: .black,
+			lineSpacing: -0.5
+		)
 	}
 }

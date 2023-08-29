@@ -3,9 +3,9 @@ import RIBs
 import RxCocoa
 import RxSwift
 import SnapKit
+import DesignKit
 import Entity
 import GMDUtils
-import DesignKit
 
 protocol TermsOfUsePresentableListener: AnyObject {
 	func confirmButtonDidTap()
@@ -15,22 +15,16 @@ final class TermsOfUseViewController:
 	UIViewController,
 	TermsOfUsePresentable,
 	TermsOfUseViewControllable {
+	// MARK: - Properties
 	weak var listener: TermsOfUsePresentableListener?
 	private let disposeBag = DisposeBag()
 	
-	private let onBoardingView: OnBoardingView = {
-		let onBoardingView = OnBoardingView(
-			willDisplayImageView: false,
-			title: "아래 약관에 동의해주세요!"
-		)
-		
-		return onBoardingView
-	}()
+	// MARK: - UI Components
+	private let onBoardingView = OnBoardingView(title: "아래 약관에 동의해주세요!")
 	
 	private let agreeAllButton: TermsOfUseButton = {
 		let button = TermsOfUseButton(title: "약관 전체 동의")
 		button.backgroundColor = .gray30
-		button.checkButton.titleLabel?.font = .b16
 		
 		return button
 	}()
@@ -41,6 +35,7 @@ final class TermsOfUseViewController:
 		tableView.rowHeight = UITableView.automaticDimension
 		tableView.estimatedRowHeight = 46
 		tableView.separatorStyle = .none
+		tableView.isScrollEnabled = false
 		
 		return tableView
 	}()
@@ -56,38 +51,40 @@ final class TermsOfUseViewController:
 		return button
 	}()
 	
+	// MARK: - Life Cycles
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
 	}
-	
-	private func setupUI() {
+}
+
+// MARK: - UI Methods
+private extension TermsOfUseViewController {
+	func setupUI() {
 		view.backgroundColor = .white
-		
-		setupSubviews()
+		setViewHierarchy()
 		setConstraints()
 		bind()
 	}
 	
-	private func setupSubviews() {
-		view.addSubview(onBoardingView)
-		view.addSubview(agreeAllButton)
-		view.addSubview(tableView)
-		view.addSubview(confirmButton)
+	func setViewHierarchy() {
+		view.addSubviews(onBoardingView, agreeAllButton, tableView, confirmButton)
 	}
 	
-	private func setConstraints() {
+	func setConstraints() {
 		onBoardingView.snp.makeConstraints { make in
-			make.leading.equalToSuperview()
-			make.top.equalToSuperview()
-		}
-		
-		agreeAllButton.snp.makeConstraints { make in
-			make.bottom.equalTo(tableView.snp.top).offset(-10)
+			make.top.equalTo(view.safeAreaLayoutGuide).offset(72)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 		}
-
+		
+		agreeAllButton.snp.makeConstraints { make in
+			make.bottom.equalTo(tableView.snp.top).offset(-12)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.height.equalTo(44)
+		}
+		
 		tableView.snp.makeConstraints { make in
 			make.height.equalTo(192)
 			make.leading.equalToSuperview().offset(32)
@@ -102,59 +99,44 @@ final class TermsOfUseViewController:
 			make.height.equalTo(40)
 		}
 	}
-
-	private func bind() {
+	
+	func bind() {
 		confirmButton.rx.tap
-			.withUnretained(self)
-			.bind { owner, _ in
+			.bind(with: self) { owner, _ in
 				owner.listener?.confirmButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 		
-		agreeAllButton.checkButton.rx.tap
-			.withUnretained(self)
-			.bind { owner, _ in
+		agreeAllButton.rx.tapGesture()
+			.when(.recognized)
+			.bind(with: self) { owner, _ in
 				owner.agreeAllButton.isChecked.toggle()
+				owner.setAllButton(to: owner.agreeAllButton.isChecked)
 			}
 			.disposed(by: disposeBag)
 		
-		Observable.of(termsOfUses)
-			.bind(to: tableView.rx.items(
-				cellIdentifier: TermsOfUseCell.identifier,
-				cellType: TermsOfUseCell.self
-			)) { (_, element: TermsOfUse, cell: TermsOfUseCell) in
+		Observable.of(TermsOfUse.data)
+			.bind(to: tableView.rx.items(cellType: TermsOfUseCell.self)) { _, element, cell in
 				cell.configuration(element)
-				cell.checkBoxButtonTap
-					.subscribe(
-						onNext: { _ in
-							cell.termsOfUseButton.isChecked.toggle()
-							let selectedType = cell.termsOfUseButton.isChecked
-							print(selectedType)
-						}
-					)
-					.disposed(by: cell.disposeBag)
+			}
+			.disposed(by: disposeBag)
+		
+		// 약관 선택 시 처리할 뷰 로직은 아래에 구현하면 됩니다.
+		tableView.rx.itemSelected
+			.bind(with: self) { owner, indexPath in
+				let cell = owner.tableView.cellForRow(TermsOfUseCell.self, at: indexPath)
+				cell.toggleButtonChecked()
 			}
 			.disposed(by: disposeBag)
 	}
-	
-	// UI때문에 잠시 구현해놓은거 입니다.
-	private let termsOfUses = [
-		TermsOfUse(
-			title: "이용약관 동의",
-			isRequired: true
-		),
-		TermsOfUse(
-			title: "개인정보 수집 및 이용 동의",
-			isRequired: true
-		),
-		TermsOfUse(
-			title: "위치정보 수집 및 이용 동의",
-			isRequired: true
-		),
-		TermsOfUse(
-			title: "마케팅 정보 수신 동의",
-			isRequired: false,
-			subTitle: "다양한 소식 및 프로모션 정보를 보내 드립니다."
-		)
-	]
+}
+
+// MARK: - Inner Action Methods
+private extension TermsOfUseViewController {
+	func setAllButton(to isChecked: Bool) {
+		tableView.visibleCells.forEach {
+			guard let cell = $0 as? TermsOfUseCell else { return }
+			cell.setButtonChecked(isChecked)
+		}
+	}
 }

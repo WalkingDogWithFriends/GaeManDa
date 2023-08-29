@@ -7,13 +7,23 @@
 //
 
 import UIKit
+import RxGesture
 import RxSwift
 import SnapKit
 
 open class BaseViewController: UIViewController {
 	// MARK: - Properties
-	public let scrollView = UIScrollView()
 	public var disposeBag = DisposeBag()
+	
+	// MARK: - UI Components
+	private let scrollView: UIScrollView = {
+		let scrollView = UIScrollView()
+		scrollView.showsVerticalScrollIndicator = false
+		scrollView.showsHorizontalScrollIndicator = false
+		return scrollView
+	}()
+	
+	public let contentView = UIView()
 	
 	// MARK: - Initializers
 	public init() {
@@ -28,33 +38,33 @@ open class BaseViewController: UIViewController {
 	open override func viewDidLoad() {
 		super.viewDidLoad()
 		self.view.backgroundColor = .white
-		NotificationCenter.default.addObserver(
-			self,
-			selector: #selector(keyboardWillShow),
-			name: UIResponder.keyboardWillShowNotification,
-			object: nil
-		)
-		NotificationCenter.default.addObserver(
-			self,
-			selector: #selector(keyboardWillHide),
-			name: UIResponder.keyboardWillHideNotification,
-			object: nil
-		)
+		registerKeyboardNotification()
+		// bind
+		contentView.rx.tapGesture()
+			.when(.recognized)
+			.bind(with: self) { owner, _ in
+				owner.view.endEditing(true)
+			}
+			.disposed(by: disposeBag)
 	}
 	
 	open override func viewDidDisappear(_ animated: Bool) {
-		NotificationCenter.default.removeObserver(UIResponder.keyboardWillShowNotification)
-		NotificationCenter.default.removeObserver(UIResponder.keyboardWillHideNotification)
+		removeKeyboardNotification()
 	}
 	
 	// MARK: - Methods
 	open func setViewHierarchy() {
 		view.addSubview(scrollView)
+		scrollView.addSubview(contentView)
 	}
 	
 	open func setConstraints() {
-		scrollView.snp.makeConstraints {
-			$0.edges.equalToSuperview()
+		scrollView.snp.makeConstraints { make in
+			make.top.equalTo(view.safeAreaLayoutGuide)
+			make.leading.trailing.bottom.equalToSuperview()
+		}
+		contentView.snp.makeConstraints { make in
+			make.edges.width.equalTo(scrollView)
 		}
 	}
 	
@@ -62,14 +72,12 @@ open class BaseViewController: UIViewController {
 }
 
 // MARK: - Keyboard
-extension BaseViewController {
-	@objc func keyboardWillShow(notification: NSNotification) {
-		if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-			scrollView.contentInset.bottom = keyboardSize.height
-		}
+extension BaseViewController: KeyboardListener {
+	public func keyboardWillShow(height: CGFloat) {
+		scrollView.contentInset.bottom = height
 	}
 	
-	@objc func keyboardWillHide(notification: NSNotification) {
+	public func keyboardWillHide() {
 		scrollView.contentInset = UIEdgeInsets.zero
 	}
 }
