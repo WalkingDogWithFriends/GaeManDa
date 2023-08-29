@@ -29,6 +29,10 @@ final class DogProfileEditViewController:
 	weak var listener: DogProfileEditPresentableListener?
 	private let disposeBag = DisposeBag()
 	private var dogs: [Dog] = []
+	private var dogSex: Sex = .male
+	private var dogWeight: String = ""
+	private var dogDidNetured: Bool = true
+	private var dogCharacter: String = ""
 	private var editIndex: Int = 0
 	
 	// MARK: - UI Components
@@ -141,6 +145,45 @@ extension DogProfileEditViewController {
 		self.dogs = doges
 		self.editIndex = editIndex
 		dogProfileDashBoard.reloadData()
+	}
+	
+	func updateDogName(_ name: String) {
+		scrollView.nickNameTextField.text = name
+		scrollView.nickNameTextField.titleLabel.alpha = name.isEmpty ? 0.0 : 1.0
+		scrollView.maxTextCountLabel.text = "\(name.count)/\(ScrollViewConstant.maximumTextFieldCount)"
+	}
+	
+	func updateDogSex(_ sex: Sex) {
+		dogSex = sex
+		if dogSex == .male {
+			scrollView.maleButton.rx.isSelected.onNext(true)
+			scrollView.femaleButton.rx.isSelected.onNext(false)
+		} else {
+			scrollView.femaleButton.rx.isSelected.onNext(true)
+			scrollView.maleButton.rx.isSelected.onNext(false)
+		}
+	}
+	
+	func updateDogWeight(_ weight: String) {
+		scrollView.weightTextField.text = "\(weight)kg"
+		scrollView.weightTextField.titleLabel.alpha = weight.isEmpty ? 0.0 : 1.0
+	}
+	
+	func updateDogNeutered(_ isNeutered: Bool) {
+		self.dogDidNetured = isNeutered
+		if isNeutered == true {
+			scrollView.didNeuterButton.rx.isSelected.onNext(true)
+			scrollView.didNotNeuterButton.rx.isSelected.onNext(false)
+		} else {
+			scrollView.didNotNeuterButton.rx.isSelected.onNext(true)
+			scrollView.didNeuterButton.rx.isSelected.onNext(false)
+		}
+	}
+	
+	func updateDogCharacter(_ character: String) {
+		self.dogCharacter = character
+		// TODO: GMDTextView 리팩토링 후 수정
+		scrollView.characterTextView.textView.text = character
 	}
 }
 

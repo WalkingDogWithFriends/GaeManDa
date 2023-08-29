@@ -18,6 +18,11 @@ protocol DogProfileEditPresentable: Presentable {
 	var listener: DogProfileEditPresentableListener? { get set }
 	
 	func updateDogDashBoard(doges: [Dog], editIndex: Int)
+	func updateDogName(_ name: String)
+	func updateDogSex(_ sex: Sex)
+	func updateDogWeight(_ weight: String)
+	func updateDogNeutered(_ isNeutered: Bool)
+	func updateDogCharacter(_ character: String)
 }
 
 protocol DogProfileEditInteractorDependency {
@@ -57,10 +62,29 @@ final class DogProfileEditInteractor:
 // MARK: - PresentableListener
 extension DogProfileEditInteractor {
 	func viewWillAppear() {
+		updateDogs()
+	}
+	
+	func didTapBackButton() {
+		listener?.dogProfileEditBackButtonDidTap()
+	}
+}
+
+// MARK: - Interactor Logic
+private extension DogProfileEditInteractor {
+	func updateDogs() {
 		dependency.userProfileUseCase
 			.fetchDogs(id: 0)
 			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, dogs in
+				if let dog = dogs.first(where: { $0.id == owner.editDogId }) {
+					owner.updateEditDog(dog)
+				} else {
+					// 해당 id의 강아지가 없는 경우 1번째 강아지로 대체
+					owner.editDogId = dogs[0].id
+					owner.updateEditDog(dogs[0])
+				}
+				// Update DogDashBoard
 				owner.presenter.updateDogDashBoard(
 					doges: dogs,
 					editIndex: owner.editDogId
@@ -69,7 +93,11 @@ extension DogProfileEditInteractor {
 			.disposeOnDeactivate(interactor: self)
 	}
 	
-	func didTapBackButton() {
-		listener?.dogProfileEditBackButtonDidTap()
+	func updateEditDog(_ dog: Dog) {
+		presenter.updateDogName(dog.name)
+		presenter.updateDogSex(dog.sex)
+		presenter.updateDogWeight(dog.weight)
+		presenter.updateDogNeutered(dog.didNeutered)
+		presenter.updateDogCharacter(dog.character)
 	}
 }
