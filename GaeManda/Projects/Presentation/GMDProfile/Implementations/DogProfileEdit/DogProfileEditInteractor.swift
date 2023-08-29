@@ -74,7 +74,14 @@ extension DogProfileEditInteractor {
 	
 	func didTapEndEditButton(dog: Dog) {
 		if !dog.name.isEmpty && !dog.weight.isEmpty {
-			listener?.dogProfileEndEditing()
+			dependency.userProfileUseCase
+				.updateDog(dog: dog)
+				.subscribe(with: self) { owner, result in
+					guard result == "success" else { return }
+					owner.listener?.dogProfileEndEditing()
+				}
+				.disposeOnDeactivate(interactor: self)
+			return
 		}
 		
 		if dog.name.isEmpty {
