@@ -27,4 +27,6 @@ public protocol UserProfileUseCase {
 		age: Int,
 		sex: String
 	) -> Single<String>
+	
+	func updateDog(dog: Dog) -> Single<String>
 }
