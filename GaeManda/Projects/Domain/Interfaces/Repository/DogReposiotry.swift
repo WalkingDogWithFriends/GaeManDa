@@ -12,4 +12,6 @@ import Entity
 
 public protocol DogRepository {
 	func fetchDogs(id: Int) -> Single<[Dog]>
+	
+	func updateDog(dog: Dog) -> Single<String>
 }
