@@ -22,4 +22,9 @@ public protocol UserProfileUseCase {
 	
 	func fetchDogs(id: Int) -> Single<[Dog]>
 	func fetchUser(id: Int) -> Single<User>
+	func updateUser(
+		nickName: String,
+		age: Int,
+		sex: String
+	) -> Single<String>
 }

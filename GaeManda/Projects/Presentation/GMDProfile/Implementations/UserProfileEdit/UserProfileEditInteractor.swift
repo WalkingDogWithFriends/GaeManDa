@@ -7,12 +7,24 @@
 //
 
 import RIBs
+import RxSwift
+import Entity
 import GMDProfile
+import UseCase
 
 protocol UserProfileEditRouting: ViewableRouting { }
 
 protocol UserProfileEditPresentable: Presentable {
 	var listener: UserProfileEditPresentableListener? { get set }
+	
+	func updateUsername(_ name: String)
+	func updateUserSex(_ sex: Sex)
+	
+	func userNameIsEmpty()
+}
+
+protocol UserProfileEditInteractorDependency {
+	var userProfileUseCase: UserProfileUseCase { get }
 }
 
 final class UserProfileEditInteractor:
@@ -22,7 +34,13 @@ final class UserProfileEditInteractor:
 	weak var router: UserProfileEditRouting?
 	weak var listener: UserProfileEditListener?
 	
-	override init(presenter: UserProfileEditPresentable) {
+	private let dependency: UserProfileEditInteractorDependency
+	
+	init(
+		presenter: UserProfileEditPresentable,
+		dependency: UserProfileEditInteractorDependency
+	) {
+		self.dependency = dependency
 		super.init(presenter: presenter)
 		presenter.listener = self
 	}
@@ -38,11 +56,35 @@ final class UserProfileEditInteractor:
 
 // MARK: PresentableListener
 extension UserProfileEditInteractor {
-	func backbuttonDidTap() {
+	func viewWillAppear() {
+		dependency.userProfileUseCase
+			.userDependency
+			.fetchUser(id: 0)
+			.observe(on: MainScheduler.instance)
+			.subscribe(with: self) { owner, user in
+				owner.presenter.updateUsername(user.name)
+				owner.presenter.updateUserSex(user.sex)
+			}
+			.disposeOnDeactivate(interactor: self)
+	}
+	
+	func didTapBackbutton() {
 		listener?.userProfileEditBackButtonDidTap()
 	}
 	
-	func endEditingButtonDidTap() {
-		listener?.userProfileEndEditing()
+	func didTapEndEditingButton(name: String, sex: Sex) {
+		debugPrint(name, sex)
+		if name.isEmpty {
+			presenter.userNameIsEmpty()
+		} else {
+			dependency.userProfileUseCase
+				.updateUser(nickName: name, age: 20, sex: sex.rawValue)
+				.observe(on: MainScheduler.instance)
+				.subscribe(with: self) { owner, result in
+					guard result == "success" else { return }
+					owner.listener?.userProfileEndEditing()
+				}
+				.disposeOnDeactivate(interactor: self)
+		}
 	}
 }

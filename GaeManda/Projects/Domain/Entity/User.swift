@@ -10,10 +10,10 @@ import Foundation
 
 public struct User {
 	public let name: String
-	public let sex: String
+	public let sex: Sex
 	public let age: String
 	
-	public init(name: String, sex: String, age: String) {
+	public init(name: String, sex: Sex, age: String) {
 		self.name = name
 		self.sex = sex
 		self.age = age
@@ -21,5 +21,5 @@ public struct User {
 }
 
 public extension User {
-	static let defaultUser = User(name: "", sex: "", age: "")
+	static let defaultUser = User(name: "", sex: .male, age: "")
 }

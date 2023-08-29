@@ -27,5 +27,15 @@ public extension String {
 			paragraphStyle.lineHeightMultiple = lineHeightMultiple
 		}
 		return NSAttributedString(string: self, attributes: attributes)
+  }
+
+  /// count만큼의 Suffix를 return 합니다.
+	/// ex) "01234".trimmingSuffic(with: 2) == "01"
+	func trimmingSuffix(with count: Int) -> String {
+		guard self.count >= count else {
+			return self
+		}
+		let index = self.index(self.startIndex, offsetBy: count)
+		return String(self[..<index])
 	}
 }

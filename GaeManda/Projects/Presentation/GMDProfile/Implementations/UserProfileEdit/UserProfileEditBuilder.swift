@@ -8,10 +8,19 @@
 
 import RIBs
 import GMDProfile
+import UseCase
 
-public protocol UserProfileEditDependency: Dependency { }
+public protocol UserProfileEditDependency: Dependency {
+	var userProfileUseCase: UserProfileUseCase { get }
+}
 
-final class UserProfileEditComponent: Component<UserProfileEditDependency> { }
+final class UserProfileEditComponent:
+	Component<UserProfileEditDependency>,
+	UserProfileEditInteractorDependency {
+	var userProfileUseCase: UserProfileUseCase {
+		dependency.userProfileUseCase
+	}
+}
 
 public final class UserProfileEditBuilder:
 	Builder<UserProfileEditDependency>,
@@ -23,7 +32,11 @@ public final class UserProfileEditBuilder:
 	public func build(withListener listener: UserProfileEditListener) -> ViewableRouting {
 		let component = UserProfileEditComponent(dependency: dependency)
 		let viewController = UserProfileEditViewController()
-		let interactor = UserProfileEditInteractor(presenter: viewController)
+		let interactor = UserProfileEditInteractor(
+			presenter: viewController,
+			dependency: component
+		)
+		
 		interactor.listener = listener
 		return UserProfileEditRouter(
 			interactor: interactor,

@@ -8,10 +8,13 @@
 
 import Foundation
 import DTO
+import Entity
 import GMDNetwork
 
 enum UserAPI {
 	case fetchUser(id: Int)
+	/// nickName, age, sex
+	case updateUser(String, Int, String)
 }
 
 extension UserAPI: TargetType {
@@ -21,7 +24,7 @@ extension UserAPI: TargetType {
 	
 	public var path: String {
 		switch self {
-		case .fetchUser:
+		case .fetchUser, .updateUser:
 			return "user"
 		}
 	}
@@ -30,6 +33,8 @@ extension UserAPI: TargetType {
 		switch self {
 		case .fetchUser:
 			return .get
+		case .updateUser:
+			return .put
 		}
 	}
 	
@@ -38,6 +43,18 @@ extension UserAPI: TargetType {
 		case let .fetchUser(id):
 			let requestDTO = UserRequestDTO(id: id)
 			return .requestParameters(parameters: requestDTO.toDictionary, encoding: .queryString)
+		
+		case let .updateUser(nickName, age, sex):
+			let requestDTO = UpdateUserReqeustDTO(
+				nickName: nickName,
+				age: age,
+				sex: sex
+			)
+			
+			return .requestParameters(
+				parameters: requestDTO.toDictionary,
+				encoding: .jsonBody
+			)
 		}
 	}
 	
@@ -49,6 +66,12 @@ extension UserAPI: TargetType {
 		switch self {
 		case .fetchUser:
 			let jsonString = UserResponseDTO.stubData
+			let data = jsonString.data(using: .utf8)
+			
+			return data ?? Data()
+			
+		case .updateUser:
+			let jsonString = UpdateUserResponseDTO.stubData
 			let data = jsonString.data(using: .utf8)
 			
 			return data ?? Data()

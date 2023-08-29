@@ -22,4 +22,18 @@ public struct UserRepositoryImpl: UserRepository {
 			.request(UserAPI.fetchUser(id: id), type: UserResponseDTO.self)
 			.map { $0.toDomain }
 	}
+	
+	public func updateUser(
+		nickName: String,
+		age: Int,
+		sex: String
+	) -> Single<String> {
+		return Provider<UserAPI>
+			.init(stubBehavior: .immediate)
+			.request(
+				UserAPI.updateUser(nickName, age, sex),
+				type: UpdateUserResponseDTO.self
+			)
+			.map { $0.message }
+	}
 }

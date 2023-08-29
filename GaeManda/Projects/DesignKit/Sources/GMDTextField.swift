@@ -1,27 +1,38 @@
 import UIKit
+import RxCocoa
+import RxSwift
 import SnapKit
 import GMDExtensions
 
+public enum GMDTextFieldMode {
+	case warning
+	case normal
+}
+
 public final class GMDTextField: UIView {
-	public lazy var isWarning = false {
+	private let disposeBag = DisposeBag()
+	
+	public var mode: GMDTextFieldMode = .normal {
 		didSet {
-			isWarning ? changeWarningMode() : changeNormalMode()
+			switch mode {
+			case .normal:
+				changeNormalMode()
+			case .warning:
+				changeWarningMode()
+			}
 		}
 	}
 	
-	private lazy var hasContent = false {
-		didSet {
-			titleLabel.layer.opacity = hasContent ? 1.0 : 0.0
+	public var text: String {
+		get {
+			textField.text ?? ""
+		}
+		set {
+			textField.text = newValue
 		}
 	}
 	
-	public var text: String = "" {
-		didSet {
-			textField.text = text
-			hasContent = !(textField.text?.isEmpty ?? false)
-		}
-	}
-	
+	// MARK: - UI Components
 	private let stackView: UIStackView = {
 		let stackView = UIStackView()
 		stackView.spacing = 7
@@ -32,10 +43,9 @@ public final class GMDTextField: UIView {
 		return stackView
 	}()
 	
-	private let titleLabel: UILabel = {
+	public let titleLabel: UILabel = {
 		let label = UILabel()
 		label.textColor = .gray90
-		label.layer.opacity = 0.0
 		label.numberOfLines = 1
 		label.font = .r12
 		
@@ -51,7 +61,7 @@ public final class GMDTextField: UIView {
 		return textField
 	}()
 	
-	private lazy var warningLabel: UILabel = {
+	private let warningLabel: UILabel = {
 		let label = UILabel()
 		label.textColor = .red100
 		label.numberOfLines = 1
@@ -61,19 +71,13 @@ public final class GMDTextField: UIView {
 		return label
 	}()
 	
+	// MARK: - Initializers
 	public init(title: String) {
 		super.init(frame: .zero)
 		
 		titleLabel.text = title
 		textField.placeholder = title
 		setupUI()
-		
-		NotificationCenter.default.addObserver(
-			self,
-			selector: #selector(textDidChange),
-			name: UITextField.textDidChangeNotification,
-			object: textField
-		)
 	}
 	
 	public convenience init(
@@ -84,36 +88,51 @@ public final class GMDTextField: UIView {
 		self.warningLabel.text = warningText
 	}
 	
+	@available(*, unavailable)
 	required init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
+		fatalError()
 	}
-	
-	private func setupUI() {
+}
+
+// MARK: - UI Setting
+private extension GMDTextField {
+	func setupUI() {
 		self.textField.setPlaceholdColor(.gray90)
 		
+		setViewHierarchy()
+		setConstraints()
+		bind()
+	}
+	
+	func setViewHierarchy() {
 		addSubview(stackView)
-		stackView.addArrangedSubview(titleLabel)
-		stackView.addArrangedSubview(textField)
-		stackView.addArrangedSubview(warningLabel)
-		
+		stackView.addArrangedSubviews(
+			titleLabel,
+			textField,
+			warningLabel
+		)
+	}
+	
+	func setConstraints() {
 		stackView.snp.makeConstraints { make in
-			make.leading.trailing.top.bottom.equalToSuperview()
+			make.edges.equalToSuperview()
 		}
 	}
 }
 
+// MARK: - Bind
 private extension GMDTextField {
-	@objc func textDidChange(_ notification: Notification) {
-		guard
-			let textField = notification.object as? UITextField,
-			let text = textField.text
-		else {
-			return
-		}
-		
-		hasContent = !text.isEmpty
+	func bind() {
+		rx.text
+			.orEmpty
+			.map { $0.isEmpty ? 0.0 : 1.0 }
+			.bind(to: titleLabel.rx.alpha)
+			.disposed(by: disposeBag)
 	}
-	
+}
+
+// MARK: - UI Logic
+private extension GMDTextField {
 	func changeNormalMode() {
 		textField.underLineColor = .gray90
 		warningLabel.layer.opacity = 0.0
@@ -122,5 +141,12 @@ private extension GMDTextField {
 	func changeWarningMode() {
 		textField.underLineColor = .red100
 		warningLabel.layer.opacity = 1.0
+	}
+}
+
+// MARK: - Reactive Extension
+public extension Reactive where Base: GMDTextField {
+	var text: ControlProperty<String?> {
+		base.textField.rx.text
 	}
 }
