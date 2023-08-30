@@ -91,6 +91,11 @@ extension DogProfileEditInteractor {
 			presenter.dogWeightIsEmpty()
 		}
 	}
+	
+	func didTapDogDashBoard(at id: Int) {
+		self.editDogId = id
+		updateDogs()
+	}
 }
 
 // MARK: - Interactor Logic

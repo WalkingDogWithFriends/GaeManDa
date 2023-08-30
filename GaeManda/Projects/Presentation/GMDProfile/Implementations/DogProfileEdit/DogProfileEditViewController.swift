@@ -20,6 +20,7 @@ protocol DogProfileEditPresentableListener: AnyObject {
 	func viewWillAppear()
 	func didTapBackButton()
 	func didTapEndEditButton(dog: Dog)
+	func didTapDogDashBoard(at id: Int)
 }
 
 final class DogProfileEditViewController:
@@ -90,7 +91,8 @@ private extension DogProfileEditViewController {
 		view.backgroundColor = .white
 		navigationController?.navigationBar.isHidden = true
 		dogProfileDashBoard.rx.setDataSource(self).disposed(by: disposeBag)
-		
+		dogProfileDashBoard.rx.setDelegate(self).disposed(by: disposeBag)
+
 		setViewHierarchy()
 		setConstraints()
 		bind()
@@ -245,6 +247,15 @@ extension DogProfileEditViewController: UICollectionViewDataSource {
 		cell.isEdited = dog.id == editDogId ? true : false
 		
 		return cell
+	}
+}
+
+// MARK: - UICollectionViewDelegate
+extension DogProfileEditViewController: UICollectionViewDelegate {
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		let dog = dogs[indexPath.row]
+		
+		listener?.didTapDogDashBoard(at: dog.id)
 	}
 }
 
