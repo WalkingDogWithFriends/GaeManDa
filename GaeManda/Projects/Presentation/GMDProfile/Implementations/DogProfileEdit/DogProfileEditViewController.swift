@@ -66,6 +66,8 @@ final class DogProfileEditViewController:
 	// MARK: - Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		dogProfileDashBoard.rx.setDataSource(self).disposed(by: disposeBag)
+		dogProfileDashBoard.rx.setDelegate(self).disposed(by: disposeBag)
 		
 		setupUI()
 		registerKeyboardNotification()
@@ -96,9 +98,7 @@ private extension DogProfileEditViewController {
 	func setupUI() {
 		view.backgroundColor = .white
 		navigationController?.navigationBar.isHidden = true
-		dogProfileDashBoard.rx.setDataSource(self).disposed(by: disposeBag)
-		dogProfileDashBoard.rx.setDelegate(self).disposed(by: disposeBag)
-
+		
 		setViewHierarchy()
 		setConstraints()
 		bind()
