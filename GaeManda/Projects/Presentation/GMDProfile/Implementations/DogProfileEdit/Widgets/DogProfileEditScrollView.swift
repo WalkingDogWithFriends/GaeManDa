@@ -158,7 +158,7 @@ final class DogProfileEditScrollView: UIScrollView {
 private extension DogProfileEditScrollView {
 	func setupUI() {
 		backgroundColor = .clear
-		showsVerticalScrollIndicator = true
+		showsVerticalScrollIndicator = false
 		
 		nickNameTextField.textField.rightView = maxTextCountLabel
 		nickNameTextField.textField.rightViewMode = .always
