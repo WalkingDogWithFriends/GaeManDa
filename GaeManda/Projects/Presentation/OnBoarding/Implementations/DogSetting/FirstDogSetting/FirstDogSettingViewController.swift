@@ -24,7 +24,7 @@ final class FirstDogSettingViewController:
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "")
 	
-	private let onBoardingView = OnBoardingView(willDisplayImageView: true, title: "보호자의 프로필을 설정해주세요!")
+	private let onBoardingView = OnBoardingView(willDisplayImageView: true, title: "우리 아이를 등록해주세요! (1/3)")
 	
 	private let dogNameTextField = GMDTextField(title: "우리 아이 이름", warningText: "우리 아이 이름을 작성해주세요")
 	
