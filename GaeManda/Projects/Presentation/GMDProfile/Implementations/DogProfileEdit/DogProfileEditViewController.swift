@@ -17,6 +17,7 @@ import GMDExtensions
 import GMDUtils
 
 protocol DogProfileEditPresentableListener: AnyObject {
+	func viewDidLoad()
 	func viewWillAppear()
 	func didTapBackButton()
 	func didTapEndEditButton(dog: Dog)
@@ -30,8 +31,8 @@ final class DogProfileEditViewController:
 	// MARK: - Properties
 	weak var listener: DogProfileEditPresentableListener?
 	private let disposeBag = DisposeBag()
-	private var dogs: [Dog] = []
-	private var editDogId: Int = 0
+	
+	private var dogs: [DogDashBoardViewModel] = []
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "프로필 수정")
@@ -66,6 +67,8 @@ final class DogProfileEditViewController:
 	// MARK: - Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		listener?.viewDidLoad()
+
 		dogProfileDashBoard.rx.setDataSource(self).disposed(by: disposeBag)
 		dogProfileDashBoard.rx.setDelegate(self).disposed(by: disposeBag)
 		
@@ -146,9 +149,8 @@ private extension DogProfileEditViewController {
 
 // MARK: - UI Update
 extension DogProfileEditViewController {
-	func updateDogDashBoard(doges: [Dog], editIndex: Int) {
+	func updateDogDashBoard(doges: [DogDashBoardViewModel]) {
 		self.dogs = doges
-		self.editDogId = editIndex
 		dogProfileDashBoard.reloadData()
 	}
 	
@@ -190,12 +192,9 @@ extension DogProfileEditViewController {
 		scrollView.characterTextView.textView.text = character
 	}
 	
-	func dogNameIsEmpty() {
-		scrollView.nickNameTextField.mode = .warning
-	}
-	
-	func dogWeightIsEmpty() {
-		scrollView.weightTextField.mode = .warning
+	func updateTextFieldMode(_ modes: TextFieldModeViewModel) {
+		scrollView.nickNameTextField.mode = modes.nickNameTextFieldMode
+		scrollView.weightTextField.mode = modes.dogWeightTextFieldMode
 	}
 }
 
@@ -216,9 +215,14 @@ private extension DogProfileEditViewController {
 		
 		endEditingButton.rx.tap
 			.bind(with: self) { owner, _ in
+				// 에러 정책 결정하고 구현하면 될거 같아요
+				guard let id = owner.dogs.first(where: { $0.isEdited == true })?.dogId else {
+					return
+				}
+				
 				owner.listener?.didTapEndEditButton(
 					dog: Dog(
-						id: owner.editDogId,
+						id: id,
 						name: owner.scrollView.nickNameTextField.text,
 						sex: owner.scrollView.dogSex,
 						age: "12",
@@ -248,9 +252,7 @@ extension DogProfileEditViewController: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueCell(DogProfileDashBoardCell.self, for: indexPath)
 		
-		let dog = dogs[indexPath.row]
-		cell.configure(with: dog)
-		cell.isEdited = dog.id == editDogId ? true : false
+		cell.configure(with: dogs[indexPath.row])
 		
 		return cell
 	}
@@ -261,7 +263,7 @@ extension DogProfileEditViewController: UICollectionViewDelegate {
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		let dog = dogs[indexPath.row]
 		
-		listener?.didTapDogDashBoard(at: dog.id)
+		listener?.didTapDogDashBoard(at: dog.dogId)
 	}
 }
 

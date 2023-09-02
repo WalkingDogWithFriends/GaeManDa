@@ -8,6 +8,7 @@
 
 import RIBs
 import RxSwift
+import RxCocoa
 import Entity
 import GMDProfile
 import UseCase
@@ -17,15 +18,14 @@ protocol DogProfileEditRouting: ViewableRouting { }
 protocol DogProfileEditPresentable: Presentable {
 	var listener: DogProfileEditPresentableListener? { get set }
 	
-	func updateDogDashBoard(doges: [Dog], editIndex: Int)
+	func updateDogDashBoard(doges: [DogDashBoardViewModel])
 	func updateDogName(_ name: String)
 	func updateDogSex(_ sex: Sex)
 	func updateDogWeight(_ weight: String)
 	func updateDogNeutered(_ isNeutered: Bool)
 	func updateDogCharacter(_ character: String)
 	
-	func dogNameIsEmpty()
-	func dogWeightIsEmpty()
+	func updateTextFieldMode(_ modes: TextFieldModeViewModel)
 }
 
 protocol DogProfileEditInteractorDependency {
@@ -39,18 +39,19 @@ final class DogProfileEditInteractor:
 	weak var router: DogProfileEditRouting?
 	weak var listener: DogProfileEditListener?
 	
+	private let dogs = BehaviorRelay<[Dog]>(value: [])
+	private let editDogId = BehaviorRelay<Int>(value: 0)
 	private let dependency: DogProfileEditInteractorDependency
-	private var editDogId: Int
 	
 	init(
 		presenter: DogProfileEditPresentable,
 		dependency: DogProfileEditInteractorDependency,
 		editDogId: Int
 	) {
-		self.editDogId = editDogId
 		self.dependency = dependency
 		super.init(presenter: presenter)
 		presenter.listener = self
+		self.editDogId.accept(editDogId)
 	}
 	
 	override func didBecomeActive() {
@@ -64,6 +65,10 @@ final class DogProfileEditInteractor:
 
 // MARK: - PresentableListener
 extension DogProfileEditInteractor {
+	func viewDidLoad() {
+		bind()
+	}
+	
 	func viewWillAppear() {
 		updateDogs()
 	}
@@ -76,6 +81,7 @@ extension DogProfileEditInteractor {
 		if !dog.name.isEmpty && !dog.weight.isEmpty {
 			dependency.userProfileUseCase
 				.updateDog(dog: dog)
+				.observe(on: MainScheduler.instance)
 				.subscribe(with: self) { owner, result in
 					guard result == "success" else { return }
 					owner.listener?.dogProfileEndEditing()
@@ -83,18 +89,19 @@ extension DogProfileEditInteractor {
 				.disposeOnDeactivate(interactor: self)
 			return
 		}
+		var textFieldsMode = TextFieldModeViewModel()
 		
 		if dog.name.isEmpty {
-			presenter.dogNameIsEmpty()
+			textFieldsMode.nickNameTextFieldMode = .warning
 		}
 		if dog.weight.isEmpty {
-			presenter.dogWeightIsEmpty()
+			textFieldsMode.dogWeightTextFieldMode = .warning
 		}
+		presenter.updateTextFieldMode(textFieldsMode)
 	}
 	
 	func didTapDogDashBoard(at id: Int) {
-		self.editDogId = id
-		updateDogs()
+		editDogId.accept(id)
 	}
 }
 
@@ -103,20 +110,8 @@ private extension DogProfileEditInteractor {
 	func updateDogs() {
 		dependency.userProfileUseCase
 			.fetchDogs(id: 0)
-			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, dogs in
-				if let dog = dogs.first(where: { $0.id == owner.editDogId }) {
-					owner.updateEditDog(dog)
-				} else {
-					// 해당 id의 강아지가 없는 경우 1번째 강아지로 대체
-					owner.editDogId = dogs[0].id
-					owner.updateEditDog(dogs[0])
-				}
-				// Update DogDashBoard
-				owner.presenter.updateDogDashBoard(
-					doges: dogs,
-					editIndex: owner.editDogId
-				)
+				owner.dogs.accept(dogs)
 			}
 			.disposeOnDeactivate(interactor: self)
 	}
@@ -127,5 +122,41 @@ private extension DogProfileEditInteractor {
 		presenter.updateDogWeight(dog.weight)
 		presenter.updateDogNeutered(dog.didNeutered)
 		presenter.updateDogCharacter(dog.character)
+	}
+	
+	func bind() {
+		let combineObservable = Observable.combineLatest(editDogId, dogs)
+		
+		combineObservable
+			.map { id, dogs in
+				dogs.map {
+					DogDashBoardViewModel(
+						dogId: $0.id,
+						profileImage: "",
+						isEdited: $0.id == id
+					)
+				}
+			}
+			.skip(1)
+			.bind(with: self) { owner, viewModel in
+				owner.presenter.updateDogDashBoard(doges: viewModel)
+			}
+			.disposeOnDeactivate(interactor: self)
+		
+		combineObservable
+			.map { id, dogs in
+				// id값으로 수정할 강아지를 찾습니다.
+				dogs.first(where: { $0.id == id })
+			}
+			.skip(1)
+			.bind(with: self) { owner, dog in
+				guard let dog = dog else {
+					// 해당 코드를 사용하면 에러가 납니다..
+					// owner.listener?.dogProfileEditBackButtonDidTap()
+					return
+				}
+				owner.updateEditDog(dog)
+			}
+			.disposeOnDeactivate(interactor: self)
 	}
 }

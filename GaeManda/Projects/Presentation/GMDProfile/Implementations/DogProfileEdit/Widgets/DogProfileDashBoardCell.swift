@@ -14,16 +14,10 @@ import Entity
 final class DogProfileDashBoardCell: UICollectionViewCell {
 	// MARK: - Properties
 	private let selectedColor = UIColor.green100.cgColor
-	private let deSelectedColor = UIColor.white.cgColor
-	
-	var isEdited: Bool = false {
-		didSet {
-			imageView.layer.borderColor = isEdited ? selectedColor : deSelectedColor
-		}
-	}
+	private let deselectedColor = UIColor.white.cgColor
 	
 	// MARK: - UI Component
-	let imageView = RoundImageView()
+	private let imageView = RoundImageView()
 	
 	// MARK: - Initializers
 	override init(frame: CGRect) {
@@ -37,8 +31,10 @@ final class DogProfileDashBoardCell: UICollectionViewCell {
 	}
 	
 	// MARK: - Configure
-	func configure(with dog: Dog) {
+	func configure(with dog: DogDashBoardViewModel) {
 		imageView.image = UIImage()
+		
+		imageView.layer.borderColor = dog.isEdited ? selectedColor : deselectedColor
 	}
 }
 
