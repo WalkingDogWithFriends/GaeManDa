@@ -99,12 +99,12 @@ final class SecondDogSettingViewController:
 	// MARK: - UI Binding
 	override func bind() {
 		super.bind()
-		bindNavigation()
+		bindNavigationBar()
 		bindTextField()
 		bindConfirmButton()
 	}
 	
-	private func bindNavigation() {
+	private func bindNavigationBar() {
 		navigationBar.backButton.rx.tap
 			.bind(with: self) { owner, _ in
 				owner.listener?.backButtonDidTap()
@@ -125,7 +125,9 @@ final class SecondDogSettingViewController:
 				owner.dogWeightTextField.textField.moveCusorLeftTo(suffix: "kg")
 			}
 			.disposed(by: disposeBag)
-		
+	}
+	
+	private func bindConfirmButton() {
 		let textFieldsTextEmptyObservable = Observable
 			.combineLatest(
 				dogBreedTextField.rx.text.orEmpty,
@@ -134,10 +136,10 @@ final class SecondDogSettingViewController:
 			.map { (!$0.0.isEmpty, !$0.1.isEmpty) }
 			.asDriver(onErrorJustReturn: (false, false))
 		
+		// 품종, 몸무게가 모두 입력된 경우
 		confirmButton.rx.tap
 			.withLatestFrom(textFieldsTextEmptyObservable)
-			.map { $0 && $1 }
-			.filter { $0 == true }
+			.filter { $0 == true && $1 == true }
 			.bind(with: self) { owner, _ in
 				owner.listener?.confirmButtonDidTap()
 			}
@@ -149,14 +151,6 @@ final class SecondDogSettingViewController:
 			.bind(with: self) { owner, isEmpty in
 				owner.dogBreedTextField.mode = isEmpty.0 ? .normal : .warning
 				owner.dogWeightTextField.mode = isEmpty.1 ? .normal : .warning
-			}
-			.disposed(by: disposeBag)
-	}
-	
-	private func bindConfirmButton() {
-		confirmButton.rx.tap
-			.bind(with: self) { owner, _ in
-				owner.listener?.confirmButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 	}
