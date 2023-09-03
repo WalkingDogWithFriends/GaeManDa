@@ -10,13 +10,17 @@ import UIKit
 import GMDExtensions
 
 public protocol KeyboardListener {
+	var keyboardShowNotification: NSObjectProtocol? { get set }
+	var keyboardHideNotification: NSObjectProtocol? { get set }
+	
 	func keyboardWillShow(height: CGFloat)
 	func keyboardWillHide()
 }
 
 public extension KeyboardListener where Self: UIViewController {
-	func registerKeyboardNotification() {
-		NotificationCenter.default.addObserver(
+	@discardableResult
+	func registerKeyboardShowNotification() -> NSObjectProtocol? {
+		let showNotification = NotificationCenter.default.addObserver(
 			forName: UIResponder.keyboardWillShowNotification,
 			object: nil,
 			queue: nil
@@ -24,18 +28,22 @@ public extension KeyboardListener where Self: UIViewController {
 			guard let height = notification.keyboardHeight else { return }
 			self?.keyboardWillShow(height: height)
 		}
-		
-		NotificationCenter.default.addObserver(
+		return showNotification
+	}
+	
+	@discardableResult
+	func registerKeyboardHideNotification() -> NSObjectProtocol? {
+		let hideNotification = NotificationCenter.default.addObserver(
 			forName: UIResponder.keyboardWillHideNotification,
 			object: nil,
 			queue: nil
 		) { [weak self] _ in
 			self?.keyboardWillHide()
 		}
+		return hideNotification
 	}
 	
-	func removeKeyboardNotification() {
-		NotificationCenter.default.removeObserver(UIResponder.keyboardWillShowNotification)
-		NotificationCenter.default.removeObserver(UIResponder.keyboardWillHideNotification)
+	func removeKeyboardNotification(_ notifications: [NSObjectProtocol?]) {
+		notifications.forEach(NotificationCenter.default.removeObserver(_:))
 	}
 }
