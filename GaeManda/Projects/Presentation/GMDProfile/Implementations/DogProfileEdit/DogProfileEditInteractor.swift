@@ -7,8 +7,8 @@
 //
 
 import RIBs
-import RxSwift
 import RxCocoa
+import RxSwift
 import Entity
 import GMDProfile
 import UseCase
@@ -18,7 +18,7 @@ protocol DogProfileEditRouting: ViewableRouting { }
 protocol DogProfileEditPresentable: Presentable {
 	var listener: DogProfileEditPresentableListener? { get set }
 	
-	func updateDogDashBoard(doges: [DogDashBoardViewModel])
+	func updateDogDashBoard(dogViewModels: [DogDashBoardViewModel])
 	func updateDogName(_ name: String)
 	func updateDogSex(_ sex: Sex)
 	func updateDogWeight(_ weight: String)
@@ -39,19 +39,19 @@ final class DogProfileEditInteractor:
 	weak var router: DogProfileEditRouting?
 	weak var listener: DogProfileEditListener?
 	
-	private let dogs = BehaviorRelay<[Dog]>(value: [])
-	private let editDogId = BehaviorRelay<Int>(value: 0)
 	private let dependency: DogProfileEditInteractorDependency
-	
+	private let editDogId: BehaviorRelay<Int>
+	private let dogs = BehaviorRelay<[Dog]>(value: [])
+
 	init(
 		presenter: DogProfileEditPresentable,
 		dependency: DogProfileEditInteractorDependency,
 		editDogId: Int
 	) {
 		self.dependency = dependency
+		self.editDogId = BehaviorRelay(value: editDogId)
 		super.init(presenter: presenter)
 		presenter.listener = self
-		self.editDogId.accept(editDogId)
 	}
 	
 	override func didBecomeActive() {
@@ -125,7 +125,9 @@ private extension DogProfileEditInteractor {
 	}
 	
 	func bind() {
-		let combineObservable = Observable.combineLatest(editDogId, dogs)
+		let combineObservable = Observable
+			.combineLatest(editDogId, dogs)
+			.share()
 		
 		combineObservable
 			.map { id, dogs in
@@ -137,9 +139,8 @@ private extension DogProfileEditInteractor {
 					)
 				}
 			}
-			.skip(1)
 			.bind(with: self) { owner, viewModel in
-				owner.presenter.updateDogDashBoard(doges: viewModel)
+				owner.presenter.updateDogDashBoard(dogViewModels: viewModel)
 			}
 			.disposeOnDeactivate(interactor: self)
 		
@@ -148,7 +149,6 @@ private extension DogProfileEditInteractor {
 				// id값으로 수정할 강아지를 찾습니다.
 				dogs.first(where: { $0.id == id })
 			}
-			.skip(1)
 			.bind(with: self) { owner, dog in
 				guard let dog = dog else {
 					// 해당 코드를 사용하면 에러가 납니다..

@@ -32,7 +32,7 @@ final class DogProfileEditViewController:
 	weak var listener: DogProfileEditPresentableListener?
 	private let disposeBag = DisposeBag()
 	
-	private var dogs: [DogDashBoardViewModel] = []
+	private var dogViewModels: [DogDashBoardViewModel] = []
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "프로필 수정")
@@ -149,8 +149,8 @@ private extension DogProfileEditViewController {
 
 // MARK: - UI Update
 extension DogProfileEditViewController {
-	func updateDogDashBoard(doges: [DogDashBoardViewModel]) {
-		self.dogs = doges
+	func updateDogDashBoard(dogViewModels: [DogDashBoardViewModel]) {
+		self.dogViewModels = dogViewModels
 		dogProfileDashBoard.reloadData()
 	}
 	
@@ -216,7 +216,7 @@ private extension DogProfileEditViewController {
 		endEditingButton.rx.tap
 			.bind(with: self) { owner, _ in
 				// 에러 정책 결정하고 구현하면 될거 같아요
-				guard let id = owner.dogs.first(where: { $0.isEdited == true })?.dogId else {
+				guard let id = owner.dogViewModels.first(where: { $0.isEdited == true })?.dogId else {
 					return
 				}
 				
@@ -246,13 +246,13 @@ private extension DogProfileEditViewController {
 // MARK: UICollectionViewDataSource
 extension DogProfileEditViewController: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return dogs.count
+		return dogViewModels.count
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueCell(DogProfileDashBoardCell.self, for: indexPath)
 		
-		cell.configure(with: dogs[indexPath.row])
+		cell.configure(with: dogViewModels[indexPath.row])
 		
 		return cell
 	}
@@ -261,7 +261,7 @@ extension DogProfileEditViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 extension DogProfileEditViewController: UICollectionViewDelegate {
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		let dog = dogs[indexPath.row]
+		let dog = dogViewModels[indexPath.row]
 		
 		listener?.didTapDogDashBoard(at: dog.dogId)
 	}
@@ -270,7 +270,7 @@ extension DogProfileEditViewController: UICollectionViewDelegate {
 // MARK: - KeyboardListener
 extension DogProfileEditViewController: KeyboardListener {
 	func keyboardWillShow(height: CGFloat) {
-		let scrollviewBottom = scrollView.convert(scrollView.bounds, to: view).maxY
+		let scrollViewBottom = scrollView.convert(scrollView.bounds, to: view).maxY
 		let bottomFromSuperView = view.frame.size.height - scrollviewBottom
 		let padding: CGFloat = 20
 		
