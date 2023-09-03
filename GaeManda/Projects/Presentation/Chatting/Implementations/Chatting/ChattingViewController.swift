@@ -27,6 +27,8 @@ final class ChattingViewController:
 	ChattingViewControllable {
 	weak var listener: ChattingPresentableListener?
 	private let disposeBag = DisposeBag()
+	var keyboardShowNotification: NSObjectProtocol?
+	var keyboardHideNotification: NSObjectProtocol?
 	
 	// MARK: - UI Components
 	private lazy var navigationBar = GMDNavigationBar(
@@ -67,10 +69,11 @@ final class ChattingViewController:
 	// MARK: - Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		self.keyboardShowNotification = registerKeyboardShowNotification()
+		self.keyboardHideNotification = registerKeyboardHideNotification()
 		view.backgroundColor = .gray20
 		navigationBar.titleLabel.font = .r16
 		setupUI()
-		registerKeyboardNotification()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -80,7 +83,7 @@ final class ChattingViewController:
 	
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
-		removeKeyboardNotification()
+		removeKeyboardNotification([keyboardShowNotification, keyboardHideNotification])
 	}
 }
 // MARK: - UI Setting
