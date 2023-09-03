@@ -69,6 +69,10 @@ final class UserSettingViewController:
 		setupUI()
 	}
 	
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+	}
+	
 	// MARK: - UI Methods
 	private func setupUI() {
 		setTextField(nickNameTextField.textField, rightView: maximumTextCountLabel)
