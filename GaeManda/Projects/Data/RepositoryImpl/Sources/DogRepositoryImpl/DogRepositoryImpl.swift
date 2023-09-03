@@ -22,4 +22,11 @@ public struct DogRepositoryImpl: DogRepository {
 			.request(DogAPI.fetchDogs(id: id), type: [DogResponseDTO].self)
 			.map { $0.map { $0.toDomain } }
 	}
+	
+	public func updateDog(dog: Dog) -> Single<String> {
+		return Provider<DogAPI>
+			.init(stubBehavior: .immediate)
+			.request(DogAPI.updateDogs(dog: dog), type: UpdateDogResponseDTO.self)
+			.map { $0.message }
+	}
 }

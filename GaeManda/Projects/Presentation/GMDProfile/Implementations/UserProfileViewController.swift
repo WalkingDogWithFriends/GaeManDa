@@ -18,7 +18,7 @@ import GMDUtils
 
 protocol UserProfilePresentableListener: AnyObject {
 	func viewWillAppear()
-	func didTapDogProfileEditButton()
+	func didTapDogProfileEditButton(at id: Int)
 	func didTapDogProfileDeleteButton()
 	func didTapUserProfileEditButton()
 }
@@ -197,6 +197,7 @@ extension UserProfileViewController {
 		collectionView.isScrollEnabled = dogs.count == 1 ? false : true
 		scrollCollectionView(at: 1, at: .right)
 		indicatorView.indicatorCount = dogs.count
+		indicatorView.collectionViewDidChange(index: 0)
 	}
 }
 
@@ -214,7 +215,7 @@ private extension UserProfileViewController {
 	func bind(to cell: DogsCollectionViewCell) {
 		cell.rx.editButtonDidTapped
 			.bind(with: self) { owner, _ in
-				owner.listener?.didTapDogProfileEditButton()
+				owner.listener?.didTapDogProfileEditButton(at: cell.dogID)
 			}
 			.disposed(by: disposeBag)
 		

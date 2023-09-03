@@ -9,37 +9,52 @@
 import UIKit
 import SnapKit
 import DesignKit
+import Entity
 
 final class DogProfileDashBoardCell: UICollectionViewCell {
-	lazy var isEdited: Bool = false {
-		didSet {
-			imageView.layer.borderWidth = isEdited ? 1 : 0
-		}
-	}
+	// MARK: - Properties
+	private let selectedColor = UIColor.green100.cgColor
+	private let deselectedColor = UIColor.white.cgColor
 	
-	let imageView = RoundImageView()
+	// MARK: - UI Component
+	private let imageView = RoundImageView()
 	
+	// MARK: - Initializers
 	override init(frame: CGRect) {
 		super.init(frame: frame)
+		setupUI()
 	}
 		
+	@available(*, unavailable)
 	required init?(coder: NSCoder) {
 		super.init(coder: coder)
 	}
 	
-	override func prepareForReuse() {
-		super.prepareForReuse()
+	// MARK: - Configure
+	func configure(with dog: DogDashBoardViewModel) {
+		imageView.image = UIImage()
+		
+		imageView.layer.borderColor = dog.isEdited ? selectedColor : deselectedColor
 	}
+}
 
-	func configuration(image: UIImage?) {
-		imageView.image = image
-		
+// MARK: - UI Setting
+private extension DogProfileDashBoardCell {
+	func setupUI() {
+		imageView.layer.borderWidth = 1
+		imageView.backgroundColor = .gray40
+		setViewHierarchy()
+		setConstraints()
+	}
+	
+	func setViewHierarchy() {
 		contentView.addSubview(imageView)
-		imageView.layer.borderColor = UIColor.green100.cgColor
-		
+	}
+	
+	func setConstraints() {
 		imageView.snp.makeConstraints { make in
 			make.height.width.equalTo(56)
-			make.top.bottom.leading.trailing.equalToSuperview()
+			make.edges.trailing.equalToSuperview()
 		}
 	}
 }

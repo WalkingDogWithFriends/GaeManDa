@@ -50,4 +50,8 @@ public extension UserProfileUseCaseImpl {
 	func fetchDogs(id: Int) -> Single<[Dog]> {
 		return dogDependency.fetchDogs(id: id)
 	}
+	
+	func updateDog(dog: Dog) -> Single<String> {
+		return dogDependency.updateDog(dog: dog)
+	}
 }

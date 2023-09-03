@@ -16,7 +16,7 @@ import UseCase
 protocol UserProfileRouting: ViewableRouting {
 	func userProfileEditAttach()
 	func userProfileEditDetach()
-	func dogProfileEditAttach()
+	func dogProfileEditAttach(selectedId: Int)
 	func dogProfileEditDetach()
 }
 
@@ -66,8 +66,8 @@ extension UserProfileInteractor {
 		fetchDogs()
 	}
 	
-	func didTapDogProfileEditButton() {
-		router?.dogProfileEditAttach()
+	func didTapDogProfileEditButton(at id: Int) {
+		router?.dogProfileEditAttach(selectedId: id)
 	}
 	
 	func didTapDogProfileDeleteButton() { }
@@ -91,6 +91,10 @@ extension UserProfileInteractor {
 // MARK: - DogProfileEditListener
 extension UserProfileInteractor {
 	func dogProfileEditBackButtonDidTap() {
+		router?.dogProfileEditDetach()
+	}
+	
+	func dogProfileEndEditing() {
 		router?.dogProfileEditDetach()
 	}
 }

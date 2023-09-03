@@ -9,9 +9,13 @@
 import RIBs
 
 public protocol DogProfileEditBuildable: Buildable {
-	func build(withListener listener: DogProfileEditListener) -> ViewableRouting
+	func build(
+		withListener listener: DogProfileEditListener,
+		selectedDogId: Int
+	) -> ViewableRouting
 }
 
 public protocol DogProfileEditListener: AnyObject {
 	func dogProfileEditBackButtonDidTap()
+	func dogProfileEndEditing()
 }

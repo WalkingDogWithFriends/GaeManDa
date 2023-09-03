@@ -20,11 +20,11 @@ enum ScrollViewConstant {
 
 final class DogProfileEditScrollView: UIScrollView {
 	private let disposeBag = DisposeBag()
-
-	var genderDidChanged = BehaviorRelay<Sex>(value: .male)
-	var neuterDidChanged = BehaviorRelay<Bool>(value: true)
 	
-	// MARK: UI Property
+	var dogSex: Sex = .male
+	var dogNeutered: Bool = true
+	
+	// MARK: - UI Components
 	private let contentView: UIStackView = {
 		let stackView = UIStackView()
 		stackView.axis = .vertical
@@ -36,17 +36,13 @@ final class DogProfileEditScrollView: UIScrollView {
 	}()
 	
 	/// Scroll View Content
-	fileprivate let nickNameTextField: GMDTextField = {
-		let gmdTextField = GMDTextField(
-			title: "닉네임",
-			warningText: "닉네임을 입력해주세요."
-		)
-		
-		return gmdTextField
-	}()
+	let nickNameTextField = GMDTextField(
+		title: "닉네임",
+		warningText: "닉네임을 입력해주세요."
+	)
 	
 	/// Display Max Count Text in nickNameTextField
-	private let maximumTextCountLabel: UILabel = {
+	let maxTextCountLabel: UILabel = {
 		let label = UILabel()
 		label.textColor = .gray90
 		label.font = .r15
@@ -54,14 +50,10 @@ final class DogProfileEditScrollView: UIScrollView {
 		return label
 	}()
 	
-	fileprivate let calenderTextField: GMDTextField = {
-		let gmdTextField = GMDTextField(
-			title: "생년월일",
-			warningText: "생년월일을 입력해주세요."
-		)
-		
-		return gmdTextField
-	}()
+	let calenderTextField = GMDTextField(
+		title: "생년월일",
+		warningText: "생년월일을 입력해주세요."
+	)
 	
 	fileprivate let calenderButton: UIButton = {
 		let button = UIButton()
@@ -83,25 +75,21 @@ final class DogProfileEditScrollView: UIScrollView {
 		return stackView
 	}()
 	
-	private let maleButton: GMDOptionButton = {
+	let maleButton: GMDOptionButton = {
 		let button = GMDOptionButton(title: "남")
 		button.isSelected = true
 		
 		return button
 	}()
 	
-	private let femaleButton = GMDOptionButton(title: "여")
+	let femaleButton = GMDOptionButton(title: "여")
 	
-	fileprivate let dogBreedTextField: GMDTextField = {
-		let gmdTextField = GMDTextField(
-			title: "우리 아이 종",
-			warningText: "우리 아이 종을 작성해주세요"
-		)
-		
-		return gmdTextField
-	}()
+	let dogBreedTextField = GMDTextField(
+		title: "우리 아이 종",
+		warningText: "우리 아이 종을 작성해주세요"
+	)
 	
-	fileprivate let weightTextField: GMDTextField = {
+	let weightTextField: GMDTextField = {
 		let gmdTextField = GMDTextField(
 			title: "우리 아이 몸무게 (kg)",
 			warningText: "우리 아이 몸무게 (kg)을 입력해주세요."
@@ -143,35 +131,36 @@ final class DogProfileEditScrollView: UIScrollView {
 		return stackView
 	}()
 	
-	private let didNeuterButton: GMDOptionButton = {
+	let didNeuterButton: GMDOptionButton = {
 		let button = GMDOptionButton(title: "했어요")
 		button.isSelected = true
 		
 		return button
 	}()
 	
-	private let didNotNeuterButton = GMDOptionButton(title: "안 했어요")
+	let didNotNeuterButton = GMDOptionButton(title: "안 했어요")
 	
-	fileprivate let characterTextView = GMDTextView(title: "우리 아이 성격 (선택)")
-
-	// MARK: Initializer
+	let characterTextView = GMDTextView(title: "우리 아이 성격 (선택)")
+	
+	// MARK: - Initializer
 	init() {
 		super.init(frame: .zero)
 		setupUI()
 	}
 	
+	@available(*, unavailable)
 	required init?(coder: NSCoder) {
 		fatalError()
 	}
 }
 
-// MARK: Setting UI
+// MARK: - UI Setting
 private extension DogProfileEditScrollView {
 	func setupUI() {
 		backgroundColor = .clear
-		showsVerticalScrollIndicator = true
+		showsVerticalScrollIndicator = false
 		
-		nickNameTextField.textField.rightView = maximumTextCountLabel
+		nickNameTextField.textField.rightView = maxTextCountLabel
 		nickNameTextField.textField.rightViewMode = .always
 		
 		calenderTextField.textField.rightView = calenderButton
@@ -179,30 +168,29 @@ private extension DogProfileEditScrollView {
 		
 		characterTextView.warningText = "\(ScrollViewConstant.maximumTextViewCount)자 이내로 입력 가능합니다."
 		
-		setupSubviews()
+		setViewHierarchy()
 		setConstraints()
 		textBind()
 		buttonBind()
 	}
 	
-	func setupSubviews() {
+	func setViewHierarchy() {
 		addSubview(contentView)
-		contentView.addArrangedSubview(nickNameTextField)
-		contentView.addArrangedSubview(calenderTextField)
-		contentView.addArrangedSubview(genderButtonStackView)
-		contentView.addArrangedSubview(dogBreedTextField)
-		contentView.addArrangedSubview(weightTextField)
-		contentView.addArrangedSubview(neuterStackView)
-		contentView.addArrangedSubview(characterTextView)
+		contentView.addArrangedSubviews(
+			nickNameTextField,
+			calenderTextField,
+			genderButtonStackView,
+			dogBreedTextField,
+			weightTextField,
+			neuterStackView,
+			characterTextView
+		)
 		
-		genderButtonStackView.addArrangedSubview(maleButton)
-		genderButtonStackView.addArrangedSubview(femaleButton)
+		genderButtonStackView.addArrangedSubviews(maleButton, femaleButton)
 		
-		neuterStackView.addArrangedSubview(neuterStackViewLabel)
-		neuterStackView.addArrangedSubview(neuterButtonStackView)
+		neuterStackView.addArrangedSubviews(neuterStackViewLabel, neuterButtonStackView)
 		
-		neuterButtonStackView.addArrangedSubview(didNeuterButton)
-		neuterButtonStackView.addArrangedSubview(didNotNeuterButton)
+		neuterButtonStackView.addArrangedSubviews(didNeuterButton, didNotNeuterButton)
 	}
 	
 	func setConstraints() {
@@ -231,30 +219,29 @@ private extension DogProfileEditScrollView {
 	}
 }
 
-// MARK: Bind
+// MARK: - Bind
 private extension DogProfileEditScrollView {
 	func textBind() {
-		rx.nickNameTextFieldText
+		nickNameTextField.textField.rx.text
 			.orEmpty
-			.withUnretained(self)
-			.map { owner, text -> String in
+			.map { text -> String in
 				let maxTextCount = ScrollViewConstant.maximumTextFieldCount
-				return owner.trimmingSuffix(text, maxCount: maxTextCount)
+				return text.trimmingSuffix(with: maxTextCount)
 			}
-			.bind(to: rx.nickNameTextFieldText)
+			.bind(to: nickNameTextField.textField.rx.text)
 			.disposed(by: disposeBag)
 		
-		rx.nickNameTextFieldText
+		nickNameTextField.textField.rx.text
 			.orEmpty
 			.map { "\($0.count)/\(ScrollViewConstant.maximumTextFieldCount)" }
-			.bind(to: maximumTextCountLabel.rx.text)
+			.bind(to: maxTextCountLabel.rx.text)
 			.disposed(by: disposeBag)
-
+		
 		calenderTextField.textField.rx.controlEvent(.editingDidBegin)
 			.map { true }
 			.bind(to: calenderTextField.textField.rx.isEditing)
 			.disposed(by: disposeBag)
-
+		
 		weightTextField.textField.rx.controlEvent(.editingChanged)
 			.withUnretained(self)
 			.bind { owner, _ in
@@ -269,13 +256,13 @@ private extension DogProfileEditScrollView {
 			}
 			.disposed(by: disposeBag)
 		
-		rx.characterTextViewText
+		characterTextView.textView.rx.text
 			.orEmpty
 			.map { "\($0.count)/\(ScrollViewConstant.maximumTextViewCount)" }
 			.bind(to: characterTextView.maximumTextCountLabel.rx.text)
 			.disposed(by: disposeBag)
 		
-		rx.characterTextViewText
+		characterTextView.textView.rx.text
 			.orEmpty
 			.map { $0.count > ScrollViewConstant.maximumTextViewCount }
 			.bind(to: characterTextView.rx.isWarning)
@@ -285,7 +272,7 @@ private extension DogProfileEditScrollView {
 	func buttonBind() {
 		maleButton.rx.tap
 			.bind(with: self) { owner, _ in
-				owner.genderDidChanged.accept(.male)
+				owner.dogSex = .male
 				owner.maleButton.rx.isSelected.onNext(true)
 				owner.femaleButton.rx.isSelected.onNext(false)
 			}
@@ -293,7 +280,7 @@ private extension DogProfileEditScrollView {
 		
 		femaleButton.rx.tap
 			.bind(with: self) { owner, _ in
-				owner.genderDidChanged.accept(.female)
+				owner.dogSex = .female
 				owner.femaleButton.rx.isSelected.onNext(true)
 				owner.maleButton.rx.isSelected.onNext(false)
 			}
@@ -301,7 +288,7 @@ private extension DogProfileEditScrollView {
 		
 		didNeuterButton.rx.tap
 			.bind(with: self) { owner, _ in
-				owner.neuterDidChanged.accept(true)
+				owner.dogNeutered = true
 				owner.didNeuterButton.rx.isSelected.onNext(true)
 				owner.didNotNeuterButton.rx.isSelected.onNext(false)
 			}
@@ -309,7 +296,7 @@ private extension DogProfileEditScrollView {
 		
 		didNotNeuterButton.rx.tap
 			.bind(with: self) { owner, _ in
-				owner.neuterDidChanged.accept(false)
+				owner.dogNeutered = false
 				owner.didNotNeuterButton.rx.isSelected.onNext(true)
 				owner.didNeuterButton.rx.isSelected.onNext(false)
 			}
@@ -319,14 +306,6 @@ private extension DogProfileEditScrollView {
 
 // MARK: Bind Function
 private extension DogProfileEditScrollView {
-	func trimmingSuffix(_ text: String, maxCount: Int) -> String {
-		if text.count >= maxCount {
-			let index = text.index(text.startIndex, offsetBy: maxCount)
-			return String(text[..<index])
-		}
-		return text
-	}
-	
 	/// add Suffix in Weight TextField
 	func addSuffixForWeightTextField() {
 		let textField = weightTextField.textField
@@ -372,26 +351,7 @@ private extension DogProfileEditScrollView {
 	}
 }
 
-// MARK: Reactive Extension About ScrollView TextField/TextView
-extension Reactive where Base: DogProfileEditScrollView {
-	var nickNameTextFieldText: ControlProperty<String?> {
-		base.nickNameTextField.textField.rx.text
-	}
-	var calenderTextFieldText: ControlProperty<String?> {
-		base.calenderTextField.textField.rx.text
-	}
-	var dogBreedTextFieldText: ControlProperty<String?> {
-		base.calenderTextField.textField.rx.text
-	}
-	var weightTextFieldText: ControlProperty<String?> {
-		base.weightTextField.textField.rx.text
-	}
-	var characterTextViewText: ControlProperty<String?> {
-		base.characterTextView.textView.rx.text
-	}
-}
-
-// MARK: Reactive Extension About ScrollView Button
+// MARK: - Reactive Extension
 extension Reactive where Base: DogProfileEditScrollView {
 	var didTapCalenderButton: ControlEvent<Void> {
 		base.calenderButton.rx.tap
