@@ -68,6 +68,10 @@ final class FirstDogSettingViewController:
 		setupUI()
 	}
 	
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+	}
+	
 	// MARK: - UI Methods
 	private func setupUI() {
 		setTextField(dogNameTextField.textField, rightView: maximumTextCountLabel)
