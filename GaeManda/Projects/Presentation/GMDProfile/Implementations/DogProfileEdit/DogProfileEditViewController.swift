@@ -271,7 +271,7 @@ extension DogProfileEditViewController: UICollectionViewDelegate {
 extension DogProfileEditViewController: KeyboardListener {
 	func keyboardWillShow(height: CGFloat) {
 		let scrollViewBottom = scrollView.convert(scrollView.bounds, to: view).maxY
-		let bottomFromSuperView = view.frame.size.height - scrollviewBottom
+		let bottomFromSuperView = view.frame.size.height - scrollViewBottom
 		let padding: CGFloat = 20
 		
 		/// add Padding from Scroll View Bottom to enable scroll all contents
