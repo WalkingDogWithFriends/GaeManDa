@@ -96,6 +96,10 @@ final class AddressSettingViewController:
 		bind()
 	}
 	
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+	}
+	
 	override func setViewHierarchy() {
 		super.setViewHierarchy()
 		contentView.addSubviews(
