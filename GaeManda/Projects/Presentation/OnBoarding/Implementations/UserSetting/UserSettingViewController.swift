@@ -145,12 +145,12 @@ final class UserSettingViewController:
 	}
 	
 	private func bindNavigation() {
-	 navigationBar.backButton.rx.tap
-		 .bind(with: self) { owner, _ in
-			 owner.listener?.backButtonDidTap()
-		 }
-		 .disposed(by: disposeBag)
- }
+		navigationBar.backButton.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.listener?.backButtonDidTap()
+			}
+			.disposed(by: disposeBag)
+	}
 	
 	private func bindTextField() {
 		nickNameTextField.textField.rx.text
@@ -205,7 +205,7 @@ final class UserSettingViewController:
 			.map { $0 == .female }
 			.drive(femaleButton.rx.isSelected)
 			.disposed(by: disposeBag)
-				
+		
 		// 닉네임, 생일 입력 여부 Observable
 		let textFieldsTextEmptyObservable = Observable
 			.combineLatest(
