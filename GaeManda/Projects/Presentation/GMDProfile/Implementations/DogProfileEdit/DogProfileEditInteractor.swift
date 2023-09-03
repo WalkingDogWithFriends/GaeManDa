@@ -139,8 +139,8 @@ private extension DogProfileEditInteractor {
 					)
 				}
 			}
-			.bind(with: self) { owner, viewModel in
-				owner.presenter.updateDogDashBoard(dogViewModels: viewModel)
+			.bind(with: self) { owner, viewModels in
+				owner.presenter.updateDogDashBoard(dogViewModels: viewModels)
 			}
 			.disposeOnDeactivate(interactor: self)
 		
