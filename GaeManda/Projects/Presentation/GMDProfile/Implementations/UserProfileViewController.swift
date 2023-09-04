@@ -67,6 +67,19 @@ final class UserProfileViewController:
 	}()
 	
 	private let profileImageView = RoundImageView()
+	
+	private let addDogButton: UIButton = {
+		let button = UIButton()
+		button.tintColor = .black
+		button.setImage(
+			UIImage(systemName: "plus"),
+			for: .normal
+		)
+		button.backgroundColor = .gray40
+		
+		return button
+	}()
+	
 	private let dogPageControl = DogPageControl()
 		
 	private let collectionView: UICollectionView = {
@@ -123,6 +136,7 @@ private extension UserProfileViewController {
 			profileEditButton,
 			sexAndAgeLabel,
 			profileImageView,
+			addDogButton,
 			dogPageControl,
 			collectionView
 		)
@@ -158,16 +172,38 @@ private extension UserProfileViewController {
 			make.height.width.equalTo(140)
 		}
 		
-		dogPageControl.snp.makeConstraints { make in
-			make.top.equalTo(profileImageView.snp.bottom).offset(32)
+		addDogButton.snp.makeConstraints { make in
+			make.top.equalTo(profileImageView.snp.bottom).offset(36)
 			make.leading.equalTo(collectionView)
+			make.height.width.equalTo(32)
+		}
+		
+		dogPageControl.snp.makeConstraints { make in
+			make.centerY.equalTo(addDogButton)
+			make.leading.equalTo(addDogButton.snp.trailing).offset(10)
 		}
 				
 		collectionView.snp.makeConstraints { make in
-			make.top.equalTo(dogPageControl.snp.bottom).offset(8)
+			make.top.equalTo(profileImageView.snp.bottom).offset(76)
 			make.leading.equalToSuperview().offset(28)
 			make.trailing.equalToSuperview().offset(-28)
 			make.height.equalTo(102)
+		}
+	}
+	
+	func setDogPageControlConstraints(with dogsCount: Int) {
+		if dogsCount == 3 {
+			addDogButton.isHidden = true
+			dogPageControl.snp.remakeConstraints { make in
+				make.centerY.equalTo(addDogButton)
+				make.leading.equalTo(collectionView)
+			}
+		} else {
+			addDogButton.isHidden = false
+			dogPageControl.snp.remakeConstraints { make in
+				make.centerY.equalTo(addDogButton)
+				make.leading.equalTo(addDogButton.snp.trailing).offset(10)
+			}
 		}
 	}
 }
@@ -188,6 +224,7 @@ extension UserProfileViewController {
 		collectionView.isScrollEnabled = dogs.count != 1
 		scrollCollectionView(at: 1, at: .right)
 		dogPageControl.numberOfPages = dogs.count
+		setDogPageControlConstraints(with: dogs.count)
 	}
 }
 
