@@ -27,6 +27,7 @@ final class UserProfileViewController:
 	UIViewController,
 	UserProfilePresentable,
 	UserProfileViewControllable {
+	// MARK: - Properties
 	weak var listener: UserProfilePresentableListener?
 	private let disposeBag = DisposeBag()
 	private var dogs: [Dog] = []
@@ -65,19 +66,9 @@ final class UserProfileViewController:
 		return label
 	}()
 	
-	private let profileImageView: RoundImageView = {
-		let roundImageView = RoundImageView()
-		roundImageView.backgroundColor = .systemGray
+	private let profileImageView = RoundImageView()
+	private let dogPageControl = DogPageControl()
 		
-		return roundImageView
-	}()
-	
-	private let indicatorView: IndicatorView = {
-		let indicatorView = IndicatorView()
-		
-		return indicatorView
-	}()
-	
 	private let collectionView: UICollectionView = {
 		let layout = UICollectionViewFlowLayout()
 		layout.scrollDirection = .horizontal
@@ -99,8 +90,8 @@ final class UserProfileViewController:
 	// MARK: - Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		collectionView.delegate = self
-		collectionView.dataSource = self
+		collectionView.rx.setDelegate(self).disposed(by: disposeBag)
+		collectionView.rx.setDataSource(self).disposed(by: disposeBag)
 		
 		setupUI()
 	}
@@ -132,7 +123,7 @@ private extension UserProfileViewController {
 			profileEditButton,
 			sexAndAgeLabel,
 			profileImageView,
-			indicatorView,
+			dogPageControl,
 			collectionView
 		)
 	}
@@ -167,13 +158,13 @@ private extension UserProfileViewController {
 			make.height.width.equalTo(140)
 		}
 		
-		indicatorView.snp.makeConstraints { make in
+		dogPageControl.snp.makeConstraints { make in
 			make.top.equalTo(profileImageView.snp.bottom).offset(32)
-			make.trailing.equalTo(collectionView)
+			make.leading.equalTo(collectionView)
 		}
-		
+				
 		collectionView.snp.makeConstraints { make in
-			make.top.equalTo(indicatorView.snp.bottom).offset(8)
+			make.top.equalTo(dogPageControl.snp.bottom).offset(8)
 			make.leading.equalToSuperview().offset(28)
 			make.trailing.equalToSuperview().offset(-28)
 			make.height.equalTo(102)
@@ -194,10 +185,9 @@ extension UserProfileViewController {
 	func updateDogs(_ dogs: [Dog]) {
 		self.dogs = getInfiniteCarouselCellData(by: dogs)
 		collectionView.reloadData()
-		collectionView.isScrollEnabled = dogs.count == 1 ? false : true
+		collectionView.isScrollEnabled = dogs.count != 1
 		scrollCollectionView(at: 1, at: .right)
-		indicatorView.indicatorCount = dogs.count
-		indicatorView.collectionViewDidChange(index: 0)
+		dogPageControl.numberOfPages = dogs.count
 	}
 }
 
@@ -266,7 +256,7 @@ extension UserProfileViewController: UIScrollViewDelegate {
 		}
 		
 		/// Indicator UI Update
-		indicatorView.collectionViewDidChange(index: index - 1)
+		dogPageControl.currentPage = index - 1
 	}
 }
 
