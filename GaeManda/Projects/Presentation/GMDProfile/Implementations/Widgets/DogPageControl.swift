@@ -49,7 +49,7 @@ final class DogPageControl: UIStackView {
 	// MARK: - layoutSubviews
 	override func layoutSubviews() {
 		super.layoutSubviews()
-		print("printLayoutSubviews")
+
 		// make Indicator views round
 		pageIndicators.forEach {
 			$0.layer.cornerRadius = $0.bounds.width / 2
