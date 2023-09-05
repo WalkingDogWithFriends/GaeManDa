@@ -29,8 +29,15 @@ public class UnderLineTextField: UITextField {
 	}
 	
 	private func setupUI() {
+		setViewHierarchy()
+		setConstraints()
+	}
+	
+	private func setViewHierarchy() {
 		addSubview(underLineView)
-		
+	}
+	
+	private func setConstraints() {
 		underLineView.snp.makeConstraints { make in
 			make.top.equalTo(self.snp.bottom).offset(4)
 			make.leading.trailing.equalToSuperview()
