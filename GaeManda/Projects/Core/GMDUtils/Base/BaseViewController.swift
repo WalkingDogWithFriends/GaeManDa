@@ -14,9 +14,11 @@ import SnapKit
 open class BaseViewController: UIViewController {
 	// MARK: - Properties
 	public var disposeBag = DisposeBag()
+	public var keyboardShowNotification: NSObjectProtocol?
+	public var keyboardHideNotification: NSObjectProtocol?
 	
 	// MARK: - UI Components
-	private let scrollView: UIScrollView = {
+	public let scrollView: UIScrollView = {
 		let scrollView = UIScrollView()
 		scrollView.showsVerticalScrollIndicator = false
 		scrollView.showsHorizontalScrollIndicator = false
@@ -38,7 +40,8 @@ open class BaseViewController: UIViewController {
 	open override func viewDidLoad() {
 		super.viewDidLoad()
 		self.view.backgroundColor = .white
-		registerKeyboardNotification()
+		self.keyboardShowNotification = registerKeyboardShowNotification()
+		self.keyboardHideNotification = registerKeyboardHideNotification()
 		// bind
 		contentView.rx.tapGesture()
 			.when(.recognized)
@@ -48,8 +51,9 @@ open class BaseViewController: UIViewController {
 			.disposed(by: disposeBag)
 	}
 	
-	open override func viewDidDisappear(_ animated: Bool) {
-		removeKeyboardNotification()
+	open override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		removeKeyboardNotification([keyboardShowNotification, keyboardHideNotification])
 	}
 	
 	// MARK: - Methods
