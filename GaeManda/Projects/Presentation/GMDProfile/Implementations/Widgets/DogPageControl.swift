@@ -14,17 +14,8 @@ import DesignKit
 
 final class DogPageControl: UIStackView {
 	// MARK: - Properties
-	var numberOfPages: Int = 0 {
-		didSet {
-			setupUI()
-		}
-	}
-	
-	var currentPage: Int = 0 {
-		didSet {
-			setIndicatorsColor()
-		}
-	}
+	private var numberOfPages: Int = 0
+	private var currentPage: Int = 0
 	
 	/// indicator color for current page
 	var currentIndicatorColor: UIColor = .green60
@@ -60,16 +51,35 @@ final class DogPageControl: UIStackView {
 	}
 }
 
+// MARK: - Internal Methods
+extension DogPageControl {
+	func setNumberOfPages(with dogsCount: Int) {
+		guard numberOfPages != dogsCount else { return }
+		
+		numberOfPages = dogsCount
+		setupUI()
+	}
+	
+	func setCurrentPage(at page: Int) {
+		guard currentPage != page else { return }
+		
+		currentPage = page
+		setIndicatorsColor()
+	}
+}
+
 // MARK: - UI Setting
 private extension DogPageControl {
 	func setupUI() {
-		// remove before page indicators
-		pageIndicators.forEach { $0.removeFromSuperview() }
-		pageIndicators = []
-		
+		resetPageIndicators()
 		setViewHierarchy()
 		setConstraints()
 		setIndicatorsColor()
+	}
+	
+	func resetPageIndicators() {
+		pageIndicators.forEach { $0.removeFromSuperview() }
+		pageIndicators = []
 	}
 	
 	func setViewHierarchy() {
