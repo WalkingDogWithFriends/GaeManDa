@@ -10,8 +10,7 @@ public enum GMDTextFieldMode {
 }
 
 public final class GMDTextField: UIView {
-	private let disposeBag = DisposeBag()
-	
+	// MARK: - Properties
 	public var mode: GMDTextFieldMode = .normal {
 		didSet {
 			switch mode {
@@ -38,6 +37,15 @@ public final class GMDTextField: UIView {
 		}
 		set {
 			textField.attributedText = newValue
+		}
+	}
+	
+	public var titleAlpha: CGFloat {
+		get {
+			titleLabel.alpha
+		}
+		set {
+			titleLabel.alpha = newValue
 		}
 	}
 	
@@ -106,37 +114,21 @@ public final class GMDTextField: UIView {
 // MARK: - UI Setting
 private extension GMDTextField {
 	func setupUI() {
-		self.textField.setPlaceholdColor(.gray90)
+		textField.setPlaceholdColor(.gray90)
 		
 		setViewHierarchy()
 		setConstraints()
-		bind()
 	}
 	
 	func setViewHierarchy() {
 		addSubview(stackView)
-		stackView.addArrangedSubviews(
-			titleLabel,
-			textField,
-			warningLabel
-		)
+		stackView.addArrangedSubviews(titleLabel, textField, warningLabel)
 	}
 	
 	func setConstraints() {
 		stackView.snp.makeConstraints { make in
 			make.edges.equalToSuperview()
 		}
-	}
-}
-
-// MARK: - Bind
-private extension GMDTextField {
-	func bind() {
-		rx.text
-			.orEmpty
-			.map { $0.isEmpty ? 0.0 : 1.0 }
-			.bind(to: titleLabel.rx.alpha)
-			.disposed(by: disposeBag)
 	}
 }
 
