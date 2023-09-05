@@ -14,6 +14,7 @@ public protocol UserProfileDependency: Dependency {
 	var userProfileUseCase: UserProfileUseCase { get }
 	var userProfileEditBuildable: UserProfileEditBuildable { get }
 	var dogProfileEditBuildable: DogProfileEditBuildable { get }
+	var newDogProfileBuildable: NewDogProfileBuildable { get }
 }
 
 final class UserProfileComponent:
@@ -27,6 +28,9 @@ final class UserProfileComponent:
 	}
 	fileprivate var dogProfileEditBuildable: DogProfileEditBuildable {
 		dependency.dogProfileEditBuildable
+	}
+	fileprivate var newDogProfileBuildable: NewDogProfileBuildable {
+		dependency.newDogProfileBuildable
 	}
 }
 
@@ -50,7 +54,8 @@ public final class UserProfileBuilder:
 			interactor: interactor,
 			viewController: viewController,
 			userProfileEditBuildable: component.userProfileEditBuildable,
-			dogProfileEditBuildable: component.dogProfileEditBuildable
+			dogProfileEditBuildable: component.dogProfileEditBuildable,
+			newDogProfileBuildable: component.newDogProfileBuildable
 		)
 	}
 }

@@ -25,7 +25,8 @@ final class LoggedInComponent:
 	DogsOnAroundDependency,
 	UserProfileDependency,
 	UserProfileEditDependency,
-	DogProfileEditDependency {	
+	DogProfileEditDependency,
+	NewDogProfileDependency {
 	// MARK: - Buildable
 	lazy var chattingListBuildable: ChattingListBuildable = {
 		return ChattingListBuilder(dependency: self)
@@ -49,6 +50,10 @@ final class LoggedInComponent:
 	
 	lazy var dogProfileEditBuildable: DogProfileEditBuildable = {
 		return DogProfileEditBuilder(dependency: self)
+	}()
+	
+	lazy var newDogProfileBuildable: NewDogProfileBuildable = {
+		return NewDogProfileBuilder(dependency: self)
 	}()
 	
 	// MARK: - Repository
