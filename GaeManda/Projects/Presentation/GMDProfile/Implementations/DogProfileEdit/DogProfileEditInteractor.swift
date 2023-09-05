@@ -72,7 +72,7 @@ extension DogProfileEditInteractor {
 	}
 	
 	func didTapBackButton() {
-		listener?.dogProfileEditBackButtonDidTap()
+		listener?.dogProfileEditDidTapBackButton()
 	}
 	
 	func didTapEndEditButton(dog: Dog) {

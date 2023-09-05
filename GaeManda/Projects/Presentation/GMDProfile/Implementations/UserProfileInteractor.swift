@@ -85,7 +85,7 @@ extension UserProfileInteractor {
 
 // MARK: - UserProfileEditListener
 extension UserProfileInteractor {
-	func userProfileEditBackButtonDidTap() {
+	func userProfileEditDidTapBackButton() {
 		router?.userProfileEditDetach()
 	}
 	
@@ -96,12 +96,19 @@ extension UserProfileInteractor {
 
 // MARK: - DogProfileEditListener
 extension UserProfileInteractor {
-	func dogProfileEditBackButtonDidTap() {
+	func dogProfileEditDidTapBackButton() {
 		router?.dogProfileEditDetach()
 	}
 	
 	func dogProfileEndEditing() {
 		router?.dogProfileEditDetach()
+	}
+}
+
+// MARK: - NewDogProfileListener
+extension UserProfileInteractor {
+	func newDogProfileDidTapBackButton() {
+		router?.newDogProfileDetach()
 	}
 }
 
