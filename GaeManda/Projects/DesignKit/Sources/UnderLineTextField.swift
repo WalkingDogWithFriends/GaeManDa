@@ -2,13 +2,6 @@ import UIKit
 import SnapKit
 
 public class UnderLineTextField: UITextField {
-	private let textPadding = UIEdgeInsets(
-		top: 0,
-		left: 10,
-		bottom: 0,
-		right: 0
-	)
-	
 	public var selecetedRange: NSRange? {
 		guard let range = self.selectedTextRange else { return nil }
 		let location = offset(from: beginningOfDocument, to: range.start)
@@ -16,6 +9,8 @@ public class UnderLineTextField: UITextField {
 		
 		return NSRange(location: location, length: length)
 	}
+		
+	private let underLineView = UIView()
 	
 	public var underLineColor: UIColor? {
 		didSet {
@@ -23,24 +18,26 @@ public class UnderLineTextField: UITextField {
 		}
 	}
 	
-	private lazy var underLineView: UIView = {
-		let view = UIView()
-		
-		return view
-	}()
-	
 	public init() {
 		super.init(frame: .zero)
 		setupUI()
 	}
-		
-	public required init?(coder: NSCoder) {
-		super.init(coder: coder)
+	
+	@available(*, unavailable)
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
 	}
 	
 	private func setupUI() {
+		setViewHierarchy()
+		setConstraints()
+	}
+	
+	private func setViewHierarchy() {
 		addSubview(underLineView)
-		
+	}
+	
+	private func setConstraints() {
 		underLineView.snp.makeConstraints { make in
 			make.top.equalTo(self.snp.bottom).offset(4)
 			make.leading.trailing.equalToSuperview()

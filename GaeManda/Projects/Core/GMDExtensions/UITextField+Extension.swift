@@ -47,6 +47,35 @@ public extension UITextField {
 			attributes: [.foregroundColor: color]
 		)
 	}
+	
+	func moveCusorLeftTo(suffix: String) {
+		guard
+			let text = self.text,
+			let selectedRange = self.selectedTextRange,
+			let suffixRange = text.range(of: suffix)
+		else {
+			return
+		}
+		
+		let suffixStartIndex = text.distance(
+			from: text.startIndex,
+			to: suffixRange.lowerBound
+		)
+		
+		let cursorEndPosition = self.offset(
+			from: self.beginningOfDocument,
+			to: selectedRange.end
+		)
+		
+		if
+			cursorEndPosition > suffixStartIndex,
+			let newPosition = self.position(from: selectedRange.end, offset: -2) {
+			self.selectedTextRange = self.textRange(
+				from: newPosition,
+				to: newPosition
+			)
+		}
+	}
 }
 
 public extension Reactive where Base: UITextField {

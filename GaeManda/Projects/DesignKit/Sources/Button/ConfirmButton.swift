@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import RxSwift
 import RxCocoa
+import RxSwift
 
 public final class ConfirmButton: UIButton {
 	// MARK: - Properties
@@ -20,15 +20,14 @@ public final class ConfirmButton: UIButton {
 	
 	// MARK: - Initializers
 	public init(title: String) {
-		self.isPositive = false
+		self.isPositive = true
 		super.init(frame: .zero)
 		
 		self.layer.cornerRadius = 4
-		self.backgroundColor = .gray60
+		self.backgroundColor = .green100
 		self.setTitleColor(.white, for: .normal)
 		self.setTitle(title, for: .normal)
 		self.titleLabel?.font = .b16
-		self.isEnabled = false
 	}
 	
 	@available(*, unavailable)

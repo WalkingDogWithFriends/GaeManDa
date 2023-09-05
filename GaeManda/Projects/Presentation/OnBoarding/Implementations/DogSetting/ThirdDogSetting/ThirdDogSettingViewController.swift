@@ -4,6 +4,7 @@ import RxCocoa
 import RxSwift
 import SnapKit
 import DesignKit
+import Entity
 import GMDExtensions
 import GMDUtils
 
@@ -13,20 +14,17 @@ protocol ThirdDogSettingPresentableListener: AnyObject {
 }
 
 final class ThirdDogSettingViewController:
-	KeyboardRespondViewController,
+	BaseViewController,
 	ThirdDogSettingPresentable,
 	ThirdDogSettingViewControllable {
+	// MARK: - Properties
 	weak var listener: ThirdDogSettingPresentableListener?
-	private let disposeBag = DisposeBag()
-		
-	private let onBoardingView: OnBoardingView = {
-		let onBoardingView = OnBoardingView(
-			willDisplayImageView: true,
-			title: "우리 아이를 등록해주세요! (3/3)"
-		)
-
-		return onBoardingView
-	}()
+	private let maximumTextCount: Int = 100
+	
+	// MARK: - UI Components
+	private let navigationBar = GMDNavigationBar(title: "")
+	
+	private let onBoardingView = OnBoardingView(willDisplayImageView: true, title: "우리 아이를 등록해주세요! (3/3)")
 	
 	private let buttonStackViewLabel: UILabel = {
 		let label = UILabel()
@@ -54,81 +52,48 @@ final class ThirdDogSettingViewController:
 		return button
 	}()
 	
-	private let didNotNeuterButton: GMDOptionButton = {
-		let button = GMDOptionButton(title: "안 했어요")
-		
-		return button
-	}()
+	private let didNotNeuterButton = GMDOptionButton(title: "안 했어요")
 	
-	private let characterTextView: GMDTextView = {
-		let gmdTextView = GMDTextView(title: "우리 아이 성격 (선택)")
-		
-		return gmdTextView
-	}()
+	private let characterTextView = GMDTextView(title: "우리 아이 성격 (선택)")
 	
-	private var maximumTextCount: Int = 100
+	private let confirmButton = ConfirmButton(title: "확인")
 	
-	private let confirmButton: UIButton = {
-		let button = UIButton()
-		button.setTitle("확인", for: .normal)
-		button.setTitleColor(.white, for: .normal)
-		button.layer.cornerRadius = 4
-		button.backgroundColor = .init(hexCode: "65BF4D")
-		button.titleLabel?.font = .systemFont(ofSize: 14, weight: .bold)
-		
-		return button
-	}()
-	
+	// MARK: - Life Cycles
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
-		
-		NotificationCenter.default.addObserver(
-			self,
-			selector: #selector(keyboardWillShow),
-			name: UIResponder.keyboardWillShowNotification,
-			object: nil
-		)
-		
-		NotificationCenter.default.addObserver(
-			self,
-			selector: #selector(keyboardWillHidden),
-			name: UIResponder.keyboardWillHideNotification,
-			object: nil
-		)
 	}
 	
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+	}
+	
+	// MARK: - UI Methods
 	private func setupUI() {
-		view.backgroundColor = .white
-		self.setupBackNavigationButton(
-			target: self,
-			action: #selector(backButtonDidTap)
-		)
-		self.paddingValue = 10
-		
-		characterTextView.warningText = "\(maximumTextCount)자 이내로 입력 가능합니다."
-		characterTextView.maximumTextCountLabel.text = "0/\(maximumTextCount)"
-		setupSubviews()
+		setViewHierarchy()
 		setConstraints()
 		bind()
 	}
 	
-	private func setupSubviews() {
-		view.addSubview(onBoardingView)
-		view.addSubview(buttonStackViewLabel)
-		view.addSubview(buttonStackView)
-		view.addSubview(characterTextView)
-		view.addSubview(confirmButton)
-		
-		buttonStackView.addArrangedSubview(didNeuterButton)
-		buttonStackView.addArrangedSubview(didNotNeuterButton)
+	override func setViewHierarchy() {
+		super.setViewHierarchy()
+		contentView.addSubviews(
+			navigationBar, onBoardingView, buttonStackViewLabel, buttonStackView, characterTextView, confirmButton
+		)
+		buttonStackView.addArrangedSubviews(didNeuterButton, didNotNeuterButton)
 	}
 	
-	private func setConstraints() {
+	override func setConstraints() {
+		super.setConstraints()
+		navigationBar.snp.makeConstraints { make in
+			make.top.leading.trailing.equalToSuperview()
+			make.height.equalTo(44)
+		}
+		
 		onBoardingView.snp.makeConstraints { make in
-			make.leading.equalToSuperview()
-			make.trailing.equalToSuperview()
-			make.top.equalToSuperview()
+			make.top.equalTo(navigationBar.snp.bottom).offset(28)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
 		}
 		
 		buttonStackViewLabel.snp.makeConstraints { make in
@@ -145,60 +110,90 @@ final class ThirdDogSettingViewController:
 		}
 		
 		characterTextView.snp.makeConstraints { make in
-			make.top.equalTo(buttonStackView.snp.bottom).offset(20)
+			make.top.equalTo(buttonStackView.snp.bottom).offset(44)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 		}
 		
 		confirmButton.snp.makeConstraints { make in
+			make.top.equalTo(characterTextView.snp.bottom).offset(98)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
-			make.bottom.equalToSuperview().offset(-54)
+			make.bottom.equalToSuperview().offset(-(54 - UIDevice.safeAreaBottomHeight))
 			make.height.equalTo(40)
 		}
 	}
 	
-	private func bind() {
+	// MARK: - UI Binding
+	override func bind() {
+		super.bind()
+		bindNavigationBar()
+		bindNeuterButon()
+		bindCharacterTextView()
+		bindConfirmButton()
+	}
+	
+	private func bindNavigationBar() {
+		navigationBar.backButton.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.listener?.backButtonDidTap()
+			}
+			.disposed(by: disposeBag)
+	}
+	private func bindNeuterButon() {
+		// 중성화 버튼 선택 Observable
+		let selectedNeuterButon = Observable
+			.merge(
+				didNeuterButton.rx.tap.map { Neutered.true },
+				didNotNeuterButton.rx.tap.map { Neutered.false }
+			)
+			.asDriver(onErrorJustReturn: .true)
+		
+		// 중성화 한 경우
+		selectedNeuterButon
+			.map { $0 == .true }
+			.drive(didNeuterButton.rx.isSelected)
+			.disposed(by: disposeBag)
+		
+		// 중성화 하지 않은 경우
+		selectedNeuterButon
+			.map { $0 == .false }
+			.drive(didNotNeuterButton.rx.isSelected)
+			.disposed(by: disposeBag)
+	}
+	
+	private func bindCharacterTextView() {
 		characterTextView.textView.rx.didBeginEditing
-			.withUnretained(self)
-			.bind { owner, _ in
-				owner.editingView = owner.characterTextView.textView
+			.bind(with: self) { owner, _ in
+				owner.characterTextView.textView.becomeFirstResponder()
 			}
 			.disposed(by: disposeBag)
 		
-		characterTextView.textView.rx.didEndEditing
+		characterTextView.textView.rx.text.orEmpty
 			.withUnretained(self)
-			.bind { owner, _ in
-				owner.editingView = nil
+			.map { owner, text in
+				"\(text.count)/\(owner.maximumTextCount)"
 			}
-			.disposed(by: disposeBag)
-
-		characterTextView.textView.rx.text
-			.orEmpty
-			.map { $0.count }
-			.withUnretained(self)
-			.bind { owner, count in
-				owner.setTextCountLabel(count)
-			}
+			.bind(to: characterTextView.maximumTextCountLabel.rx.text)
 			.disposed(by: disposeBag)
 		
-		didNeuterButton.rx.tap
+		characterTextView.textView.rx.text.orEmpty
 			.withUnretained(self)
-			.bind { owner, _ in
-				owner.didNeuterButtonDidTap()
+			.map { owner, text in
+				return text.count > owner.maximumTextCount
 			}
+			.bind(to: characterTextView.rx.isWarning)
 			.disposed(by: disposeBag)
-		
-		didNotNeuterButton.rx.tap
-			.withUnretained(self)
-			.bind { owner, _ in
-				owner.didNotNeuterButtonDidTap()
-			}
-			.disposed(by: disposeBag)
-		
+	}
+	
+	private func bindConfirmButton() {
 		confirmButton.rx.tap
-			.withUnretained(self)
-			.bind { owner, _ in
+			.withLatestFrom(characterTextView.textView.rx.text.orEmpty) { [weak self] _, text in
+				guard let self else { return false }
+				return text.count <= self.maximumTextCount
+			}
+			.filter { $0 == true }
+			.bind(with: self) { owner, _ in
 				owner.listener?.confirmButtonDidTap()
 			}
 			.disposed(by: disposeBag)
@@ -207,34 +202,7 @@ final class ThirdDogSettingViewController:
 
 // MARK: - Action
 private extension ThirdDogSettingViewController {
-	func setTextCountLabel(_ textCount: Int) {
-		characterTextView.maximumTextCountLabel.text = "\(textCount)/\(maximumTextCount)"
-		if textCount > maximumTextCount {
-			characterTextView.isWarning = true
-		} else {
-			characterTextView.isWarning = false
-		}
-	}
-	
 	func calenderButtonDidTap() {
 		print("calenderButtonDidTap")
-	}
-	
-	func didNeuterButtonDidTap() {
-		if didNeuterButton.isSelected == true { return }
-		
-		didNeuterButton.isSelected = true
-		didNotNeuterButton.isSelected = false
-	}
-	
-	func didNotNeuterButtonDidTap() {
-		if didNotNeuterButton.isSelected == true { return }
-		
-		didNotNeuterButton.isSelected = true
-		didNeuterButton.isSelected = false
-	}
-	
-	@objc func backButtonDidTap() {
-		listener?.backButtonDidTap()
 	}
 }
