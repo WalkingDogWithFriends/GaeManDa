@@ -180,9 +180,10 @@ final class ThirdDogSettingViewController:
 		characterTextView.textView.rx.text.orEmpty
 			.withUnretained(self)
 			.map { owner, text in
-				return text.count > owner.maximumTextCount
+				text.count > owner.maximumTextCount
+				? GMDTextViewMode.warning : GMDTextViewMode.normal
 			}
-			.bind(to: characterTextView.rx.isWarning)
+			.bind(to: characterTextView.rx.mode)
 			.disposed(by: disposeBag)
 	}
 	
