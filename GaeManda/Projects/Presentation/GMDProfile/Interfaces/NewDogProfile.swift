@@ -12,4 +12,6 @@ public protocol NewDogProfileBuildable: Buildable {
 	func build(withListener listener: NewDogProfileListener) -> ViewableRouting
 }
 
-public protocol NewDogProfileListener: AnyObject { }
+public protocol NewDogProfileListener: AnyObject {
+	func newDogProfileDidTapBackButton()
+}

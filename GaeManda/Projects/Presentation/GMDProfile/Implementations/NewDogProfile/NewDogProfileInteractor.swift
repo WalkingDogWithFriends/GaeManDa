@@ -35,3 +35,10 @@ final class NewDogProfileInteractor:
 		super.willResignActive()
 	}
 }
+
+// MARK: - PresentablListener
+extension NewDogProfileInteractor {
+	func didTapBackButton() {
+		listener?.newDogProfileDidTapBackButton()
+	}
+}

@@ -15,7 +15,9 @@ import DesignKit
 import GMDExtensions
 import GMDUtils
 
-protocol NewDogProfilePresentableListener: AnyObject { }
+protocol NewDogProfilePresentableListener: AnyObject {
+	func didTapBackButton()
+}
 
 final class NewDogProfileViewController:
 	UIViewController,
@@ -23,6 +25,7 @@ final class NewDogProfileViewController:
 	NewDogProfileViewControllable {
 	// MARK: - Properties
 	weak var listener: NewDogProfilePresentableListener?
+	private let disposeBag = DisposeBag()
 	var keyboardShowNotification: NSObjectProtocol?
 	var keyboardHideNotification: NSObjectProtocol?
 	
@@ -63,6 +66,7 @@ private extension NewDogProfileViewController {
 		
 		setViewHierarchy()
 		setConstraints()
+		bind()
 	}
 	
 	func setViewHierarchy() {
@@ -95,6 +99,17 @@ private extension NewDogProfileViewController {
 			make.bottom.equalToSuperview().offset(-(54 - UIDevice.safeAreaBottomHeight))
 			make.height.equalTo(40)
 		}
+	}
+}
+
+// MARK: - Action Bind
+private extension NewDogProfileViewController {
+	func bind() {
+		navigationBar.backButton.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.listener?.didTapBackButton()
+			}
+			.disposed(by: disposeBag)
 	}
 }
 
