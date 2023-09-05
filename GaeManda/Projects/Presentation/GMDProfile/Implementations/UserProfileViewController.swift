@@ -118,9 +118,10 @@ final class UserProfileViewController:
 // MARK: - UI Setting
 private extension UserProfileViewController {
 	func setupUI() {
+		view.backgroundColor = .white
+		
 		navigationController?.navigationBar.isHidden = true
 		navigationBar.backButton.isHidden = true
-		view.backgroundColor = .white
 		
 		setViewHierarchy()
 		setConstraints()

@@ -166,11 +166,8 @@ private extension DogsCollectionViewCell {
 			bottomStackView
 		)
 		buttonStackView.addArrangedSubviews(editButton, deleteButton)
-		
 		bottomStackView.addArrangedSubviews(weightStackView, neuteringStackView)
-		
 		weightStackView.addArrangedSubviews(weightLabel, weightValueLabel)
-		
 		neuteringStackView.addArrangedSubviews(neuteringLabel, neuteringValueLabel)
 	}
 	
