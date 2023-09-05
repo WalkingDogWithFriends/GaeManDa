@@ -38,4 +38,14 @@ public extension String {
 		let index = self.index(self.startIndex, offsetBy: count)
 		return String(self[..<index])
 	}
+	
+	func append(suffix: String) -> String {
+		if self.contains(suffix), self.count == suffix.count {
+			return ""
+		} else if !self.contains(suffix) {
+			return self + suffix
+		}
+		
+		return self
+	}
 }

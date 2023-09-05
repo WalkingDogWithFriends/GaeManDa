@@ -13,6 +13,11 @@ public enum Sex: String {
 	case female = "여"
 }
 
+public enum Neutered {
+	case `true`
+	case `false`
+}
+
 public struct Dog {
 	public let name: String
 	public let sex: String
