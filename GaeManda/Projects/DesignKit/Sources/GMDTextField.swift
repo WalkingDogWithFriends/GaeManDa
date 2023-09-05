@@ -32,6 +32,15 @@ public final class GMDTextField: UIView {
 		}
 	}
 	
+	public var attributedText: NSAttributedString {
+		get {
+			textField.attributedText ?? NSAttributedString(string: "")
+		}
+		set {
+			textField.attributedText = newValue
+		}
+	}
+	
 	// MARK: - UI Components
 	private let stackView: UIStackView = {
 		let stackView = UIStackView()
@@ -148,5 +157,9 @@ private extension GMDTextField {
 public extension Reactive where Base: GMDTextField {
 	var text: ControlProperty<String?> {
 		base.textField.rx.text
+	}
+	
+	var attributedText: ControlProperty<NSAttributedString?> {
+		base.textField.rx.attributedText
 	}
 }
