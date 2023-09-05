@@ -48,6 +48,12 @@ final class NewDogProfileViewController:
 	override func viewWillDisappear(_ animated: Bool) {
 		removeKeyboardNotification([keyboardShowNotification, keyboardHideNotification])
 	}
+	
+	// MARK: touchedBegan
+	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+		super.touchesBegan(touches, with: event)
+		self.scrollView.endEditing(true)
+	}
 }
 
 // MARK: - UI Setting
