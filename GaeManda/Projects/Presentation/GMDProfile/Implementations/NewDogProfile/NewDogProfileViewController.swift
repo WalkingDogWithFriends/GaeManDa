@@ -8,6 +8,12 @@
 
 import UIKit
 import RIBs
+import RxCocoa
+import RxSwift
+import SnapKit
+import DesignKit
+import GMDExtensions
+import GMDUtils
 
 protocol NewDogProfilePresentableListener: AnyObject { }
 
@@ -15,5 +21,100 @@ final class NewDogProfileViewController:
 	UIViewController,
 	NewDogProfilePresentable,
 	NewDogProfileViewControllable {
+	// MARK: - Properties
 	weak var listener: NewDogProfilePresentableListener?
+	var keyboardShowNotification: NSObjectProtocol?
+	var keyboardHideNotification: NSObjectProtocol?
+	
+	// MARK: - UI Components
+	private var navigationBar = GMDNavigationBar(title: "프로필 추가")
+	private var profileImageView = RoundImageView()
+	private var scrollView = DogProfileScrollView()
+	private var confirmButton = ConfirmButton(title: "완료")
+	
+	// MARK: - Life Cycle
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		setupUI()
+		keyboardShowNotification = registerKeyboardShowNotification()
+		keyboardHideNotification = registerKeyboardHideNotification()
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		hideTabBar()
+	}
+	
+	override func viewWillDisappear(_ animated: Bool) {
+		removeKeyboardNotification([keyboardShowNotification, keyboardHideNotification])
+	}
+}
+
+// MARK: - UI Setting
+private extension NewDogProfileViewController {
+	func setupUI() {
+		navigationController?.navigationBar.isHidden = true
+		
+		setViewHierarchy()
+		setConstraints()
+	}
+	
+	func setViewHierarchy() {
+		view.addSubviews(navigationBar, profileImageView, scrollView, confirmButton)
+	}
+	
+	func setConstraints() {
+		navigationBar.snp.makeConstraints { make in
+			make.leading.trailing.equalToSuperview()
+			make.top.equalTo(view.safeAreaLayoutGuide)
+			make.height.equalTo(44)
+		}
+		
+		profileImageView.snp.makeConstraints { make in
+			make.top.equalTo(navigationBar.snp.bottom).offset(96)
+			make.centerX.equalToSuperview()
+			make.width.height.equalTo(140)
+		}
+		
+		scrollView.snp.makeConstraints { make in
+			make.top.equalTo(profileImageView.snp.bottom).offset(32)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.bottom.equalTo(confirmButton.snp.top).offset(-24)
+		}
+		
+		confirmButton.snp.makeConstraints { make in
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.bottom.equalToSuperview().offset(-(54 - UIDevice.safeAreaBottomHeight))
+			make.height.equalTo(40)
+		}
+	}
+}
+
+// MARK: - KeyboardListener
+extension NewDogProfileViewController: KeyboardListener {
+	func keyboardWillShow(height: CGFloat) {
+		let scrollViewBottom = scrollView.convert(scrollView.bounds, to: view).maxY
+		let bottomFromSuperView = view.frame.size.height - scrollViewBottom
+		let padding: CGFloat = 20
+		
+		/// add Padding from Scroll View Bottom to enable scroll all contents
+		scrollView.contentInset.bottom = height - bottomFromSuperView + padding
+		
+		let firstResponder = UIResponder.currentFirstResponder
+		
+		if let textView = firstResponder as? UITextView {
+			let textViewTopFromScrollView = textView.convert(textView.frame, to: scrollView).maxY
+			// locate textView Top to top of scrollView
+			let moveValue = textViewTopFromScrollView - (scrollView.bounds.size.height / 2)
+			
+			let point = CGPoint(x: 0, y: moveValue - padding)
+			scrollView.setContentOffset(point, animated: true)
+		}
+	}
+	
+	func keyboardWillHide() {
+		scrollView.contentInset = .zero
+	}
 }
