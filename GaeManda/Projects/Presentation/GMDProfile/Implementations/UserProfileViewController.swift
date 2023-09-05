@@ -27,12 +27,10 @@ final class UserProfileViewController:
 	UIViewController,
 	UserProfilePresentable,
 	UserProfileViewControllable {
+	// MARK: - Properties
 	weak var listener: UserProfilePresentableListener?
 	private let disposeBag = DisposeBag()
-	private var dogs: [Dog] = []
-	var dogsCount: Int {
-		dogs.isEmpty ? 0 : dogs.count - 2
-	}
+	private var carouselViewModel = DogsCarouselViewModel()
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "프로필")
@@ -65,19 +63,22 @@ final class UserProfileViewController:
 		return label
 	}()
 	
-	private let profileImageView: RoundImageView = {
-		let roundImageView = RoundImageView()
-		roundImageView.backgroundColor = .systemGray
+	private let profileImageView = RoundImageView()
+	
+	private let addDogButton: UIButton = {
+		let button = UIButton()
+		button.tintColor = .black
+		button.setImage(
+			UIImage(systemName: "plus"),
+			for: .normal
+		)
+		button.backgroundColor = .gray40
 		
-		return roundImageView
+		return button
 	}()
 	
-	private let indicatorView: IndicatorView = {
-		let indicatorView = IndicatorView()
+	private let dogPageControl = DogPageControl()
 		
-		return indicatorView
-	}()
-	
 	private let collectionView: UICollectionView = {
 		let layout = UICollectionViewFlowLayout()
 		layout.scrollDirection = .horizontal
@@ -99,8 +100,8 @@ final class UserProfileViewController:
 	// MARK: - Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		collectionView.delegate = self
-		collectionView.dataSource = self
+		collectionView.rx.setDelegate(self).disposed(by: disposeBag)
+		collectionView.rx.setDataSource(self).disposed(by: disposeBag)
 		
 		setupUI()
 	}
@@ -132,7 +133,8 @@ private extension UserProfileViewController {
 			profileEditButton,
 			sexAndAgeLabel,
 			profileImageView,
-			indicatorView,
+			addDogButton,
+			dogPageControl,
 			collectionView
 		)
 	}
@@ -167,13 +169,19 @@ private extension UserProfileViewController {
 			make.height.width.equalTo(140)
 		}
 		
-		indicatorView.snp.makeConstraints { make in
-			make.top.equalTo(profileImageView.snp.bottom).offset(32)
-			make.trailing.equalTo(collectionView)
+		addDogButton.snp.makeConstraints { make in
+			make.top.equalTo(profileImageView.snp.bottom).offset(36)
+			make.leading.equalTo(collectionView)
+			make.height.width.equalTo(32)
 		}
 		
+		dogPageControl.snp.makeConstraints { make in
+			make.centerY.equalTo(addDogButton)
+			make.leading.equalTo(addDogButton.snp.trailing).offset(10)
+		}
+				
 		collectionView.snp.makeConstraints { make in
-			make.top.equalTo(indicatorView.snp.bottom).offset(8)
+			make.top.equalTo(profileImageView.snp.bottom).offset(76)
 			make.leading.equalToSuperview().offset(28)
 			make.trailing.equalToSuperview().offset(-28)
 			make.height.equalTo(102)
@@ -191,13 +199,37 @@ extension UserProfileViewController {
 		sexAndAgeLabel.text = sexAndAge
 	}
 	
-	func updateDogs(_ dogs: [Dog]) {
-		self.dogs = getInfiniteCarouselCellData(by: dogs)
+	func updateDogs(with viewModel: DogsCarouselViewModel) {
+		self.carouselViewModel = viewModel
+		updateCollectionView()
+		updateDogPageControl()
+	}
+	
+	func updateCollectionView() {
 		collectionView.reloadData()
-		collectionView.isScrollEnabled = dogs.count == 1 ? false : true
+		collectionView.isScrollEnabled = carouselViewModel.dogsCount != 1
 		scrollCollectionView(at: 1, at: .right)
-		indicatorView.indicatorCount = dogs.count
-		indicatorView.collectionViewDidChange(index: 0)
+	}
+	
+	func updateDogPageControl() {
+		dogPageControl.setNumberOfPages(with: carouselViewModel.dogsCount)
+		setDogPageControlConstraints(with: carouselViewModel.dogsCount)
+	}
+	
+	func setDogPageControlConstraints(with dogsCount: Int) {
+		if dogsCount == 3 {
+			addDogButton.isHidden = true
+			dogPageControl.snp.remakeConstraints { make in
+				make.centerY.equalTo(addDogButton)
+				make.leading.equalTo(collectionView)
+			}
+		} else {
+			addDogButton.isHidden = false
+			dogPageControl.snp.remakeConstraints { make in
+				make.centerY.equalTo(addDogButton)
+				make.leading.equalTo(addDogButton.snp.trailing).offset(10)
+			}
+		}
 	}
 }
 
@@ -230,7 +262,7 @@ private extension UserProfileViewController {
 // MARK: - UICollectionViewDataSource
 extension UserProfileViewController: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return dogs.count
+		return carouselViewModel.dogs.count
 	}
 	
 	func collectionView(
@@ -241,7 +273,7 @@ extension UserProfileViewController: UICollectionViewDataSource {
 			DogsCollectionViewCell.self,
 			for: indexPath
 		)
-		let dog = dogs[indexPath.row]
+		let dog = carouselViewModel.dogs[indexPath.row]
 		cell.configure(with: dog)
 		bind(to: cell)
 		
@@ -255,6 +287,7 @@ extension UserProfileViewController: UIScrollViewDelegate {
 		guard let collectionView = scrollView as? UICollectionView else { return }
 		
 		let page = Int(collectionView.contentOffset.x / collectionView.frame.width)
+		let dogsCount = carouselViewModel.dogsCount
 		var index = page
 		
 		if page == 0 {
@@ -266,33 +299,18 @@ extension UserProfileViewController: UIScrollViewDelegate {
 		}
 		
 		/// Indicator UI Update
-		indicatorView.collectionViewDidChange(index: index - 1)
+		dogPageControl.setCurrentPage(at: index - 1)
 	}
 }
 
 // MARK: - CollectionView Infinite Carousel
 private extension UserProfileViewController {
-	func getInfiniteCarouselCellData(by dogs: [Dog]) -> [Dog] {
-		guard
-			let last = dogs.last,
-			let first = dogs.first
-		else {
-			return dogs
-		}
-		var dogsForCell = dogs
-		
-		dogsForCell.insert(last, at: 0)
-		dogsForCell.append(first)
-		
-		return dogsForCell
-	}
-	
 	func scrollCollectionView(
 		at row: Int,
 		at position: UICollectionView.ScrollPosition,
 		animated: Bool = false
 	) {
-		guard row >= 0 && row < dogs.count else { return }
+		guard row >= 0 && row < carouselViewModel.dogs.count else { return }
 		
 		DispatchQueue.main.async { [weak self] in
 			self?.collectionView.scrollToItem(

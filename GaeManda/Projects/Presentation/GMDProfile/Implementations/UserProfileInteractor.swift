@@ -25,7 +25,7 @@ protocol UserProfilePresentable: Presentable {
 	
 	func updateUserName(_ name: String)
 	func updateUserSexAndAge(_ sexAndAge: String)
-	func updateDogs(_ dogs: [Dog])
+	func updateDogs(with viewModel: DogsCarouselViewModel)
 }
 
 protocol UserProfileInteractorDependency {
@@ -121,8 +121,24 @@ private extension UserProfileInteractor {
 			.fetchDogs(id: 0)
 			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, dogs in
-				owner.presenter.updateDogs(dogs)
+				let dogsCarousel = owner.convertToDogsCarousel(with: dogs)
+				let viewMoel = DogsCarouselViewModel(dogs: dogsCarousel)
+				owner.presenter.updateDogs(with: viewMoel)
 			}
 			.disposeOnDeactivate(interactor: self)
+	}
+}
+
+// MARK: - Interactor Logic
+private extension UserProfileInteractor {
+	func convertToDogsCarousel(with dogs: [Dog]) -> [Dog] {
+		guard
+			let last = dogs.last,
+			let first = dogs.first
+		else {
+			return dogs
+		}
+
+		return [last] + dogs + [first]
 	}
 }
