@@ -110,6 +110,11 @@ private extension NewDogProfileViewController {
 				owner.listener?.didTapBackButton()
 			}
 			.disposed(by: disposeBag)
+		
+		scrollView.textFieldModeRelay
+			.map { $0.isValid }
+			.bind(to: confirmButton.rx.isPositive)
+			.disposed(by: disposeBag)
 	}
 }
 
