@@ -33,6 +33,7 @@ final class SecondDogSettingViewController:
 			warningText: "우리 아이 몸무게 (kg)을 입력해주세요."
 		)
 		gmdTextField.textField.keyboardType = .numberPad
+		
 		return gmdTextField
 	}()
 	
