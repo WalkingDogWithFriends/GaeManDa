@@ -17,6 +17,7 @@ import GMDUtils
 
 protocol NewDogProfilePresentableListener: AnyObject {
 	func didTapBackButton()
+	func didTapConfirmButton()
 }
 
 final class NewDogProfileViewController:
@@ -114,6 +115,26 @@ private extension NewDogProfileViewController {
 		scrollView.textFieldModeRelay
 			.map { $0.isValid }
 			.bind(to: confirmButton.rx.isPositive)
+			.disposed(by: disposeBag)
+		
+		let confirmButtonWithViewModel = confirmButton.rx.tap
+			.withLatestFrom(scrollView.textFieldModeRelay)
+			.share()
+		
+		confirmButtonWithViewModel
+			.filter { $0.isValid }
+			.bind(with: self) { owner, _ in
+				owner.listener?.didTapConfirmButton()
+			}
+			.disposed(by: disposeBag)
+		
+		confirmButtonWithViewModel
+			.withLatestFrom(scrollView.textFieldModeRelay)
+			.bind(with: self) { owner, viewModel in
+				owner.scrollView.nickNameTextField.mode = viewModel.nickNameTextFieldMode
+				owner.scrollView.dogBreedTextField.mode = viewModel.dogBreedTextFieldMode
+				owner.scrollView.weightTextField.mode = viewModel.dogWeightTextFieldMode
+			}
 			.disposed(by: disposeBag)
 	}
 }

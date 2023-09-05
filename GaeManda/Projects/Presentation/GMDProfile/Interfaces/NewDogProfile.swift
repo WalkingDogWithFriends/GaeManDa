@@ -14,4 +14,5 @@ public protocol NewDogProfileBuildable: Buildable {
 
 public protocol NewDogProfileListener: AnyObject {
 	func newDogProfileDidTapBackButton()
+	func newDogProfileDidTapConfirmButton()
 }

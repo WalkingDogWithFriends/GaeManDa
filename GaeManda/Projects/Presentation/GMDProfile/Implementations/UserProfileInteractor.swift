@@ -110,6 +110,10 @@ extension UserProfileInteractor {
 	func newDogProfileDidTapBackButton() {
 		router?.newDogProfileDetach()
 	}
+	
+	func newDogProfileDidTapConfirmButton() {
+		router?.newDogProfileDetach()
+	}
 }
 
 // MARK: - Fetch Data From Dependency
