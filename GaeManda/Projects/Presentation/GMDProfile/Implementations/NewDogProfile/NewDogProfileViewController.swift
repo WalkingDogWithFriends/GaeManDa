@@ -96,7 +96,7 @@ private extension NewDogProfileViewController {
 		confirmButton.snp.makeConstraints { make in
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
-			make.bottom.equalToSuperview().offset(-(54 - UIDevice.safeAreaBottomHeight))
+			make.bottom.equalToSuperview().offset(-54)
 			make.height.equalTo(40)
 		}
 	}
