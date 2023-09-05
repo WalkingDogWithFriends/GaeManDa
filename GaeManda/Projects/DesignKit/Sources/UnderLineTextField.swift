@@ -2,6 +2,13 @@ import UIKit
 import SnapKit
 
 public class UnderLineTextField: UITextField {
+	public override var text: String? {
+		didSet {
+			// textField.text를 통해 값을 설정할 때, rx.text로 이벤트를 방출시키기 위해 추가한 코드
+			sendActions(for: .valueChanged)
+		}
+	}
+	
 	public var selecetedRange: NSRange? {
 		guard let range = self.selectedTextRange else { return nil }
 		let location = offset(from: beginningOfDocument, to: range.start)
