@@ -31,6 +31,8 @@ final class DogProfileEditViewController:
 	// MARK: - Properties
 	weak var listener: DogProfileEditPresentableListener?
 	private let disposeBag = DisposeBag()
+	var keyboardShowNotification: NSObjectProtocol?
+	var keyboardHideNotification: NSObjectProtocol?
 	
 	private var dogViewModels: [DogDashBoardViewModel] = []
 	
@@ -73,7 +75,8 @@ final class DogProfileEditViewController:
 		dogProfileDashBoard.rx.setDelegate(self).disposed(by: disposeBag)
 		
 		setupUI()
-		registerKeyboardNotification()
+		keyboardShowNotification = registerKeyboardHideNotification()
+		keyboardHideNotification = registerKeyboardHideNotification()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -86,7 +89,7 @@ final class DogProfileEditViewController:
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		
-		removeKeyboardNotification()
+		removeKeyboardNotification([keyboardShowNotification, keyboardHideNotification])
 	}
 	
 	// MARK: touchedBegan
