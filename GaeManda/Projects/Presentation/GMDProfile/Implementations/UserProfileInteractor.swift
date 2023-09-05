@@ -70,6 +70,8 @@ extension UserProfileInteractor {
 		router?.dogProfileEditAttach(selectedId: id)
 	}
 	
+	func didTapNewDogButton() { }
+	
 	func didTapDogProfileDeleteButton() { }
 	
 	func didTapUserProfileEditButton() {

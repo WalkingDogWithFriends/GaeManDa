@@ -19,6 +19,7 @@ import GMDUtils
 protocol UserProfilePresentableListener: AnyObject {
 	func viewWillAppear()
 	func didTapDogProfileEditButton(at id: Int)
+	func didTapNewDogButton()
 	func didTapDogProfileDeleteButton()
 	func didTapUserProfileEditButton()
 }
@@ -65,7 +66,7 @@ final class UserProfileViewController:
 	
 	private let profileImageView = RoundImageView()
 	
-	private let addDogButton: UIButton = {
+	private let newDogButton: UIButton = {
 		let button = UIButton()
 		button.tintColor = .black
 		button.setImage(
@@ -133,7 +134,7 @@ private extension UserProfileViewController {
 			profileEditButton,
 			sexAndAgeLabel,
 			profileImageView,
-			addDogButton,
+			newDogButton,
 			dogPageControl,
 			collectionView
 		)
@@ -169,15 +170,15 @@ private extension UserProfileViewController {
 			make.height.width.equalTo(140)
 		}
 		
-		addDogButton.snp.makeConstraints { make in
+		newDogButton.snp.makeConstraints { make in
 			make.top.equalTo(profileImageView.snp.bottom).offset(36)
 			make.leading.equalTo(collectionView)
 			make.height.width.equalTo(32)
 		}
 		
 		dogPageControl.snp.makeConstraints { make in
-			make.centerY.equalTo(addDogButton)
-			make.leading.equalTo(addDogButton.snp.trailing).offset(10)
+			make.centerY.equalTo(newDogButton)
+			make.leading.equalTo(newDogButton.snp.trailing).offset(10)
 		}
 				
 		collectionView.snp.makeConstraints { make in
@@ -218,16 +219,16 @@ extension UserProfileViewController {
 	
 	func setDogPageControlConstraints(with dogsCount: Int) {
 		if dogsCount == 3 {
-			addDogButton.isHidden = true
+			newDogButton.isHidden = true
 			dogPageControl.snp.remakeConstraints { make in
-				make.centerY.equalTo(addDogButton)
+				make.centerY.equalTo(newDogButton)
 				make.leading.equalTo(collectionView)
 			}
 		} else {
-			addDogButton.isHidden = false
+			newDogButton.isHidden = false
 			dogPageControl.snp.remakeConstraints { make in
-				make.centerY.equalTo(addDogButton)
-				make.leading.equalTo(addDogButton.snp.trailing).offset(10)
+				make.centerY.equalTo(newDogButton)
+				make.leading.equalTo(newDogButton.snp.trailing).offset(10)
 			}
 		}
 	}
@@ -237,12 +238,16 @@ extension UserProfileViewController {
 private extension UserProfileViewController {
 	func bind() {
 		profileEditButton.rx.tap
-			.withUnretained(self)
-			.bind { owner, _ in
+			.bind(with: self) { owner, _ in
 				owner.listener?.didTapUserProfileEditButton()
 			}
 			.disposed(by: disposeBag)
-	}
+		
+		newDogButton.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.listener?.didTapNewDogButton()
+			}
+			.disposed(by: disposeBag)	}
 	
 	func bind(to cell: DogsCollectionViewCell) {
 		cell.rx.editButtonDidTapped
