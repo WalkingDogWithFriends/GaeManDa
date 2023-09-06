@@ -229,6 +229,7 @@ private extension DogProfileScrollView {
 			.disposed(by: disposeBag)
 		
 		nickNameTextField.rx.text.orEmpty
+			.filter { !$0.isEmpty }
 			.map { _ in GMDTextFieldMode.normal }
 			.bind(to: nickNameTextField.rx.mode)
 			.disposed(by: disposeBag)
@@ -256,6 +257,12 @@ private extension DogProfileScrollView {
 			.map { $0.isEmpty ? 0.0 : 1.0 }
 			.bind(to: dogBreedTextField.rx.titleAlpha)
 			.disposed(by: disposeBag)
+		
+		dogBreedTextField.rx.text.orEmpty
+			.filter { !$0.isEmpty }
+			.map { _ in GMDTextFieldMode.normal }
+			.bind(to: dogBreedTextField.rx.mode)
+			.disposed(by: disposeBag)
 	}
 	
 	func dogWeightTextFieldBind() {
@@ -274,6 +281,12 @@ private extension DogProfileScrollView {
 		weightTextField.rx.text.orEmpty
 			.map { $0.isEmpty ? 0.0 : 1.0 }
 			.bind(to: weightTextField.rx.titleAlpha)
+			.disposed(by: disposeBag)
+		
+		weightTextField.rx.text.orEmpty
+			.filter { !$0.isEmpty }
+			.map { _ in GMDTextFieldMode.normal }
+			.bind(to: weightTextField.rx.mode)
 			.disposed(by: disposeBag)
 	}
 		
