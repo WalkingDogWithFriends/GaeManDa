@@ -227,17 +227,6 @@ private extension DogProfileScrollView {
 			.map { "\($0.count)/\(ScrollViewConstant.maximumTextFieldCount)".inputText(color: .gray90) }
 			.bind(to: maxTextCountLabel.rx.attributedText)
 			.disposed(by: disposeBag)
-		
-		nickNameTextField.rx.text.orEmpty
-			.filter { !$0.isEmpty }
-			.map { _ in GMDTextFieldMode.normal }
-			.bind(to: nickNameTextField.rx.mode)
-			.disposed(by: disposeBag)
-		
-		nickNameTextField.rx.text.orEmpty
-			.map { $0.isEmpty ? 0.0 : 1.0 }
-			.bind(to: nickNameTextField.rx.titleAlpha)
-			.disposed(by: disposeBag)
 	}
 	
 	func calenderTextFieldBind() {
@@ -245,25 +234,9 @@ private extension DogProfileScrollView {
 			.map { true }
 			.bind(to: calenderTextField.textField.rx.isEditing)
 			.disposed(by: disposeBag)
-		
-		calenderTextField.rx.text.orEmpty
-			.map { $0.isEmpty ? 0.0 : 1.0 }
-			.bind(to: calenderTextField.rx.titleAlpha)
-			.disposed(by: disposeBag)
 	}
 	
-	func dogBreedTextFieldBind() {
-		dogBreedTextField.rx.text.orEmpty
-			.map { $0.isEmpty ? 0.0 : 1.0 }
-			.bind(to: dogBreedTextField.rx.titleAlpha)
-			.disposed(by: disposeBag)
-		
-		dogBreedTextField.rx.text.orEmpty
-			.filter { !$0.isEmpty }
-			.map { _ in GMDTextFieldMode.normal }
-			.bind(to: dogBreedTextField.rx.mode)
-			.disposed(by: disposeBag)
-	}
+	func dogBreedTextFieldBind() { }
 	
 	func dogWeightTextFieldBind() {
 		weightTextField.rx.text.orEmpty
@@ -276,17 +249,6 @@ private extension DogProfileScrollView {
 			.bind(with: self) { owner, _ in
 				owner.weightTextField.textField.moveCusorLeftTo(suffix: "kg")
 			}
-			.disposed(by: disposeBag)
-		
-		weightTextField.rx.text.orEmpty
-			.map { $0.isEmpty ? 0.0 : 1.0 }
-			.bind(to: weightTextField.rx.titleAlpha)
-			.disposed(by: disposeBag)
-		
-		weightTextField.rx.text.orEmpty
-			.filter { !$0.isEmpty }
-			.map { _ in GMDTextFieldMode.normal }
-			.bind(to: weightTextField.rx.mode)
 			.disposed(by: disposeBag)
 	}
 		
