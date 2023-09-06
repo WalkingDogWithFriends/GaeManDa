@@ -215,6 +215,7 @@ private extension DogProfileScrollView {
 	}
 	
 	func nickNameTextFieldBind() {
+		// textField의 text가 지정된 수보다 넘어가면 trimming해줌.
 		nickNameTextField.rx.text.orEmpty
 			.map { text in
 				let maxTextCount = ScrollViewConstant.maximumTextFieldCount
@@ -223,6 +224,7 @@ private extension DogProfileScrollView {
 			.bind(to: nickNameTextField.rx.attributedText)
 			.disposed(by: disposeBag)
 		
+		// textField의 text수를 알려주는 Label에 매핑해줌.
 		nickNameTextField.rx.text.orEmpty
 			.map { "\($0.count)/\(ScrollViewConstant.maximumTextFieldCount)".inputText(color: .gray90) }
 			.bind(to: maxTextCountLabel.rx.attributedText)
@@ -230,6 +232,7 @@ private extension DogProfileScrollView {
 	}
 	
 	func calenderTextFieldBind() {
+		// calenderTextField가 editing안되도록 해줌.
 		calenderTextField.textField.rx.controlEvent(.editingDidBegin)
 			.map { true }
 			.bind(to: calenderTextField.textField.rx.isEditing)
@@ -239,12 +242,14 @@ private extension DogProfileScrollView {
 	func dogBreedTextFieldBind() { }
 	
 	func dogWeightTextFieldBind() {
+		// kg suffix를 붙여줌.
 		weightTextField.rx.text.orEmpty
 			.filter { !$0.isEmpty }
 			.map { $0.append(suffix: "kg") }
 			.bind(to: weightTextField.rx.text)
 			.disposed(by: disposeBag)
 		
+		// suffix부분에 커서가 이동이 안되도록 해줌.
 		weightTextField.textField.rx.cursorChanged
 			.bind(with: self) { owner, _ in
 				owner.weightTextField.textField.moveCusorLeftTo(suffix: "kg")
@@ -253,6 +258,7 @@ private extension DogProfileScrollView {
 	}
 		
 	func textViewBind() {
+		// "0/100"과 같이 maxTextCount를 bind시켜줌.
 		characterTextView.rx.text.orEmpty
 			.withUnretained(self)
 			.map { owner, text in
@@ -267,10 +273,12 @@ private extension DogProfileScrollView {
 				? GMDTextViewMode.warning : GMDTextViewMode.normal
 			}.asDriver(onErrorJustReturn: .normal)
 		
+		// GMDTextView의 모드를 변경시켜줌
 		characterTextViewModeObservable
 			.drive(characterTextView.rx.mode)
 			.disposed(by: disposeBag)
 		
+		// ScrollViewUIComponentMode를 생성해서 전달해줌.
 		Observable
 			.combineLatest(
 				nickNameTextField.rx.text.orEmpty,
@@ -293,6 +301,7 @@ private extension DogProfileScrollView {
 	}
 	
 	func buttonBind() {
+		// 성별 버튼 선택 Observable
 		Observable.merge(
 			maleButton.rx.tap.map { Sex.male },
 			femaleButton.rx.tap.map { Sex.female }
@@ -302,16 +311,19 @@ private extension DogProfileScrollView {
 		}
 		.disposed(by: disposeBag)
 		
+		// 남자일 경우
 		selectedSexRelay
 			.map { $0 == .male }
 			.bind(to: maleButton.rx.isSelected)
 			.disposed(by: disposeBag)
 		
+		// 여성일 경우
 		selectedSexRelay
 			.map { $0 == .female }
 			.bind(to: femaleButton.rx.isSelected)
 			.disposed(by: disposeBag)
 		
+		// 중성화 버튼 선택 Observable
 		Observable.merge(
 			didNeuterButton.rx.tap.map { Neutered.true },
 			didNotNeuterButton.rx.tap.map { Neutered.false }
@@ -321,11 +333,13 @@ private extension DogProfileScrollView {
 		}
 		.disposed(by: disposeBag)
 		
+		// 중성화 한 경우
 		selectedNeuterRelay
 			.map { $0 == .true }
 			.bind(to: didNeuterButton.rx.isSelected)
 			.disposed(by: disposeBag)
 		
+		// 중성화 안한 경우
 		selectedNeuterRelay
 			.map { $0 == .false }
 			.bind(to: didNotNeuterButton.rx.isSelected)
