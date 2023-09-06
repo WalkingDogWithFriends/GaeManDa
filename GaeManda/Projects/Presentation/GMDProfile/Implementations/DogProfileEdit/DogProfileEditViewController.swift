@@ -34,6 +34,7 @@ final class DogProfileEditViewController:
 	private var dogViewModels: [DogDashBoardViewModel] = []
 	var keyboardShowNotification: NSObjectProtocol?
 	var keyboardHideNotification: NSObjectProtocol?
+	var textDidChangeNotification: NSObjectProtocol?
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "프로필 수정")
@@ -70,6 +71,7 @@ final class DogProfileEditViewController:
 		setupUI()
 		keyboardShowNotification = registerKeyboardHideNotification()
 		keyboardHideNotification = registerKeyboardHideNotification()
+		textDidChangeNotification = registerTextFieldNotification()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -83,6 +85,7 @@ final class DogProfileEditViewController:
 		super.viewWillDisappear(animated)
 		
 		removeKeyboardNotification([keyboardShowNotification, keyboardHideNotification])
+		removeTextFieldNotification([textDidChangeNotification])
 	}
 	
 	// MARK: touchedBegan
@@ -277,3 +280,6 @@ extension DogProfileEditViewController: KeyboardListener {
 		scrollView.contentInset = .zero
 	}
 }
+
+// MARK: - GMDTextFieldListener
+extension DogProfileEditViewController: GMDTextFieldListener { }

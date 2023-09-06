@@ -29,6 +29,7 @@ final class NewDogProfileViewController:
 	private let disposeBag = DisposeBag()
 	var keyboardShowNotification: NSObjectProtocol?
 	var keyboardHideNotification: NSObjectProtocol?
+	var textDidChangeNotification: NSObjectProtocol?
 	
 	// MARK: - UI Components
 	private var navigationBar = GMDNavigationBar(title: "프로필 추가")
@@ -43,6 +44,7 @@ final class NewDogProfileViewController:
 		setupUI()
 		keyboardShowNotification = registerKeyboardShowNotification()
 		keyboardHideNotification = registerKeyboardHideNotification()
+		textDidChangeNotification = registerTextFieldNotification()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -51,6 +53,7 @@ final class NewDogProfileViewController:
 	
 	override func viewWillDisappear(_ animated: Bool) {
 		removeKeyboardNotification([keyboardShowNotification, keyboardHideNotification])
+		removeTextFieldNotification([textDidChangeNotification])
 	}
 	
 	// MARK: touchedBegan
@@ -63,8 +66,6 @@ final class NewDogProfileViewController:
 // MARK: - UI Setting
 private extension NewDogProfileViewController {
 	func setupUI() {
-		navigationController?.navigationBar.isHidden = true
-		
 		setViewHierarchy()
 		setConstraints()
 		bind()
@@ -129,7 +130,6 @@ private extension NewDogProfileViewController {
 			.disposed(by: disposeBag)
 		
 		confirmButtonWithViewModel
-			.withLatestFrom(scrollView.textFieldModeRelay)
 			.bind(with: self) { owner, viewModel in
 				owner.scrollView.nickNameTextField.mode = viewModel.nickNameTextFieldMode
 				owner.scrollView.dogBreedTextField.mode = viewModel.dogBreedTextFieldMode
@@ -165,3 +165,6 @@ extension NewDogProfileViewController: KeyboardListener {
 		scrollView.contentInset = .zero
 	}
 }
+
+// MARK: - GMDTextFieldListener
+extension NewDogProfileViewController: GMDTextFieldListener { }
