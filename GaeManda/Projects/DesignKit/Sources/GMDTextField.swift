@@ -65,6 +65,7 @@ public final class GMDTextField: UIView {
 		label.textColor = .gray90
 		label.numberOfLines = 1
 		label.font = .r12
+		label.alpha = 0
 		
 		return label
 	}()
@@ -73,7 +74,6 @@ public final class GMDTextField: UIView {
 		let textField = UnderLineTextField()
 		textField.font = .r15
 		textField.underLineColor = .gray90
-		textField.setPlaceholdColor(.gray90)
 		
 		return textField
 	}()
