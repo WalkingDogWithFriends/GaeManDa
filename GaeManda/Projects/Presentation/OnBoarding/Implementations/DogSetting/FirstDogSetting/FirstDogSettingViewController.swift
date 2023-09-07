@@ -1,3 +1,4 @@
+import PhotosUI
 import UIKit
 import RIBs
 import RxCocoa
@@ -6,6 +7,7 @@ import SnapKit
 import DesignKit
 import Entity
 import GMDUtils
+import GMDExtensions
 
 protocol FirstDogSettingPresentableListener: AnyObject {
 	func confirmButtonDidTap()
@@ -139,17 +141,27 @@ final class FirstDogSettingViewController:
 	override func bind() {
 		super.bind()
 		bindNavigation()
+		bindOnboardingView()
 		bindTextField()
 		bindButtons()
 	}
 	
 	private func bindNavigation() {
-	 navigationBar.backButton.rx.tap
-		 .bind(with: self) { owner, _ in
-			 owner.listener?.backButtonDidTap()
-		 }
-		 .disposed(by: disposeBag)
- }
+		navigationBar.backButton.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.listener?.backButtonDidTap()
+			}
+			.disposed(by: disposeBag)
+	}
+	
+	private func bindOnboardingView() {
+		onBoardingView.rx.tapGesture()
+			.when(.recognized)
+			.bind(with: self) { owner, _ in
+				owner.presentPHPickerView()
+			}
+			.disposed(by: disposeBag)
+	}
 	
 	private func bindTextField() {
 		dogNameTextField.textField.rx.text
@@ -204,7 +216,7 @@ final class FirstDogSettingViewController:
 			.map { $0 == .female }
 			.drive(femaleButton.rx.isSelected)
 			.disposed(by: disposeBag)
-				
+		
 		// 닉네임, 생일 입력 여부 Observable
 		let textFieldsTextEmptyObservable = Observable
 			.combineLatest(
@@ -239,5 +251,18 @@ final class FirstDogSettingViewController:
 private extension FirstDogSettingViewController {
 	func calenderButtonDidTap() {
 		print("calenderButtonDidTap")
+	}
+}
+
+extension FirstDogSettingViewController: PHPickerViewControllerDelegate {
+	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+		picker.dismiss(animated: true)
+		guard let firstResult = results.first else { return }
+		firstResult.fetchImage { result in
+			switch result {
+			case let .success(image): self.onBoardingView.setProfileImage(image)
+			case .failure: break //
+			}
+		}
 	}
 }
