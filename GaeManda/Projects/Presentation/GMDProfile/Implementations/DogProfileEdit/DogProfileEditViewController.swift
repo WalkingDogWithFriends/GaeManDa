@@ -31,8 +31,10 @@ final class DogProfileEditViewController:
 	// MARK: - Properties
 	weak var listener: DogProfileEditPresentableListener?
 	private let disposeBag = DisposeBag()
-	
 	private var dogViewModels: [DogDashBoardViewModel] = []
+	var keyboardShowNotification: NSObjectProtocol?
+	var keyboardHideNotification: NSObjectProtocol?
+	var textDidChangeNotification: NSObjectProtocol?
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "프로필 수정")
@@ -44,14 +46,8 @@ final class DogProfileEditViewController:
 		return collectionView
 	}()
 	
-	private let profileImageView: RoundImageView = {
-		let imageView = RoundImageView()
-		imageView.backgroundColor = .gray40
-		
-		return imageView
-	}()
-	
-	private let scrollView = DogProfileEditScrollView()
+	private let profileImageView = RoundImageView()
+	private let scrollView = DogProfileScrollView()
 	
 	private let endEditingButton: UIButton = {
 		let button = UIButton()
@@ -68,12 +64,14 @@ final class DogProfileEditViewController:
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		listener?.viewDidLoad()
-
+		
 		dogProfileDashBoard.rx.setDataSource(self).disposed(by: disposeBag)
 		dogProfileDashBoard.rx.setDelegate(self).disposed(by: disposeBag)
 		
 		setupUI()
-		registerKeyboardNotification()
+		keyboardShowNotification = registerKeyboardHideNotification()
+		keyboardHideNotification = registerKeyboardHideNotification()
+		textDidChangeNotification = registerTextFieldNotification()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -86,7 +84,8 @@ final class DogProfileEditViewController:
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		
-		removeKeyboardNotification()
+		removeKeyboardNotification([keyboardShowNotification, keyboardHideNotification])
+		removeTextFieldNotification([textDidChangeNotification])
 	}
 	
 	// MARK: touchedBegan
@@ -156,45 +155,22 @@ extension DogProfileEditViewController {
 	
 	func updateDogName(_ name: String) {
 		scrollView.nickNameTextField.text = name
-		scrollView.nickNameTextField.titleLabel.alpha = name.isEmpty ? 0.0 : 1.0
-		scrollView.maxTextCountLabel.text = "\(name.count)/\(ScrollViewConstant.maximumTextFieldCount)"
 	}
 	
 	func updateDogSex(_ sex: Sex) {
-		scrollView.dogSex = sex
-		if sex == .male {
-			scrollView.maleButton.rx.isSelected.onNext(true)
-			scrollView.femaleButton.rx.isSelected.onNext(false)
-		} else {
-			scrollView.femaleButton.rx.isSelected.onNext(true)
-			scrollView.maleButton.rx.isSelected.onNext(false)
-		}
+		scrollView.selectedSexRelay.accept(sex)
 	}
 	
 	func updateDogWeight(_ weight: String) {
 		scrollView.weightTextField.text = "\(weight)kg"
-		scrollView.weightTextField.titleLabel.alpha = weight.isEmpty ? 0.0 : 1.0
 	}
 	
 	func updateDogNeutered(_ isNeutered: Bool) {
-		scrollView.dogNeutered = isNeutered
-		if isNeutered == true {
-			scrollView.didNeuterButton.rx.isSelected.onNext(true)
-			scrollView.didNotNeuterButton.rx.isSelected.onNext(false)
-		} else {
-			scrollView.didNotNeuterButton.rx.isSelected.onNext(true)
-			scrollView.didNeuterButton.rx.isSelected.onNext(false)
-		}
+		scrollView.selectedNeuterRelay.accept(isNeutered ? .true : .false)
 	}
 	
 	func updateDogCharacter(_ character: String) {
-		// TODO: GMDTextView 리팩토링 후 수정
-		scrollView.characterTextView.textView.text = character
-	}
-	
-	func updateTextFieldMode(_ modes: TextFieldModeViewModel) {
-		scrollView.nickNameTextField.mode = modes.nickNameTextFieldMode
-		scrollView.weightTextField.mode = modes.dogWeightTextFieldMode
+		scrollView.characterTextView.text = character
 	}
 }
 
@@ -214,23 +190,34 @@ private extension DogProfileEditViewController {
 			.disposed(by: disposeBag)
 		
 		endEditingButton.rx.tap
+			.withLatestFrom(scrollView.textFieldModeRelay)
+			.filter { $0.isValid }
 			.bind(with: self) { owner, _ in
 				// 에러 정책 결정하고 구현하면 될거 같아요
-				guard let id = owner.dogViewModels.first(where: { $0.isEdited == true })?.dogId else {
-					return
-				}
+				guard let id = owner.dogViewModels.first(where: { $0.isEdited == true })?.dogId else { return }
+				
+				let didNeuterd = owner.scrollView.selectedNeuterRelay.value
 				
 				owner.listener?.didTapEndEditButton(
 					dog: Dog(
 						id: id,
 						name: owner.scrollView.nickNameTextField.text,
-						sex: owner.scrollView.dogSex,
+						sex: owner.scrollView.selectedSexRelay.value,
 						age: "12",
 						weight: owner.scrollView.weightTextField.text,
-						didNeutered: owner.scrollView.dogNeutered,
+						didNeutered: didNeuterd == .true ? true : false,
 						character: owner.scrollView.characterTextView.textView.text
 					)
 				)
+			}
+			.disposed(by: disposeBag)
+		
+		endEditingButton.rx.tap
+			.withLatestFrom(scrollView.textFieldModeRelay)
+			.bind(with: self) { owner, viewModel in
+				owner.scrollView.nickNameTextField.mode = viewModel.nickNameTextFieldMode
+				owner.scrollView.dogBreedTextField.mode = viewModel.dogBreedTextFieldMode
+				owner.scrollView.weightTextField.mode = viewModel.dogWeightTextFieldMode
 			}
 			.disposed(by: disposeBag)
 	}
@@ -293,3 +280,6 @@ extension DogProfileEditViewController: KeyboardListener {
 		scrollView.contentInset = .zero
 	}
 }
+
+// MARK: - GMDTextFieldListener
+extension DogProfileEditViewController: GMDTextFieldListener { }

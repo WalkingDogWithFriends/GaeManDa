@@ -24,8 +24,6 @@ protocol DogProfileEditPresentable: Presentable {
 	func updateDogWeight(_ weight: String)
 	func updateDogNeutered(_ isNeutered: Bool)
 	func updateDogCharacter(_ character: String)
-	
-	func updateTextFieldMode(_ modes: TextFieldModeViewModel)
 }
 
 protocol DogProfileEditInteractorDependency {
@@ -42,7 +40,7 @@ final class DogProfileEditInteractor:
 	private let dependency: DogProfileEditInteractorDependency
 	private let editDogId: BehaviorRelay<Int>
 	private let dogs = BehaviorRelay<[Dog]>(value: [])
-
+	
 	init(
 		presenter: DogProfileEditPresentable,
 		dependency: DogProfileEditInteractorDependency,
@@ -74,30 +72,18 @@ extension DogProfileEditInteractor {
 	}
 	
 	func didTapBackButton() {
-		listener?.dogProfileEditBackButtonDidTap()
+		listener?.dogProfileEditDidTapBackButton()
 	}
 	
 	func didTapEndEditButton(dog: Dog) {
-		if !dog.name.isEmpty && !dog.weight.isEmpty {
-			dependency.userProfileUseCase
-				.updateDog(dog: dog)
-				.observe(on: MainScheduler.instance)
-				.subscribe(with: self) { owner, result in
-					guard result == "success" else { return }
-					owner.listener?.dogProfileEndEditing()
-				}
-				.disposeOnDeactivate(interactor: self)
-			return
-		}
-		var textFieldsMode = TextFieldModeViewModel()
-		
-		if dog.name.isEmpty {
-			textFieldsMode.nickNameTextFieldMode = .warning
-		}
-		if dog.weight.isEmpty {
-			textFieldsMode.dogWeightTextFieldMode = .warning
-		}
-		presenter.updateTextFieldMode(textFieldsMode)
+		dependency.userProfileUseCase
+			.updateDog(dog: dog)
+			.observe(on: MainScheduler.instance)
+			.subscribe(with: self) { owner, result in
+				guard result == "success" else { return }
+				owner.listener?.dogProfileEndEditing()
+			}
+			.disposeOnDeactivate(interactor: self)
 	}
 	
 	func didTapDogDashBoard(at id: Int) {

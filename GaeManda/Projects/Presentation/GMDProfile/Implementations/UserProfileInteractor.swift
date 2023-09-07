@@ -18,6 +18,8 @@ protocol UserProfileRouting: ViewableRouting {
 	func userProfileEditDetach()
 	func dogProfileEditAttach(selectedId: Int)
 	func dogProfileEditDetach()
+	func newDogProfileAttach()
+	func newDogProfileDetach()
 }
 
 protocol UserProfilePresentable: Presentable {
@@ -70,6 +72,10 @@ extension UserProfileInteractor {
 		router?.dogProfileEditAttach(selectedId: id)
 	}
 	
+	func didTapNewDogButton() {
+		router?.newDogProfileAttach()
+	}
+	
 	func didTapDogProfileDeleteButton() { }
 	
 	func didTapUserProfileEditButton() {
@@ -79,7 +85,7 @@ extension UserProfileInteractor {
 
 // MARK: - UserProfileEditListener
 extension UserProfileInteractor {
-	func userProfileEditBackButtonDidTap() {
+	func userProfileEditDidTapBackButton() {
 		router?.userProfileEditDetach()
 	}
 	
@@ -90,12 +96,23 @@ extension UserProfileInteractor {
 
 // MARK: - DogProfileEditListener
 extension UserProfileInteractor {
-	func dogProfileEditBackButtonDidTap() {
+	func dogProfileEditDidTapBackButton() {
 		router?.dogProfileEditDetach()
 	}
 	
 	func dogProfileEndEditing() {
 		router?.dogProfileEditDetach()
+	}
+}
+
+// MARK: - NewDogProfileListener
+extension UserProfileInteractor {
+	func newDogProfileDidTapBackButton() {
+		router?.newDogProfileDetach()
+	}
+	
+	func newDogProfileDidTapConfirmButton() {
+		router?.newDogProfileDetach()
 	}
 }
 

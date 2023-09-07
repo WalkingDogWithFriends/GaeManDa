@@ -12,7 +12,8 @@ import GMDProfile
 protocol UserProfileInteractable:
 	Interactable,
 	DogProfileEditListener,
-	UserProfileEditListener {
+	UserProfileEditListener,
+	NewDogProfileListener {
 	var router: UserProfileRouting? { get set }
 	var listener: UserProfileListener? { get set }
 }
@@ -28,14 +29,19 @@ final class UserProfileRouter:
 	private let dogProfileEditBuildable: DogProfileEditBuildable
 	private var dogProfileEditRouting: ViewableRouting?
 	
+	private let newDogProfileBuildable: NewDogProfileBuildable
+	private var newDogProfileRouting: ViewableRouting?
+	
 	init(
 		interactor: UserProfileInteractable,
 		viewController: UserProfileViewControllable,
 		userProfileEditBuildable: UserProfileEditBuildable,
-		dogProfileEditBuildable: DogProfileEditBuildable
+		dogProfileEditBuildable: DogProfileEditBuildable,
+		newDogProfileBuildable: NewDogProfileBuildable
 	) {
 		self.userProfileEditBuildable = userProfileEditBuildable
 		self.dogProfileEditBuildable = dogProfileEditBuildable
+		self.newDogProfileBuildable = newDogProfileBuildable
 		super.init(interactor: interactor, viewController: viewController)
 		interactor.router = self
 	}
@@ -88,6 +94,30 @@ extension UserProfileRouter {
 		
 		router.viewControllable.popViewController(animated: true)
 		dogProfileEditRouting = nil
+		detachChild(router)
+	}
+}
+
+// MARK: - NewDogProfile
+extension UserProfileRouter {
+	func newDogProfileAttach() {
+		if newDogProfileRouting != nil { return }
+		
+		let router = newDogProfileBuildable.build(withListener: interactor)
+		viewController.pushViewController(
+			router.viewControllable,
+			animated: true
+		)
+		
+		newDogProfileRouting = router
+		attachChild(router)
+	}
+	
+	func newDogProfileDetach() {
+		guard let router = newDogProfileRouting else { return }
+		
+		router.viewControllable.popViewController(animated: true)
+		newDogProfileRouting = nil
 		detachChild(router)
 	}
 }

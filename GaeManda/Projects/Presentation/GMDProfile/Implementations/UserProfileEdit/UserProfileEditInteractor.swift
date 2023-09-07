@@ -69,7 +69,7 @@ extension UserProfileEditInteractor {
 	}
 	
 	func didTapBackbutton() {
-		listener?.userProfileEditBackButtonDidTap()
+		listener?.userProfileEditDidTapBackButton()
 	}
 	
 	func didTapEndEditingButton(name: String, sex: Sex) {

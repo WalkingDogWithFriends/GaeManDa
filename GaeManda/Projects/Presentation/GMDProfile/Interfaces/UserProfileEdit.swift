@@ -13,6 +13,6 @@ public protocol UserProfileEditBuildable: Buildable {
 }
 
 public protocol UserProfileEditListener: AnyObject {
-	func userProfileEditBackButtonDidTap()
+	func userProfileEditDidTapBackButton()
 	func userProfileEndEditing()
 }
