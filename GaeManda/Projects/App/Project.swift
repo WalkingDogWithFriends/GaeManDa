@@ -10,6 +10,7 @@ let project = Project.createProject(
 			bundleId: "com.gaemanda.dev",
 			infoPlist: .file(path: .relativeToRoot("Projects/App/Info.plist")),
 			resources: ["Resources/**"],
+			entitlements: .relativeToRoot("Projects/App/Entitlements/Dev-GaeManda.entitlements"),
 			dependencies: [
 				.Project.PresentationLayer.CorePresentationImpl,
 				.Project.PresentationLayer.ChattingImpl,
@@ -39,6 +40,7 @@ let project = Project.createProject(
 			bundleId: "com.gaemanda",
 			infoPlist: .file(path: .relativeToRoot("Projects/App/Info.plist")),
 			resources: ["Resources/**"],
+			entitlements: .relativeToRoot("Projects/App/Entitlements/Prod-GaeManda.entitlements"),
 			dependencies: [
 				.Project.PresentationLayer.CorePresentationImpl,
 				.Project.PresentationLayer.ChattingImpl,

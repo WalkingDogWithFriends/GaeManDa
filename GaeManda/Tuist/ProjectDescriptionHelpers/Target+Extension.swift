@@ -76,6 +76,7 @@ public extension Target{
 		infoPlist: InfoPlist = .default,
 		sources: SourceFilesList = ["Sources/**"],
 		resources: ResourceFileElements? = nil,
+		entitlements: Path? = nil,
 		scripts: [TargetScript] = [],
 		dependencies: [TargetDependency] = [],
 		settings: Settings? = nil
@@ -93,6 +94,7 @@ public extension Target{
 			infoPlist: infoPlist,
 			sources: sources,
 			resources: resources,
+			entitlements: entitlements,
 			scripts: commonScripts + scripts,
 			dependencies: dependencies,
 			settings: settings
