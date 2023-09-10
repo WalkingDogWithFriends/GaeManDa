@@ -7,13 +7,20 @@
 //
 
 import RIBs
+import RxCocoa
+import RxSwift
 import Entity
 import GMDProfile
+import UseCase
 
 protocol NewDogProfileRouting: ViewableRouting { }
 
 protocol NewDogProfilePresentable: Presentable {
 	var listener: NewDogProfilePresentableListener? { get set }
+}
+
+protocol NewDogProfileInteractorDependency {
+	var userProfileUseCase: UserProfileUseCase { get }
 }
 
 final class NewDogProfileInteractor:
@@ -22,8 +29,13 @@ final class NewDogProfileInteractor:
 	NewDogProfilePresentableListener {
 	weak var router: NewDogProfileRouting?
 	weak var listener: NewDogProfileListener?
+	private let dependency: NewDogProfileInteractorDependency
 	
-	override init(presenter: NewDogProfilePresentable) {
+	init(
+		presenter: NewDogProfilePresentable,
+		dependency: NewDogProfileInteractorDependency
+	) {
+		self.dependency = dependency
 		super.init(presenter: presenter)
 		presenter.listener = self
 	}
@@ -44,6 +56,16 @@ extension NewDogProfileInteractor {
 	}
 	
 	func didTapConfirmButton(dog: Dog) {
+		dependency.userProfileUseCase
+			.postNewDog(dog: dog)
+			.observe(on: MainScheduler.instance)
+			.subscribe(with: self) { owner, message in
+				guard message == "success" else { return }
+
+				owner.listener?.newDogProfileDidTapConfirmButton()
+			}
+			.disposeOnDeactivate(interactor: self)
+		
 		listener?.newDogProfileDidTapConfirmButton()
 	}
 }
