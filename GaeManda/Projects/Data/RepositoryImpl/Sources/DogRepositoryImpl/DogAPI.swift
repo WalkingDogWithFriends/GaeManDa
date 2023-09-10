@@ -14,6 +14,7 @@ import GMDNetwork
 public enum DogAPI {
 	case fetchDogs(id: Int)
 	case updateDogs(dog: Dog)
+	case postNewDog(dog: Dog)
 }
 
 extension DogAPI: TargetType {
@@ -25,6 +26,8 @@ extension DogAPI: TargetType {
 			return "fetchDog"
 		case .updateDogs:
 			return "updateDog"
+		case .postNewDog:
+			return "postNewDog"
 		}
 	}
 	
@@ -34,6 +37,8 @@ extension DogAPI: TargetType {
 			return .get
 		case .updateDogs:
 			return .put
+		case .postNewDog:
+			return .post
 		}
 	}
 	
@@ -45,6 +50,14 @@ extension DogAPI: TargetType {
 			
 		case let .updateDogs(dog):
 			let requestDTO = UpdateDogRequestDTO(dog: dog)
+			
+			return .requestParameters(
+				parameters: requestDTO.toDictionary,
+				encoding: .jsonBody
+			)
+			
+		case let .postNewDog(dog):
+			let requestDTO = NewDogRequestDTO(dog: dog)
 			
 			return .requestParameters(
 				parameters: requestDTO.toDictionary,
@@ -67,6 +80,12 @@ extension DogAPI: TargetType {
 		
 		case .updateDogs:
 			let jsonString = UpdateDogResponseDTO.stubData
+			let data = jsonString.data(using: .utf8)
+			
+			return data ?? Data()
+			
+		case .postNewDog:
+			let jsonString = NewDogResponseDTO.stubData
 			let data = jsonString.data(using: .utf8)
 			
 			return data ?? Data()
