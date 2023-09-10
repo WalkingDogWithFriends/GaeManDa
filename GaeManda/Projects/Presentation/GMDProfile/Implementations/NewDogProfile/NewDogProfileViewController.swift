@@ -12,12 +12,13 @@ import RxCocoa
 import RxSwift
 import SnapKit
 import DesignKit
+import Entity
 import GMDExtensions
 import GMDUtils
 
 protocol NewDogProfilePresentableListener: AnyObject {
 	func didTapBackButton()
-	func didTapConfirmButton()
+	func didTapConfirmButton(dog: Dog)
 }
 
 final class NewDogProfileViewController:
@@ -125,7 +126,17 @@ private extension NewDogProfileViewController {
 		confirmButtonWithViewModel
 			.filter { $0.isValid }
 			.bind(with: self) { owner, _ in
-				owner.listener?.didTapConfirmButton()
+				owner.listener?.didTapConfirmButton(
+					dog: Dog(
+						id: 0,
+						name: owner.scrollView.nickNameTextField.text,
+						sex: owner.scrollView.selectedSexRelay.value,
+						age: "12",
+						weight: owner.scrollView.weightTextField.text,
+						didNeutered: owner.scrollView.selectedNeuterRelay.value,
+						character: owner.scrollView.characterTextView.text
+					)
+				)
 			}
 			.disposed(by: disposeBag)
 		

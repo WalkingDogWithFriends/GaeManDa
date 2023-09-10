@@ -7,6 +7,7 @@
 //
 
 import RIBs
+import Entity
 import GMDProfile
 
 protocol NewDogProfileRouting: ViewableRouting { }
@@ -42,8 +43,7 @@ extension NewDogProfileInteractor {
 		listener?.newDogProfileDidTapBackButton()
 	}
 	
-	func didTapConfirmButton() {
-		// 서버에 보내는 로직 추가
+	func didTapConfirmButton(dog: Dog) {
 		listener?.newDogProfileDidTapConfirmButton()
 	}
 }
