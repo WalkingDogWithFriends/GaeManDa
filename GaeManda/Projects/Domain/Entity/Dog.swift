@@ -24,7 +24,7 @@ public struct Dog {
 	public let sex: Sex
 	public let age: String
 	public let weight: String
-	public let didNeutered: Bool
+	public let didNeutered: Neutered
 	public let character: String
 	
 	public init(
@@ -33,7 +33,7 @@ public struct Dog {
 		sex: Sex,
 		age: String,
 		weight: String,
-		didNeutered: Bool,
+		didNeutered: Neutered,
 		character: String
 	) {
 		self.id = id
