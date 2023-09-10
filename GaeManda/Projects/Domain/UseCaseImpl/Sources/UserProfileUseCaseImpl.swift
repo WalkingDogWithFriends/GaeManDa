@@ -54,4 +54,8 @@ public extension UserProfileUseCaseImpl {
 	func updateDog(dog: Dog) -> Single<String> {
 		return dogDependency.updateDog(dog: dog)
 	}
+	
+	func postNewDog(dog: Dog) -> Single<String> {
+		return dogDependency.postNewDog(dog: dog)
+	}
 }
