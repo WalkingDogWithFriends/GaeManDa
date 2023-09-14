@@ -1,5 +1,10 @@
 import UIKit
 import RIBs
+import RxCocoa
+import RxSwift
+import SnapKit
+import DesignKit
+import GMDExtensions
 
 protocol SignInPresentableListener: AnyObject {
 	func appleLoginButtonDidTapped()
@@ -10,30 +15,74 @@ final class SignInViewController:
 	UIViewController,
 	SignInPresentable,
 	SignInViewControllable {
+	// MARK: - Properties
 	weak var listener: SignInPresentableListener?
+	private let disposeBag = DisposeBag()
 	
-	private lazy var appleLoginButton: UIButton = {
+	// MARK: - UI Components
+	
+	private let stackView: UIStackView = {
+		let stackView = UIStackView()
+		stackView.axis = .vertical
+		stackView.distribution = .fillEqually
+		stackView.alignment = .fill
+		stackView.spacing = 16
+		
+		return stackView
+	}()
+	
+	private let appleLoginButton: UIButton = {
 		let button = UIButton()
 		button.setTitle("Apple", for: .normal)
-		button.tintColor = .black
-		button.addTarget(self, action: #selector(appleLoginButtonTapped), for: .touchUpInside)
+		button.setTitleColor(.white, for: .normal)
+		button.backgroundColor = .black
+		button.layer.cornerRadius = 4
 		
 		return button
 	}()
 	
-	private lazy var kakaoLoginButton: UIButton = {
+	private let kakaoLoginButton: UIButton = {
 		let button = UIButton()
 		button.setTitle("Kakao", for: .normal)
-		button.tintColor = .black
-		button.addTarget(self, action: #selector(kakaoLoginButtonTapped), for: .touchUpInside)
+		button.setTitleColor(.white, for: .normal)
+		button.backgroundColor = .yellow
+		button.layer.cornerRadius = 4
 		
 		return button
 	}()
 	
-	@objc func appleLoginButtonTapped() {
-		listener?.appleLoginButtonDidTapped()
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		setupUI()
 	}
-	@objc func kakaoLoginButtonTapped() {
-		listener?.kakaoLoginButtonDidTapped()
+}
+
+// MARK: - UI Setting
+private extension SignInViewController {
+	func setupUI() {
+		view.backgroundColor = .white
+		setViewHierarchy()
+		setConstraints()
+	}
+	
+	func setViewHierarchy() {
+		view.addSubview(stackView)
+		stackView.addArrangedSubviews(appleLoginButton, kakaoLoginButton)
+	}
+	
+	func setConstraints() {
+		stackView.snp.makeConstraints { make in
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.bottom.equalToSuperview().offset(-104)
+		}
+		
+		appleLoginButton.snp.makeConstraints { make in
+			make.height.equalTo(44)
+		}
+		
+		kakaoLoginButton.snp.makeConstraints { make in
+			make.height.equalTo(44)
+		}
 	}
 }
