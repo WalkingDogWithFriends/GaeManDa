@@ -7,8 +7,8 @@ import DesignKit
 import GMDExtensions
 
 protocol SignInPresentableListener: AnyObject {
-	func appleLoginButtonDidTapped()
-	func kakaoLoginButtonDidTapped()
+	func didTapAppleLoginButton()
+	func didTapKakaoLoginButton()
 }
 
 final class SignInViewController:
@@ -20,7 +20,6 @@ final class SignInViewController:
 	private let disposeBag = DisposeBag()
 	
 	// MARK: - UI Components
-	
 	private let stackView: UIStackView = {
 		let stackView = UIStackView()
 		stackView.axis = .vertical
@@ -51,6 +50,7 @@ final class SignInViewController:
 		return button
 	}()
 	
+	// MARK: - Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
@@ -84,5 +84,22 @@ private extension SignInViewController {
 		kakaoLoginButton.snp.makeConstraints { make in
 			make.height.equalTo(44)
 		}
+	}
+}
+
+// MARK: - Action Bind
+extension SignInViewController {
+	func bind() {
+		appleLoginButton.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.listener?.didTapAppleLoginButton()
+			}
+			.disposed(by: disposeBag)
+		
+		kakaoLoginButton.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.listener?.didTapKakaoLoginButton()
+			}
+			.disposed(by: disposeBag)
 	}
 }
