@@ -10,7 +10,7 @@ final class AppRootComponent:
 	}()
 	
 	var loggedOutViewController: ViewControllable {
-		rootViewController.topViewControllable
+		rootViewController
 	}
 	
 	private let rootViewController: ViewControllable
