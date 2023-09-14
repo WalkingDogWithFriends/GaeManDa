@@ -19,7 +19,8 @@ let project = Project.createProject(
 			product: .staticLibrary,
 			sources: ["GMDUtils/**"],
 			dependencies: [
-				.Project.CoreLayer.GMDExtensions
+				.Project.CoreLayer.GMDExtensions,
+				.Project.DesignKit
 			]
 		)
 	]
