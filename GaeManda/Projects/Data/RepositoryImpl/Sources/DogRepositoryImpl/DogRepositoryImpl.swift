@@ -29,4 +29,11 @@ public struct DogRepositoryImpl: DogRepository {
 			.request(DogAPI.updateDogs(dog: dog), type: UpdateDogResponseDTO.self)
 			.map { $0.message }
 	}
+	
+	public func postNewDog(dog: Dog) -> Single<String> {
+		return Provider<DogAPI>
+			.init(stubBehavior: .immediate)
+			.request(DogAPI.postNewDog(dog: dog), type: NewDogResponseDTO.self)
+			.map { $0.message }
+	}
 }

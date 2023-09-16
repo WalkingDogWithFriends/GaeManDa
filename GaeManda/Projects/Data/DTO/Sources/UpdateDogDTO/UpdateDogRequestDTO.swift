@@ -34,7 +34,7 @@ public struct UpdateDogRequestDTO: Encodable {
 		self.sex = dog.sex.rawValue
 		self.age = dog.age
 		self.weight = dog.weight
-		self.didNeutered = dog.didNeutered
+		self.didNeutered = dog.didNeutered == .true ? true : false
 		self.character = dog.character
 	}
 }

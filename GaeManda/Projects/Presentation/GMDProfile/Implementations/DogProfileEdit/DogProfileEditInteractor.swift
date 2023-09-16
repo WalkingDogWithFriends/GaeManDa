@@ -22,7 +22,7 @@ protocol DogProfileEditPresentable: Presentable {
 	func updateDogName(_ name: String)
 	func updateDogSex(_ sex: Sex)
 	func updateDogWeight(_ weight: String)
-	func updateDogNeutered(_ isNeutered: Bool)
+	func updateDogNeutered(_ isNeutered: Neutered)
 	func updateDogCharacter(_ character: String)
 }
 

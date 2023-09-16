@@ -8,10 +8,19 @@
 
 import RIBs
 import GMDProfile
+import UseCase
 
-public protocol NewDogProfileDependency: Dependency { }
+public protocol NewDogProfileDependency: Dependency {
+	var userProfileUseCase: UserProfileUseCase { get }
+}
 
-final class NewDogProfileComponent: Component<NewDogProfileDependency> { }
+final class NewDogProfileComponent:
+	Component<NewDogProfileDependency>,
+	NewDogProfileInteractorDependency {
+	var userProfileUseCase: UserProfileUseCase {
+		dependency.userProfileUseCase
+	}
+}
 
 // MARK: - Builder
 public final class NewDogProfileBuilder:
@@ -22,9 +31,14 @@ public final class NewDogProfileBuilder:
 	}
 	
 	public func build(withListener listener: NewDogProfileListener) -> ViewableRouting {
+		let component = NewDogProfileComponent(dependency: dependency)
 		let viewController = NewDogProfileViewController()
-		let interactor = NewDogProfileInteractor(presenter: viewController)
+		let interactor = NewDogProfileInteractor(
+			presenter: viewController,
+			dependency: component
+		)
 		interactor.listener = listener
+		
 		return NewDogProfileRouter(
 			interactor: interactor,
 			viewController: viewController

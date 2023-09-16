@@ -29,4 +29,5 @@ public protocol UserProfileUseCase {
 	) -> Single<String>
 	
 	func updateDog(dog: Dog) -> Single<String>
+	func postNewDog(dog: Dog) -> Single<String>
 }

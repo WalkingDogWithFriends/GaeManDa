@@ -25,7 +25,7 @@ public struct DogResponseDTO: Decodable {
 			sex: Sex(rawValue: sex) ?? .male,
 			age: age,
 			weight: weight,
-			didNeutered: didNeutered,
+			didNeutered: didNeutered ? .true : .false,
 			character: character
 		)
 	}

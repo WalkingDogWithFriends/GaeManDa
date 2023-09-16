@@ -165,8 +165,8 @@ extension DogProfileEditViewController {
 		scrollView.weightTextField.text = "\(weight)kg"
 	}
 	
-	func updateDogNeutered(_ isNeutered: Bool) {
-		scrollView.selectedNeuterRelay.accept(isNeutered ? .true : .false)
+	func updateDogNeutered(_ isNeutered: Neutered) {
+		scrollView.selectedNeuterRelay.accept(isNeutered)
 	}
 	
 	func updateDogCharacter(_ character: String) {
@@ -196,8 +196,6 @@ private extension DogProfileEditViewController {
 				// 에러 정책 결정하고 구현하면 될거 같아요
 				guard let id = owner.dogViewModels.first(where: { $0.isEdited == true })?.dogId else { return }
 				
-				let didNeuterd = owner.scrollView.selectedNeuterRelay.value
-				
 				owner.listener?.didTapEndEditButton(
 					dog: Dog(
 						id: id,
@@ -205,7 +203,7 @@ private extension DogProfileEditViewController {
 						sex: owner.scrollView.selectedSexRelay.value,
 						age: "12",
 						weight: owner.scrollView.weightTextField.text,
-						didNeutered: didNeuterd == .true ? true : false,
+						didNeutered: owner.scrollView.selectedNeuterRelay.value,
 						character: owner.scrollView.characterTextView.textView.text
 					)
 				)
