@@ -27,11 +27,11 @@ final class SignInInteractor:
 		super.willResignActive()
 	}
 	
-	func appleLoginButtonDidTapped() {
+	func didTapAppleLoginButton() {
 		// Apple Login Bussiness Logic 구현
 	}
 	
-	func kakaoLoginButtonDidTapped() {
+	func didTapKakaoLoginButton() {
 		// Kakao Login Bussiness Logic 구현
 	}
 }

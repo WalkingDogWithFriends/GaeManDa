@@ -2,9 +2,12 @@ import RIBs
 import GMDUtils
 import OnBoarding
 import OnBoardingImpl
+import SignIn
+import SignInImpl
 
 final class LoggedOutComponent:
 	Component<LoggedOutDependency>,
+	SignInDependency,
 	OnBoardingDependency,
 	TermsOfUseDependency,
 	AddressSettingDependency,
@@ -35,8 +38,12 @@ final class LoggedOutComponent:
 		return DogSettingBuilder(dependency: self)
 	}()
 	
+	lazy var signInBuildable: SignInBuildable = {
+		return SignInBuilder(dependency: self)
+	}()
+	
 	var onBoardingViewController: ViewControllable {
-		loggedOutViewController.topViewControllable
+		dependency.loggedOutViewController
 	}
 	var dogSettingViewController: ViewControllable {
 		loggedOutViewController.topViewControllable
