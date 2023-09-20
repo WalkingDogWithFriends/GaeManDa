@@ -63,6 +63,7 @@ private extension SignInViewController {
 		view.backgroundColor = .white
 		setViewHierarchy()
 		setConstraints()
+		bind()
 	}
 	
 	func setViewHierarchy() {
