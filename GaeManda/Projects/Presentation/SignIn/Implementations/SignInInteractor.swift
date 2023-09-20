@@ -45,6 +45,11 @@ final class SignInInteractor:
 	}
 	
 	func didTapKakaoLoginButton() {
-		// Kakao Login Bussiness Logic 구현
+		dependency.signInUseCase
+			.tryKakaoSignIn()
+			.subscribe(with: self) { owner, isFrirstSignIn in
+				owner.listener?.didSignIn(isFirst: isFrirstSignIn)
+			}
+			.disposeOnDeactivate(interactor: self)
 	}
 }

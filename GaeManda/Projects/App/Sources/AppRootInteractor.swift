@@ -40,6 +40,7 @@ final class AppRootInteractor:
 	}
 }
 
+// MARK: - LoggedOutListener
 extension AppRootInteractor {
 	func loggedOutDidFinish() {
 		router?.detachLoggedOut()
