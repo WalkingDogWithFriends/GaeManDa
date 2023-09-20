@@ -5,12 +5,12 @@ import DesignKit
 import GMDUtils
 import OnBoarding
 import OnBoardingImpl
+import Repository
+import RepositoryImpl
 import SignIn
 import SignInImpl
 import UseCase
 import UseCaseImpl
-import Repository
-import RepositoryImpl
 
 final class LoggedOutComponent:
 	Component<LoggedOutDependency>,
@@ -19,12 +19,12 @@ final class LoggedOutComponent:
 	TermsOfUseDependency,
 	AddressSettingDependency,
 	DetailAddressSettingDependency,
-	UserProfileSettingDependency,
-	DogProfileSettingDependency {
+	UserSettingDependency,
+	DogSettingDependency {
+	// MARK: - Buildable
 	var dogCharacterPickerBuildable: DogCharacterPickerBuildable {
 		return dependency.dogCharacterPickerBuildable
 	}
-	
 	lazy var onBoardingBuildable: OnBoardingBuildable = {
 		return OnBoardingBuilder(dependency: self)
 	}()
@@ -62,6 +62,17 @@ final class LoggedOutComponent:
 		return SignInBuilder(dependency: self)
 	}()
 	
+	// MARK: - Repositories
+	lazy var signInRepository: SignInRepository = {
+		return SignInRepositoryImpl()
+	}()
+	
+	// MARK: - UseCases
+	lazy var signInUseCase: SignInUseCase = {
+		return SignInUseCaseImpl(dependency: signInRepository)
+	}()
+	
+	// MARK: - ViewControllerable
 	var onBoardingViewController: ViewControllable {
 		dependency.loggedOutViewController
 	}

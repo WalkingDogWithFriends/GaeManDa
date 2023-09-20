@@ -1,10 +1,17 @@
-import SignIn
 import RIBs
+import RxCocoa
+import RxSwift
+import SignIn
+import UseCase
 
 protocol SignInRouting: ViewableRouting { }
 
 protocol SignInPresentable: Presentable {
 	var listener: SignInPresentableListener? { get set }
+}
+
+protocol SignInInteractorDependency {
+	var signInUseCase: SignInUseCase { get }
 }
 
 final class SignInInteractor:
@@ -14,7 +21,13 @@ final class SignInInteractor:
 	weak var router: SignInRouting?
 	weak var listener: SignInListener?
 	
-	override init(presenter: SignInPresentable) {
+	private let dependency: SignInInteractorDependency
+	
+	init(
+		presenter: SignInPresentable,
+		dependency: SignInInteractorDependency
+	) {
+		self.dependency = dependency
 		super.init(presenter: presenter)
 		presenter.listener = self
 	}
