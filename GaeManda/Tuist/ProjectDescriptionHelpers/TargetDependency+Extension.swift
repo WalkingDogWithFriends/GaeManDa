@@ -141,5 +141,10 @@ public extension TargetDependency.SPM {
 	static let RxCocoa = TargetDependency.external(name: "RxCocoa")
 	static let RxGesture = TargetDependency.external(name: "RxGesture")
 	static let SnapKit = TargetDependency.external(name: "SnapKit")
+	static let RxKakaoSDKCommon = TargetDependency.external(name: "RxKakaoSDKCommon")
+	static let KakaoSDKAuth = TargetDependency.external(name: "KakaoSDKAuth")
+	static let RxKakaoSDKAuth = TargetDependency.external(name: "RxKakaoSDKAuth")
+	static let KakaoSDKUser = TargetDependency.external(name: "KakaoSDKUser")
+	static let RxKakaoSDKUser = TargetDependency.external(name: "RxKakaoSDKUser")
 	static let NMapsMap = TargetDependency.external(name: "NMapsMapSPM")
 }

@@ -15,6 +15,9 @@ let dependencies = Dependencies(
 			url: "https://github.com/SnapKit/SnapKit.git", requirement: .exact("5.6.0")
 		),
 		.remote(
+			url: "https://github.com/kakao/kakao-ios-sdk-rx", requirement: .upToNextMajor(from: "2.0.0")
+		),
+		.remote(
 			url: "https://github.com/WalkingDogWithFriends/NMapsMapSPM.git", requirement: .branch("main")
 		)
 	],

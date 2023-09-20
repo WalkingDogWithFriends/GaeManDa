@@ -19,7 +19,10 @@ let project = Project.createProject(
 				.Project.PresentationLayer.GMDProfileImpl,
 				.Project.CoreLayer.GMDUtils,
 				.Project.DomainLayer.UseCaseImpl,
-				.Project.DataLayer.RepositoryImpl
+				.Project.DataLayer.RepositoryImpl,
+				.SPM.RxKakaoSDKCommon,
+				.SPM.KakaoSDKAuth,
+				.SPM.RxKakaoSDKAuth
 			],
 			settings: .settings(
 				base: [
@@ -47,7 +50,10 @@ let project = Project.createProject(
 				.Project.DomainLayer.UseCase,
 				.Project.DomainLayer.Repository,
 				.Project.DomainLayer.UseCaseImpl,
-				.Project.DataLayer.RepositoryImpl
+				.Project.DataLayer.RepositoryImpl,
+				.SPM.RxKakaoSDKCommon,
+				.SPM.KakaoSDKAuth,
+				.SPM.RxKakaoSDKAuth
 			],
 			settings: .settings(
 				base: [

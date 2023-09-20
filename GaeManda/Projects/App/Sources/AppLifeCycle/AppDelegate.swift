@@ -1,4 +1,5 @@
 import UIKit
+import RxKakaoSDKCommon
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -6,7 +7,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		_ application: UIApplication,
 		didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
 	) -> Bool {
-		// Override point for customization after application launch.
+		setupKakaoLogin()
 		return true
 	}
 	
@@ -31,3 +32,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 }
 
+private extension AppDelegate {
+	func setupKakaoLogin() {
+		guard
+			let infoDictionary = Bundle.main.infoDictionary,
+					let kakaoAppKey = infoDictionary["KAKAO_NATIVE_APP_KEY"],
+			let appKey = kakaoAppKey as? String
+		else {
+			return
+		}
+		RxKakaoSDK.initSDK(appKey: appKey)
+	}
+}
