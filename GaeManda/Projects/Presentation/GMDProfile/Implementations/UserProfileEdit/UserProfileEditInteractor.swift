@@ -19,8 +19,6 @@ protocol UserProfileEditPresentable: Presentable {
 	
 	func updateUsername(_ name: String)
 	func updateUserSex(_ sex: Sex)
-	
-	func userNameIsEmpty()
 }
 
 protocol UserProfileEditInteractorDependency {
@@ -74,17 +72,13 @@ extension UserProfileEditInteractor {
 	
 	func didTapEndEditingButton(name: String, sex: Sex) {
 		debugPrint(name, sex)
-		if name.isEmpty {
-			presenter.userNameIsEmpty()
-		} else {
-			dependency.userProfileUseCase
-				.updateUser(nickName: name, age: 20, sex: sex.rawValue)
-				.observe(on: MainScheduler.instance)
-				.subscribe(with: self) { owner, result in
-					guard result == "success" else { return }
-					owner.listener?.userProfileEndEditing()
-				}
-				.disposeOnDeactivate(interactor: self)
-		}
+		dependency.userProfileUseCase
+			.updateUser(nickName: name, age: 20, sex: sex.rawValue)
+			.observe(on: MainScheduler.instance)
+			.subscribe(with: self) { owner, result in
+				guard result == "success" else { return }
+				owner.listener?.userProfileEndEditing()
+			}
+			.disposeOnDeactivate(interactor: self)
 	}
 }

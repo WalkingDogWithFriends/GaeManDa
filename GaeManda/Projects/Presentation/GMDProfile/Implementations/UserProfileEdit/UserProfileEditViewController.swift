@@ -197,28 +197,60 @@ extension UserProfileEditViewController {
 	func updateUserSex(_ sex: Sex) {
 		selectedSexRelay.accept(sex)
 	}
-	
-	func userNameIsEmpty() {
-		nickNameTextField.mode = .warning
-	}
 }
 
 // MARK: - Action Bind
 private extension UserProfileEditViewController {
 	func bind() {
+		// 뒤로가기 버튼
 		navigationBar.backButton.rx.tap
 			.bind(with: self) { owner, _ in
 				owner.listener?.didTapBackbutton()
 			}
 			.disposed(by: disposeBag)
 	
+		// calenderButton 눌렀을 때
 		calenderButton.rx.tap
 			.bind(with: self) { owner, _ in
 				owner.calenderButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 		
-		confirmButton.rx.tap
+		// textField 모드 Observable
+		let textFieldModesObservable = Observable
+			.combineLatest(
+				nickNameTextField.rx.text.orEmpty,
+				calenderTextField.rx.text.orEmpty
+			)
+			.map { texts -> (GMDTextFieldMode, GMDTextFieldMode) in
+				(
+					texts.0.isEmpty ? .warning : .normal,
+					texts.1.isEmpty ? .warning : .normal
+				 )
+			}
+		
+		// confirmButton tap 이벤트와 TextField 모드 Observable
+		let confirmButtonTappedWithTextFieldModes = confirmButton.rx.tap
+			.withLatestFrom(textFieldModesObservable)
+			.share()
+
+		// confirmButton 눌렀을 때, textField의 모드 변경
+		confirmButtonTappedWithTextFieldModes
+			.bind(with: self) { owner, textFieldModes in
+				owner.nickNameTextField.mode = textFieldModes.0
+				owner.calenderTextField.mode = textFieldModes.1
+			}
+			.disposed(by: disposeBag)
+		
+		// confirmButton positive 변경
+		textFieldModesObservable
+			.map { $0.0 == .normal && $0.1 == .normal }
+			.bind(to: confirmButton.rx.isPositive)
+			.disposed(by: disposeBag)
+		
+		// confirmButton 눌렀을 때 interactor로 전달
+		confirmButtonTappedWithTextFieldModes
+			.filter { $0.0 == .normal && $0.1 == .normal }
 			.bind(with: self) { owner, _ in
 				owner.listener?.didTapEndEditingButton(
 					name: owner.nickNameTextField.text,
