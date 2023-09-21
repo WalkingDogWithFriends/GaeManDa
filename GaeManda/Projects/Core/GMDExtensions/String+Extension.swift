@@ -17,7 +17,7 @@ public extension String {
 	) -> NSAttributedString {
 		let paragraphStyle = NSMutableParagraphStyle()
 		paragraphStyle.lineSpacing = lineSpacing
-		var attributes: [NSAttributedString.Key: Any] = [
+		let attributes: [NSAttributedString.Key: Any] = [
 			.font: font,
 			.foregroundColor: color,
 			.paragraphStyle: paragraphStyle
