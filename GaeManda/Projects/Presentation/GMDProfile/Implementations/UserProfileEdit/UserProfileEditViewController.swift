@@ -26,12 +26,12 @@ final class UserProfileEditViewController:
 	UIViewController,
 	UserProfileEditPresentable,
 	UserProfileEditViewControllable {
+	// MARK: - Properties
 	weak var listener: UserProfileEditPresentableListener?
 	private let disposeBag = DisposeBag()
 	
-	var userGender: Sex = .male
-	// MARK: - Constant Properties
-	let maxTextCount = 20
+	private let maxTextCount = 20
+	private let selectedSexRelay = BehaviorRelay<Sex>(value: .male)
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "프로필 수정")
@@ -95,16 +95,7 @@ final class UserProfileEditViewController:
 	private let maleButton = GMDOptionButton(title: "남")
 	private let femaleButton = GMDOptionButton(title: "여")
 	
-	private let endEditingButton: UIButton = {
-		let button = UIButton()
-		button.setTitle("수정 완료", for: .normal)
-		button.setTitleColor(.white, for: .normal)
-		button.layer.cornerRadius = 4
-		button.backgroundColor = .green100
-		button.titleLabel?.font = .b16
-		
-		return button
-	}()
+	private let confirmButton = ConfirmButton(title: "수정 완료")
 	
 	// MARK: - Life Cycle
 	override func viewDidLoad() {
@@ -128,16 +119,18 @@ private extension UserProfileEditViewController {
 		maleButton.isSelected = true
 		
 		/// Set TextField Right View
-		nickNameTextField.textField.rightView = maxTextCountLabel
-		nickNameTextField.textField.rightViewMode = .always
-		
-		calenderTextField.textField.rightView = calenderButton
-		calenderTextField.textField.rightViewMode = .always
+		setTextField(nickNameTextField, rightView: maxTextCountLabel)
+		setTextField(calenderTextField, rightView: calenderButton)
 		
 		setViewHierarchy()
 		setConstraints()
 		bind()
 		bindForUI()
+	}
+	
+	func setTextField(_ textField: GMDTextField, rightView: UIView) {
+		textField.textField.rightView = rightView
+		textField.textField.rightViewMode = .always
 	}
 	
 	func setViewHierarchy() {
@@ -146,7 +139,7 @@ private extension UserProfileEditViewController {
 			profileImageView,
 			textStackView,
 			buttonStackView,
-			endEditingButton
+			confirmButton
 		)
 		
 		textStackView.addArrangedSubviews(nickNameTextField, calenderTextField)
@@ -180,7 +173,7 @@ private extension UserProfileEditViewController {
 			make.height.equalTo(40)
 		}
 		
-		endEditingButton.snp.makeConstraints { make in
+		confirmButton.snp.makeConstraints { make in
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 			make.bottom.equalToSuperview().offset(-54)
@@ -193,20 +186,10 @@ private extension UserProfileEditViewController {
 extension UserProfileEditViewController {
 	func updateUsername(_ name: String) {
 		nickNameTextField.text = name
-		nickNameTextField.titleLabel.alpha = name.isEmpty ? 0.0 : 1.0
-		maxTextCountLabel.text = "\(name.count)/\(maxTextCount)"
 	}
 	
 	func updateUserSex(_ sex: Sex) {
-		if sex.rawValue == "남" {
-			userGender = .male
-			maleButton.rx.isSelected.onNext(true)
-			femaleButton.rx.isSelected.onNext(false)
-		} else {
-			userGender = .female
-			femaleButton.rx.isSelected.onNext(true)
-			maleButton.rx.isSelected.onNext(false)
-		}
+		selectedSexRelay.accept(sex)
 	}
 	
 	func userNameIsEmpty() {
@@ -222,12 +205,18 @@ private extension UserProfileEditViewController {
 				owner.listener?.didTapBackbutton()
 			}
 			.disposed(by: disposeBag)
+	
+		calenderButton.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.calenderButtonDidTap()
+			}
+			.disposed(by: disposeBag)
 		
-		endEditingButton.rx.tap
+		confirmButton.rx.tap
 			.bind(with: self) { owner, _ in
 				owner.listener?.didTapEndEditingButton(
 					name: owner.nickNameTextField.text,
-					sex: owner.userGender
+					sex: owner.selectedSexRelay.value
 				)
 			}
 			.disposed(by: disposeBag)
@@ -235,48 +224,50 @@ private extension UserProfileEditViewController {
 	
 	// MARK: - UI Binding
 	func bindForUI() {
+		// textField의 text가 지정된 수보다 넘어가면 trimming
 		nickNameTextField.rx.text
 			.orEmpty
 			.withUnretained(self)
-			.map { owner, text -> String in
-				let maxCount = owner.maxTextCount
-				return text.trimmingSuffix(with: maxCount)
+			.map { owner, text -> NSAttributedString in
+				text.trimmingSuffix(with: owner.maxTextCount).inputText()
 			}
-			.bind(to: nickNameTextField.textField.rx.text)
+			.bind(to: nickNameTextField.rx.attributedText)
 			.disposed(by: disposeBag)
-		
+	
+		// textField의 text수를 알려주는 Label에 매핑
 		nickNameTextField.rx.text
 			.orEmpty
 			.withUnretained(self)
-			.map { "\($1.count)/\($0.maxTextCount)" }
-			.bind(to: maxTextCountLabel.rx.text)
+			.map { "\($1.count)/\($0.maxTextCount)".inputText(color: .gray90) }
+			.bind(to: maxTextCountLabel.rx.attributedText)
 			.disposed(by: disposeBag)
 		
+		// calenderTextField가 editing안되도록 해줌.
 		calenderTextField.textField.rx.controlEvent(.editingDidBegin)
 			.map { true }
 			.bind(to: calenderTextField.textField.rx.isEditing)
 			.disposed(by: disposeBag)
 		
-		calenderButton.rx.tap
-			.bind(with: self) { owner, _ in
-				owner.calenderButtonDidTap()
-			}
+		// 성별 버튼 선택 Observable
+		Observable.merge(
+			maleButton.rx.tap.map { Sex.male },
+			femaleButton.rx.tap.map { Sex.female }
+		)
+		.subscribe(with: self) { owner, sex in
+			owner.selectedSexRelay.accept(sex)
+		}
+		.disposed(by: disposeBag)
+		
+		// 남자일 경우
+		selectedSexRelay
+			.map { $0 == .male }
+			.bind(to: maleButton.rx.isSelected)
 			.disposed(by: disposeBag)
 		
-		maleButton.rx.tap
-			.bind(with: self) { owner, _ in
-				owner.userGender = .male
-				owner.maleButton.rx.isSelected.onNext(true)
-				owner.femaleButton.rx.isSelected.onNext(false)
-			}
-			.disposed(by: disposeBag)
-		
-		femaleButton.rx.tap
-			.bind(with: self) { owner, _ in
-				owner.userGender = .female
-				owner.femaleButton.rx.isSelected.onNext(true)
-				owner.maleButton.rx.isSelected.onNext(false)
-			}
+		// 여성일 경우
+		selectedSexRelay
+			.map { $0 == .female }
+			.bind(to: femaleButton.rx.isSelected)
 			.disposed(by: disposeBag)
 	}
 }
