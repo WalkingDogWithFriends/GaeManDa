@@ -3,7 +3,7 @@ import RIBs
 
 public final class NavigationControllerable: ViewControllable {
 	public var uiviewController: UIViewController { self.navigationController }
-	public let navigationController: UINavigationController
+	public let navigationController: BaseNavigationController
 	public var navigationBarIsHidden: Bool = false {
 		didSet {
 			navigationController.isNavigationBarHidden = navigationBarIsHidden
@@ -11,7 +11,7 @@ public final class NavigationControllerable: ViewControllable {
 	}
 	
 	public init(root: ViewControllable) {
-		let navigation = UINavigationController(rootViewController: root.uiviewController)
+		let navigation = BaseNavigationController(rootViewController: root.uiviewController)
 		self.navigationController = navigation
 		self.navigationController.navigationBar.isHidden = true
 	}
