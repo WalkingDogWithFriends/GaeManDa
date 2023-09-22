@@ -8,6 +8,7 @@
 
 import RIBs
 import GMDProfile
+import GMDUtils
 
 protocol UserProfileInteractable:
 	Interactable,
@@ -51,13 +52,10 @@ final class UserProfileRouter:
 extension UserProfileRouter {
 	func userProfileEditAttach() {
 		if userProfileEditRouting != nil { return }
-		
+
 		let router = userProfileEditBuildable.build(withListener: interactor)
-		viewController.pushViewController(
-			router.viewControllable,
-			animated: true
-		)
-		
+		pushViewController(router.viewControllable)
+
 		userProfileEditRouting = router
 		attachChild(router)
 	}
@@ -80,10 +78,7 @@ extension UserProfileRouter {
 			withListener: interactor,
 			selectedDogId: selectedId
 		)
-		viewController.pushViewController(
-			router.viewControllable,
-			animated: true
-		)
+		pushViewController(router.viewControllable)
 		
 		dogProfileEditRouting = router
 		attachChild(router)
@@ -104,10 +99,7 @@ extension UserProfileRouter {
 		if newDogProfileRouting != nil { return }
 		
 		let router = newDogProfileBuildable.build(withListener: interactor)
-		viewController.pushViewController(
-			router.viewControllable,
-			animated: true
-		)
+		pushViewController(router.viewControllable)
 		
 		newDogProfileRouting = router
 		attachChild(router)
@@ -119,5 +111,15 @@ extension UserProfileRouter {
 		router.viewControllable.popViewController(animated: true)
 		newDogProfileRouting = nil
 		detachChild(router)
+	}
+}
+
+// MARK: - Private Extension
+private extension UserProfileRouter {
+	func pushViewController(_ viewControllable: ViewControllable) {
+		viewController.pushViewController(
+			viewControllable,
+			animated: true
+		)
 	}
 }

@@ -19,6 +19,7 @@ import GMDUtils
 protocol UserProfileEditPresentableListener: AnyObject {
 	func viewWillAppear()
 	func didTapBackbutton()
+	func dismiss()
 	func didTapEndEditingButton(name: String, sex: Sex)
 }
 
@@ -35,13 +36,7 @@ final class UserProfileEditViewController:
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "프로필 수정")
-	
-	private let profileImageView: RoundImageView = {
-		let roundImageView = RoundImageView()
-		roundImageView.backgroundColor = .gray40
-		
-		return roundImageView
-	}()
+	private let profileImageView = RoundImageView()
 	
 	/// GMDTextField StackView
 	private let textStackView: UIStackView = {
@@ -110,6 +105,7 @@ final class UserProfileEditViewController:
 		
 		hideTabBar()
 	}
+	
 	// MARK: - touchesBegan
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		super.touchesBegan(touches, with: event)
@@ -314,5 +310,12 @@ private extension UserProfileEditViewController {
 private extension UserProfileEditViewController {
 	func calenderButtonDidTap() {
 		print("calenderButtonDidTap")
+	}
+}
+
+// MARK: - SwipeRecognigerDelegate
+extension UserProfileEditViewController: SwipeRecognigerDelegate {
+	func swipeRecognigerDismiss() {
+		listener?.dismiss()
 	}
 }

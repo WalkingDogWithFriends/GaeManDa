@@ -92,6 +92,10 @@ extension UserProfileInteractor {
 	func userProfileEndEditing() {
 		router?.userProfileEditDetach()
 	}
+	
+	func userProfileEditDismiss() {
+		router?.userProfileEditDetach()
+	}
 }
 
 // MARK: - DogProfileEditListener
