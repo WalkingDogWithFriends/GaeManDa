@@ -119,6 +119,10 @@ extension UserProfileInteractor {
 		router?.newDogProfileDetach()
 	}
 	
+	func newDogProfileDismiss() {
+		router?.newDogProfileDetach()
+	}
+	
 	func newDogProfileDidTapConfirmButton() {
 		router?.newDogProfileDetach()
 	}

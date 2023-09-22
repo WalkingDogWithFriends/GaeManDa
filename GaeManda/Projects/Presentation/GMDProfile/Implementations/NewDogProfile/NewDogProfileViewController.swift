@@ -18,6 +18,7 @@ import GMDUtils
 
 protocol NewDogProfilePresentableListener: AnyObject {
 	func didTapBackButton()
+	func dismiss()
 	func didTapConfirmButton(dog: Dog)
 }
 
@@ -179,3 +180,10 @@ extension NewDogProfileViewController: KeyboardListener {
 
 // MARK: - GMDTextFieldListener
 extension NewDogProfileViewController: GMDTextFieldListener { }
+
+// MARK: - SwipeRecognigerDelegate
+extension NewDogProfileViewController: SwipeRecognigerDelegate {
+	func swipeRecognigerDismiss() {
+		listener?.dismiss()
+	}
+}
