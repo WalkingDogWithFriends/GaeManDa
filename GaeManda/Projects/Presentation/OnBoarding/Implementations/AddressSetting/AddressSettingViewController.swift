@@ -10,6 +10,7 @@ import GMDUtils
 protocol AddressSettingPresentableListener: AnyObject {
 	func confirmButtonDidTap()
 	func backButtonDidTap()
+	func dismiss()
 	func searchTextFieldDidTap()
 	func loadLocationButtonDidTap()
 }
@@ -186,5 +187,12 @@ final class AddressSettingViewController:
 				owner.listener?.backButtonDidTap()
 			}
 			.disposed(by: disposeBag)
+	}
+}
+
+// MARK: - SwipeRecognigerDelegate
+extension AddressSettingViewController: SwipeRecognigerDelegate {
+	func swipeRecognigerDismiss() {
+		listener?.dismiss()
 	}
 }

@@ -55,6 +55,10 @@ extension OnBoardingInteractor {
 	func addressSettingBackButtonDidTap() {
 		router?.addressSettingDetach()
 	}
+	
+	func addressSettingDismiss() {
+		router?.addressSettingDetach()
+	}
 }
 
 // MARK: DetailAddressSettingListener
