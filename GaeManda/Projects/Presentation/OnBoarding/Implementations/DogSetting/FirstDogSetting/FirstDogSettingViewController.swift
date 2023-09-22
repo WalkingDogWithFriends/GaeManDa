@@ -10,6 +10,7 @@ import GMDUtils
 protocol FirstDogSettingPresentableListener: AnyObject {
 	func confirmButtonDidTap()
 	func backButtonDidTap()
+	func dismiss()
 }
 
 final class FirstDogSettingViewController:
@@ -239,5 +240,12 @@ final class FirstDogSettingViewController:
 private extension FirstDogSettingViewController {
 	func calenderButtonDidTap() {
 		print("calenderButtonDidTap")
+	}
+}
+
+// MARK: - SwipeRecognigerDelegate
+extension FirstDogSettingViewController: SwipeRecognigerDelegate {
+	func swipeRecognigerDismiss() {
+		listener?.dismiss()
 	}
 }

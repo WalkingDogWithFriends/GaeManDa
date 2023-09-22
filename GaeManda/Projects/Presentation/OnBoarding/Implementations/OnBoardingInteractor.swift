@@ -100,4 +100,8 @@ extension OnBoardingInteractor {
 	func dogSettingBackButtonDidTap() {
 		router?.dogSettingDetach()
 	}
+	
+	func dogSettingDismiss() {
+		router?.dogSettingDetach()
+	}
 }

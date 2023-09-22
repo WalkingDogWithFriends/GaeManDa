@@ -39,6 +39,10 @@ extension DogSettingInteractor {
 	func firstDogSettingBackButtonDidTap() {
 		listener?.dogSettingBackButtonDidTap()
 	}
+	
+	func firstDogSettingDismiss() {
+		listener?.dogSettingDismiss()
+	}
 }
 
 // MARK: SecondDogSetting

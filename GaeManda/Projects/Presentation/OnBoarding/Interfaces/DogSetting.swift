@@ -11,4 +11,5 @@ public protocol DogSettingBuildable: Buildable {
 public protocol DogSettingListener: AnyObject {
 	func dogSettingDidFinish()
 	func dogSettingBackButtonDidTap()
+	func dogSettingDismiss()
 }
