@@ -10,6 +10,7 @@ import GMDUtils
 protocol SecondDogSettingPresentableListener: AnyObject {
 	func confirmButtonDidTap()
 	func backButtonDidTap()
+	func dismiss()
 }
 
 final class SecondDogSettingViewController:
@@ -154,5 +155,12 @@ final class SecondDogSettingViewController:
 				owner.dogWeightTextField.mode = isEmpty.1 ? .normal : .warning
 			}
 			.disposed(by: disposeBag)
+	}
+}
+
+// MARK: - SwipeRecognigerDelegate
+extension SecondDogSettingViewController: SwipeRecognigerDelegate {
+	func swipeRecognigerDismiss() {
+		listener?.dismiss()
 	}
 }
