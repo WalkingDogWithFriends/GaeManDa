@@ -20,6 +20,7 @@ protocol DogProfileEditPresentableListener: AnyObject {
 	func viewDidLoad()
 	func viewWillAppear()
 	func didTapBackButton()
+	func dismiss()
 	func didTapEndEditButton(dog: Dog)
 	func didTapDogDashBoard(at id: Int)
 }
@@ -281,3 +282,10 @@ extension DogProfileEditViewController: KeyboardListener {
 
 // MARK: - GMDTextFieldListener
 extension DogProfileEditViewController: GMDTextFieldListener { }
+
+// MARK: - SwipeRecognigerDelegate
+extension DogProfileEditViewController: SwipeRecognigerDelegate {
+	func swipeRecognigerDismiss() {
+		listener?.dismiss()
+	}
+}
