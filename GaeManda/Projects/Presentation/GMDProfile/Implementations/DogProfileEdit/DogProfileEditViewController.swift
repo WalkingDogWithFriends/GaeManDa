@@ -70,7 +70,7 @@ final class DogProfileEditViewController:
 		dogProfileDashBoard.rx.setDelegate(self).disposed(by: disposeBag)
 		
 		setupUI()
-		keyboardShowNotification = registerKeyboardHideNotification()
+		keyboardShowNotification = registerKeyboardShowNotification()
 		keyboardHideNotification = registerKeyboardHideNotification()
 		textDidChangeNotification = registerTextFieldNotification()
 	}
