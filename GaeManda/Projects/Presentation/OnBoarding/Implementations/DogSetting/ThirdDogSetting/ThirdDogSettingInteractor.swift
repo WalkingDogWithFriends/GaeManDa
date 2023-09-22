@@ -9,6 +9,7 @@ protocol ThirdDogSettingPresentable: Presentable {
 protocol ThirdDogSettingListener: AnyObject {
 	func thirdDogSettingDidFinish()
 	func thirdDogSettingBackButtonDidTap()
+	func thirdDogSettingDismiss()
 }
 
 final class ThirdDogSettingInteractor:
@@ -40,5 +41,9 @@ extension ThirdDogSettingInteractor {
 	
 	func backButtonDidTap() {
 		listener?.thirdDogSettingBackButtonDidTap()
+	}
+	
+	func dismiss() {
+		listener?.thirdDogSettingDismiss()
 	}
 }

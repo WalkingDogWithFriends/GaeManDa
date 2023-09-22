@@ -69,4 +69,8 @@ extension DogSettingInteractor {
 	func thirdDogSettingBackButtonDidTap() {
 		router?.thirdDogSettingDetach()
 	}
+	
+	func thirdDogSettingDismiss() {
+		router?.thirdDogSettingDetach()
+	}
 }
