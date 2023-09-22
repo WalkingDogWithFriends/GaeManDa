@@ -11,6 +11,7 @@ import GMDUtils
 protocol ThirdDogSettingPresentableListener: AnyObject {
 	func confirmButtonDidTap()
 	func backButtonDidTap()
+	func dismiss()
 }
 
 final class ThirdDogSettingViewController:
@@ -205,5 +206,12 @@ final class ThirdDogSettingViewController:
 private extension ThirdDogSettingViewController {
 	func calenderButtonDidTap() {
 		print("calenderButtonDidTap")
+	}
+}
+
+// MARK: - SwipeRecognigerDelegate
+extension ThirdDogSettingViewController: SwipeRecognigerDelegate {
+	func swipeRecognigerDismiss() {
+		listener?.dismiss()
 	}
 }
