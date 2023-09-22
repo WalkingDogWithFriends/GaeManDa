@@ -11,6 +11,7 @@ import GMDUtils
 protocol UserSettingPresentableListener: AnyObject {
 	func confirmButtonDidTap()
 	func backButtonDidTap()
+	func dismiss()
 }
 
 final class UserSettingViewController:
@@ -240,5 +241,12 @@ final class UserSettingViewController:
 private extension UserSettingViewController {
 	func calenderButtonDidTap() {
 		print("calenderButtonDidTap")
+	}
+}
+
+// MARK: - SwipeRecognigerDelegate
+extension UserSettingViewController: SwipeRecognigerDelegate {
+	func swipeRecognigerDismiss() {
+		listener?.dismiss()
 	}
 }

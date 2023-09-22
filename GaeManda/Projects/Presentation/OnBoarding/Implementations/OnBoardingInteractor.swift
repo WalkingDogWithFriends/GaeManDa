@@ -85,6 +85,10 @@ extension OnBoardingInteractor {
 	func userSettingBackButtonDidTap() {
 		router?.userSettingDetach()
 	}
+	
+	func userSettingDismiss() {
+		router?.userSettingDetach()
+	}
 }
 
 // MARK: DogSettingListener
