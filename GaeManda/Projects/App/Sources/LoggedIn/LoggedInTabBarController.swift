@@ -227,4 +227,8 @@ extension LoggedInTabBarController: FloatingTabBarPresentable {
 			self.view.layoutIfNeeded()
 		}
 	}
+	
+	public func setProfileImage(_ image: UIImage?) {
+		profileImageView.image = image
+	}
 }

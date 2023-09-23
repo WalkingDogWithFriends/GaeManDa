@@ -11,6 +11,7 @@ import UIKit
 public protocol FloatingTabBarPresentable {
 	func presentTabBar()
 	func dismissTabBar()
+	func setProfileImage(_ image: UIImage?)
 }
 
 public extension UIViewController {
@@ -24,5 +25,11 @@ public extension UIViewController {
 		guard let parent = navigationController?.parent as? FloatingTabBarPresentable else { return }
 		
 		parent.presentTabBar()
+	}
+	
+	func setProfileImage(with image: UIImage?) {
+		guard let parent = navigationController?.parent as? FloatingTabBarPresentable else { return }
+		
+		parent.setProfileImage(image)
 	}
 }
