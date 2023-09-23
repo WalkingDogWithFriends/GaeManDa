@@ -48,15 +48,23 @@ final class LoggedInTabBarController:
 		return button
 	}()
 	
-	private let secondTabButton: TabBarButton = {
-		let image = UIImage(
-			systemName: "pawprint",
-			withConfiguration: UIImage.SymbolConfiguration(pointSize: 54)
-		)
+	// ProfileImageView를 wrapper하는 ImageView
+	private let wrapperImageView: RoundImageView = {
+		let imageView = RoundImageView()
+		imageView.backgroundColor = .white
 		
-		let roundImageView = RoundImageView(image: image)
-		roundImageView.backgroundColor = .white
-		let button = TabBarButton(imageView: roundImageView, title: "프로필")
+		return imageView
+	}()
+	
+	private let profileImageView: RoundImageView = {
+		let imageView = RoundImageView()
+		imageView.backgroundColor = .gray20
+		
+		return imageView
+	}()
+	
+	private lazy var secondTabButton: TabBarButton = {
+		let button = TabBarButton(imageView: wrapperImageView, title: "프로필")
 		button.tag = 1
 		
 		return button
@@ -104,6 +112,7 @@ private extension LoggedInTabBarController {
 	func setViewHierarchy() {
 		view.addSubview(floatingTabBar)
 		floatingTabBar.addSubviews(firstTabButton, secondTabButton, thirdTabButton)
+		wrapperImageView.addSubview(profileImageView)
 	}
 	
 	func setConstraints() {
@@ -122,6 +131,15 @@ private extension LoggedInTabBarController {
 		secondTabButton.snp.makeConstraints { make in
 			make.centerX.equalTo(floatingTabBar.snp.centerX)
 			make.bottom.equalTo(firstTabButton.snp.bottom)
+		}
+		
+		wrapperImageView.snp.makeConstraints { make in
+			make.height.width.equalTo(60)
+		}
+		
+		profileImageView.snp.makeConstraints { make in
+			make.height.width.equalTo(52)
+			make.centerX.centerY.equalToSuperview()
 		}
 		
 		thirdTabButton.snp.makeConstraints { make in
