@@ -2,6 +2,7 @@ import UIKit
 import RIBs
 import RxCocoa
 import RxSwift
+import RxGesture
 import SnapKit
 import DesignKit
 import GMDExtensions
@@ -121,7 +122,14 @@ final class SecondDogSettingViewController:
 			.bind(to: dogWeightTextField.textField.rx.text)
 			.disposed(by: disposeBag)
 		
-		dogWeightTextField.textField.rx.cursorChanged
+		
+		let cursorObservable = Observable.merge([
+			dogWeightTextField.textField.rx.tapGesture().when(.recognized).map { _ in () },
+			dogWeightTextField.textField.rx.controlEvent(.allEditingEvents).asObservable()
+		])
+		
+		// suffix부분에 커서가 이동이 안되도록 해줌.
+		cursorObservable
 			.bind(with: self) { owner, _ in
 				owner.dogWeightTextField.textField.moveCusorLeftTo(suffix: "kg")
 			}
