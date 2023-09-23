@@ -8,10 +8,7 @@ public extension UIViewController {
 		if navigationController == nil { return }
 		
 		let backButton = UIBarButtonItem(
-			image: UIImage(
-				systemName: "chevron.backward",
-				withConfiguration: UIImage.SymbolConfiguration(pointSize: 18, weight: .semibold)
-			),
+			image: .iconChevronLeft,
 			style: .plain,
 			target: target,
 			action: action
@@ -30,10 +27,7 @@ public extension UIViewController {
 		if navigationController == nil { return }
 		
 		navigationItem.rightBarButtonItem = UIBarButtonItem(
-			image: UIImage(
-				systemName: "xmark",
-				withConfiguration: UIImage.SymbolConfiguration(pointSize: 18, weight: .semibold)
-			),
+			image: .iconCloseRound,
 			style: .plain,
 			target: target,
 			action: action

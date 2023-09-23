@@ -42,9 +42,9 @@ private extension GMDNavigationItem {
 	func setImage() {
 		switch type {
 		case .setting:
-			setImage(UIImage.iconSettings, for: .normal)
+			setImage(.iconSettings, for: .normal)
 		case .alarm:
-			setImage(UIImage.iconNotification, for: .normal)
+			setImage(.iconNotification, for: .normal)
 		}
 	}
 }

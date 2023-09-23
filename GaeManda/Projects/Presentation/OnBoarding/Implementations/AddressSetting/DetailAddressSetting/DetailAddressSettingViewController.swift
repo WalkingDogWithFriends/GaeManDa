@@ -54,10 +54,7 @@ final class DetailAddressSettingViewController:
 	
 	private let closeButton: UIButton = {
 		let button = UIButton()
-		let image = UIImage(
-			systemName: "xmark",
-			withConfiguration: UIImage.SymbolConfiguration(pointSize: 18, weight: .semibold)
-		)
+		let image = UIImage.iconCloseRound
 		button.setImage(image, for: .normal)
 		button.tintColor = .black
 		
@@ -70,10 +67,7 @@ final class DetailAddressSettingViewController:
 		textField.layer.cornerRadius = 7
 		textField.layer.borderWidth = 1.2
 		textField.layer.borderColor = UIColor.black.cgColor
-		let image = UIImage(
-			systemName: "magnifyingglass",
-			withConfiguration: UIImage.SymbolConfiguration(weight: .bold)
-		)
+		let image = UIImage.iconSearch
 		textField.setLeftImage(image, size: 15, leftPadding: 8)
 		textField.setPlaceholdColor(.gray90)
 		textField.font = .r12
@@ -85,10 +79,7 @@ final class DetailAddressSettingViewController:
 		let button = UIButton()
 		var configuration = UIButton.Configuration.plain()
 		let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 12, weight: .light)
-		let image = UIImage(
-			systemName: "location.north.circle.fill",
-			withConfiguration: imageConfiguration
-		)
+		let image = UIImage.iconGps
 		configuration.image = image
 		configuration.imagePadding = 10
 		

@@ -35,12 +35,7 @@ final class LoggedInTabBarController:
 	}()
 	
 	private let firstTabButton: TabBarButton = {
-		let image = UIImage(
-			systemName: "pawprint",
-			withConfiguration: UIImage.SymbolConfiguration(pointSize: 20)
-		)
-		
-		let button = TabBarButton(image: image, title: "산책")
+		let button = TabBarButton(image: .iconWalkingDog, title: "산책")
 		button.tag = 0
 		
 		return button
@@ -61,11 +56,7 @@ final class LoggedInTabBarController:
 	}()
 	
 	private let thirdTabButton: TabBarButton = {
-		let image = UIImage(
-			systemName: "pawprint",
-			withConfiguration: UIImage.SymbolConfiguration(pointSize: 20)
-		)
-		let button = TabBarButton(image: image, title: "채팅")
+		let button = TabBarButton(image: .iconChat, title: "채팅")
 		button.tag = 2
 		
 		return button

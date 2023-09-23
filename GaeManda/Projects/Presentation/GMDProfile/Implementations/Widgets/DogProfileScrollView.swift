@@ -53,9 +53,8 @@ final class DogProfileScrollView: UIScrollView {
 	
 	fileprivate let calenderButton: UIButton = {
 		let button = UIButton()
-		let image = UIImage(systemName: "calendar")
 		button.tintColor = .black
-		button.setImage(image, for: .normal)
+		button.setImage(.iconCameraOn, for: .normal)
 		
 		return button
 	}()
