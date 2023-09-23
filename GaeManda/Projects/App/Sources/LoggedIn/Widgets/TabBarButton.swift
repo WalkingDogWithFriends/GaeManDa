@@ -8,18 +8,17 @@
 
 import UIKit
 import DesignKit
+import GMDExtensions
 
 final class TabBarButton: UIView {
+	// MARK: - Properties
 	var isSelected: Bool = false {
 		didSet {
-			if isSelected == true {
-				titleLabel.font = .b12
-			} else {
-				titleLabel.font = .r12
-			}
+			titleLabel.font = isSelected ? .b12 : .r12
 		}
 	}
 	
+	// MARK: - UI Components
 	private let titleLabel: UILabel = {
 		let label = UILabel()
 		label.font = .r12
@@ -30,9 +29,9 @@ final class TabBarButton: UIView {
 	
 	private let imageView: UIImageView
 	
+	// MARK: - Initializers
 	init(imageView: UIImageView, title: String) {
 		self.imageView = imageView
-		imageView.translatesAutoresizingMaskIntoConstraints = false
 		
 		super.init(frame: .zero)
 		titleLabel.text = title
@@ -46,34 +45,36 @@ final class TabBarButton: UIView {
 		setupUI()
 	}
 	
+	@available(*, unavailable)
 	required init?(coder: NSCoder) {
 		fatalError()
 	}
-	
-	private func setupUI() {
+}
+
+// MARK: - UI Methods
+private extension TabBarButton {
+	func setupUI() {
 		imageView.tintColor = .black
 		
-		setupSubViews()
+		setViewHierarchy()
 		setConstraints()
 	}
 	
-	private func setupSubViews() {
-		addSubview(imageView)
-		addSubview(titleLabel)
+	func setViewHierarchy() {
+		addSubviews(imageView, titleLabel)
 	}
-	
-	private func setConstraints() {
+	func setConstraints() {
 		imageView.snp.makeConstraints { make in
-				make.top.equalToSuperview()
-				make.leading.equalToSuperview()
-				make.trailing.equalToSuperview()
+			make.top.equalToSuperview()
+			make.leading.equalToSuperview()
+			make.trailing.equalToSuperview()
 		}
-
+		
 		titleLabel.snp.makeConstraints { make in
-				make.top.equalTo(imageView.snp.bottom).offset(8)
-				make.leading.equalToSuperview()
-				make.trailing.equalToSuperview()
-				make.bottom.equalToSuperview()
+			make.top.equalTo(imageView.snp.bottom).offset(8)
+			make.leading.equalToSuperview()
+			make.trailing.equalToSuperview()
+			make.bottom.equalToSuperview()
 		}
 	}
 }

@@ -19,6 +19,7 @@ final class LoggedInTabBarController:
 	UIViewController,
 	LoggedInPresentable,
 	LoggedInViewControllable {
+	// MARK: - Properties
 	weak var listener: LoggedInPresentableListener?
 	private let disposeBag = DisposeBag()
 	
@@ -26,6 +27,7 @@ final class LoggedInTabBarController:
 	private lazy var tabBarButtons = [firstTabButton, secondTabButton, thirdTabButton]
 	private var tabViewControllers = [UIViewController]()
 	
+	// MARK: - UI Components
 	private let floatingTabBar: UIView = {
 		let view = UIView()
 		view.backgroundColor = .gray20
@@ -71,65 +73,15 @@ final class LoggedInTabBarController:
 		return button
 	}()
 	
+	// MARK: - Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
 		setupUI()
-		
-		attachViewControllerToParent(0)
+		attachViewControllerToParent(at: 0)
 	}
 	
-	private func setupUI() {
-		setupSubviews()
-		setConstraints()
-		bind()
-	}
-	
-	private func setupSubviews() {
-		view.backgroundColor = .white
-		
-		view.addSubview(floatingTabBar)
-		floatingTabBar.addSubview(firstTabButton)
-		floatingTabBar.addSubview(secondTabButton)
-		floatingTabBar.addSubview(thirdTabButton)
-	}
-	
-	private func setConstraints() {
-		floatingTabBar.snp.makeConstraints { make in
-			make.leading.equalTo(view.snp.leading).offset(21)
-			make.trailing.equalTo(view.snp.trailing).offset(-21)
-			make.bottom.equalTo(view.snp.bottom).offset(-32)
-			make.height.equalTo(60)
-		}
-		
-		firstTabButton.snp.makeConstraints { make in
-			make.leading.equalTo(floatingTabBar.snp.leading).offset(26)
-			make.centerY.equalTo(floatingTabBar.snp.centerY)
-		}
-		
-		secondTabButton.snp.makeConstraints { make in
-			make.centerX.equalTo(floatingTabBar.snp.centerX)
-			make.bottom.equalTo(firstTabButton.snp.bottom)
-		}
-		
-		thirdTabButton.snp.makeConstraints { make in
-			make.trailing.equalTo(floatingTabBar.snp.trailing).offset(-21)
-			make.centerY.equalTo(floatingTabBar.snp.centerY)
-		}
-	}
-	
-	private func bind() {
-		tabBarButtons.forEach { button in
-			button.rx.tapGesture()
-				.when(.recognized)
-				.withUnretained(self)
-				.bind { owner, _ in
-					owner.didTapTapBarButton(button)
-				}
-				.disposed(by: disposeBag)
-		}
-	}
-	
+	// MARK: - setViewControllers
 	func setViewControllers(_ viewControllers: [ViewControllable]) {
 		viewControllers
 			.map(\.uiviewController)
@@ -139,18 +91,73 @@ final class LoggedInTabBarController:
 	}
 }
 
-extension LoggedInTabBarController {
-	private func didTapTapBarButton(_ button: TabBarButton) {
-		guard self.selectedIndex != button.tag else {
-			return
-		}
-		removeViewControllerFromParent(selectedIndex)
-		attachViewControllerToParent(button.tag)
-		
-		self.selectedIndex = button.tag
+// MARK: - UI Methods
+private extension LoggedInTabBarController {
+	func setupUI() {
+		view.backgroundColor = .white
+
+		setViewHierarchy()
+		setConstraints()
+		bind()
 	}
 	
-	private func removeViewControllerFromParent(_ index: Int) {
+	func setViewHierarchy() {
+		view.addSubview(floatingTabBar)
+		floatingTabBar.addSubviews(firstTabButton, secondTabButton, thirdTabButton)
+	}
+	
+	func setConstraints() {
+		floatingTabBar.snp.makeConstraints { make in
+			make.leading.equalTo(view.snp.leading).offset(21)
+			make.trailing.equalTo(view.snp.trailing).offset(-21)
+			make.bottom.equalTo(view.snp.bottom).offset(-32)
+			make.height.equalTo(60)
+		}
+		
+		firstTabButton.snp.makeConstraints { make in
+			make.leading.equalTo(floatingTabBar.snp.leading).offset(20)
+			make.centerY.equalTo(floatingTabBar.snp.centerY)
+		}
+		
+		secondTabButton.snp.makeConstraints { make in
+			make.centerX.equalTo(floatingTabBar.snp.centerX)
+			make.bottom.equalTo(firstTabButton.snp.bottom)
+		}
+		
+		thirdTabButton.snp.makeConstraints { make in
+			make.trailing.equalTo(floatingTabBar.snp.trailing).offset(-20)
+			make.centerY.equalTo(floatingTabBar.snp.centerY)
+		}
+	}
+}
+
+// MARK: - Bind Method
+private extension LoggedInTabBarController {
+	func bind() {
+		tabBarButtons.forEach { button in
+			button.rx.tapGesture()
+				.when(.recognized)
+				.bind(with: self) { owner, _ in
+					owner.didTapTapBarButton(at: button.tag)
+				}
+				.disposed(by: disposeBag)
+		}
+	}
+}
+
+// MARK: - TabBar Logic
+private extension LoggedInTabBarController {
+	func didTapTapBarButton(at index: Int) {
+		guard self.selectedIndex != index else {
+			return
+		}
+		removeViewControllerFromParent(at: selectedIndex)
+		attachViewControllerToParent(at: index)
+		
+		self.selectedIndex = index
+	}
+	
+	func removeViewControllerFromParent(at index: Int) {
 		tabBarButtons[index].isSelected = false
 		
 		let previousVC = tabViewControllers[index]
@@ -159,7 +166,7 @@ extension LoggedInTabBarController {
 		previousVC.removeFromParent()
 	}
 	
-	private func attachViewControllerToParent(_ index: Int) {
+	func attachViewControllerToParent(at index: Int) {
 		let viewController = tabViewControllers[index]
 		
 		tabBarButtons[index].isSelected = true
@@ -171,6 +178,7 @@ extension LoggedInTabBarController {
 	}
 }
 
+// MARK: - FloatingTabBarPresentable
 extension LoggedInTabBarController: FloatingTabBarPresentable {
 	public func dismissTabBar() {
 		UIView.animate(
