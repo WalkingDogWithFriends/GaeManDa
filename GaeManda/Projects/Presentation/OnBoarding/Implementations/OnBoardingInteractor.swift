@@ -9,6 +9,7 @@ protocol OnBoardingRouting: Routing {
 	func termsOfUseDidFinish()
 	func addressSettingAttach()
 	func addressSettingDetach()
+	func addressSettingDismiss()
 	func addressSettingDidFinish()
 	func detailAddressSettingAttach()
 	func detailAddressSettingDetach()
@@ -54,6 +55,10 @@ extension OnBoardingInteractor {
 	
 	func addressSettingBackButtonDidTap() {
 		router?.addressSettingDetach()
+	}
+	
+	func addressSettingDismiss() {
+		router?.addressSettingDismiss()
 	}
 }
 

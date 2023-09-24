@@ -115,6 +115,13 @@ extension OnBoardingRouter {
 		detachChild(router)
 	}
 	
+	func addressSettingDismiss() {
+		guard let router = addressSettingRouting else { return }
+		
+		addressSettingRouting = nil
+		detachChild(router)
+	}
+	
 	func addressSettingDidFinish() {
 		userSettingAttach()
 	}

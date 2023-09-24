@@ -10,6 +10,7 @@ import GMDUtils
 protocol AddressSettingPresentableListener: AnyObject {
 	func confirmButtonDidTap()
 	func backButtonDidTap()
+	func dismiss()
 	func searchTextFieldDidTap()
 	func loadLocationButtonDidTap()
 }
@@ -86,6 +87,14 @@ final class AddressSettingViewController:
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
+	}
+	
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		
+		if isBeingDismissed || isMovingFromParent {
+			listener?.dismiss()
+		}
 	}
 	
 	// MARK: - UI Methods
