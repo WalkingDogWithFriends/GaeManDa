@@ -16,10 +16,13 @@ import UseCase
 protocol UserProfileRouting: ViewableRouting {
 	func userProfileEditAttach()
 	func userProfileEditDetach()
+	func userProfileEditDismiss()
 	func dogProfileEditAttach(selectedId: Int)
 	func dogProfileEditDetach()
+	func dogProfileEditDismiss()
 	func newDogProfileAttach()
 	func newDogProfileDetach()
+	func newDogProfileDismiss()
 }
 
 protocol UserProfilePresentable: Presentable {
@@ -89,6 +92,10 @@ extension UserProfileInteractor {
 		router?.userProfileEditDetach()
 	}
 	
+	func userProfileEditDismiss() {
+		router?.userProfileEditDismiss()
+	}
+	
 	func userProfileEndEditing() {
 		router?.userProfileEditDetach()
 	}
@@ -100,6 +107,10 @@ extension UserProfileInteractor {
 		router?.dogProfileEditDetach()
 	}
 	
+	func dogProfileEditDismiss() {
+		router?.dogProfileEditDismiss()
+	}
+	
 	func dogProfileEndEditing() {
 		router?.dogProfileEditDetach()
 	}
@@ -109,6 +120,10 @@ extension UserProfileInteractor {
 extension UserProfileInteractor {
 	func newDogProfileDidTapBackButton() {
 		router?.newDogProfileDetach()
+	}
+	
+	func newDogProfileDismiss() {
+		router?.newDogProfileDismiss()
 	}
 	
 	func newDogProfileDidTapConfirmButton() {

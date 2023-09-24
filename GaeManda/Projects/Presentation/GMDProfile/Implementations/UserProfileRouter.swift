@@ -69,6 +69,13 @@ extension UserProfileRouter {
 		userProfileEditRouting = nil
 		detachChild(router)
 	}
+	
+	func userProfileEditDismiss() {
+		guard let router = userProfileEditRouting else { return }
+		
+		userProfileEditRouting = nil
+		detachChild(router)
+	}
 }
 
 // MARK: DogProfileEdit
@@ -96,6 +103,13 @@ extension UserProfileRouter {
 		dogProfileEditRouting = nil
 		detachChild(router)
 	}
+	
+	func dogProfileEditDismiss() {
+		guard let router = dogProfileEditRouting else { return }
+
+		dogProfileEditRouting = nil
+		detachChild(router)
+	}
 }
 
 // MARK: - NewDogProfile
@@ -117,6 +131,13 @@ extension UserProfileRouter {
 		guard let router = newDogProfileRouting else { return }
 		
 		router.viewControllable.popViewController(animated: true)
+		newDogProfileRouting = nil
+		detachChild(router)
+	}
+	
+	func newDogProfileDismiss() {
+		guard let router = newDogProfileRouting else { return }
+		
 		newDogProfileRouting = nil
 		detachChild(router)
 	}

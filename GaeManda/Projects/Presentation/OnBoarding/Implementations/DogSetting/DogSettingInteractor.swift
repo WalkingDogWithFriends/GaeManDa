@@ -5,12 +5,15 @@ protocol DogSettingRouting: Routing {
 	func cleanupViews()
 	func firstDogSettingAttach()
 	func firstDogSettingDetach()
+	func firstDogSettingDismiss()
 	func firstDogSettingDidFinish()
 	func secondDogSettingAttach()
 	func secondDogSettingDetach()
+	func secondDogSettingDismiss()
 	func secondDogSettingDidFinish()
 	func thirdDogSettingAttach()
 	func thirdDogSettingDetach()
+	func thirdDogSettingDismiss()
 }
 
 final class DogSettingInteractor: Interactor, DogSettingInteractable {
@@ -39,6 +42,11 @@ extension DogSettingInteractor {
 	func firstDogSettingBackButtonDidTap() {
 		listener?.dogSettingBackButtonDidTap()
 	}
+	
+	func firstDogSettingDismiss() {
+		router?.firstDogSettingDismiss()
+		listener?.dogSettingDismiss()
+	}
 }
 
 // MARK: SecondDogSetting
@@ -50,6 +58,10 @@ extension DogSettingInteractor {
 	func secondDogSettingBackButtonDidTap() {
 		router?.secondDogSettingDetach()
 	}
+	
+	func secondDogSettingDismiss() {
+		router?.secondDogSettingDismiss()
+	}
 }
 
 // MARK: ThirdDogSetting
@@ -60,5 +72,9 @@ extension DogSettingInteractor {
 	
 	func thirdDogSettingBackButtonDidTap() {
 		router?.thirdDogSettingDetach()
+	}
+	
+	func thirdDogSettingDismiss() {
+		router?.thirdDogSettingDismiss()
 	}
 }

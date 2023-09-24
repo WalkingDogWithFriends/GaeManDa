@@ -9,12 +9,14 @@ protocol OnBoardingRouting: Routing {
 	func termsOfUseDidFinish()
 	func addressSettingAttach()
 	func addressSettingDetach()
+	func addressSettingDismiss()
 	func addressSettingDidFinish()
 	func detailAddressSettingAttach()
 	func detailAddressSettingDetach()
 	func detailAddressSettingDismiss()
 	func userSettingAttach()
 	func userSettingDetach()
+	func userSettingDismiss()
 	func userSettingDidFinish()
 	func dogSettingAttach()
 	func dogSettingDetach()
@@ -55,6 +57,10 @@ extension OnBoardingInteractor {
 	func addressSettingBackButtonDidTap() {
 		router?.addressSettingDetach()
 	}
+	
+	func addressSettingDismiss() {
+		router?.addressSettingDismiss()
+	}
 }
 
 // MARK: DetailAddressSettingListener
@@ -81,6 +87,10 @@ extension OnBoardingInteractor {
 	func userSettingBackButtonDidTap() {
 		router?.userSettingDetach()
 	}
+	
+	func userSettingDismiss() {
+		router?.userSettingDismiss()
+	}
 }
 
 // MARK: DogSettingListener
@@ -90,6 +100,10 @@ extension OnBoardingInteractor {
 	}
 	
 	func dogSettingBackButtonDidTap() {
+		router?.dogSettingDetach()
+	}
+	
+	func dogSettingDismiss() {
 		router?.dogSettingDetach()
 	}
 }

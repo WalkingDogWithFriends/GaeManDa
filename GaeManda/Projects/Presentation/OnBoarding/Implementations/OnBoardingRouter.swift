@@ -115,6 +115,13 @@ extension OnBoardingRouter {
 		detachChild(router)
 	}
 	
+	func addressSettingDismiss() {
+		guard let router = addressSettingRouting else { return }
+		
+		addressSettingRouting = nil
+		detachChild(router)
+	}
+	
 	func addressSettingDidFinish() {
 		userSettingAttach()
 	}
@@ -164,6 +171,13 @@ extension OnBoardingRouter {
 		guard let router = userSettingRouting else { return }
 		
 		navigationControllerable?.popViewControllerable(animated: true)
+		userSettingRouting = nil
+		detachChild(router)
+	}
+	
+	func userSettingDismiss() {
+		guard let router = userSettingRouting else { return }
+		
 		userSettingRouting = nil
 		detachChild(router)
 	}

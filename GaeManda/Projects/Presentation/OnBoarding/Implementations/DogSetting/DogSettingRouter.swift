@@ -85,6 +85,14 @@ extension DogSettingRouter {
 		firstDogSettingRouting = nil
 		detachChild(router)
 	}
+	
+	func firstDogSettingDismiss() {
+		guard let router = firstDogSettingRouting else { return }
+		
+		firstDogSettingRouting = nil
+		detachChild(router)
+	}
+	
 	func firstDogSettingDidFinish() {
 		secondDogSettingAttach()
 	}
@@ -112,6 +120,13 @@ extension DogSettingRouter {
 		detachChild(router)
 	}
 	
+	func secondDogSettingDismiss() {
+		guard let router = secondDogSettingRouting else { return }
+		
+		secondDogSettingRouting = nil
+		detachChild(router)
+	}
+	
 	func secondDogSettingDidFinish() {
 		thirdDogSettingAttach()
 	}
@@ -135,6 +150,13 @@ extension DogSettingRouter {
 		guard let router = thirdDogSettingRouting else { return }
 		
 		navigationControllable?.popViewController(animated: true)
+		thirdDogSettingRouting = nil
+		detachChild(router)
+	}
+	
+	func thirdDogSettingDismiss() {
+		guard let router = thirdDogSettingRouting else { return }
+		
 		thirdDogSettingRouting = nil
 		detachChild(router)
 	}

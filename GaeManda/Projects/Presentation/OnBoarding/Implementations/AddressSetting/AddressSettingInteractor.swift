@@ -37,6 +37,10 @@ extension AddressSettingInteractor {
 		listener?.addressSettingBackButtonDidTap()
 	}
 	
+	func dismiss() {
+		listener?.addressSettingDismiss()
+	}
+	
 	func searchTextFieldDidTap() {
 		listener?.addressSettingDidTapSearchTextField()
 	}
