@@ -68,9 +68,7 @@ final class UserProfileViewController:
 	
 	private let newDogButton: UIButton = {
 		let button = UIButton()
-		button.tintColor = .black
 		button.setImage(.iconPlusCircle, for: .normal)
-		button.backgroundColor = .gray40
 		
 		return button
 	}()
