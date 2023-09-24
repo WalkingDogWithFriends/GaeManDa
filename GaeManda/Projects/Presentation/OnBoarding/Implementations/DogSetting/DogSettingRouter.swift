@@ -153,4 +153,11 @@ extension DogSettingRouter {
 		thirdDogSettingRouting = nil
 		detachChild(router)
 	}
+	
+	func thirdDogSettingDismiss() {
+		guard let router = thirdDogSettingRouting else { return }
+		
+		thirdDogSettingRouting = nil
+		detachChild(router)
+	}
 }

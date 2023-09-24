@@ -13,6 +13,7 @@ protocol DogSettingRouting: Routing {
 	func secondDogSettingDidFinish()
 	func thirdDogSettingAttach()
 	func thirdDogSettingDetach()
+	func thirdDogSettingDismiss()
 }
 
 final class DogSettingInteractor: Interactor, DogSettingInteractable {
@@ -71,5 +72,9 @@ extension DogSettingInteractor {
 	
 	func thirdDogSettingBackButtonDidTap() {
 		router?.thirdDogSettingDetach()
+	}
+	
+	func thirdDogSettingDismiss() {
+		router?.thirdDogSettingDismiss()
 	}
 }
