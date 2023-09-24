@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension Date {
+public extension Date {
 	/// Date를 String으로 변환
 	/// - Parameter format: 날짜 포맷 (ex: "yyyy-MM-dd")
 	func toString(format: String = "yyyy-MM-dd HH:mm:ss") -> String {
