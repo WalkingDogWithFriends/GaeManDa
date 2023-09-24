@@ -75,7 +75,7 @@ extension DogProfileEditInteractor {
 		listener?.dogProfileEditDidTapBackButton()
 	}
 	
-	func didTapEndEditButton(dog: Dog) {
+	func didTapConfirmButton(dog: Dog) {
 		dependency.userProfileUseCase
 			.updateDog(dog: dog)
 			.observe(on: MainScheduler.instance)

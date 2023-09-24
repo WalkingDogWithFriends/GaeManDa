@@ -20,7 +20,7 @@ protocol DogProfileEditPresentableListener: AnyObject {
 	func viewDidLoad()
 	func viewWillAppear()
 	func didTapBackButton()
-	func didTapEndEditButton(dog: Dog)
+	func didTapConfirmButton(dog: Dog)
 	func didTapDogDashBoard(at id: Int)
 }
 
@@ -48,17 +48,7 @@ final class DogProfileEditViewController:
 	
 	private let profileImageView = RoundImageView()
 	private let scrollView = DogProfileScrollView()
-	
-	private let endEditingButton: UIButton = {
-		let button = UIButton()
-		button.setTitle("수정 완료", for: .normal)
-		button.setTitleColor(.white, for: .normal)
-		button.layer.cornerRadius = 4
-		button.backgroundColor = .green100
-		button.titleLabel?.font = .b16
-		
-		return button
-	}()
+	private let confirmButton = ConfirmButton(title: "수정 완료")
 	
 	// MARK: - Life Cycle
 	override func viewDidLoad() {
@@ -69,7 +59,7 @@ final class DogProfileEditViewController:
 		dogProfileDashBoard.rx.setDelegate(self).disposed(by: disposeBag)
 		
 		setupUI()
-		keyboardShowNotification = registerKeyboardHideNotification()
+		keyboardShowNotification = registerKeyboardShowNotification()
 		keyboardHideNotification = registerKeyboardHideNotification()
 		textDidChangeNotification = registerTextFieldNotification()
 	}
@@ -88,7 +78,7 @@ final class DogProfileEditViewController:
 		removeTextFieldNotification([textDidChangeNotification])
 	}
 	
-	// MARK: touchedBegan
+	// MARK: - touchesBegan
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		super.touchesBegan(touches, with: event)
 		self.scrollView.endEditing(true)
@@ -107,7 +97,7 @@ private extension DogProfileEditViewController {
 	}
 	
 	func setViewHierarchy() {
-		view.addSubviews(navigationBar, dogProfileDashBoard, profileImageView, scrollView, endEditingButton)
+		view.addSubviews(navigationBar, dogProfileDashBoard, profileImageView, scrollView, confirmButton)
 	}
 	
 	func setConstraints() {
@@ -134,10 +124,10 @@ private extension DogProfileEditViewController {
 			make.top.equalTo(profileImageView.snp.bottom).offset(32)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
-			make.bottom.equalTo(endEditingButton.snp.top).offset(-24)
+			make.bottom.equalTo(confirmButton.snp.top).offset(-24)
 		}
 		
-		endEditingButton.snp.makeConstraints { make in
+		confirmButton.snp.makeConstraints { make in
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 			make.bottom.equalToSuperview().offset(-54)
@@ -188,15 +178,23 @@ private extension DogProfileEditViewController {
 				owner.calenderButtonDidTap()
 			}
 			.disposed(by: disposeBag)
+				
+		scrollView.textFieldModeRelay
+			.map { $0.isValid }
+			.bind(to: confirmButton.rx.isPositive)
+			.disposed(by: disposeBag)
 		
-		endEditingButton.rx.tap
+		let confirmButtonWithViewModel = confirmButton.rx.tap
 			.withLatestFrom(scrollView.textFieldModeRelay)
+			.share()
+		
+		confirmButtonWithViewModel
 			.filter { $0.isValid }
 			.bind(with: self) { owner, _ in
 				// 에러 정책 결정하고 구현하면 될거 같아요
 				guard let id = owner.dogViewModels.first(where: { $0.isEdited == true })?.dogId else { return }
 				
-				owner.listener?.didTapEndEditButton(
+				owner.listener?.didTapConfirmButton(
 					dog: Dog(
 						id: id,
 						name: owner.scrollView.nickNameTextField.text,
@@ -210,8 +208,7 @@ private extension DogProfileEditViewController {
 			}
 			.disposed(by: disposeBag)
 		
-		endEditingButton.rx.tap
-			.withLatestFrom(scrollView.textFieldModeRelay)
+		confirmButtonWithViewModel
 			.bind(with: self) { owner, viewModel in
 				owner.scrollView.nickNameTextField.mode = viewModel.nickNameTextFieldMode
 				owner.scrollView.dogBreedTextField.mode = viewModel.dogBreedTextFieldMode
