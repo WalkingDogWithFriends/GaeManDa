@@ -20,6 +20,7 @@ protocol DogProfileEditPresentableListener: AnyObject {
 	func viewDidLoad()
 	func viewWillAppear()
 	func didTapBackButton()
+	func dismiss()
 	func didTapEndEditButton(dog: Dog)
 	func didTapDogDashBoard(at id: Int)
 }
@@ -86,6 +87,14 @@ final class DogProfileEditViewController:
 		
 		removeKeyboardNotification([keyboardShowNotification, keyboardHideNotification])
 		removeTextFieldNotification([textDidChangeNotification])
+	}
+	
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		
+		if isBeingDismissed || isMovingFromParent {
+			listener?.dismiss()
+		}
 	}
 	
 	// MARK: touchedBegan

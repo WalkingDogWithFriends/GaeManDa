@@ -18,6 +18,7 @@ protocol UserProfileRouting: ViewableRouting {
 	func userProfileEditDetach()
 	func dogProfileEditAttach(selectedId: Int)
 	func dogProfileEditDetach()
+	func dogProfileEditDismiss()
 	func newDogProfileAttach()
 	func newDogProfileDetach()
 }
@@ -98,6 +99,10 @@ extension UserProfileInteractor {
 extension UserProfileInteractor {
 	func dogProfileEditDidTapBackButton() {
 		router?.dogProfileEditDetach()
+	}
+	
+	func dogProfileEditDismiss() {
+		router?.dogProfileEditDismiss()
 	}
 	
 	func dogProfileEndEditing() {

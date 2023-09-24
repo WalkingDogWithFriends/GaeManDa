@@ -75,6 +75,10 @@ extension DogProfileEditInteractor {
 		listener?.dogProfileEditDidTapBackButton()
 	}
 	
+	func dismiss() {
+		listener?.dogProfileEditDismiss()
+	}
+	
 	func didTapEndEditButton(dog: Dog) {
 		dependency.userProfileUseCase
 			.updateDog(dog: dog)

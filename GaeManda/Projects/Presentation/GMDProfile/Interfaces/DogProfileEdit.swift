@@ -18,4 +18,5 @@ public protocol DogProfileEditBuildable: Buildable {
 public protocol DogProfileEditListener: AnyObject {
 	func dogProfileEditDidTapBackButton()
 	func dogProfileEndEditing()
+	func dogProfileEditDismiss()
 }
