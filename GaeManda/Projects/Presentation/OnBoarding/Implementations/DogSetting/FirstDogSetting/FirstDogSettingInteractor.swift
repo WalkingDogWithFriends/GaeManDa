@@ -9,6 +9,7 @@ protocol FirstDogSettingPresentable: Presentable {
 protocol FirstDogSettingListener: AnyObject {
 	func firstDogSettingDidFinish()
 	func firstDogSettingBackButtonDidTap()
+	func firstDogSettingDismiss()
 }
 
 final class FirstDogSettingInteractor:
@@ -40,5 +41,9 @@ extension FirstDogSettingInteractor {
 	
 	func backButtonDidTap() {
 		listener?.firstDogSettingBackButtonDidTap()
+	}
+	
+	func dismiss() {
+		listener?.firstDogSettingDismiss()
 	}
 }

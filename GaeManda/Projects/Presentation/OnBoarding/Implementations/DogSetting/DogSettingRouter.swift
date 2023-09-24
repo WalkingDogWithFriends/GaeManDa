@@ -85,6 +85,14 @@ extension DogSettingRouter {
 		firstDogSettingRouting = nil
 		detachChild(router)
 	}
+	
+	func firstDogSettingDismiss() {
+		guard let router = firstDogSettingRouting else { return }
+		
+		firstDogSettingRouting = nil
+		detachChild(router)
+	}
+	
 	func firstDogSettingDidFinish() {
 		secondDogSettingAttach()
 	}

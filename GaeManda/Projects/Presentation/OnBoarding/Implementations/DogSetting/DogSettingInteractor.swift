@@ -5,6 +5,7 @@ protocol DogSettingRouting: Routing {
 	func cleanupViews()
 	func firstDogSettingAttach()
 	func firstDogSettingDetach()
+	func firstDogSettingDismiss()
 	func firstDogSettingDidFinish()
 	func secondDogSettingAttach()
 	func secondDogSettingDetach()
@@ -38,6 +39,11 @@ extension DogSettingInteractor {
 	
 	func firstDogSettingBackButtonDidTap() {
 		listener?.dogSettingBackButtonDidTap()
+	}
+	
+	func firstDogSettingDismiss() {
+		router?.firstDogSettingDismiss()
+		listener?.dogSettingDismiss()
 	}
 }
 
