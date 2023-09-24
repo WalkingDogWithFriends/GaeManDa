@@ -9,6 +9,7 @@
 import UIKit
 import RxCocoa
 import RxSwift
+import RxGesture
 import DesignKit
 import Entity
 import GMDExtensions
@@ -248,8 +249,13 @@ private extension DogProfileScrollView {
 			.bind(to: weightTextField.rx.text)
 			.disposed(by: disposeBag)
 		
+		let cursorObservable = Observable.merge([
+			weightTextField.textField.rx.tapGesture().when(.recognized).map { _ in () },
+			weightTextField.textField.rx.controlEvent(.allEditingEvents).asObservable()
+		])
+		
 		// suffix부분에 커서가 이동이 안되도록 해줌.
-		weightTextField.textField.rx.cursorChanged
+		cursorObservable
 			.bind(with: self) { owner, _ in
 				owner.weightTextField.textField.moveCusorLeftTo(suffix: "kg")
 			}

@@ -41,13 +41,14 @@ public extension UITextField {
 	
 	func setPlaceholdColor(_ color: UIColor) {
 		guard let placeholder = self.placeholder else { return }
-
+		
 		self.attributedPlaceholder = NSAttributedString(
 			string: placeholder,
 			attributes: [.foregroundColor: color]
 		)
 	}
 	
+	// suffix위치에 커서가 가지 않도록 해주는 함수입니다.
 	func moveCusorLeftTo(suffix: String) {
 		guard
 			let text = self.text,
@@ -67,36 +68,39 @@ public extension UITextField {
 			to: selectedRange.end
 		)
 		
-		if
+		guard
 			cursorEndPosition > suffixStartIndex,
-			let newPosition = self.position(from: selectedRange.end, offset: -2) {
+			let newPosition = self.position(from: endOfDocument, offset: -2),
+			let newStartPosition = self.position(from: selectedRange.start, offset: 0)
+		else { return }
+		
+		// 단일 커서일 때
+		if selectedRange.start == selectedRange.end {
+			setSelectedTextRange(from: newPosition, to: newPosition)
+		// 드래그한 커서일 때
+		} else {
+			setSelectedTextRange(from: newStartPosition, to: newPosition)
+		}
+	}
+}
+
+// MARK: - Private Extension
+private extension UITextField {
+	/// 원하는 위치로 textField의 커서를 조정합니다.
+	func setSelectedTextRange(
+		from startPosition: UITextPosition,
+		to endPosition: UITextPosition) {
+		DispatchQueue.main.async {
 			self.selectedTextRange = self.textRange(
-				from: newPosition,
-				to: newPosition
+				from: startPosition,
+				to: endPosition
 			)
 		}
 	}
 }
 
+// MARK: - Reactive Extension
 public extension Reactive where Base: UITextField {
-	var cursorChanged: ControlProperty<UITextRange?> {
-		return cursor
-	}
-	
-	var cursor: ControlProperty<UITextRange?> {
-		return base.rx.controlProperty(
-			editingEvents: [.allTouchEvents, .allEditingEvents, .valueChanged],
-			getter: { textField in
-				textField.selectedTextRange
-			},
-			setter: { textField, value in
-				if textField.selectedTextRange != value {
-					textField.selectedTextRange = value
-				}
-			}
-		)
-	}
-	
 	var isEditing: ControlProperty<Bool> {
 		return base.rx.controlProperty(
 			editingEvents: [],
