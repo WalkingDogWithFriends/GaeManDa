@@ -122,7 +122,6 @@ final class SecondDogSettingViewController:
 			.bind(to: dogWeightTextField.textField.rx.text)
 			.disposed(by: disposeBag)
 		
-		
 		let cursorObservable = Observable.merge([
 			dogWeightTextField.textField.rx.tapGesture().when(.recognized).map { _ in () },
 			dogWeightTextField.textField.rx.controlEvent(.allEditingEvents).asObservable()

@@ -99,7 +99,6 @@ private extension UITextField {
 	}
 }
 
-
 // MARK: - Reactive Extension
 public extension Reactive where Base: UITextField {
 	var isEditing: ControlProperty<Bool> {
