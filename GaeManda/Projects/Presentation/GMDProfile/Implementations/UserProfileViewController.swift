@@ -102,10 +102,15 @@ final class UserProfileViewController:
 		setupUI()
 	}
 	
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		
+		showTabBar()
+	}
+	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		showTabBar()
 		listener?.viewWillAppear()
 	}
 }
