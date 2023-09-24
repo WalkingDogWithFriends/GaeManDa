@@ -155,8 +155,7 @@ final class FirstDogSettingViewController:
 	}
 	
 	private func bindOnboardingView() {
-		onBoardingView.rx.tapGesture()
-			.when(.recognized)
+		onBoardingView.rx.didTapImageView
 			.bind(with: self) { owner, _ in
 				owner.presentPHPickerView()
 			}
