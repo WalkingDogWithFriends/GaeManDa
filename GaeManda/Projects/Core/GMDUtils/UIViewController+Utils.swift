@@ -1,4 +1,5 @@
 import UIKit
+import PhotosUI
 
 public extension UIViewController {
 	func setupBackNavigationButton(
@@ -44,5 +45,15 @@ public extension UIViewController {
 	func setNavigationTitleFont(_ font: UIFont) {
 		let attributes = [NSAttributedString.Key.font: font]
 		self.navigationController?.navigationBar.standardAppearance.titleTextAttributes = attributes
+	}
+	
+	func presentPHPickerView() {
+		guard let self = self as? PHPickerViewControllerDelegate else { return }
+		var configuration = PHPickerConfiguration()
+		configuration.selectionLimit = 1
+		configuration.filter = .any(of: [.images, .not(.livePhotos)])
+		let picker = PHPickerViewController(configuration: configuration)
+		picker.delegate = self
+		present(picker, animated: true)
 	}
 }

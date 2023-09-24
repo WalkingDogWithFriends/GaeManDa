@@ -1,3 +1,4 @@
+import PhotosUI
 import UIKit
 import RIBs
 import RxCocoa
@@ -140,6 +141,7 @@ final class UserSettingViewController:
 	override func bind() {
 		super.bind()
 		bindNavigation()
+		bindOnboardingView() 
 		bindTextField()
 		bindButtons()
 	}
@@ -148,6 +150,14 @@ final class UserSettingViewController:
 		navigationBar.backButton.rx.tap
 			.bind(with: self) { owner, _ in
 				owner.listener?.backButtonDidTap()
+			}
+			.disposed(by: disposeBag)
+	}
+	
+	private func bindOnboardingView() {
+		onBoardingView.rx.didTapImageView
+			.bind(with: self) { owner, _ in
+				owner.presentPHPickerView()
 			}
 			.disposed(by: disposeBag)
 	}
@@ -240,5 +250,21 @@ final class UserSettingViewController:
 private extension UserSettingViewController {
 	func calenderButtonDidTap() {
 		print("calenderButtonDidTap")
+	}
+}
+
+extension UserSettingViewController: PHPickerViewControllerDelegate {
+	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+		picker.dismiss(animated: true)
+		guard let firstResult = results.first else { return }
+		firstResult.fetchImage { result in
+			switch result {
+			case let .success(image):
+				DispatchQueue.main.async {
+					self.onBoardingView.setProfileImage(image)
+				}
+			case .failure: break //
+			}
+		}
 	}
 }
