@@ -10,13 +10,12 @@ import UIKit
 import SnapKit
 
 public enum GMDNavigationItemType {
-	case setting
-	case alarm
+	case more
 }
 
 public final class GMDNavigationItem: UIButton {
 	private let type: GMDNavigationItemType
-
+	
 	// MARK: Initializers
 	public init(type: GMDNavigationItemType) {
 		self.type = type
@@ -40,11 +39,6 @@ private extension GMDNavigationItem {
 	}
 	
 	func setImage() {
-		switch type {
-		case .setting:
-			setImage(UIImage.iconSettings, for: .normal)
-		case .alarm:
-			setImage(UIImage.iconNotification, for: .normal)
-		}
+		setImage(.iconMore, for: .normal)
 	}
 }

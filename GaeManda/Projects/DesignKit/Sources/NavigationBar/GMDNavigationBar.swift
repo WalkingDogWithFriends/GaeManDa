@@ -20,7 +20,7 @@ public final class GMDNavigationBar: UIView {
 	
 	public let backButton: UIButton = {
 		let button = UIButton()
-		button.setImage(UIImage.iconChevronLeft, for: .normal)
+		button.setImage(.iconChevronLeft, for: .normal)
 		return button
 	}()
 	

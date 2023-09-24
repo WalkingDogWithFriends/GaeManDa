@@ -75,9 +75,8 @@ final class UserProfileEditViewController:
 	
 	private let calenderButton: UIButton = {
 		let button = UIButton()
-		let image = UIImage(systemName: "calendar")
 		button.tintColor = .black
-		button.setImage(image, for: .normal)
+		button.setImage(.iconCalendar, for: .normal)
 		
 		return button
 	}()

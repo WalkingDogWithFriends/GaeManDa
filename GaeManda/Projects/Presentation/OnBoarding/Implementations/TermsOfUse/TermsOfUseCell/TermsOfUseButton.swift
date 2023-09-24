@@ -16,7 +16,7 @@ final class TermsOfUseButton: UIView {
 	// MARK: - Properties
 	var isChecked: Bool {
 		didSet {
-			checkButton.tintColor = isChecked ? .green100 : .gray70
+			checkButton.imageView?.image = isChecked ? .iconCheckGreen : .iconCheckGray
 		}
 	}
 	
@@ -32,7 +32,7 @@ final class TermsOfUseButton: UIView {
 	
 	private let checkButton: UIButton = {
 		let button = UIButton()
-		let image = UIImage(systemName: "checkmark.circle")
+		let image = UIImage.iconCheckGray
 		button.setImage(image, for: .normal)
 		button.tintColor = .gray70
 		button.isUserInteractionEnabled = false

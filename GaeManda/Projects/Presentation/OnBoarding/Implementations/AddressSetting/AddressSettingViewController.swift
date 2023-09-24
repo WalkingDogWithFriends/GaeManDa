@@ -30,8 +30,7 @@ final class AddressSettingViewController:
 		let underLineTextField = UnderLineTextField()
 		underLineTextField.underLineColor = .black
 		underLineTextField.placeholder = "도로명 또는 지번 주소를 입력해주세요"
-		let image = UIImage(systemName: "magnifyingglass")
-		underLineTextField.setLeftImage(image, size: 24)
+		underLineTextField.setLeftImage(.iconSearch, size: 24)
 		underLineTextField.setPlaceholdColor(.gray90)
 		
 		return underLineTextField
