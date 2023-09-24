@@ -55,6 +55,10 @@ extension NewDogProfileInteractor {
 		listener?.newDogProfileDidTapBackButton()
 	}
 	
+	func dismiss() {
+		listener?.newDogProfileDismiss()
+	}
+	
 	func didTapConfirmButton(dog: Dog) {
 		dependency.userProfileUseCase
 			.postNewDog(dog: dog)

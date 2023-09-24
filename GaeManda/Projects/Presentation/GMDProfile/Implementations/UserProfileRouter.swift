@@ -127,4 +127,11 @@ extension UserProfileRouter {
 		newDogProfileRouting = nil
 		detachChild(router)
 	}
+	
+	func newDogProfileDismiss() {
+		guard let router = newDogProfileRouting else { return }
+		
+		newDogProfileRouting = nil
+		detachChild(router)
+	}
 }

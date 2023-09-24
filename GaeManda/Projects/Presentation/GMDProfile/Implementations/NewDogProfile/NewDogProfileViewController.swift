@@ -19,6 +19,7 @@ import GMDUtils
 protocol NewDogProfilePresentableListener: AnyObject {
 	func didTapBackButton()
 	func didTapConfirmButton(dog: Dog)
+	func dismiss()
 }
 
 final class NewDogProfileViewController:
@@ -49,12 +50,24 @@ final class NewDogProfileViewController:
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		
 		hideTabBar()
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		
 		removeKeyboardNotification([keyboardShowNotification, keyboardHideNotification])
 		removeTextFieldNotification([textDidChangeNotification])
+	}
+	
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		
+		if isBeingDismissed || isMovingFromParent {
+			listener?.dismiss()
+		}
 	}
 	
 	// MARK: - touchesBegan

@@ -21,6 +21,7 @@ protocol UserProfileRouting: ViewableRouting {
 	func dogProfileEditDismiss()
 	func newDogProfileAttach()
 	func newDogProfileDetach()
+	func newDogProfileDismiss()
 }
 
 protocol UserProfilePresentable: Presentable {
@@ -114,6 +115,10 @@ extension UserProfileInteractor {
 extension UserProfileInteractor {
 	func newDogProfileDidTapBackButton() {
 		router?.newDogProfileDetach()
+	}
+	
+	func newDogProfileDismiss() {
+		router?.newDogProfileDismiss()
 	}
 	
 	func newDogProfileDidTapConfirmButton() {
