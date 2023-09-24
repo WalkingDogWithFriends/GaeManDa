@@ -69,6 +69,13 @@ extension UserProfileRouter {
 		userProfileEditRouting = nil
 		detachChild(router)
 	}
+	
+	func userProfileEditDismiss() {
+		guard let router = userProfileEditRouting else { return }
+		
+		userProfileEditRouting = nil
+		detachChild(router)
+	}
 }
 
 // MARK: DogProfileEdit

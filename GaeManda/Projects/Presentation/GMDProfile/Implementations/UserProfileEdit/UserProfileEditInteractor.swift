@@ -70,6 +70,10 @@ extension UserProfileEditInteractor {
 		listener?.userProfileEditDidTapBackButton()
 	}
 	
+	func dismiss() {
+		listener?.userProfileEditDismiss()
+	}
+	
 	func didTapEndEditingButton(name: String, sex: Sex) {
 		debugPrint(name, sex)
 		dependency.userProfileUseCase

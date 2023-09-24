@@ -19,6 +19,7 @@ import GMDUtils
 protocol UserProfileEditPresentableListener: AnyObject {
 	func viewWillAppear()
 	func didTapBackbutton()
+	func dismiss()
 	func didTapEndEditingButton(name: String, sex: Sex)
 }
 
@@ -109,6 +110,15 @@ final class UserProfileEditViewController:
 		
 		hideTabBar()
 	}
+	
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		
+		if isBeingDismissed || isMovingFromParent {
+			listener?.dismiss()
+		}
+	}
+	
 	// MARK: - touchesBegan
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		super.touchesBegan(touches, with: event)
