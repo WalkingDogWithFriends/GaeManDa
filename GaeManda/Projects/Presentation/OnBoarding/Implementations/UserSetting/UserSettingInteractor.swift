@@ -37,4 +37,8 @@ extension UserSettingInteractor {
 	func backButtonDidTap() {
 		listener?.userSettingBackButtonDidTap()
 	}
+	
+	func dismiss() {
+		listener?.userSettingDismiss()
+	}
 }

@@ -175,6 +175,13 @@ extension OnBoardingRouter {
 		detachChild(router)
 	}
 	
+	func userSettingDismiss() {
+		guard let router = userSettingRouting else { return }
+		
+		userSettingRouting = nil
+		detachChild(router)
+	}
+	
 	func userSettingDidFinish() {
 		dogSettingAttach()
 	}
