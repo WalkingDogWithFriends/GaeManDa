@@ -29,7 +29,7 @@ open class BottomSheetViewController: UIViewController {
 	
 	fileprivate let dimmedView: UIView = {
 		let view = UIView()
-		view.backgroundColor = UIColor(hexCode: "#4C4C4C", alpha: 0.7)
+		// view.backgroundColor = UIColor(hexCode: "#4C4C4C", alpha: 0.7)
 		return view
 	}()
 	

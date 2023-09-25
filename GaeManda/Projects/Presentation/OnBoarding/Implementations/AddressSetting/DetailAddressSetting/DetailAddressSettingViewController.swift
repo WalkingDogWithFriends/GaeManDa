@@ -104,7 +104,7 @@ final class DetailAddressSettingViewController:
 	
 	private let bottomView: UIView = {
 		let view = UIView()
-		view.backgroundColor = .init(hexCode: "#F6F6F6")
+//		view.backgroundColor = .init(hexCode: "#F6F6F6")
 		
 		return view
 	}()

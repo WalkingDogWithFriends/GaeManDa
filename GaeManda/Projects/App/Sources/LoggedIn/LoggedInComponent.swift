@@ -9,8 +9,8 @@
 import RIBs
 import Chatting
 import ChattingImpl
-import DogsOnAround
-import DogsOnAroundImpl
+import GMDMap
+import GMDMapImpl
 import GMDProfile
 import GMDProfileImpl
 import Repository
@@ -36,11 +36,11 @@ final class LoggedInComponent:
 		return ChattingBuilder(dependency: self)
 	}()
 	
-	lazy var dogsOnAroundBuildable: DogsOnAroundBuildable = {
+	lazy var gmdMapBuildable: DogsOnAroundBuildable = {
 		return DogsOnAroundBuilder(dependency: self)
 	}()
 	
-	lazy var userProfileBuildable: UserProfileBuildable = {
+	lazy var gmdProfileBuildable: UserProfileBuildable = {
 		return UserProfileBuilder(dependency: self)
 	}()
 	

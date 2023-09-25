@@ -8,7 +8,7 @@
 
 import RIBs
 import Chatting
-import DogsOnAround
+import GMDMap
 import GMDProfile
 import GMDUtils
 
@@ -31,39 +31,39 @@ final class LoggedInRouter:
 	private let chattingListBuildable: ChattingListBuildable
 	private var chattingListRouting: ViewableRouting?
 	
-	private let dogsOnAroundBuildable: DogsOnAroundBuildable
-	private var dogsOnAroundRouting: ViewableRouting?
+	private let gmdMapBuildable: DogsOnAroundBuildable
+	private var gmdMapRouting: ViewableRouting?
 	
-	private let userSettingBuildable: UserProfileBuildable
-	private var userSettingRouting: ViewableRouting?
+	private let gmdProfileBuildable: UserProfileBuildable
+	private var gmdProfileRouting: ViewableRouting?
 	
 	init(
 		interactor: LoggedInInteractable,
 		viewController: LoggedInViewControllable,
 		chattingListBuildable: ChattingListBuildable,
-		dogsOnAroundBuildable: DogsOnAroundBuildable,
-		userSettingBuildable: UserProfileBuildable
+		gmdMapBuildable: DogsOnAroundBuildable,
+		gmdProfileBuildable: UserProfileBuildable
 	) {
 		self.chattingListBuildable = chattingListBuildable
-		self.dogsOnAroundBuildable = dogsOnAroundBuildable
-		self.userSettingBuildable = userSettingBuildable
+		self.gmdMapBuildable = gmdMapBuildable
+		self.gmdProfileBuildable = gmdProfileBuildable
 		
 		super.init(interactor: interactor, viewController: viewController)
 		interactor.router = self
 	}
 	
 	func attachTabs() {
+		let gmdMapRouting = gmdMapBuildable.build(withListener: interactor)
+		let gmdProfileRouting = gmdProfileBuildable.build(withListener: interactor)
 		let chattingListRouting = chattingListBuildable.build(withListener: interactor)
-		let dogsOnAroundRouting = dogsOnAroundBuildable.build(withListener: interactor)
-		let userSettingRouting = userSettingBuildable.build(withListener: interactor)
 		
+		attachChild(gmdMapRouting)
+		attachChild(gmdProfileRouting)
 		attachChild(chattingListRouting)
-		attachChild(dogsOnAroundRouting)
-		attachChild(userSettingRouting)
 
 		let viewControllers = [
-			NavigationControllerable(root: dogsOnAroundRouting.viewControllable),
-			NavigationControllerable(root: userSettingRouting.viewControllable),
+			NavigationControllerable(root: gmdMapRouting.viewControllable),
+			NavigationControllerable(root: gmdProfileRouting.viewControllable),
 			NavigationControllerable(root: chattingListRouting.viewControllable)
 		]
 		

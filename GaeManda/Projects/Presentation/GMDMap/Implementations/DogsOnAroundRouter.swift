@@ -7,7 +7,7 @@
 //
 
 import RIBs
-import DogsOnAround
+import GMDMap
 
 protocol DogsOnAroundInteractable: Interactable {
     var router: DogsOnAroundRouting? { get set }

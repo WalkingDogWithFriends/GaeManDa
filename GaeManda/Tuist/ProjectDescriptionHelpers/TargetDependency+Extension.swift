@@ -23,21 +23,13 @@ public extension TargetDependency.Project.PresentationLayer {
 		target: "Presentation",
 		path: .relativeToRoot("Projects/Presentation")
 	)
-	static let DogsOnAround = TargetDependency.project(
-		target: "DogsOnAround",
-		path: .relativeToRoot("Projects/Presentation/DogsOnAround")
+	static let GMDMap = TargetDependency.project(
+		target: "GMDMap",
+		path: .relativeToRoot("Projects/Presentation/GMDMap")
 	)
 	static let Chatting = TargetDependency.project(
 		target: "Chatting",
 		path: .relativeToRoot("Projects/Presentation/Chatting")
-	)
-	static let Settings = TargetDependency.project(
-		target: "Settings",
-		path: .relativeToRoot("Projects/Presentation/Settings")
-	)
-	static let SignUp = TargetDependency.project(
-		target: "SignUp",
-		path: .relativeToRoot("Projects/Presentation/SignUp")
 	)
 	static let SignIn = TargetDependency.project(
 		target: "SignIn",
@@ -51,21 +43,13 @@ public extension TargetDependency.Project.PresentationLayer {
 		target: "GMDProfile",
 		path: .relativeToRoot("Projects/Presentation/GMDProfile")
 	)
-	static let DogsOnAroundImpl = TargetDependency.project(
-		target: "DogsOnAroundImpl",
-		path: .relativeToRoot("Projects/Presentation/DogsOnAround")
+	static let GMDMapImpl = TargetDependency.project(
+		target: "GMDMapImpl",
+		path: .relativeToRoot("Projects/Presentation/GMDMap")
 	)
 	static let ChattingImpl = TargetDependency.project(
 		target: "ChattingImpl",
 		path: .relativeToRoot("Projects/Presentation/Chatting")
-	)
-	static let SettingsImpl = TargetDependency.project(
-		target: "SettingsImpl",
-		path: .relativeToRoot("Projects/Presentation/Settings")
-	)
-	static let SignUpImpl = TargetDependency.project(
-		target: "SignUpImpl",
-		path: .relativeToRoot("Projects/Presentation/SignUp")
 	)
 	static let SignInImpl = TargetDependency.project(
 		target: "SignInImpl",
@@ -99,16 +83,20 @@ public extension TargetDependency.Project.DomainLayer {
 		target: "Entity",
 		path: .relativeToRoot("Projects/Domain")
 	)
+	static let DataMapper = TargetDependency.project(
+		target: "DataMapper",
+		path: .relativeToRoot("Projects/Domain")
+	)
 	static let UseCase = TargetDependency.project(
 		target: "UseCase",
 		path: .relativeToRoot("Projects/Domain")
 	)
-	static let UseCaseImpl = TargetDependency.project(
-		target: "UseCaseImpl",
-		path: .relativeToRoot("Projects/Domain")
-	)
 	static let Repository = TargetDependency.project(
 		target: "Repository",
+		path: .relativeToRoot("Projects/Domain")
+	)
+	static let UseCaseImpl = TargetDependency.project(
+		target: "UseCaseImpl",
 		path: .relativeToRoot("Projects/Domain")
 	)
 }
