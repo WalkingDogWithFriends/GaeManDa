@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PhotosUI
 import RIBs
 import RxCocoa
 import RxSwift
@@ -271,6 +272,14 @@ private extension UserProfileEditViewController {
 	
 	// MARK: - UI Binding
 	func bindForUI() {
+		// profileImageView 눌렀을 때
+		profileImageView.rx.tapGesture()
+			.when(.recognized)
+			.bind(with: self) { owner, _ in
+				owner.presentPHPickerView()
+			}
+			.disposed(by: disposeBag)
+		
 		// textField의 text가 지정된 수보다 넘어가면 trimming
 		nickNameTextField.rx.text
 			.orEmpty
@@ -323,5 +332,22 @@ private extension UserProfileEditViewController {
 private extension UserProfileEditViewController {
 	func calenderButtonDidTap() {
 		print("calenderButtonDidTap")
+	}
+}
+
+// MARK: - PHPickerViewControllerDelegate
+extension UserProfileEditViewController: PHPickerViewControllerDelegate {
+	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+		picker.dismiss(animated: true)
+		guard let firstResult = results.first else { return }
+		firstResult.fetchImage { result in
+			switch result {
+			case let .success(image):
+				DispatchQueue.main.async {
+					self.profileImageView.image = image
+				}
+			case .failure: break
+			}
+		}
 	}
 }
