@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PhotosUI
 import RIBs
 import RxCocoa
 import RxSwift
@@ -127,6 +128,13 @@ private extension NewDogProfileViewController {
 			}
 			.disposed(by: disposeBag)
 		
+		profileImageView.rx.tapGesture()
+			.when(.recognized)
+			.bind(with: self) { owner, _ in
+				owner.presentPHPickerView()
+			}
+			.disposed(by: disposeBag)
+		
 		scrollView.textFieldModeRelay
 			.map { $0.isValid }
 			.bind(to: confirmButton.rx.isPositive)
@@ -192,3 +200,20 @@ extension NewDogProfileViewController: KeyboardListener {
 
 // MARK: - GMDTextFieldListener
 extension NewDogProfileViewController: GMDTextFieldListener { }
+
+// MARK: - PHPickerViewControllerDelegate
+extension NewDogProfileViewController: PHPickerViewControllerDelegate {
+	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+		picker.dismiss(animated: true)
+		guard let firstResult = results.first else { return }
+		firstResult.fetchImage { result in
+			switch result {
+			case let .success(image):
+				DispatchQueue.main.async {
+					self.profileImageView.image = image
+				}
+			case .failure: break
+			}
+		}
+	}
+}
