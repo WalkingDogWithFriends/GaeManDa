@@ -31,8 +31,8 @@ final class LoggedInBuilder:
 			interactor: interactor,
 			viewController: viewController,
 			chattingListBuildable: component.chattingListBuildable,
-			dogsOnAroundBuildable: component.dogsOnAroundBuildable,
-			userSettingBuildable: component.userProfileBuildable
+			gmdMapBuildable: component.gmdMapBuildable,
+			gmdProfileBuildable: component.gmdProfileBuildable
 		)
 	}
 }

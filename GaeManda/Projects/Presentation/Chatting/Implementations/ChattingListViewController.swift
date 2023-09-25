@@ -67,9 +67,6 @@ final class ChattingListViewController:
 // MARK: - UI Setting
 private extension ChattingListViewController {
 	func setupUI() {
-		title = "채팅"
-
-		setNavigationTitleFont(.b20)
 		// Register RefreshControl
 		chattingListTableView.refreshControl = refreshControl
 		
