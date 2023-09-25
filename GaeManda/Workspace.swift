@@ -9,10 +9,8 @@ let workspace = Workspace(
 		"Projects/DesignKit",
 		"Projects/Domain",
 		"Projects/Presentation/Chatting",
-		"Projects/Presentation/DogsOnAround",
-		"Projects/Presentation/Settings",
+		"Projects/Presentation/GMDMap",
 		"Projects/Presentation/SignIn",
-		"Projects/Presentation/SignUp",
 		"Projects/Presentation/OnBoarding"
 	],
 	schemes: [

@@ -7,7 +7,7 @@
 //
 
 import RIBs
-import DogsOnAround
+import GMDMap
 
 protocol DogsOnAroundRouting: ViewableRouting { }
 

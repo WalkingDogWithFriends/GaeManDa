@@ -1,7 +1,7 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-private let projectName = "Settings"
+private let projectName = "GMDMap"
 
 let project = Project.createProject(
 	name: projectName,
@@ -9,18 +9,18 @@ let project = Project.createProject(
 		.createIntefaceTarget(
 			name: projectName,
 			dependencies: [
-				.Project.DomainLayer.Entity,
-				.Project.CoreLayer.GMDUtils,
 				.SPM.RIBs
 			]
 		),
 		.createImplementationTarget(
 			name: projectName,
 			dependencies: [
-				.Project.PresentationLayer.Settings,
-				.Project.DesignKit,
+				.Project.PresentationLayer.GMDMap,
+				.Project.CoreLayer.GMDUtils,
 				.Project.CoreLayer.GMDExtensions,
+				.Project.DomainLayer.Entity,
 				.Project.DomainLayer.UseCase,
+				.Project.DesignKit,
 				.SPM.RxCocoa,
 				.SPM.RxGesture,
 				.SPM.SnapKit

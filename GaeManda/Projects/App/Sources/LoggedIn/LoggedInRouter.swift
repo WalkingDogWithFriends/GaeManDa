@@ -8,7 +8,7 @@
 
 import RIBs
 import Chatting
-import DogsOnAround
+import GMDMap
 import GMDProfile
 import GMDUtils
 

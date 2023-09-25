@@ -7,7 +7,7 @@
 //
 
 import RIBs
-import DogsOnAround
+import GMDMap
 
 public protocol DogsOnAroundDependency: Dependency { }
 

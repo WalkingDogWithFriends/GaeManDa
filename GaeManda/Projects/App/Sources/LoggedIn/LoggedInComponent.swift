@@ -9,8 +9,8 @@
 import RIBs
 import Chatting
 import ChattingImpl
-import DogsOnAround
-import DogsOnAroundImpl
+import GMDMap
+import GMDMapImpl
 import GMDProfile
 import GMDProfileImpl
 import Repository
