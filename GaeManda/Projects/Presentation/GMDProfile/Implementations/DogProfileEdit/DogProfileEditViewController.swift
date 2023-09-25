@@ -6,6 +6,7 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
+import PhotosUI
 import UIKit
 import RIBs
 import RxCocoa
@@ -192,6 +193,13 @@ private extension DogProfileEditViewController {
 			}
 			.disposed(by: disposeBag)
 		
+		profileImageView.rx.tapGesture()
+			.when(.recognized)
+			.bind(with: self) { owner, _ in
+				owner.presentPHPickerView()
+			}
+			.disposed(by: disposeBag)
+		
 		scrollView.rx.didTapCalenderButton
 			.bind(with: self) { owner, _ in
 				owner.calenderButtonDidTap()
@@ -290,3 +298,20 @@ extension DogProfileEditViewController: KeyboardListener {
 
 // MARK: - GMDTextFieldListener
 extension DogProfileEditViewController: GMDTextFieldListener { }
+
+// MARK: - PHPickerViewControllerDelegate
+extension DogProfileEditViewController: PHPickerViewControllerDelegate {
+	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+		picker.dismiss(animated: true)
+		guard let firstResult = results.first else { return }
+		firstResult.fetchImage { result in
+			switch result {
+			case let .success(image):
+				DispatchQueue.main.async {
+					self.profileImageView.image = image
+				}
+			case .failure: break
+			}
+		}
+	}
+}
