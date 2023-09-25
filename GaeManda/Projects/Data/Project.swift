@@ -7,7 +7,7 @@ let project = Project.createProject(
 		.createTarget(
 			name: "DTO",
 			product: .staticLibrary,
-			sources: ["DTO/Sources/**"]
+			sources: ["DTO/**"]
 		),
 		.createTarget(
 			name: "RepositoryImpl",
