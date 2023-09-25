@@ -143,6 +143,17 @@ extension DogProfileEditViewController {
 		dogProfileDashBoard.reloadData()
 	}
 	
+	func updateDog(_ dog: Dog) {
+		scrollView.endEditing(true)
+		scrollView.scroll(to: .top, animated: true)
+		
+		updateDogName(dog.name)
+		updateDogSex(dog.sex)
+		updateDogWeight(dog.weight)
+		updateDogNeutered(dog.didNeutered)
+		updateDogCharacter(dog.character)
+	}
+	
 	func updateDogName(_ name: String) {
 		scrollView.nickNameTextField.text = name
 	}

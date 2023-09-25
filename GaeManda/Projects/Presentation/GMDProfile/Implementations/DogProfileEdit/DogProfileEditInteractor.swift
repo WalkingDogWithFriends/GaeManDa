@@ -19,11 +19,7 @@ protocol DogProfileEditPresentable: Presentable {
 	var listener: DogProfileEditPresentableListener? { get set }
 	
 	func updateDogDashBoard(dogViewModels: [DogDashBoardViewModel])
-	func updateDogName(_ name: String)
-	func updateDogSex(_ sex: Sex)
-	func updateDogWeight(_ weight: String)
-	func updateDogNeutered(_ isNeutered: Neutered)
-	func updateDogCharacter(_ character: String)
+	func updateDog(_ dog: Dog)
 }
 
 protocol DogProfileEditInteractorDependency {
@@ -87,6 +83,7 @@ extension DogProfileEditInteractor {
 	}
 	
 	func didTapDogDashBoard(at id: Int) {
+		guard id != editDogId.value else { return }
 		editDogId.accept(id)
 	}
 }
@@ -100,14 +97,6 @@ private extension DogProfileEditInteractor {
 				owner.dogs.accept(dogs)
 			}
 			.disposeOnDeactivate(interactor: self)
-	}
-	
-	func updateEditDog(_ dog: Dog) {
-		presenter.updateDogName(dog.name)
-		presenter.updateDogSex(dog.sex)
-		presenter.updateDogWeight(dog.weight)
-		presenter.updateDogNeutered(dog.didNeutered)
-		presenter.updateDogCharacter(dog.character)
 	}
 	
 	func bind() {
@@ -141,7 +130,7 @@ private extension DogProfileEditInteractor {
 					// owner.listener?.dogProfileEditBackButtonDidTap()
 					return
 				}
-				owner.updateEditDog(dog)
+				owner.presenter.updateDog(dog)
 			}
 			.disposeOnDeactivate(interactor: self)
 	}
