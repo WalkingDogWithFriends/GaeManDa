@@ -1,35 +1,13 @@
+//
+//  ViewControllable+Extension.swift
+//  GMDExtensions
+//
+//  Created by 김영균 on 9/25/23.
+//  Copyright © 2023 com.gaemanda. All rights reserved.
+//
+
 import UIKit
 import RIBs
-
-public final class NavigationControllerable: ViewControllable {
-	public var uiviewController: UIViewController { self.navigationController }
-	public let navigationController: UINavigationController
-	public var navigationBarIsHidden: Bool = false {
-		didSet {
-			navigationController.isNavigationBarHidden = navigationBarIsHidden
-		}
-	}
-	
-	public init(root: ViewControllable) {
-		let navigation = UINavigationController(rootViewController: root.uiviewController)
-		self.navigationController = navigation
-		self.navigationController.navigationBar.isHidden = true
-	}
-	
-	public func pushViewControllerable(
-		_ viewControllerable: ViewControllable,
-		animated: Bool
-	) {
-		navigationController.pushViewController(
-			viewControllerable.uiviewController,
-			animated: animated
-		)
-	}
-	
-	public func popViewControllerable(animated: Bool) {
-		self.navigationController.popViewController(animated: animated)
-	}
-}
 
 public extension ViewControllable {
 	func present(
@@ -58,8 +36,8 @@ public extension ViewControllable {
 		)
 	}
 	
-	func dismiss(completion: (() -> Void)?) {
-		self.uiviewController.dismiss(animated: true, completion: completion)
+	func dismiss(animated: Bool = true, completion: (() -> Void)? = nil) {
+		self.uiviewController.dismiss(animated: animated, completion: completion)
 	}
 	
 	func pushViewController(_ viewControllable: ViewControllable, animated: Bool) {

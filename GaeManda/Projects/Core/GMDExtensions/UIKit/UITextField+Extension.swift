@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import RxCocoa
-import RxSwift
 
 public extension UITextField {
 	func setLeftImage(
@@ -75,37 +73,5 @@ public extension UITextField {
 				to: newPosition
 			)
 		}
-	}
-}
-
-public extension Reactive where Base: UITextField {
-	var cursorChanged: ControlProperty<UITextRange?> {
-		return cursor
-	}
-	
-	var cursor: ControlProperty<UITextRange?> {
-		return base.rx.controlProperty(
-			editingEvents: [.allTouchEvents, .allEditingEvents, .valueChanged],
-			getter: { textField in
-				textField.selectedTextRange
-			},
-			setter: { textField, value in
-				if textField.selectedTextRange != value {
-					textField.selectedTextRange = value
-				}
-			}
-		)
-	}
-	
-	var isEditing: ControlProperty<Bool> {
-		return base.rx.controlProperty(
-			editingEvents: [],
-			getter: { textField in
-				textField.isEditing
-			},
-			setter: { textField, value in
-				textField.endEditing(value)
-			}
-		)
 	}
 }

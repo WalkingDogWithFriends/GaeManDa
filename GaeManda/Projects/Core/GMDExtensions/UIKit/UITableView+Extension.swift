@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import RxSwift
 
 // MARK: - UIKit
 public extension UITableView {
@@ -55,20 +54,5 @@ public extension UITableView {
 			fatalError("identifier: \(identifier) could not be dequeued as \(T.self)")
 		}
 		return headerFooter
-	}
-}
-
-// MARK: - RxSwift
-extension Reactive where Base: UITableView {
-	public func items<
-		Sequence: Swift.Sequence,
-		Cell: UITableViewCell,
-		Source: ObservableType
-	>(cellType: Cell.Type = Cell.self)
-	-> (_ source: Source)
-	-> (_ configureCell: @escaping (Int, Sequence.Element, Cell) -> Void)
-	-> Disposable
-	where Source.Element == Sequence {
-		return self.items(cellIdentifier: cellType.identifier, cellType: cellType)
 	}
 }

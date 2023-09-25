@@ -130,11 +130,11 @@ final class SecondDogSettingViewController:
 			.bind(to: dogWeightTextField.textField.rx.text)
 			.disposed(by: disposeBag)
 		
-		dogWeightTextField.textField.rx.cursorChanged
-			.bind(with: self) { owner, _ in
-				owner.dogWeightTextField.textField.moveCusorLeftTo(suffix: "kg")
-			}
-			.disposed(by: disposeBag)
+//		dogWeightTextField.textField.rx.cursorChanged
+//			.bind(with: self) { owner, _ in
+//				owner.dogWeightTextField.textField.moveCusorLeftTo(suffix: "kg")
+//			}
+//			.disposed(by: disposeBag)
 	}
 	
 	private func bindConfirmButton() {
