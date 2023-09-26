@@ -22,7 +22,7 @@ final class LoggedInComponent:
 	Component<LoggedInDependency>,
 	ChattingListDependency,
 	ChattingDependency,
-	DogsOnAroundDependency,
+	GMDMapDependency,
 	UserProfileDependency,
 	UserProfileEditDependency,
 	DogProfileEditDependency,
@@ -36,8 +36,8 @@ final class LoggedInComponent:
 		return ChattingBuilder(dependency: self)
 	}()
 	
-	lazy var gmdMapBuildable: DogsOnAroundBuildable = {
-		return DogsOnAroundBuilder(dependency: self)
+	lazy var gmdMapBuildable: GMDMapBuildable = {
+		return GMDMapBuilder(dependency: self)
 	}()
 	
 	lazy var gmdProfileBuildable: UserProfileBuildable = {
