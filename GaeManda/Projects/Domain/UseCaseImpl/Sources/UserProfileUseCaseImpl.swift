@@ -12,7 +12,7 @@ import Entity
 import Repository
 import UseCase
 
-public struct UserProfileUseCaseImpl: UserProfileUseCase {
+public struct GMDProfileUseCaseImpl: GMDProfileUseCase {
 	// MARK: - Repositories
 	public let dogDependency: DogRepository
 	public let userDependency: UserRepository
@@ -27,7 +27,7 @@ public struct UserProfileUseCaseImpl: UserProfileUseCase {
 	}
 }
 // MARK: - User Profile Use Case
-public extension UserProfileUseCaseImpl {
+public extension GMDProfileUseCaseImpl {
 	func fetchUser(id: Int) -> Single<User> {
 		return userDependency.fetchUser(id: id)
 	}
@@ -46,7 +46,7 @@ public extension UserProfileUseCaseImpl {
 }
 
 // MARK: - Dog Profile Use Case
-public extension UserProfileUseCaseImpl {
+public extension GMDProfileUseCaseImpl {
 	func fetchDogs(id: Int) -> Single<[Dog]> {
 		return dogDependency.fetchDogs(id: id)
 	}

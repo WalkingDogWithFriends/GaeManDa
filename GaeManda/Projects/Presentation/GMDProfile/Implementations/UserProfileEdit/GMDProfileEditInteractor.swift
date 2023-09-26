@@ -1,5 +1,5 @@
 //
-//  UserProfileEditInteractor.swift
+//  GMDProfileEditInteractor.swift
 //  GMDProfileImpl
 //
 //  Created by jung on 2023/07/30.
@@ -12,31 +12,31 @@ import Entity
 import GMDProfile
 import UseCase
 
-protocol UserProfileEditRouting: ViewableRouting { }
+protocol GMDProfileEditRouting: ViewableRouting { }
 
-protocol UserProfileEditPresentable: Presentable {
-	var listener: UserProfileEditPresentableListener? { get set }
+protocol GMDProfileEditPresentable: Presentable {
+	var listener: GMDProfileEditPresentableListener? { get set }
 	
 	func updateUsername(_ name: String)
 	func updateUserSex(_ sex: Sex)
 }
 
-protocol UserProfileEditInteractorDependency {
-	var userProfileUseCase: UserProfileUseCase { get }
+protocol GMDProfileEditInteractorDependency {
+	var gmdProfileUseCase: GMDProfileUseCase { get }
 }
 
-final class UserProfileEditInteractor:
-	PresentableInteractor<UserProfileEditPresentable>,
-	UserProfileEditInteractable,
-	UserProfileEditPresentableListener {
-	weak var router: UserProfileEditRouting?
-	weak var listener: UserProfileEditListener?
+final class GMDProfileEditInteractor:
+	PresentableInteractor<GMDProfileEditPresentable>,
+	GMDProfileEditInteractable,
+	GMDProfileEditPresentableListener {
+	weak var router: GMDProfileEditRouting?
+	weak var listener: GMDProfileEditListener?
 	
-	private let dependency: UserProfileEditInteractorDependency
+	private let dependency: GMDProfileEditInteractorDependency
 	
 	init(
-		presenter: UserProfileEditPresentable,
-		dependency: UserProfileEditInteractorDependency
+		presenter: GMDProfileEditPresentable,
+		dependency: GMDProfileEditInteractorDependency
 	) {
 		self.dependency = dependency
 		super.init(presenter: presenter)
@@ -53,9 +53,9 @@ final class UserProfileEditInteractor:
 }
 
 // MARK: PresentableListener
-extension UserProfileEditInteractor {
+extension GMDProfileEditInteractor {
 	func viewWillAppear() {
-		dependency.userProfileUseCase
+		dependency.gmdProfileUseCase
 			.userDependency
 			.fetchUser(id: 0)
 			.observe(on: MainScheduler.instance)
@@ -67,21 +67,21 @@ extension UserProfileEditInteractor {
 	}
 	
 	func didTapBackbutton() {
-		listener?.userProfileEditDidTapBackButton()
+		listener?.gmdProfileEditDidTapBackButton()
 	}
 	
 	func dismiss() {
-		listener?.userProfileEditDismiss()
+		listener?.gmdProfileEditDismiss()
 	}
 	
 	func didTapEndEditingButton(name: String, sex: Sex) {
 		debugPrint(name, sex)
-		dependency.userProfileUseCase
+		dependency.gmdProfileUseCase
 			.updateUser(nickName: name, age: 20, sex: sex.rawValue)
 			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, result in
 				guard result == "success" else { return }
-				owner.listener?.userProfileEndEditing()
+				owner.listener?.gmdProfileEndEditing()
 			}
 			.disposeOnDeactivate(interactor: self)
 	}

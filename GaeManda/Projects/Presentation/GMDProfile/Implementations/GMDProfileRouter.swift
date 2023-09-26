@@ -1,6 +1,6 @@
 //
-//  UserProfileRouter.swift
-//  ProfileImpl
+//  GMDProfileRouter.swift
+//  GMDProfileImpl
 //
 //  Created by jung on 2023/07/17.
 //  Copyright © 2023 com.gaemanda. All rights reserved.
@@ -9,22 +9,22 @@
 import RIBs
 import GMDProfile
 
-protocol UserProfileInteractable:
+protocol GMDProfileInteractable:
 	Interactable,
 	DogProfileEditListener,
-	UserProfileEditListener,
+	GMDProfileEditListener,
 	NewDogProfileListener {
-	var router: UserProfileRouting? { get set }
-	var listener: UserProfileListener? { get set }
+	var router: GMDProfileRouting? { get set }
+	var listener: GMDProfileListener? { get set }
 }
 
-protocol UserProfileViewControllable: ViewControllable { }
+protocol GMDProfileViewControllable: ViewControllable { }
 
-final class UserProfileRouter:
-	ViewableRouter<UserProfileInteractable, UserProfileViewControllable>,
-	UserProfileRouting {
-	private let userProfileEditBuildable: UserProfileEditBuildable
-	private var userProfileEditRouting: ViewableRouting?
+final class GMDProfileRouter:
+	ViewableRouter<GMDProfileInteractable, GMDProfileViewControllable>,
+	GMDProfileRouting {
+	private let gmdProfileEditBuildable: GMDProfileEditBuildable
+	private var gmdProfileEditRouting: ViewableRouting?
 	
 	private let dogProfileEditBuildable: DogProfileEditBuildable
 	private var dogProfileEditRouting: ViewableRouting?
@@ -33,13 +33,13 @@ final class UserProfileRouter:
 	private var newDogProfileRouting: ViewableRouting?
 	
 	init(
-		interactor: UserProfileInteractable,
-		viewController: UserProfileViewControllable,
-		userProfileEditBuildable: UserProfileEditBuildable,
+		interactor: GMDProfileInteractable,
+		viewController: GMDProfileViewControllable,
+		gmdProfileEditBuildable: GMDProfileEditBuildable,
 		dogProfileEditBuildable: DogProfileEditBuildable,
 		newDogProfileBuildable: NewDogProfileBuildable
 	) {
-		self.userProfileEditBuildable = userProfileEditBuildable
+		self.gmdProfileEditBuildable = gmdProfileEditBuildable
 		self.dogProfileEditBuildable = dogProfileEditBuildable
 		self.newDogProfileBuildable = newDogProfileBuildable
 		super.init(interactor: interactor, viewController: viewController)
@@ -47,39 +47,39 @@ final class UserProfileRouter:
 	}
 }
 
-// MARK: UserProfileEdit
-extension UserProfileRouter {
-	func userProfileEditAttach() {
-		if userProfileEditRouting != nil { return }
+// MARK: GMDProfileEdit
+extension GMDProfileRouter {
+	func gmdProfileEditAttach() {
+		if gmdProfileEditRouting != nil { return }
 		
-		let router = userProfileEditBuildable.build(withListener: interactor)
+		let router = gmdProfileEditBuildable.build(withListener: interactor)
 		viewController.pushViewController(
 			router.viewControllable,
 			animated: true
 		)
 		
-		userProfileEditRouting = router
+		gmdProfileEditRouting = router
 		attachChild(router)
 	}
 	
-	func userProfileEditDetach() {
-		guard let router = userProfileEditRouting else { return }
+	func gmdProfileEditDetach() {
+		guard let router = gmdProfileEditRouting else { return }
 		
 		router.viewControllable.popViewController(animated: true)
-		userProfileEditRouting = nil
+		gmdProfileEditRouting = nil
 		detachChild(router)
 	}
 	
-	func userProfileEditDismiss() {
-		guard let router = userProfileEditRouting else { return }
+	func gmdProfileEditDismiss() {
+		guard let router = gmdProfileEditRouting else { return }
 		
-		userProfileEditRouting = nil
+		gmdProfileEditRouting = nil
 		detachChild(router)
 	}
 }
 
 // MARK: DogProfileEdit
-extension UserProfileRouter {
+extension GMDProfileRouter {
 	func dogProfileEditAttach(selectedId: Int) {
 		if dogProfileEditRouting != nil { return }
 		
@@ -113,7 +113,7 @@ extension UserProfileRouter {
 }
 
 // MARK: - NewDogProfile
-extension UserProfileRouter {
+extension GMDProfileRouter {
 	func newDogProfileAttach() {
 		if newDogProfileRouting != nil { return }
 		

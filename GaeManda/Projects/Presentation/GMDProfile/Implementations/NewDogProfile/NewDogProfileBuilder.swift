@@ -11,14 +11,14 @@ import GMDProfile
 import UseCase
 
 public protocol NewDogProfileDependency: Dependency {
-	var userProfileUseCase: UserProfileUseCase { get }
+	var gmdProfileUseCase: GMDProfileUseCase { get }
 }
 
 final class NewDogProfileComponent:
 	Component<NewDogProfileDependency>,
 	NewDogProfileInteractorDependency {
-	var userProfileUseCase: UserProfileUseCase {
-		dependency.userProfileUseCase
+	var gmdProfileUseCase: GMDProfileUseCase {
+		dependency.gmdProfileUseCase
 	}
 }
 

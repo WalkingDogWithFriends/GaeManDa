@@ -16,7 +16,7 @@ protocol LoggedInInteractable:
 	Interactable,
 	ChattingListListener,
 	GMDMapListener,
-	UserProfileListener {
+	GMDProfileListener {
 	var router: LoggedInRouting? { get set }
 	var listener: LoggedInListener? { get set }
 }
@@ -34,7 +34,7 @@ final class LoggedInRouter:
 	private let gmdMapBuildable: GMDMapBuildable
 	private var gmdMapRouting: ViewableRouting?
 	
-	private let gmdProfileBuildable: UserProfileBuildable
+	private let gmdProfileBuildable: GMDProfileBuildable
 	private var gmdProfileRouting: ViewableRouting?
 	
 	init(
@@ -42,7 +42,7 @@ final class LoggedInRouter:
 		viewController: LoggedInViewControllable,
 		chattingListBuildable: ChattingListBuildable,
 		gmdMapBuildable: GMDMapBuildable,
-		gmdProfileBuildable: UserProfileBuildable
+		gmdProfileBuildable: GMDProfileBuildable
 	) {
 		self.chattingListBuildable = chattingListBuildable
 		self.gmdMapBuildable = gmdMapBuildable

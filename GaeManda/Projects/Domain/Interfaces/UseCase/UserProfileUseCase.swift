@@ -11,7 +11,7 @@ import RxSwift
 import Entity
 import Repository
 
-public protocol UserProfileUseCase {
+public protocol GMDProfileUseCase {
 	var dogDependency: DogRepository { get }
 	var userDependency: UserRepository { get }
 
