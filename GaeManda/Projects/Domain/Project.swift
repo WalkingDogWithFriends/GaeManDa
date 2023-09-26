@@ -10,15 +10,6 @@ let project = Project.createProject(
 			sources: ["Entity/**"]
 		),
 		.createTarget(
-			name: "DataMapper",
-			product: .staticLibrary,
-			sources: ["DataMapper/**"],
-			dependencies: [
-				.Project.DataLayer.DTO,
-				.Project.DomainLayer.Entity
-			]
-		),
-		.createTarget(
 			name: "UseCase",
 			product: .staticLibrary,
 			sources: ["Interfaces/UseCase/**"],

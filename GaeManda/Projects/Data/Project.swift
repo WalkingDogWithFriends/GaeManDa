@@ -10,14 +10,23 @@ let project = Project.createProject(
 			sources: ["DTO/**"]
 		),
 		.createTarget(
+			name: "DataMapper",
+			product: .staticLibrary,
+			sources: ["DataMapper/**"],
+			dependencies: [
+				.Project.DataLayer.DTO,
+				.Project.DomainLayer.Entity
+			]
+		),
+		.createTarget(
 			name: "RepositoryImpl",
 			product: .staticLibrary,
 			sources: ["RepositoryImpl/Sources/**"],
 			dependencies: [
 				.Project.DataLayer.DTO,
 				.Project.DataLayer.GMDNetwork,
-				.Project.DomainLayer.Repository,
-				.Project.DomainLayer.DataMapper
+				.Project.DataLayer.DataMapper,
+				.Project.DomainLayer.Repository
 			]
 		),
 		.createTarget(

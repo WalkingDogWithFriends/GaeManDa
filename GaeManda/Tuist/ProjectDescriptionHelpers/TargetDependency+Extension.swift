@@ -83,10 +83,6 @@ public extension TargetDependency.Project.DomainLayer {
 		target: "Entity",
 		path: .relativeToRoot("Projects/Domain")
 	)
-	static let DataMapper = TargetDependency.project(
-		target: "DataMapper",
-		path: .relativeToRoot("Projects/Domain")
-	)
 	static let UseCase = TargetDependency.project(
 		target: "UseCase",
 		path: .relativeToRoot("Projects/Domain")
@@ -105,6 +101,10 @@ public extension TargetDependency.Project.DomainLayer {
 public extension TargetDependency.Project.DataLayer {
 	static let DTO = TargetDependency.project(
 		target: "DTO",
+		path: .relativeToRoot("Projects/Data")
+	)
+	static let DataMapper = TargetDependency.project(
+		target: "DataMapper",
 		path: .relativeToRoot("Projects/Data")
 	)
 	static let RepositoryImpl = TargetDependency.project(
