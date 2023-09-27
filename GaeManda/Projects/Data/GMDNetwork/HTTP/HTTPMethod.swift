@@ -17,6 +17,8 @@ public struct HTTPMethod: RawRepresentable, Equatable, Hashable {
 		public static let post = HTTPMethod(rawValue: "POST")
 		/// `PUT` method.
 		public static let put = HTTPMethod(rawValue: "PUT")
+		/// `PATCH` method.
+		public static let patch = HTTPMethod(rawValue: "PATCH")
 	
 		public let rawValue: String
 
