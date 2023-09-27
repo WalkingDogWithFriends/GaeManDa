@@ -1,5 +1,5 @@
 //
-//  GMDProfileEditInteractor.swift
+//  UserProfileEditInteractor.swift
 //  GMDProfileImpl
 //
 //  Created by jung on 2023/07/30.
@@ -12,31 +12,31 @@ import Entity
 import GMDProfile
 import UseCase
 
-protocol GMDProfileEditRouting: ViewableRouting { }
+protocol UserProfileEditRouting: ViewableRouting { }
 
-protocol GMDProfileEditPresentable: Presentable {
-	var listener: GMDProfileEditPresentableListener? { get set }
+protocol UserProfileEditPresentable: Presentable {
+	var listener: UserProfileEditPresentableListener? { get set }
 	
 	func updateUsername(_ name: String)
 	func updateUserSex(_ sex: Sex)
 }
 
-protocol GMDProfileEditInteractorDependency {
+protocol UserProfileEditInteractorDependency {
 	var gmdProfileUseCase: GMDProfileUseCase { get }
 }
 
-final class GMDProfileEditInteractor:
-	PresentableInteractor<GMDProfileEditPresentable>,
-	GMDProfileEditInteractable,
-	GMDProfileEditPresentableListener {
-	weak var router: GMDProfileEditRouting?
-	weak var listener: GMDProfileEditListener?
+final class UserProfileEditInteractor:
+	PresentableInteractor<UserProfileEditPresentable>,
+	UserProfileEditInteractable,
+	UserProfileEditPresentableListener {
+	weak var router: UserProfileEditRouting?
+	weak var listener: UserProfileEditListener?
 	
-	private let dependency: GMDProfileEditInteractorDependency
+	private let dependency: UserProfileEditInteractorDependency
 	
 	init(
-		presenter: GMDProfileEditPresentable,
-		dependency: GMDProfileEditInteractorDependency
+		presenter: UserProfileEditPresentable,
+		dependency: UserProfileEditInteractorDependency
 	) {
 		self.dependency = dependency
 		super.init(presenter: presenter)
@@ -53,7 +53,7 @@ final class GMDProfileEditInteractor:
 }
 
 // MARK: PresentableListener
-extension GMDProfileEditInteractor {
+extension UserProfileEditInteractor {
 	func viewWillAppear() {
 		dependency.gmdProfileUseCase
 			.userDependency
@@ -67,11 +67,11 @@ extension GMDProfileEditInteractor {
 	}
 	
 	func didTapBackbutton() {
-		listener?.gmdProfileEditDidTapBackButton()
+		listener?.userProfileEditDidTapBackButton()
 	}
 	
 	func dismiss() {
-		listener?.gmdProfileEditDismiss()
+		listener?.userProfileEditDismiss()
 	}
 	
 	func didTapEndEditingButton(name: String, sex: Sex) {

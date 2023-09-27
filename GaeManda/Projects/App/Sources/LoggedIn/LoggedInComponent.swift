@@ -24,7 +24,7 @@ final class LoggedInComponent:
 	ChattingDependency,
 	GMDMapDependency,
 	GMDProfileDependency,
-	GMDProfileEditDependency,
+	UserProfileEditDependency,
 	DogProfileEditDependency,
 	NewDogProfileDependency {
 	// MARK: - Buildable
@@ -44,8 +44,8 @@ final class LoggedInComponent:
 		return GMDProfileBuilder(dependency: self)
 	}()
 	
-	lazy var gmdProfileEditBuildable: GMDProfileEditBuildable = {
-		return GMDProfileEditBuilder(dependency: self)
+	lazy var userProfileEditBuildable: UserProfileEditBuildable = {
+		return UserProfileEditBuilder(dependency: self)
 	}()
 	
 	lazy var dogProfileEditBuildable: DogProfileEditBuildable = {

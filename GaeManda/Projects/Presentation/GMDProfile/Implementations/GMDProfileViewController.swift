@@ -21,7 +21,7 @@ protocol GMDProfilePresentableListener: AnyObject {
 	func didTapDogProfileEditButton(at id: Int)
 	func didTapNewDogButton()
 	func didTapDogProfileDeleteButton()
-	func didTapGMDProfileEditButton()
+	func didTapUserProfileEditButton()
 }
 
 final class GMDProfileViewController:
@@ -240,7 +240,7 @@ private extension GMDProfileViewController {
 	func bind() {
 		profileEditButton.rx.tap
 			.bind(with: self) { owner, _ in
-				owner.listener?.didTapGMDProfileEditButton()
+				owner.listener?.didTapUserProfileEditButton()
 			}
 			.disposed(by: disposeBag)
 		

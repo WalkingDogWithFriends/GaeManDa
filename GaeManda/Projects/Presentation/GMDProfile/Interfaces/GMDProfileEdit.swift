@@ -1,5 +1,5 @@
 //
-//  GMDProfileEdit.swift
+//  UserProfileEdit.swift
 //  GMDProfileImpl
 //
 //  Created by jung on 2023/07/30.
@@ -8,12 +8,12 @@
 
 import RIBs
 
-public protocol GMDProfileEditBuildable: Buildable {
-	func build(withListener listener: GMDProfileEditListener) -> ViewableRouting
+public protocol UserProfileEditBuildable: Buildable {
+	func build(withListener listener: UserProfileEditListener) -> ViewableRouting
 }
 
-public protocol GMDProfileEditListener: AnyObject {
-	func gmdProfileEditDidTapBackButton()
-	func gmdProfileEditDismiss()
+public protocol UserProfileEditListener: AnyObject {
+	func userProfileEditDidTapBackButton()
+	func userProfileEditDismiss()
 	func gmdProfileEndEditing()
 }

@@ -12,7 +12,7 @@ import UseCase
 
 public protocol GMDProfileDependency: Dependency {
 	var gmdProfileUseCase: GMDProfileUseCase { get }
-	var gmdProfileEditBuildable: GMDProfileEditBuildable { get }
+	var userProfileEditBuildable: UserProfileEditBuildable { get }
 	var dogProfileEditBuildable: DogProfileEditBuildable { get }
 	var newDogProfileBuildable: NewDogProfileBuildable { get }
 }
@@ -23,8 +23,8 @@ final class GMDProfileComponent:
 	var gmdProfileUseCase: GMDProfileUseCase {
 		dependency.gmdProfileUseCase
 	}
-	fileprivate var gmdProfileEditBuildable: GMDProfileEditBuildable {
-		dependency.gmdProfileEditBuildable
+	fileprivate var userProfileEditBuildable: UserProfileEditBuildable {
+		dependency.userProfileEditBuildable
 	}
 	fileprivate var dogProfileEditBuildable: DogProfileEditBuildable {
 		dependency.dogProfileEditBuildable
@@ -53,7 +53,7 @@ public final class GMDProfileBuilder:
 		return GMDProfileRouter(
 			interactor: interactor,
 			viewController: viewController,
-			gmdProfileEditBuildable: component.gmdProfileEditBuildable,
+			userProfileEditBuildable: component.userProfileEditBuildable,
 			dogProfileEditBuildable: component.dogProfileEditBuildable,
 			newDogProfileBuildable: component.newDogProfileBuildable
 		)

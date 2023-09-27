@@ -14,9 +14,9 @@ import GMDUtils
 import UseCase
 
 protocol GMDProfileRouting: ViewableRouting {
-	func gmdProfileEditAttach()
-	func gmdProfileEditDetach()
-	func gmdProfileEditDismiss()
+	func userProfileEditAttach()
+	func userProfileEditDetach()
+	func userProfileEditDismiss()
 	func dogProfileEditAttach(selectedId: Int)
 	func dogProfileEditDetach()
 	func dogProfileEditDismiss()
@@ -81,23 +81,23 @@ extension GMDProfileInteractor {
 	
 	func didTapDogProfileDeleteButton() { }
 	
-	func didTapGMDProfileEditButton() {
-		router?.gmdProfileEditAttach()
+	func didTapUserProfileEditButton() {
+		router?.userProfileEditAttach()
 	}
 }
 
-// MARK: - GMDProfileEditListener
+// MARK: - UserProfileEditListener
 extension GMDProfileInteractor {
-	func gmdProfileEditDidTapBackButton() {
-		router?.gmdProfileEditDetach()
+	func userProfileEditDidTapBackButton() {
+		router?.userProfileEditDetach()
 	}
 	
-	func gmdProfileEditDismiss() {
-		router?.gmdProfileEditDismiss()
+	func userProfileEditDismiss() {
+		router?.userProfileEditDismiss()
 	}
 	
 	func gmdProfileEndEditing() {
-		router?.gmdProfileEditDetach()
+		router?.userProfileEditDetach()
 	}
 }
 

@@ -1,5 +1,5 @@
 //
-//  GMDProfileEditViewController.swift
+//  UserProfileEditViewController.swift
 //  GMDProfileImpl
 //
 //  Created by jung on 2023/07/30.
@@ -17,19 +17,19 @@ import Entity
 import GMDExtensions
 import GMDUtils
 
-protocol GMDProfileEditPresentableListener: AnyObject {
+protocol UserProfileEditPresentableListener: AnyObject {
 	func viewWillAppear()
 	func didTapBackbutton()
 	func dismiss()
 	func didTapEndEditingButton(name: String, sex: Sex)
 }
 
-final class GMDProfileEditViewController:
+final class UserProfileEditViewController:
 	UIViewController,
-	GMDProfileEditPresentable,
-	GMDProfileEditViewControllable {
+	UserProfileEditPresentable,
+	UserProfileEditViewControllable {
 	// MARK: - Properties
-	weak var listener: GMDProfileEditPresentableListener?
+	weak var listener: UserProfileEditPresentableListener?
 	private let disposeBag = DisposeBag()
 	
 	private let maxTextCount = 20
@@ -128,7 +128,7 @@ final class GMDProfileEditViewController:
 }
 
 // MARK: - UI Setting
-private extension GMDProfileEditViewController {
+private extension UserProfileEditViewController {
 	func setupUI() {
 		view.backgroundColor = .white
 		self.navigationController?.navigationBar.isHidden = true
@@ -199,7 +199,7 @@ private extension GMDProfileEditViewController {
 }
 
 // MARK: - UI Update
-extension GMDProfileEditViewController {
+extension UserProfileEditViewController {
 	func updateUsername(_ name: String) {
 		nickNameTextField.text = name
 	}
@@ -210,7 +210,7 @@ extension GMDProfileEditViewController {
 }
 
 // MARK: - Action Bind
-private extension GMDProfileEditViewController {
+private extension UserProfileEditViewController {
 	func bind() {
 		// 뒤로가기 버튼
 		navigationBar.backButton.rx.tap
@@ -329,14 +329,14 @@ private extension GMDProfileEditViewController {
 }
 
 // MARK: - UI Logic
-private extension GMDProfileEditViewController {
+private extension UserProfileEditViewController {
 	func calenderButtonDidTap() {
 		print("calenderButtonDidTap")
 	}
 }
 
 // MARK: - PHPickerViewControllerDelegate
-extension GMDProfileEditViewController: PHPickerViewControllerDelegate {
+extension UserProfileEditViewController: PHPickerViewControllerDelegate {
 	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
 		picker.dismiss(animated: true)
 		guard let firstResult = results.first else { return }

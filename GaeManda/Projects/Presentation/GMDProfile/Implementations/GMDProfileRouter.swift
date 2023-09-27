@@ -12,7 +12,7 @@ import GMDProfile
 protocol GMDProfileInteractable:
 	Interactable,
 	DogProfileEditListener,
-	GMDProfileEditListener,
+	UserProfileEditListener,
 	NewDogProfileListener {
 	var router: GMDProfileRouting? { get set }
 	var listener: GMDProfileListener? { get set }
@@ -23,8 +23,8 @@ protocol GMDProfileViewControllable: ViewControllable { }
 final class GMDProfileRouter:
 	ViewableRouter<GMDProfileInteractable, GMDProfileViewControllable>,
 	GMDProfileRouting {
-	private let gmdProfileEditBuildable: GMDProfileEditBuildable
-	private var gmdProfileEditRouting: ViewableRouting?
+	private let userProfileEditBuildable: UserProfileEditBuildable
+	private var userProfileEditRouting: ViewableRouting?
 	
 	private let dogProfileEditBuildable: DogProfileEditBuildable
 	private var dogProfileEditRouting: ViewableRouting?
@@ -35,11 +35,11 @@ final class GMDProfileRouter:
 	init(
 		interactor: GMDProfileInteractable,
 		viewController: GMDProfileViewControllable,
-		gmdProfileEditBuildable: GMDProfileEditBuildable,
+		userProfileEditBuildable: UserProfileEditBuildable,
 		dogProfileEditBuildable: DogProfileEditBuildable,
 		newDogProfileBuildable: NewDogProfileBuildable
 	) {
-		self.gmdProfileEditBuildable = gmdProfileEditBuildable
+		self.userProfileEditBuildable = userProfileEditBuildable
 		self.dogProfileEditBuildable = dogProfileEditBuildable
 		self.newDogProfileBuildable = newDogProfileBuildable
 		super.init(interactor: interactor, viewController: viewController)
@@ -47,33 +47,33 @@ final class GMDProfileRouter:
 	}
 }
 
-// MARK: GMDProfileEdit
+// MARK: UserProfileEdit
 extension GMDProfileRouter {
-	func gmdProfileEditAttach() {
-		if gmdProfileEditRouting != nil { return }
+	func userProfileEditAttach() {
+		if userProfileEditRouting != nil { return }
 		
-		let router = gmdProfileEditBuildable.build(withListener: interactor)
+		let router = userProfileEditBuildable.build(withListener: interactor)
 		viewController.pushViewController(
 			router.viewControllable,
 			animated: true
 		)
 		
-		gmdProfileEditRouting = router
+		userProfileEditRouting = router
 		attachChild(router)
 	}
 	
-	func gmdProfileEditDetach() {
-		guard let router = gmdProfileEditRouting else { return }
+	func userProfileEditDetach() {
+		guard let router = userProfileEditRouting else { return }
 		
 		router.viewControllable.popViewController(animated: true)
-		gmdProfileEditRouting = nil
+		userProfileEditRouting = nil
 		detachChild(router)
 	}
 	
-	func gmdProfileEditDismiss() {
-		guard let router = gmdProfileEditRouting else { return }
+	func userProfileEditDismiss() {
+		guard let router = userProfileEditRouting else { return }
 		
-		gmdProfileEditRouting = nil
+		userProfileEditRouting = nil
 		detachChild(router)
 	}
 }
