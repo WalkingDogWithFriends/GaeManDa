@@ -1,5 +1,5 @@
 //
-//  ProfileUseCaseImpl.swift
+//  GMDProfileUseCaseImpl.swift
 //  UseCase
 //
 //  Created by jung on 2023/07/20.
