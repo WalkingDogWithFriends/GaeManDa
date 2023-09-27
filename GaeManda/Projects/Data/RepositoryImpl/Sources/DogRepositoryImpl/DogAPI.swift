@@ -22,47 +22,38 @@ extension DogAPI: TargetType {
 	
 	public var path: String {
 		switch self {
-		case .fetchDogs:
-			return "fetchDog"
-		case .updateDogs:
-			return "updateDog"
-		case .postNewDog:
-			return "postNewDog"
+			case .fetchDogs:
+				return "fetchDog"
+			case .updateDogs:
+				return "updateDog"
+			case .postNewDog:
+				return "postNewDog"
 		}
 	}
 	
 	public var method: HTTPMethod {
 		switch self {
-		case . fetchDogs:
-			return .get
-		case .updateDogs:
-			return .put
-		case .postNewDog:
-			return .post
+			case . fetchDogs:
+				return .get
+			case .updateDogs:
+				return .put
+			case .postNewDog:
+				return .post
 		}
 	}
 	
 	public var task: TaskType {
 		switch self {
-		case let .fetchDogs(id):
-			let requestDTO = DogRequestDTO(id: id)
-			return .requestParameters(parameters: requestDTO.toDictionary, encoding: .queryString)
-			
-		case let .updateDogs(dog):
-			let requestDTO = UpdateDogRequestDTO(dog: dog)
-			
-			return .requestParameters(
-				parameters: requestDTO.toDictionary,
-				encoding: .jsonBody
-			)
-			
-		case let .postNewDog(dog):
-			let requestDTO = NewDogRequestDTO(dog: dog)
-			
-			return .requestParameters(
-				parameters: requestDTO.toDictionary,
-				encoding: .jsonBody
-			)
+			case .fetchDogs:
+				return .requestPlain
+				
+			case .updateDogs:
+				// TODO: requestDTO 만들기
+				return .requestPlain
+				
+			case .postNewDog:
+				// TODO: requestDTO 만들기
+				return .requestPlain
 		}
 	}
 	
@@ -72,23 +63,14 @@ extension DogAPI: TargetType {
 	
 	public var sampleData: Data {
 		switch self {
-		case .fetchDogs:
-			let jsonString = DogResponseDTO.stubData
-			let data = jsonString.data(using: .utf8)
-			
-			return data ?? Data()
-		
-		case .updateDogs:
-			let jsonString = UpdateDogResponseDTO.stubData
-			let data = jsonString.data(using: .utf8)
-			
-			return data ?? Data()
-			
-		case .postNewDog:
-			let jsonString = NewDogResponseDTO.stubData
-			let data = jsonString.data(using: .utf8)
-			
-			return data ?? Data()
+			case .fetchDogs:
+				let jsonString = DogResponseDTO.stubData
+				let data = jsonString.data(using: .utf8)
+				
+				return data ?? Data()
+				
+			case .updateDogs, .postNewDog:
+				return  Data()
 		}
 	}
 }

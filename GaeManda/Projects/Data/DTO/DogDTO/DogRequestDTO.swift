@@ -9,9 +9,9 @@
 import Foundation
 
 public struct DogRequestDTO: Encodable {
-	public let id: Int
+	public let petId: Int
 	
-	public init(id: Int) {
-		self.id = id
+	public init(petId: Int) {
+		self.petId = petId
 	}
 }

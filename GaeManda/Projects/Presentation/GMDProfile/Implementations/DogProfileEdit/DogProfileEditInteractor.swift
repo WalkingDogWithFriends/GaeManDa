@@ -83,8 +83,7 @@ extension DogProfileEditInteractor {
 		dependency.gmdProfileUseCase
 			.updateDog(dog: dog)
 			.observe(on: MainScheduler.instance)
-			.subscribe(with: self) { owner, result in
-				guard result == "success" else { return }
+			.subscribe(with: self) { owner, _ in
 				owner.listener?.dogProfileEndEditing()
 			}
 			.disposeOnDeactivate(interactor: self)

@@ -9,6 +9,7 @@
 import RIBs
 import Chatting
 import ChattingImpl
+import DataMapper
 import GMDMap
 import GMDMapImpl
 import GMDProfile
@@ -58,11 +59,11 @@ final class LoggedInComponent:
 	
 	// MARK: - Repository
 	lazy var dogRepository: DogRepository = {
-		return DogRepositoryImpl()
+		return DogRepositoryImpl(dogDataMapper: DogDataMapperImpl())
 	}()
 	
 	lazy var userRepository: UserRepository = {
-		return UserRepositoryImpl()
+		return UserRepositoryImpl(userDataMapper: UserProfileDataMapperImpl())
 	}()
 	
 	// MARK: - UseCase
