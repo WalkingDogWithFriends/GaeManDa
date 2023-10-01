@@ -26,8 +26,8 @@ public protocol GMDProfileUseCase {
 		nickName: String,
 		age: Int,
 		sex: String
-	) -> Single<String>
+	) -> Single<Void>
 	
-	func updateDog(dog: Dog) -> Single<String>
-	func postNewDog(dog: Dog) -> Single<String>
+	func updateDog(dog: Dog) -> Single<Void>
+	func postNewDog(dog: Dog) -> Single<Void>
 }

@@ -79,8 +79,7 @@ extension UserProfileEditInteractor {
 		dependency.gmdProfileUseCase
 			.updateUser(nickName: name, age: 20, sex: sex.rawValue)
 			.observe(on: MainScheduler.instance)
-			.subscribe(with: self) { owner, result in
-				guard result == "success" else { return }
+			.subscribe(with: self) { owner, _ in
 				owner.listener?.gmdProfileEndEditing()
 			}
 			.disposeOnDeactivate(interactor: self)
