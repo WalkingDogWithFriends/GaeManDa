@@ -1,6 +1,6 @@
 //
-//  UserProfileRouter.swift
-//  ProfileImpl
+//  GMDProfileRouter.swift
+//  GMDProfileImpl
 //
 //  Created by jung on 2023/07/17.
 //  Copyright © 2023 com.gaemanda. All rights reserved.
@@ -9,20 +9,20 @@
 import RIBs
 import GMDProfile
 
-protocol UserProfileInteractable:
+protocol GMDProfileInteractable:
 	Interactable,
 	DogProfileEditListener,
 	UserProfileEditListener,
 	NewDogProfileListener {
-	var router: UserProfileRouting? { get set }
-	var listener: UserProfileListener? { get set }
+	var router: GMDProfileRouting? { get set }
+	var listener: GMDProfileListener? { get set }
 }
 
-protocol UserProfileViewControllable: ViewControllable { }
+protocol GMDProfileViewControllable: ViewControllable { }
 
-final class UserProfileRouter:
-	ViewableRouter<UserProfileInteractable, UserProfileViewControllable>,
-	UserProfileRouting {
+final class GMDProfileRouter:
+	ViewableRouter<GMDProfileInteractable, GMDProfileViewControllable>,
+	GMDProfileRouting {
 	private let userProfileEditBuildable: UserProfileEditBuildable
 	private var userProfileEditRouting: ViewableRouting?
 	
@@ -33,8 +33,8 @@ final class UserProfileRouter:
 	private var newDogProfileRouting: ViewableRouting?
 	
 	init(
-		interactor: UserProfileInteractable,
-		viewController: UserProfileViewControllable,
+		interactor: GMDProfileInteractable,
+		viewController: GMDProfileViewControllable,
 		userProfileEditBuildable: UserProfileEditBuildable,
 		dogProfileEditBuildable: DogProfileEditBuildable,
 		newDogProfileBuildable: NewDogProfileBuildable
@@ -48,7 +48,7 @@ final class UserProfileRouter:
 }
 
 // MARK: UserProfileEdit
-extension UserProfileRouter {
+extension GMDProfileRouter {
 	func userProfileEditAttach() {
 		if userProfileEditRouting != nil { return }
 		
@@ -79,7 +79,7 @@ extension UserProfileRouter {
 }
 
 // MARK: DogProfileEdit
-extension UserProfileRouter {
+extension GMDProfileRouter {
 	func dogProfileEditAttach(selectedId: Int) {
 		if dogProfileEditRouting != nil { return }
 		
@@ -113,7 +113,7 @@ extension UserProfileRouter {
 }
 
 // MARK: - NewDogProfile
-extension UserProfileRouter {
+extension GMDProfileRouter {
 	func newDogProfileAttach() {
 		if newDogProfileRouting != nil { return }
 		

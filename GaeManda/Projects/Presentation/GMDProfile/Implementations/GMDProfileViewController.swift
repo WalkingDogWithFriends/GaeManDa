@@ -1,6 +1,6 @@
 //
-//  UserProfileViewController.swift
-//  ProfileImpl
+//  GMDProfileViewController.swift
+//  GMDProfileImpl
 //
 //  Created by jung on 2023/07/17.
 //  Copyright © 2023 com.gaemanda. All rights reserved.
@@ -16,7 +16,7 @@ import Entity
 import GMDExtensions
 import GMDUtils
 
-protocol UserProfilePresentableListener: AnyObject {
+protocol GMDProfilePresentableListener: AnyObject {
 	func viewWillAppear()
 	func didTapDogProfileEditButton(at id: Int)
 	func didTapNewDogButton()
@@ -24,12 +24,12 @@ protocol UserProfilePresentableListener: AnyObject {
 	func didTapUserProfileEditButton()
 }
 
-final class UserProfileViewController:
+final class GMDProfileViewController:
 	UIViewController,
-	UserProfilePresentable,
-	UserProfileViewControllable {
+	GMDProfilePresentable,
+	GMDProfileViewControllable {
 	// MARK: - Properties
-	weak var listener: UserProfilePresentableListener?
+	weak var listener: GMDProfilePresentableListener?
 	private let disposeBag = DisposeBag()
 	private var carouselViewModel = DogsCarouselViewModel()
 	
@@ -116,7 +116,7 @@ final class UserProfileViewController:
 }
 
 // MARK: - UI Setting
-private extension UserProfileViewController {
+private extension GMDProfileViewController {
 	func setupUI() {
 		view.backgroundColor = .white
 		
@@ -192,7 +192,7 @@ private extension UserProfileViewController {
 }
 
 // MARK: - UI Update
-extension UserProfileViewController {
+extension GMDProfileViewController {
 	func updateUserName(_ name: String) {
 		nickNameLabel.text = name
 	}
@@ -236,7 +236,7 @@ extension UserProfileViewController {
 }
 
 // MARK: - Action Bind
-private extension UserProfileViewController {
+private extension GMDProfileViewController {
 	func bind() {
 		profileEditButton.rx.tap
 			.bind(with: self) { owner, _ in
@@ -266,7 +266,7 @@ private extension UserProfileViewController {
 }
 
 // MARK: - UICollectionViewDataSource
-extension UserProfileViewController: UICollectionViewDataSource {
+extension GMDProfileViewController: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return carouselViewModel.dogs.count
 	}
@@ -288,7 +288,7 @@ extension UserProfileViewController: UICollectionViewDataSource {
 }
 
 // MARK: - UIScrollViewDelegate
-extension UserProfileViewController: UIScrollViewDelegate {
+extension GMDProfileViewController: UIScrollViewDelegate {
 	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
 		guard let collectionView = scrollView as? UICollectionView else { return }
 		
@@ -310,7 +310,7 @@ extension UserProfileViewController: UIScrollViewDelegate {
 }
 
 // MARK: - CollectionView Infinite Carousel
-private extension UserProfileViewController {
+private extension GMDProfileViewController {
 	func scrollCollectionView(
 		at row: Int,
 		at position: UICollectionView.ScrollPosition,
@@ -329,7 +329,7 @@ private extension UserProfileViewController {
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
-extension UserProfileViewController: UICollectionViewDelegateFlowLayout {
+extension GMDProfileViewController: UICollectionViewDelegateFlowLayout {
 	func collectionView(
 		_ collectionView: UICollectionView,
 		layout collectionViewLayout: UICollectionViewLayout,

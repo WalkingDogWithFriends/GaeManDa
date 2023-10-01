@@ -1,6 +1,6 @@
 //
-//  UserProfileInteractor.swift
-//  ProfileImpl
+//  GMDProfileInteractor.swift
+//  GMDProfileImpl
 //
 //  Created by jung on 2023/07/17.
 //  Copyright © 2023 com.gaemanda. All rights reserved.
@@ -13,7 +13,7 @@ import GMDProfile
 import GMDUtils
 import UseCase
 
-protocol UserProfileRouting: ViewableRouting {
+protocol GMDProfileRouting: ViewableRouting {
 	func userProfileEditAttach()
 	func userProfileEditDetach()
 	func userProfileEditDismiss()
@@ -25,30 +25,30 @@ protocol UserProfileRouting: ViewableRouting {
 	func newDogProfileDismiss()
 }
 
-protocol UserProfilePresentable: Presentable {
-	var listener: UserProfilePresentableListener? { get set }
+protocol GMDProfilePresentable: Presentable {
+	var listener: GMDProfilePresentableListener? { get set }
 	
 	func updateUserName(_ name: String)
 	func updateUserSexAndAge(_ sexAndAge: String)
 	func updateDogs(with viewModel: DogsCarouselViewModel)
 }
 
-protocol UserProfileInteractorDependency {
-	var userProfileUseCase: UserProfileUseCase { get }
+protocol GMDProfileInteractorDependency {
+	var gmdProfileUseCase: GMDProfileUseCase { get }
 }
 
-final class UserProfileInteractor:
-	PresentableInteractor<UserProfilePresentable>,
-	UserProfileInteractable,
-	UserProfilePresentableListener {
-	weak var router: UserProfileRouting?
-	weak var listener: UserProfileListener?
+final class GMDProfileInteractor:
+	PresentableInteractor<GMDProfilePresentable>,
+	GMDProfileInteractable,
+	GMDProfilePresentableListener {
+	weak var router: GMDProfileRouting?
+	weak var listener: GMDProfileListener?
 
-	private let dependency: UserProfileInteractorDependency
+	private let dependency: GMDProfileInteractorDependency
 	
 	init(
-		presenter: UserProfilePresentable,
-		dependency: UserProfileInteractorDependency
+		presenter: GMDProfilePresentable,
+		dependency: GMDProfileInteractorDependency
 	) {
 		self.dependency = dependency
 		super.init(presenter: presenter)
@@ -65,7 +65,7 @@ final class UserProfileInteractor:
 }
 
 // MARK: - PresentableListener
-extension UserProfileInteractor {
+extension GMDProfileInteractor {
 	func viewWillAppear() {
 		fetchUser()
 		fetchDogs()
@@ -87,7 +87,7 @@ extension UserProfileInteractor {
 }
 
 // MARK: - UserProfileEditListener
-extension UserProfileInteractor {
+extension GMDProfileInteractor {
 	func userProfileEditDidTapBackButton() {
 		router?.userProfileEditDetach()
 	}
@@ -96,13 +96,13 @@ extension UserProfileInteractor {
 		router?.userProfileEditDismiss()
 	}
 	
-	func userProfileEndEditing() {
+	func gmdProfileEndEditing() {
 		router?.userProfileEditDetach()
 	}
 }
 
 // MARK: - DogProfileEditListener
-extension UserProfileInteractor {
+extension GMDProfileInteractor {
 	func dogProfileEditDidTapBackButton() {
 		router?.dogProfileEditDetach()
 	}
@@ -117,7 +117,7 @@ extension UserProfileInteractor {
 }
 
 // MARK: - NewDogProfileListener
-extension UserProfileInteractor {
+extension GMDProfileInteractor {
 	func newDogProfileDidTapBackButton() {
 		router?.newDogProfileDetach()
 	}
@@ -132,9 +132,9 @@ extension UserProfileInteractor {
 }
 
 // MARK: - Fetch Data From Dependency
-private extension UserProfileInteractor {
+private extension GMDProfileInteractor {
 	func fetchUser() {
-		dependency.userProfileUseCase
+		dependency.gmdProfileUseCase
 			.userDependency
 			.fetchUser(id: 0)
 			.observe(on: MainScheduler.instance)
@@ -148,7 +148,7 @@ private extension UserProfileInteractor {
 	}
 	
 	func fetchDogs() {
-		dependency.userProfileUseCase
+		dependency.gmdProfileUseCase
 			.dogDependency
 			.fetchDogs(id: 0)
 			.observe(on: MainScheduler.instance)
@@ -162,7 +162,7 @@ private extension UserProfileInteractor {
 }
 
 // MARK: - Interactor Logic
-private extension UserProfileInteractor {
+private extension GMDProfileInteractor {
 	func convertToDogsCarousel(with dogs: [Dog]) -> [Dog] {
 		guard
 			let last = dogs.last,

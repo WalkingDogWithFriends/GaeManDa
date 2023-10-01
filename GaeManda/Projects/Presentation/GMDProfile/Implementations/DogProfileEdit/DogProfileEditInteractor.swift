@@ -27,7 +27,7 @@ protocol DogProfileEditPresentable: Presentable {
 }
 
 protocol DogProfileEditInteractorDependency {
-	var userProfileUseCase: UserProfileUseCase { get }
+	var gmdProfileUseCase: GMDProfileUseCase { get }
 }
 
 final class DogProfileEditInteractor:
@@ -80,7 +80,7 @@ extension DogProfileEditInteractor {
 	}
 	
 	func didTapEndEditButton(dog: Dog) {
-		dependency.userProfileUseCase
+		dependency.gmdProfileUseCase
 			.updateDog(dog: dog)
 			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, result in
@@ -98,7 +98,7 @@ extension DogProfileEditInteractor {
 // MARK: - Interactor Logic
 private extension DogProfileEditInteractor {
 	func updateDogs() {
-		dependency.userProfileUseCase
+		dependency.gmdProfileUseCase
 			.fetchDogs(id: 0)
 			.subscribe(with: self) { owner, dogs in
 				owner.dogs.accept(dogs)

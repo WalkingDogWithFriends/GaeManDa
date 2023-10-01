@@ -1,5 +1,5 @@
 //
-//  ProfileUseCase.swift
+//  GMDProfileUseCase.swift
 //  UseCase
 //
 //  Created by jung on 2023/07/20.
@@ -11,7 +11,7 @@ import RxSwift
 import Entity
 import Repository
 
-public protocol UserProfileUseCase {
+public protocol GMDProfileUseCase {
 	var dogDependency: DogRepository { get }
 	var userDependency: UserRepository { get }
 

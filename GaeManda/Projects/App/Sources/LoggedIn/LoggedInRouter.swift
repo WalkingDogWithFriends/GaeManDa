@@ -15,8 +15,8 @@ import GMDUtils
 protocol LoggedInInteractable:
 	Interactable,
 	ChattingListListener,
-	DogsOnAroundListener,
-	UserProfileListener {
+	GMDMapListener,
+	GMDProfileListener {
 	var router: LoggedInRouting? { get set }
 	var listener: LoggedInListener? { get set }
 }
@@ -31,18 +31,18 @@ final class LoggedInRouter:
 	private let chattingListBuildable: ChattingListBuildable
 	private var chattingListRouting: ViewableRouting?
 	
-	private let gmdMapBuildable: DogsOnAroundBuildable
+	private let gmdMapBuildable: GMDMapBuildable
 	private var gmdMapRouting: ViewableRouting?
 	
-	private let gmdProfileBuildable: UserProfileBuildable
+	private let gmdProfileBuildable: GMDProfileBuildable
 	private var gmdProfileRouting: ViewableRouting?
 	
 	init(
 		interactor: LoggedInInteractable,
 		viewController: LoggedInViewControllable,
 		chattingListBuildable: ChattingListBuildable,
-		gmdMapBuildable: DogsOnAroundBuildable,
-		gmdProfileBuildable: UserProfileBuildable
+		gmdMapBuildable: GMDMapBuildable,
+		gmdProfileBuildable: GMDProfileBuildable
 	) {
 		self.chattingListBuildable = chattingListBuildable
 		self.gmdMapBuildable = gmdMapBuildable

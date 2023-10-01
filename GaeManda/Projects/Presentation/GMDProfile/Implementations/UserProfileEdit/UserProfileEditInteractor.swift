@@ -22,7 +22,7 @@ protocol UserProfileEditPresentable: Presentable {
 }
 
 protocol UserProfileEditInteractorDependency {
-	var userProfileUseCase: UserProfileUseCase { get }
+	var gmdProfileUseCase: GMDProfileUseCase { get }
 }
 
 final class UserProfileEditInteractor:
@@ -55,7 +55,7 @@ final class UserProfileEditInteractor:
 // MARK: PresentableListener
 extension UserProfileEditInteractor {
 	func viewWillAppear() {
-		dependency.userProfileUseCase
+		dependency.gmdProfileUseCase
 			.userDependency
 			.fetchUser(id: 0)
 			.observe(on: MainScheduler.instance)
@@ -76,12 +76,12 @@ extension UserProfileEditInteractor {
 	
 	func didTapEndEditingButton(name: String, sex: Sex) {
 		debugPrint(name, sex)
-		dependency.userProfileUseCase
+		dependency.gmdProfileUseCase
 			.updateUser(nickName: name, age: 20, sex: sex.rawValue)
 			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, result in
 				guard result == "success" else { return }
-				owner.listener?.userProfileEndEditing()
+				owner.listener?.gmdProfileEndEditing()
 			}
 			.disposeOnDeactivate(interactor: self)
 	}

@@ -22,8 +22,8 @@ final class LoggedInComponent:
 	Component<LoggedInDependency>,
 	ChattingListDependency,
 	ChattingDependency,
-	DogsOnAroundDependency,
-	UserProfileDependency,
+	GMDMapDependency,
+	GMDProfileDependency,
 	UserProfileEditDependency,
 	DogProfileEditDependency,
 	NewDogProfileDependency {
@@ -36,12 +36,12 @@ final class LoggedInComponent:
 		return ChattingBuilder(dependency: self)
 	}()
 	
-	lazy var gmdMapBuildable: DogsOnAroundBuildable = {
-		return DogsOnAroundBuilder(dependency: self)
+	lazy var gmdMapBuildable: GMDMapBuildable = {
+		return GMDMapBuilder(dependency: self)
 	}()
 	
-	lazy var gmdProfileBuildable: UserProfileBuildable = {
-		return UserProfileBuilder(dependency: self)
+	lazy var gmdProfileBuildable: GMDProfileBuildable = {
+		return GMDProfileBuilder(dependency: self)
 	}()
 	
 	lazy var userProfileEditBuildable: UserProfileEditBuildable = {
@@ -66,8 +66,8 @@ final class LoggedInComponent:
 	}()
 	
 	// MARK: - UseCase
-	lazy var userProfileUseCase: UserProfileUseCase = {
-		return UserProfileUseCaseImpl(
+	lazy var gmdProfileUseCase: GMDProfileUseCase = {
+		return GMDProfileUseCaseImpl(
 			dogDependecy: dogRepository,
 			userDependency: userRepository
 		)

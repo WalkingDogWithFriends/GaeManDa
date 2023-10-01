@@ -20,7 +20,7 @@ protocol NewDogProfilePresentable: Presentable {
 }
 
 protocol NewDogProfileInteractorDependency {
-	var userProfileUseCase: UserProfileUseCase { get }
+	var gmdProfileUseCase: GMDProfileUseCase { get }
 }
 
 final class NewDogProfileInteractor:
@@ -60,7 +60,7 @@ extension NewDogProfileInteractor {
 	}
 	
 	func didTapConfirmButton(dog: Dog) {
-		dependency.userProfileUseCase
+		dependency.gmdProfileUseCase
 			.postNewDog(dog: dog)
 			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, message in

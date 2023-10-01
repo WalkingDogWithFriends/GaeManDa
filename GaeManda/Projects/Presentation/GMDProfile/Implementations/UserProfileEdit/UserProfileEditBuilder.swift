@@ -11,14 +11,14 @@ import GMDProfile
 import UseCase
 
 public protocol UserProfileEditDependency: Dependency {
-	var userProfileUseCase: UserProfileUseCase { get }
+	var gmdProfileUseCase: GMDProfileUseCase { get }
 }
 
 final class UserProfileEditComponent:
 	Component<UserProfileEditDependency>,
 	UserProfileEditInteractorDependency {
-	var userProfileUseCase: UserProfileUseCase {
-		dependency.userProfileUseCase
+	var gmdProfileUseCase: GMDProfileUseCase {
+		dependency.gmdProfileUseCase
 	}
 }
 
