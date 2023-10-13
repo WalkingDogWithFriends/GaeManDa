@@ -7,23 +7,36 @@
 //
 
 import UIKit
-import RxCocoa
-import RxGesture
-import RxSwift
+import RxRelay
 import SnapKit
 
 open class BottomSheetViewController: UIViewController {
 	// MARK: - Constants
-	private let dimmedAlpha: CGFloat = 0.7
-	private let deviceHeight = UIScreen.main.bounds.height
+	private var minTopSpacing: CGFloat = 80
 	
-	// MARK: - UI Components
-	private let contentRootView: UIView = {
+	// MARK: - Properties
+	private let mainContainerView: UIView = {
 		let view = UIView()
-		view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-		view.layer.cornerRadius = 9
-		view.clipsToBounds = true
+		view.translatesAutoresizingMaskIntoConstraints = false
 		view.backgroundColor = .white
+		view.layer.cornerRadius = 8
+		view.clipsToBounds = true
+		
+		return view
+	}()
+	
+	open var contentView: UIView = {
+		let view = UIView()
+		view.translatesAutoresizingMaskIntoConstraints = false
+		
+		return view
+	}()
+	
+	private let topBarView: UIView = {
+		let view = UIView()
+		view.backgroundColor = .white
+		view.translatesAutoresizingMaskIntoConstraints = false
+		
 		return view
 	}()
 	
@@ -33,105 +46,111 @@ open class BottomSheetViewController: UIViewController {
 		return view
 	}()
 	
-	private let contentView: UIView
+	public var didDismissBottomSheet = PublishRelay<Void>()
 	
-	// MARK: - Initializers
-	public init(contentView: UIView) {
-		self.contentView = contentView
-		super.init(nibName: nil, bundle: nil)
-		modalPresentationStyle = .overFullScreen
-	}
-	
-	@available(*, unavailable)
-	required public init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-	
-	// MARK: - Life Cycles
-	public override func viewDidLoad() {
+	// MARK: - View Life Cycle
+	open override func viewDidLoad() {
 		super.viewDidLoad()
+		setupUI()
+		setupGestures()
+	}
+	
+	open override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		animatePresent()
+	}
+	
+	// MARK: - UI Methods
+	private func setupUI() {
+		view.backgroundColor = .clear
 		setViewHierarchy()
-		setViewConstraints()
+		setConstraints()
 	}
 	
-	public override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-		animateDimmdedView()
-		animateContainerView()
-	}
-}
-
-// MARK: - View Methods
-private extension BottomSheetViewController {
-	func setViewHierarchy() {
+	private func setViewHierarchy() {
 		view.addSubview(dimmedView)
-		view.addSubview(contentRootView)
-		contentRootView.addSubview(contentView)
+		view.addSubview(mainContainerView)
+		mainContainerView.addSubviews(topBarView, contentView)
 	}
 	
-	func setViewConstraints() {
+	private func setConstraints() {
 		dimmedView.snp.makeConstraints { make in
 			make.edges.equalToSuperview()
 		}
 		
-		contentRootView.snp.makeConstraints { make in
-			make.leading.trailing.equalToSuperview()
-			make.bottom.equalToSuperview().offset(deviceHeight)
+		mainContainerView.snp.makeConstraints { make in
+			make.top.greaterThanOrEqualTo(view).offset(minTopSpacing)
+			make.leading.trailing.bottom.equalTo(view)
+		}
+		
+		topBarView.snp.makeConstraints { make in
+			make.top.leading.trailing.equalToSuperview()
+			make.height.equalTo(36)
 		}
 		
 		contentView.snp.makeConstraints { make in
-			make.leading.trailing.equalTo(contentRootView)
-			make.top.equalTo(contentRootView.snp.top).offset(24)
-			make.bottom.equalTo(contentRootView.snp.bottom).offset(-24)
-		}
-	}
-}
-
-// MARK: - Animation Methods
-extension BottomSheetViewController {
-	private func animateDimmdedView() {
-		dimmedView.alpha = 0
-		UIView.animate(withDuration: 0.4) {
-			self.dimmedView.alpha = self.dimmedAlpha
+			make.top.equalTo(topBarView.snp.bottom)
+			make.leading.equalToSuperview().offset(24)
+			make.bottom.equalToSuperview().offset(-24)
+			make.trailing.equalToSuperview().offset(-24)
 		}
 	}
 	
-	private func animateContainerView() {
-		UIView.animate(withDuration: 0.4) {
-			self.contentRootView.snp.updateConstraints { make in
-				make.bottom.equalToSuperview()
-			}
-			self.view.layoutIfNeeded()
+	private func setupGestures() {
+		let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapDimmedView))
+		dimmedView.addGestureRecognizer(tapGesture)
+		
+		let panGesture = UIPanGestureRecognizer(target: self, action: #selector(didPanTopView))
+		topBarView.addGestureRecognizer(panGesture)
+	}
+	
+	@objc private func didTapDimmedView() {
+		dismissBottomSheet()
+	}
+	
+	@objc fileprivate func didPanTopView(_ gesture: UIPanGestureRecognizer) {
+		let translation = gesture.translation(in: view)
+		let isDraggingDown = translation.y > 0
+		guard isDraggingDown else { return }
+		
+		let pannedHeight = translation.y
+		let currentY = self.view.frame.height - self.mainContainerView.frame.height
+		
+		switch gesture.state {
+		case .changed:
+				self.mainContainerView.frame.origin.y = currentY + pannedHeight
+		case .ended:
+				let shouldDismiss = pannedHeight > self.mainContainerView.frame.height / 2
+				if shouldDismiss {
+					dismissBottomSheet()
+				} else {
+					self.mainContainerView.frame.origin.y = currentY
+				}
+				
+		default:
+				break
 		}
 	}
 	
-	public func animateDismissView() {
-		dimmedView.alpha = dimmedAlpha
-		UIView.animate(withDuration: 0.4) {
-			self.dimmedView.alpha = 0
+	open func dismissBottomSheet() {
+		UIView.animate(withDuration: 0.3) {
+			self.dimmedView.alpha = 0.7
+			self.mainContainerView.frame.origin.y = self.view.frame.height
 		} completion: { _ in
 			self.dismiss(animated: false)
-		}
-		
-		UIView.animate(withDuration: 0.4) {
-			self.contentRootView.snp.updateConstraints { make in
-				make.bottom.equalToSuperview().offset(self.deviceHeight)
-			}
-			self.view.layoutIfNeeded()
+			self.didDismissBottomSheet.accept(())
 		}
 	}
-}
-
-// MARK: - Reactive Extensions
-extension Reactive where Base: BottomSheetViewController {
-	public var didTapDimmedView: Observable<Void> {
-		base.dimmedView.rx.tapGesture()
-			.when(.recognized)
-			.throttle(
-				.milliseconds(400),
-				latest: false,
-				scheduler: MainScheduler.instance
-			)
-			.map { _ in return }
+	
+	private func animatePresent() {
+		dimmedView.alpha = 0
+		mainContainerView.transform = CGAffineTransform(translationX: 0, y: view.frame.height)
+		UIView.animate(withDuration: 0.3) {
+			self.mainContainerView.transform = .identity
+		}
+		
+		UIView.animate(withDuration: 0.3) {
+			self.dimmedView.alpha = 0.7
+		}
 	}
 }
