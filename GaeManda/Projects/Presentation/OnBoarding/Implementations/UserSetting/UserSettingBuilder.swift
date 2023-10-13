@@ -1,9 +1,15 @@
 import RIBs
 import OnBoarding
 
-public protocol UserSettingDependency: Dependency { }
+public protocol UserSettingDependency: Dependency { 
+	var birthdayPickerBuildable: BirthdayPickerBuildable { get }
+}
 
-final class UserSettingComponent: Component<UserSettingDependency> { }
+final class UserSettingComponent: Component<UserSettingDependency> { 
+	var birthdayPickerBuildable: BirthdayPickerBuildable {
+		dependency.birthdayPickerBuildable
+	}
+}
 
 public final class UserSettingBuilder:
 	Builder<UserSettingDependency>,
@@ -13,12 +19,14 @@ public final class UserSettingBuilder:
 	}
 	
 	public func build(withListener listener: UserSettingListener) -> ViewableRouting {
+		let component = UserSettingComponent(dependency: dependency)
 		let viewController = UserSettingViewController()
 		let interactor = UserSettingInteractor(presenter: viewController)
 		interactor.listener = listener
 		return ProfileSettingRouter(
 			interactor: interactor,
-			viewController: viewController
+			viewController: viewController,
+			birthdayPickerBuildable: component.birthdayPickerBuildable
 		)
 	}
 }

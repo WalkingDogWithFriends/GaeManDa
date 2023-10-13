@@ -13,6 +13,7 @@ final class LoggedOutComponent:
 	AddressSettingDependency,
 	DetailAddressSettingDependency,
 	UserSettingDependency,
+	BirthdayPickerDependency,
 	DogSettingDependency {
 	lazy var onBoardingBuildable: OnBoardingBuildable = {
 		return OnBoardingBuilder(dependency: self)
@@ -32,6 +33,10 @@ final class LoggedOutComponent:
 	
 	lazy var userSettingBuildable: UserSettingBuildable = {
 		return UserSettingBuilder(dependency: self)
+	}()
+	
+	lazy var birthdayPickerBuildable: BirthdayPickerBuildable = {
+		return BirthdayPickerBuilder(dependency: self)
 	}()
 	
 	lazy var dogSettingBuildable: DogSettingBuildable = {

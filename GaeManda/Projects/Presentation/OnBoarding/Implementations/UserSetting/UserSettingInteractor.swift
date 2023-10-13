@@ -1,16 +1,26 @@
 import RIBs
 import OnBoarding
 
-protocol UserSettingRouting: ViewableRouting { }
+protocol UserSettingRouting: ViewableRouting {
+	func attachBirthdayPicker()
+	func detachBirthdayPicker()
+}
 
 protocol UserSettingPresentable: Presentable {
 	var listener: UserSettingPresentableListener? { get set }
+	
+	func displayBirthday(date: String)
 }
 
 final class UserSettingInteractor:
 	PresentableInteractor<UserSettingPresentable>,
 	UserSettingInteractable,
 	UserSettingPresentableListener {
+	func birthdaySelected(date: String) {
+		presenter.displayBirthday(date: date)
+		router?.detachBirthdayPicker()
+	}
+	
 	weak var router: UserSettingRouting?
 	weak var listener: UserSettingListener?
 	
@@ -38,7 +48,22 @@ extension UserSettingInteractor {
 		listener?.userSettingBackButtonDidTap()
 	}
 	
+	func birthdayPickerDidTap() {
+		router?.attachBirthdayPicker()
+	}
+	
 	func dismiss() {
 		listener?.userSettingDismiss()
+	}
+}
+
+// MARK: - BirthdayPickerListener
+extension UserSettingInteractor {
+	func didTapBirthdayPicker() {
+		router?.attachBirthdayPicker()
+	}
+	
+	func birthdayPickerDismiss() {
+		router?.detachBirthdayPicker()
 	}
 }
