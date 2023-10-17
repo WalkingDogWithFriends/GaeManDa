@@ -12,6 +12,8 @@ import GMDExtensions
 
 public final class DropDownView: UIView {
 	// MARK: - Properties
+	public weak var listener: DropDownListener?
+	
 	/// DropDownView에서 button의 buttom Constraint를 리턴합니다.
 	public var viewBottom: ConstraintItem {
 		self.dropDownButton.snp.bottom
@@ -136,6 +138,7 @@ extension DropDownView: UITableViewDataSource {
 // MARK: - UITableViewDataSource
 extension DropDownView: UITableViewDelegate {
 	public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		listener?.dropdown(self, didSelectRowAt: indexPath)
 		selectedOption = dataSource[indexPath.row]
 		dropDownTableView.selectRow(at: indexPath.row)
 		hideDropDown()
