@@ -156,10 +156,12 @@ extension DropDownView {
 		}
 	}
 	
+	/// DropDownList를 숨김니다.
 	public func hideDropDown() {
 		dropDownTableView.isHidden = true
 	}
 	
+	/// DropDownList를 보여줍니다.
 	public func displayDropDown() {
 		dropDownTableView.isHidden = false
 	}
