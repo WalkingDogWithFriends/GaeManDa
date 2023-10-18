@@ -33,22 +33,9 @@ public final class DropDownView: UIView {
 			dropDownTableView.reloadData()
 		}
 	}
-	
-	/// DropDown의 title을 정의할 수 있습니다.
-	public var title: String? {
-		didSet {
-			guard let title = title else { return }
-			dropDownButton.setTitle(title, for: .title)
-		}
-	}
-	
+		
 	/// DropDown의 현재 선택된 항목을 알 수 있습니다.
-	public private(set) var selectedOption: String? {
-		didSet {
-			guard let option = selectedOption else { return }
-			dropDownButton.setTitle(option, for: .option)
-		}
-	}
+	public private(set) var selectedOption: String? = nil
 		
 	// MARK: - UI Components
 	private let stackView: UIStackView = {
@@ -80,11 +67,10 @@ public final class DropDownView: UIView {
 		selectedOption: String? = nil
 	) {
 		self.init()
+		self.selectedOption = selectedOption
 		
-		defer {
-			self.title = title
-			self.selectedOption = selectedOption
-		}
+		self.setButtonTitle(title)
+		self.setButtonOption(selectedOption)
 	}
 	
 	@available(*, unavailable)
@@ -141,6 +127,7 @@ extension DropDownView: UITableViewDelegate {
 		listener?.dropdown(self, didSelectRowAt: indexPath)
 		selectedOption = dataSource[indexPath.row]
 		dropDownTableView.selectRow(at: indexPath.row)
+		setButtonOption(selectedOption)
 		hideDropDown()
 	}
 }
@@ -164,5 +151,17 @@ extension DropDownView {
 	/// DropDownList를 보여줍니다.
 	public func displayDropDown() {
 		dropDownTableView.isHidden = false
+	}
+	
+	/// DropDownButton의 Title을 설정합니다.
+	public func setButtonTitle(_ title: String?) {
+		guard let title = title else { return }
+		dropDownButton.setTitle(title, for: .title)
+	}
+	
+	/// DropDownButton의 Title을 선택된 Option으로 설정합니다.
+	public func setButtonOption(_ selectedOption: String?) {
+		guard let selectedOption = selectedOption else { return }
+		dropDownButton.setTitle(selectedOption, for: .option)
 	}
 }
