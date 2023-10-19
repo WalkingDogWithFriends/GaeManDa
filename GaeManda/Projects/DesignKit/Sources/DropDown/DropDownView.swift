@@ -20,8 +20,8 @@ public final class DropDownView: UIView {
 	}
 
 	/// DropDown을 띄울지 여부입니다.
-	public var isDisplayed: Bool {
-		didSet { 
+	public var isDisplayed: Bool = false {
+		didSet {
 			isDisplayed ? displayDropDown() : hideDropDown()
 		}
 	}
@@ -35,7 +35,7 @@ public final class DropDownView: UIView {
 	}
 		
 	/// DropDown의 현재 선택된 항목을 알 수 있습니다.
-	public private(set) var selectedOption: String? = nil
+	public private(set) var selectedOption: String?
 		
 	// MARK: - UI Components
 	private let stackView: UIStackView = {
@@ -52,13 +52,10 @@ public final class DropDownView: UIView {
 	private let dropDownTableView = DropDownTableView()
 	
 	// MARK: - Initializers
-	public init(isDisplayed: Bool = false) {
-		self.isDisplayed = isDisplayed
+	public init() {
 		super.init(frame: .zero)
-		dropDownTableView.isHidden = true
 		dropDownTableView.dataSource = self
 		dropDownTableView.delegate = self
-		
 		setupUI()
 	}
 	
@@ -82,22 +79,18 @@ public final class DropDownView: UIView {
 // MARK: - UI Methods
 private extension DropDownView {
 	func setupUI() {
+		dropDownTableView.backgroundColor = .red
 		setViewHierarchy()
 		setConstraints()
 	}
 	
 	func setViewHierarchy() {
-		addSubview(stackView)
-		stackView.addArrangedSubviews(dropDownButton, dropDownTableView)
+		addSubview(dropDownButton)
 	}
 	
 	func setConstraints() {
-		stackView.snp.makeConstraints { make in
+		dropDownButton.snp.makeConstraints { make in
 			make.edges.equalToSuperview()
-		}
-		
-		dropDownTableView.snp.makeConstraints { make in
-			make.height.equalTo(0)
 		}
 	}
 }
@@ -128,7 +121,7 @@ extension DropDownView: UITableViewDelegate {
 		selectedOption = dataSource[indexPath.row]
 		dropDownTableView.selectRow(at: indexPath.row)
 		setButtonOption(selectedOption)
-		hideDropDown()
+		isDisplayed = false
 	}
 }
 
@@ -145,12 +138,20 @@ extension DropDownView {
 	
 	/// DropDownList를 숨김니다.
 	public func hideDropDown() {
-		dropDownTableView.isHidden = true
+		dropDownTableView.removeFromSuperview()
+		dropDownTableView.snp.removeConstraints()
 	}
 	
 	/// DropDownList를 보여줍니다.
 	public func displayDropDown() {
-		dropDownTableView.isHidden = false
+		UIWindow.key?.addSubview(dropDownTableView)
+		dropDownTableView.snp.makeConstraints { make in
+			make.width.equalTo(dropDownButton.snp.width)
+			make.leading.equalTo(dropDownButton)
+			make.top.equalTo(viewBottom)
+			make.height.equalTo(0)
+		}
+		updateDropDownTableViewHeight()
 	}
 	
 	/// DropDownButton의 Title을 설정합니다.
