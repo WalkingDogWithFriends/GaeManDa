@@ -21,26 +21,24 @@ final class FirstDogSettingViewController:
 	FirstDogSettingViewControllable {
 	// MARK: - Properties
 	weak var listener: FirstDogSettingPresentableListener?
+	var textDidChangeNotification: NSObjectProtocol?
 	
+	private let kgSuffix = "kg"
 	private let maximumTextCount = 20
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "")
 	
-	private let onBoardingView = OnBoardingView(willDisplayImageView: true, title: "우리 아이를 등록해주세요! (1/3)")
+	private let onBoardingView = OnBoardingView(willDisplayImageView: true, title: "우리 아이를 등록해주세요! (1/2)")
 	
-	private let dogNameTextField = GMDTextField(title: "우리 아이 이름", warningText: "우리 아이 이름을 작성해주세요")
-	
-	private let maximumTextCountLabel = UILabel()
-	
-	private let calenderTextField = GMDTextField(title: "생년월일", warningText: "생년월일을 입력해주세요.")
-	
-	private let calenderButton: UIButton = {
-		let button = UIButton()
-		button.tintColor = .black
-		button.setImage(.iconCalendar, for: .normal)
+	private let textStackView: UIStackView = {
+		let stackView = UIStackView()
+		stackView.axis = .vertical
+		stackView.alignment = .fill
+		stackView.spacing = 8
+		stackView.distribution = .fillEqually
 		
-		return button
+		return stackView
 	}()
 	
 	private let buttonStackView: UIStackView = {
@@ -53,6 +51,30 @@ final class FirstDogSettingViewController:
 		return stackView
 	}()
 	
+	private let dogNameTextField = GMDTextField(title: "우리 아이 이름", warningText: "우리 아이 이름을 작성해주세요")
+	
+	private let maximumTextCountLabel = UILabel()
+	
+	private let calenderTextField = GMDTextField(title: "우리 아이 생년월일", warningText: "생년월일을 입력해주세요.")
+	
+	private let calenderButton: UIButton = {
+		let button = UIButton()
+		button.tintColor = .black
+		button.setImage(.iconCalendar, for: .normal)
+		
+		return button
+	}()
+	
+	private let dogWeightTextField: GMDTextField = {
+		let gmdTextField = GMDTextField(
+			title: "우리 아이 몸무게 (kg)",
+			warningText: "우리 아이 몸무게 (kg)을 입력해주세요."
+		)
+		gmdTextField.textField.keyboardType = .numberPad
+		
+		return gmdTextField
+	}()
+		
 	private let maleButton: GMDOptionButton = {
 		let button = GMDOptionButton(title: "남")
 		button.isSelected = true
@@ -67,6 +89,8 @@ final class FirstDogSettingViewController:
 	// MARK: - Life Cycles
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		
+		textDidChangeNotification = registerTextFieldNotification()
 		setupUI()
 	}
 	
@@ -77,6 +101,8 @@ final class FirstDogSettingViewController:
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 		
+		removeTextFieldNotification([textDidChangeNotification])
+		
 		if isBeingDismissed || isMovingFromParent {
 			listener?.dismiss()
 		}
@@ -84,23 +110,19 @@ final class FirstDogSettingViewController:
 	
 	// MARK: - UI Methods
 	private func setupUI() {
-		setTextField(dogNameTextField.textField, rightView: maximumTextCountLabel)
-		setTextField(calenderTextField.textField, rightView: calenderButton)
+		dogNameTextField.setRightView(maximumTextCountLabel)
+		calenderTextField.setRightView(calenderButton)
+
 		setViewHierarchy()
 		setConstraints()
 		bind()
 	}
 	
-	func setTextField(_ textField: UITextField, rightView: UIView) {
-		textField.rightView = rightView
-		textField.rightViewMode = .always
-	}
-	
 	override func setViewHierarchy() {
 		super.setViewHierarchy()
-		contentView.addSubviews(
-			navigationBar, onBoardingView, dogNameTextField, calenderTextField, buttonStackView, confirmButton
-		)
+		contentView.addSubviews(navigationBar, onBoardingView, textStackView, buttonStackView, confirmButton)
+		
+		textStackView.addArrangedSubviews(dogNameTextField, calenderTextField, dogWeightTextField)
 		buttonStackView.addArrangedSubviews(maleButton, femaleButton)
 	}
 	
@@ -117,27 +139,21 @@ final class FirstDogSettingViewController:
 			make.trailing.equalToSuperview().offset(-32)
 		}
 		
-		dogNameTextField.snp.makeConstraints { make in
-			make.top.equalTo(onBoardingView.snp.bottom).offset(48)
+		textStackView.snp.makeConstraints { make in
+			make.top.equalTo(onBoardingView.snp.bottom).offset(24)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 		}
-		
-		calenderTextField.snp.makeConstraints { make in
-			make.top.equalTo(dogNameTextField.snp.bottom).offset(16)
-			make.leading.equalToSuperview().offset(32)
-			make.trailing.equalToSuperview().offset(-32)
-		}
-		
+
 		buttonStackView.snp.makeConstraints { make in
-			make.top.equalTo(calenderTextField.snp.bottom).offset(44)
+			make.top.equalTo(textStackView.snp.bottom).offset(28)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 			make.height.equalTo(40)
 		}
-		
+		print((54 - UIDevice.safeAreaBottomHeight))
 		confirmButton.snp.makeConstraints { make in
-			make.top.equalTo(buttonStackView.snp.bottom).offset(98)
+			make.top.equalTo(buttonStackView.snp.bottom).offset(58)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 			make.bottom.equalToSuperview().offset(-(54 - UIDevice.safeAreaBottomHeight))
@@ -261,6 +277,10 @@ private extension FirstDogSettingViewController {
 	}
 }
 
+// MARK: - GMDTextFieldListener
+extension FirstDogSettingViewController: GMDTextFieldListener {}
+
+// MARK: - PHPickerViewControllerDelegate
 extension FirstDogSettingViewController: PHPickerViewControllerDelegate {
 	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
 		picker.dismiss(animated: true)
