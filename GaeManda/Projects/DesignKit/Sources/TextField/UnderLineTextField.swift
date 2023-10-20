@@ -2,6 +2,14 @@ import UIKit
 import SnapKit
 
 public class UnderLineTextField: UITextField {
+	// MARK: - Properties
+	/// TextField의 padding을 정의할 수 있습니다.
+	public var padding = UIEdgeInsets(top: 0, left: 0, bottom: 8, right: 0) {
+		didSet {
+			setNeedsDisplay()
+		}
+	}
+	
 	public override var text: String? {
 		didSet {
 			// textField.text를 통해 값을 설정할 때, rx.text로 이벤트를 방출시키기 위해 추가한 코드
@@ -19,15 +27,17 @@ public class UnderLineTextField: UITextField {
 		
 		return NSRange(location: location, length: length)
 	}
-		
+	
+	// MARK: - UI Components
 	private let underLineView = UIView()
 	
-	public var underLineColor: UIColor? {
+	public var underLineColor: UIColor = .black {
 		didSet {
 			underLineView.backgroundColor = underLineColor
 		}
 	}
 	
+	// MARK: - Initializers
 	public init() {
 		super.init(frame: .zero)
 		setupUI()
@@ -38,18 +48,43 @@ public class UnderLineTextField: UITextField {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
-	private func setupUI() {
+	// MARK: - Method Override
+	open override func textRect(forBounds bounds: CGRect) -> CGRect {
+		return bounds.inset(by: padding)
+	}
+	
+	open override func editingRect(forBounds bounds: CGRect) -> CGRect {
+		return bounds.inset(by: padding)
+	}
+	
+	open override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+		return bounds.inset(by: padding)
+	}
+	
+	open override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
+		var rightViewRect = super.rightViewRect(forBounds: bounds)
+		
+		rightViewRect.origin.x -= padding.right
+		rightViewRect.origin.y -= (padding.bottom / 2)
+		
+		return rightViewRect
+	}
+}
+
+// MARK: - UI Methods
+private extension UnderLineTextField {
+	func setupUI() {
 		setViewHierarchy()
 		setConstraints()
 	}
 	
-	private func setViewHierarchy() {
+	func setViewHierarchy() {
 		addSubview(underLineView)
 	}
 	
-	private func setConstraints() {
+	func setConstraints() {
 		underLineView.snp.makeConstraints { make in
-			make.top.equalTo(self.snp.bottom).offset(4)
+			make.top.equalTo(self.snp.bottom)
 			make.leading.trailing.equalToSuperview()
 			make.height.equalTo(1)
 		}
