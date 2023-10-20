@@ -33,10 +33,8 @@ final class DropDownTableView: UITableView {
 		self.visibleCells.forEach { $0.isSelected = false }
 	}
 	
-	func selectRow(at index: Int) {
+	func selectRow(at indexPath: IndexPath) {
 		deselectAllCell()
-		self.visibleCells.enumerated().forEach { (idx, cell) in
-			if index == idx { cell.isSelected = true }
-		}
+		self.cellForRow(DropDownCell.self, at: indexPath).isSelected = true
 	}
 }

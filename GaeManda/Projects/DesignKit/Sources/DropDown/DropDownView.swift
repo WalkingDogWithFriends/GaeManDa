@@ -79,7 +79,6 @@ public final class DropDownView: UIView {
 // MARK: - UI Methods
 private extension DropDownView {
 	func setupUI() {
-		dropDownTableView.backgroundColor = .red
 		setViewHierarchy()
 		setConstraints()
 	}
@@ -119,7 +118,7 @@ extension DropDownView: UITableViewDelegate {
 	public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		listener?.dropdown(self, didSelectRowAt: indexPath)
 		selectedOption = dataSource[indexPath.row]
-		dropDownTableView.selectRow(at: indexPath.row)
+		dropDownTableView.selectRow(at: indexPath)
 		setButtonOption(selectedOption)
 		isDisplayed = false
 	}
@@ -127,15 +126,6 @@ extension DropDownView: UITableViewDelegate {
 
 // MARK: - DropDown Logic
 extension DropDownView {
-	private func updateDropDownTableViewHeight() {
-		let height = min(CGFloat(dataSource.count) * 32, 160)
-		UIView.animate(withDuration: 0.3) {
-			self.dropDownTableView.snp.updateConstraints { make in
-				make.height.equalTo(height)
-			}
-		}
-	}
-	
 	/// DropDownList를 숨김니다.
 	public func hideDropDown() {
 		dropDownTableView.removeFromSuperview()
@@ -145,13 +135,13 @@ extension DropDownView {
 	/// DropDownList를 보여줍니다.
 	public func displayDropDown() {
 		UIWindow.key?.addSubview(dropDownTableView)
+
 		dropDownTableView.snp.makeConstraints { make in
 			make.width.equalTo(dropDownButton.snp.width)
 			make.leading.equalTo(dropDownButton)
 			make.top.equalTo(viewBottom)
-			make.height.equalTo(0)
+			make.height.equalTo(self.getTableViewHeight())
 		}
-		updateDropDownTableViewHeight()
 	}
 	
 	/// DropDownButton의 Title을 설정합니다.
@@ -164,5 +154,17 @@ extension DropDownView {
 	public func setButtonOption(_ selectedOption: String?) {
 		guard let selectedOption = selectedOption else { return }
 		dropDownButton.setTitle(selectedOption, for: .option)
+	}
+	
+	private func updateDropDownTableViewHeight() {
+		UIView.animate(withDuration: 0.3) {
+			self.dropDownTableView.snp.updateConstraints { make in
+				make.height.equalTo(self.getTableViewHeight())
+			}
+		}
+	}
+	
+	private func getTableViewHeight() -> CGFloat {
+		return min(CGFloat(dataSource.count) * 32, 192)
 	}
 }
