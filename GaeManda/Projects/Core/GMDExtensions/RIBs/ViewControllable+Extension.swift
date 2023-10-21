@@ -9,6 +9,12 @@
 import UIKit
 import RIBs
 
+extension UINavigationController: ViewControllable { }
+
+public extension ViewControllable where Self: UINavigationController {
+	var uiviewController: UIViewController { return self }
+}
+
 public extension ViewControllable {
 	func present(
 		_ viewControllable: ViewControllable,
@@ -79,13 +85,25 @@ public extension ViewControllable {
 		}
 	}
 	
+	/// 가장위에 있는 ViewControllable을 리턴합니다.
 	var topViewControllable: ViewControllable {
 		var top: ViewControllable = self
 		
-		while let presented = top.uiviewController.presentedViewController as? ViewControllable {
+		while
+			let presented = getPresentedViewController(base: top.uiviewController) as? ViewControllable {
 			top = presented
 		}
-		
+
 		return top
+	}
+	
+	private func getPresentedViewController(base: UIViewController) -> UIViewController? {
+		if let navigation = base as? UINavigationController {
+			return navigation.visibleViewController
+		} else if let tapBar = base as? UITabBarController {
+			return tapBar.selectedViewController
+		} else {
+			return base.presentedViewController
+		}
 	}
 }
