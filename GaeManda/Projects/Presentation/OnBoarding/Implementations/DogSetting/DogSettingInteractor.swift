@@ -31,11 +31,11 @@ final class DogSettingInteractor: Interactor, DogSettingInteractable {
 
 // MARK: FirstDogSetting
 extension DogSettingInteractor {
-	func firstDogSettingDidFinish() {
+	func firstDogSettingDidTapConfirmButton() {
 		router?.firstDogSettingDidFinish()
 	}
 	
-	func firstDogSettingBackButtonDidTap() {
+	func firstDogSettingDidTapBackButton() {
 		listener?.dogSettingBackButtonDidTap()
 	}
 	
@@ -47,11 +47,11 @@ extension DogSettingInteractor {
 
 // MARK: SecondDogSetting
 extension DogSettingInteractor {
-	func secondDogSettingDidFinish() {
+	func secondDogSettingDidTapConfirmButton() {
 		listener?.dogSettingDidFinish()
 	}
 	
-	func secondDogSettingBackButtonDidTap() {
+	func secondDogSettingDidTaBackButtonp() {
 		router?.secondDogSettingDetach()
 	}
 	

@@ -8,8 +8,8 @@ import GMDExtensions
 import GMDUtils
 
 protocol SecondDogSettingPresentableListener: AnyObject {
-	func confirmButtonDidTap()
-	func backButtonDidTap()
+	func didTapConfirmButton()
+	func didTapBackButton()
 	func dismiss()
 }
 
@@ -144,7 +144,7 @@ final class SecondDogSettingViewController:
 	private func bindNavigationBar() {
 		navigationBar.backButton.rx.tap
 			.bind(with: self) { owner, _ in
-				owner.listener?.backButtonDidTap()
+				owner.listener?.didTapBackButton()
 			}
 			.disposed(by: disposeBag)
 	}
