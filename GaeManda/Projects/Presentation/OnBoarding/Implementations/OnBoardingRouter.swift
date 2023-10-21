@@ -192,10 +192,7 @@ extension OnBoardingRouter {
 	func dogSettingAttach() {
 		if dogSettingRouting != nil { return }
 		
-		let router = dogSettingBuildable.build(
-			withListener: interactor,
-			navigationControllerable: navigationControllerable
-		)
+		let router = dogSettingBuildable.build(withListener: interactor)
 		dogSettingRouting = router
 		attachChild(router)
 	}

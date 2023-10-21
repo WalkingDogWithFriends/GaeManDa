@@ -16,8 +16,6 @@ protocol DogSettingViewControllable: ViewControllable { }
 final class DogSettingRouter:
 	Router<DogSettingInteractable>,
 	DogSettingRouting {
-	private var navigationControllable: NavigationControllerable?
-	
 	private let firstDogSettingBuildable: FirstDogSettingBuildable
 	private var firstDogSettingRouting: ViewableRouting?
 	
@@ -30,13 +28,11 @@ final class DogSettingRouter:
 	init(
 		interactor: DogSettingInteractable,
 		viewController: ViewControllable,
-		navigationControllable: NavigationControllerable?,
 		firstDogSettingBuildable: FirstDogSettingBuildable,
 		secondDogSettingBuildable: SecondDogSettingBuildable,
 		thirdDogSettingBuildable: ThirdDogSettingBuildable
 	) {
 		self.viewController = viewController
-		self.navigationControllable = navigationControllable
 		self.firstDogSettingBuildable = firstDogSettingBuildable
 		self.secondDogSettingBuildable = secondDogSettingBuildable
 		self.thirdDogSettingBuildable = thirdDogSettingBuildable
@@ -51,13 +47,13 @@ final class DogSettingRouter:
 	
 	func cleanupViews() {
 		if thirdDogSettingRouting != nil {
-			navigationControllable?.popViewController(animated: true)
+			viewController.popViewController(animated: true)
 		}
 		if secondDogSettingRouting != nil {
-			navigationControllable?.popViewController(animated: true)
+			viewController.popViewController(animated: true)
 		}
 		if firstDogSettingRouting != nil {
-			navigationControllable?.popViewController(animated: true)
+			viewController.popViewController(animated: true)
 		}
 	}
 	
@@ -70,7 +66,7 @@ extension DogSettingRouter {
 		if firstDogSettingRouting != nil { return }
 		
 		let router = firstDogSettingBuildable.build(withListener: interactor)
-		navigationControllable?.pushViewController(
+		viewController.pushViewController(
 			router.viewControllable,
 			animated: true
 		)
@@ -81,7 +77,7 @@ extension DogSettingRouter {
 	func firstDogSettingDetach() {
 		guard let router = firstDogSettingRouting else { return }
 		
-		navigationControllable?.popViewController(animated: true)
+		viewController.popViewController(animated: true)
 		firstDogSettingRouting = nil
 		detachChild(router)
 	}
@@ -104,7 +100,7 @@ extension DogSettingRouter {
 		if secondDogSettingRouting != nil { return }
 		
 		let router = secondDogSettingBuildable.build(withListener: interactor)
-		navigationControllable?.pushViewController(
+		viewController.pushViewController(
 			router.viewControllable,
 			animated: true
 		)
@@ -115,7 +111,7 @@ extension DogSettingRouter {
 	func secondDogSettingDetach() {
 		guard let router = secondDogSettingRouting else { return }
 		
-		navigationControllable?.popViewController(animated: true)
+		viewController.popViewController(animated: true)
 		secondDogSettingRouting = nil
 		detachChild(router)
 	}
@@ -138,7 +134,7 @@ extension DogSettingRouter {
 		if thirdDogSettingRouting != nil { return }
 		
 		let router = thirdDogSettingBuildable.build(withListener: interactor)
-		navigationControllable?.pushViewController(
+		viewController.pushViewController(
 			router.viewControllable,
 			animated: true
 		)
@@ -149,7 +145,7 @@ extension DogSettingRouter {
 	func thirdDogSettingDetach() {
 		guard let router = thirdDogSettingRouting else { return }
 		
-		navigationControllable?.popViewController(animated: true)
+		viewController.popViewController(animated: true)
 		thirdDogSettingRouting = nil
 		detachChild(router)
 	}

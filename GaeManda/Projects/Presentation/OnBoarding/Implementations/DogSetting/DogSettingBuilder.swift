@@ -21,10 +21,7 @@ public final class DogSettingBuilder: Builder<DogSettingDependency>, DogSettingB
 		super.init(dependency: dependency)
 	}
 	
-	public func build(
-		withListener listener: DogSettingListener,
-		navigationControllerable: NavigationControllerable?
-	) -> Routing {
+	public func build(withListener listener: DogSettingListener) -> Routing {
 		let component = DogSettingComponent(dependency: dependency)
 		let interactor = DogSettingInteractor()
 		interactor.listener = listener
@@ -36,7 +33,6 @@ public final class DogSettingBuilder: Builder<DogSettingDependency>, DogSettingB
 		return DogSettingRouter(
 			interactor: interactor,
 			viewController: component.dogSettingViewController,
-			navigationControllable: navigationControllerable,
 			firstDogSettingBuildable: firstDogSettingBuildable,
 			secondDogSettingBuildable: secondDogSettingBuildable,
 			thirdDogSettingBuildable: thirdDogSettingBuildable

@@ -2,10 +2,7 @@ import RIBs
 import GMDUtils
 
 public protocol DogSettingBuildable: Buildable {
-	func build(
-		withListener listener: DogSettingListener,
-		navigationControllerable: NavigationControllerable?
-	) -> Routing
+	func build(withListener listener: DogSettingListener) -> Routing
 }
 
 public protocol DogSettingListener: AnyObject {
