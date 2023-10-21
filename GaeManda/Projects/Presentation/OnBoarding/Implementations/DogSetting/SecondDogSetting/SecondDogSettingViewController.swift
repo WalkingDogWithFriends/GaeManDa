@@ -16,33 +16,41 @@ protocol SecondDogSettingPresentableListener: AnyObject {
 final class SecondDogSettingViewController:
 	BaseViewController,
 	SecondDogSettingPresentable,
-	SecondDogSettingViewControllable, UITextFieldDelegate {
+	SecondDogSettingViewControllable {
 	// MARK: - Properties
 	weak var listener: SecondDogSettingPresentableListener?
-	private let kgSuffix = "kg"
+	var dropDownViews: [DropDownView]?
+	
+	private let viewModel = SecondDogSettingViewModel()
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "")
+	private let onBoardingView = OnBoardingView(willDisplayImageView: true, title: "우리 아이를 등록해주세요! (2/2)")
 	
-	private let onBoardingView = OnBoardingView(willDisplayImageView: true, title: "우리 아이를 등록해주세요! (2/3)")
+	private let dogBreedDropDownView = DropDownView(title: "우리 아이 종")
+	private let dogCharacterDropDownView = DropDownView(title: "우리 아이 성격")
 	
-	private let dogBreedTextField = GMDTextField(title: "우리 아이 종", warningText: "우리 아이 종을 작성해주세요")
-	
-	private let dogWeightTextField: GMDTextField = {
-		let gmdTextField = GMDTextField(
-			title: "우리 아이 몸무게 (kg)",
-			warningText: "우리 아이 몸무게 (kg)을 입력해주세요."
-		)
-		gmdTextField.textField.keyboardType = .numberPad
+	private let buttonStackView: UIStackView = {
+		let stackView = UIStackView()
+		stackView.axis = .horizontal
+		stackView.alignment = .fill
+		stackView.spacing = 26
+		stackView.distribution = .fillEqually
 		
-		return gmdTextField
+		return stackView
 	}()
 	
+	private let didNeuterButton = GMDOptionButton(title: "했어요")
+	private let didNotNeuterButton = GMDOptionButton(title: "안 했어요")
 	private let confirmButton = ConfirmButton(title: "확인")
 	
 	// MARK: - Life Cycles
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		registerDropDrownViews(dogBreedDropDownView, dogCharacterDropDownView)
+		
+		dogBreedDropDownView.dataSource = viewModel.dogBreedDataSource
+		dogCharacterDropDownView.dataSource = viewModel.dogCharacterDataSource
 		setupUI()
 	}
 	
@@ -58,8 +66,20 @@ final class SecondDogSettingViewController:
 		}
 	}
 	
+	// MARK: - touchesBegan
+	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+		super.touchesBegan(touches, with: event)
+		guard
+				let touch = touches.first,
+				let hitView = self.view.hitTest(touch.location(in: view), with: event)
+			else { return }
+			self.hit(at: hitView)
+	}
+	
 	// MARK: - UI Methods
 	private func setupUI() {
+		didNeuterButton.isSelected = true
+
 		setViewHierarchy()
 		setConstraints()
 		bind()
@@ -68,8 +88,9 @@ final class SecondDogSettingViewController:
 	override func setViewHierarchy() {
 		super.setViewHierarchy()
 		contentView.addSubviews(
-			navigationBar, onBoardingView, dogBreedTextField, dogWeightTextField, confirmButton
+			navigationBar, onBoardingView, dogBreedDropDownView, dogCharacterDropDownView, buttonStackView, confirmButton
 		)
+		buttonStackView.addArrangedSubviews(didNeuterButton, didNotNeuterButton)
 	}
 	
 	override func setConstraints() {
@@ -85,20 +106,27 @@ final class SecondDogSettingViewController:
 			make.trailing.equalToSuperview().offset(-32)
 		}
 		
-		dogBreedTextField.snp.makeConstraints { make in
-			make.top.equalTo(onBoardingView.snp.bottom).offset(48)
-			make.leading.equalToSuperview().offset(32)
-			make.trailing.equalToSuperview().offset(-32)
+		dogBreedDropDownView.snp.makeConstraints { make in
+			make.leading.equalToSuperview().offset(28)
+			make.top.equalTo(onBoardingView.snp.bottom).offset(56)
+			make.width.equalTo(216)
 		}
 		
-		dogWeightTextField.snp.makeConstraints { make in
-			make.top.equalTo(dogBreedTextField.snp.bottom).offset(16)
-			make.leading.equalToSuperview().offset(32)
-			make.trailing.equalToSuperview().offset(-32)
+		dogCharacterDropDownView.snp.makeConstraints { make in
+			make.leading.equalToSuperview().offset(28)
+			make.top.equalTo(dogBreedDropDownView.snp.bottom).offset(48)
+			make.width.equalTo(300)
 		}
 		
+		buttonStackView.snp.makeConstraints { make in
+			make.top.equalTo(dogCharacterDropDownView.snp.bottom).offset(52)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.height.equalTo(40)
+		}
+				
 		confirmButton.snp.makeConstraints { make in
-			make.top.equalTo(dogWeightTextField.snp.bottom).offset(182)
+			make.top.equalTo(buttonStackView.snp.bottom).offset(108)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 			make.bottom.equalToSuperview().offset(-(54 - UIDevice.safeAreaBottomHeight))
@@ -110,7 +138,6 @@ final class SecondDogSettingViewController:
 	override func bind() {
 		super.bind()
 		bindNavigationBar()
-		bindTextField()
 		bindConfirmButton()
 	}
 	
@@ -121,47 +148,11 @@ final class SecondDogSettingViewController:
 			}
 			.disposed(by: disposeBag)
 	}
-		
-	private func bindTextField() {
-		dogWeightTextField.textField.rx.text
-			.orEmpty
-			.filter { !$0.isEmpty }
-			.map { $0.append(suffix: "kg") }
-			.bind(to: dogWeightTextField.textField.rx.text)
-			.disposed(by: disposeBag)
-		
-//		dogWeightTextField.textField.rx.cursorChanged
-//			.bind(with: self) { owner, _ in
-//				owner.dogWeightTextField.textField.moveCusorLeftTo(suffix: "kg")
-//			}
-//			.disposed(by: disposeBag)
-	}
 	
-	private func bindConfirmButton() {
-		let textFieldsTextEmptyObservable = Observable
-			.combineLatest(
-				dogBreedTextField.rx.text.orEmpty,
-				dogWeightTextField.rx.text.orEmpty
-			)
-			.map { (!$0.0.isEmpty, !$0.1.isEmpty) }
-			.asDriver(onErrorJustReturn: (false, false))
-		
-		// 품종, 몸무게가 모두 입력된 경우
-		confirmButton.rx.tap
-			.withLatestFrom(textFieldsTextEmptyObservable)
-			.filter { $0 == true && $1 == true }
-			.bind(with: self) { owner, _ in
-				owner.listener?.confirmButtonDidTap()
-			}
-			.disposed(by: disposeBag)
-		
-		// 품종, 몸무게가 입력되지 않은 경우
-		confirmButton.rx.tap
-			.withLatestFrom(textFieldsTextEmptyObservable)
-			.bind(with: self) { owner, isEmpty in
-				owner.dogBreedTextField.mode = isEmpty.0 ? .normal : .warning
-				owner.dogWeightTextField.mode = isEmpty.1 ? .normal : .warning
-			}
-			.disposed(by: disposeBag)
-	}
+	private func bindConfirmButton() { }
+}
+
+// MARK: - DropDownListener
+extension SecondDogSettingViewController: DropDownListener {	
+	func dropdown(_ dropDown: DropDownView, didSelectRowAt indexPath: IndexPath) { }
 }
