@@ -6,18 +6,15 @@ protocol OnBoardingRouting: Routing {
 	func cleanupViews()
 	func termsOfUseAttach()
 	func termsOfUseDetach()
-	func termsOfUseDidFinish()
 	func addressSettingAttach()
 	func addressSettingDetach()
 	func addressSettingDismiss()
-	func addressSettingDidFinish()
 	func detailAddressSettingAttach()
 	func detailAddressSettingDetach()
 	func detailAddressSettingDismiss()
 	func userSettingAttach()
 	func userSettingDetach()
 	func userSettingDismiss()
-	func userSettingDidFinish()
 	func dogSettingAttach()
 	func dogSettingDetach()
 }
@@ -44,14 +41,14 @@ final class OnBoardingInteractor:
 // MARK: TermsOfUseListener
 extension OnBoardingInteractor {
 	func termsOfUseDidFinish() {
-		router?.termsOfUseDidFinish()
+		router?.addressSettingAttach()
 	}
 }
 
 // MARK: AddressSettingListener
 extension OnBoardingInteractor {
 	func addressSettingDidFinish() {
-		router?.addressSettingDidFinish()
+		router?.userSettingAttach()
 	}
 	
 	func addressSettingBackButtonDidTap() {
@@ -81,7 +78,7 @@ extension OnBoardingInteractor {
 // MARK: UserSettingListener
 extension OnBoardingInteractor {
 	func userSettingDidFinish() {
-		router?.userSettingDidFinish()
+		router?.dogSettingAttach()
 	}
 	
 	func userSettingBackButtonDidTap() {

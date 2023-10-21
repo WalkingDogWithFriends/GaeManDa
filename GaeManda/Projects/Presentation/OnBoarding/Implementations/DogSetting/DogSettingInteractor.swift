@@ -6,7 +6,6 @@ protocol DogSettingRouting: Routing {
 	func firstDogSettingAttach()
 	func firstDogSettingDetach()
 	func firstDogSettingDismiss()
-	func firstDogSettingDidFinish()
 	func secondDogSettingAttach()
 	func secondDogSettingDetach()
 	func secondDogSettingDismiss()
@@ -32,7 +31,7 @@ final class DogSettingInteractor: Interactor, DogSettingInteractable {
 // MARK: FirstDogSetting
 extension DogSettingInteractor {
 	func firstDogSettingDidTapConfirmButton() {
-		router?.firstDogSettingDidFinish()
+		router?.secondDogSettingAttach()
 	}
 	
 	func firstDogSettingDidTapBackButton() {
@@ -40,7 +39,6 @@ extension DogSettingInteractor {
 	}
 	
 	func firstDogSettingDismiss() {
-		router?.firstDogSettingDismiss()
 		listener?.dogSettingDismiss()
 	}
 }
