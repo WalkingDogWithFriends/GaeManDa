@@ -5,8 +5,7 @@ import OnBoarding
 protocol DogSettingInteractable:
 	Interactable,
 	FirstDogSettingListener,
-	SecondDogSettingListener,
-	ThirdDogSettingListener {
+	SecondDogSettingListener {
 	var router: DogSettingRouting? { get set }
 	var listener: DogSettingListener? { get set }
 }
@@ -22,20 +21,15 @@ final class DogSettingRouter:
 	private let secondDogSettingBuildable: SecondDogSettingBuildable
 	private var secondDogSettingRouting: ViewableRouting?
 	
-	private let thirdDogSettingBuildable: ThirdDogSettingBuildable
-	private var thirdDogSettingRouting: ViewableRouting?
-	
 	init(
 		interactor: DogSettingInteractable,
 		viewController: ViewControllable,
 		firstDogSettingBuildable: FirstDogSettingBuildable,
-		secondDogSettingBuildable: SecondDogSettingBuildable,
-		thirdDogSettingBuildable: ThirdDogSettingBuildable
+		secondDogSettingBuildable: SecondDogSettingBuildable
 	) {
 		self.viewController = viewController
 		self.firstDogSettingBuildable = firstDogSettingBuildable
 		self.secondDogSettingBuildable = secondDogSettingBuildable
-		self.thirdDogSettingBuildable = thirdDogSettingBuildable
 		super.init(interactor: interactor)
 		interactor.router = self
 	}
@@ -46,9 +40,6 @@ final class DogSettingRouter:
 	}
 	
 	func cleanupViews() {
-		if thirdDogSettingRouting != nil {
-			viewController.popViewController(animated: true)
-		}
 		if secondDogSettingRouting != nil {
 			viewController.popViewController(animated: true)
 		}
@@ -120,40 +111,6 @@ extension DogSettingRouter {
 		guard let router = secondDogSettingRouting else { return }
 		
 		secondDogSettingRouting = nil
-		detachChild(router)
-	}
-	
-	func secondDogSettingDidFinish() {
-		thirdDogSettingAttach()
-	}
-}
-
-// MARK: ThirdDogSetting
-extension DogSettingRouter {
-	func thirdDogSettingAttach() {
-		if thirdDogSettingRouting != nil { return }
-		
-		let router = thirdDogSettingBuildable.build(withListener: interactor)
-		viewController.pushViewController(
-			router.viewControllable,
-			animated: true
-		)
-		thirdDogSettingRouting = router
-		attachChild(router)
-	}
-	
-	func thirdDogSettingDetach() {
-		guard let router = thirdDogSettingRouting else { return }
-		
-		viewController.popViewController(animated: true)
-		thirdDogSettingRouting = nil
-		detachChild(router)
-	}
-	
-	func thirdDogSettingDismiss() {
-		guard let router = thirdDogSettingRouting else { return }
-		
-		thirdDogSettingRouting = nil
 		detachChild(router)
 	}
 }
