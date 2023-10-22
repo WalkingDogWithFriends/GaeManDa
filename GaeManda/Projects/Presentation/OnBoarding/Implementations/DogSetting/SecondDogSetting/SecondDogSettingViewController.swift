@@ -27,8 +27,10 @@ final class SecondDogSettingViewController:
 	private let navigationBar = GMDNavigationBar(title: "")
 	private let onBoardingView = OnBoardingView(willDisplayImageView: true, title: "우리 아이를 등록해주세요! (2/2)")
 	
-	private let dogBreedDropDownView = DropDownView(title: "우리 아이 종")
-	private let dogCharacterDropDownView = DropDownView(title: "우리 아이 성격")
+	private let dogBreedDropDownButton = DropDownButton(text: "우리 아이 종", mode: .title)
+	private let dogCharacterDropDownButton = DropDownButton(text: "우리 아이 성격", mode: .title)
+	private let dogBreedDropDownView = DropDownView()
+	private let dogCharacterDropDownView = DropDownView()
 	
 	private let buttonStackView: UIStackView = {
 		let stackView = UIStackView()
@@ -49,8 +51,6 @@ final class SecondDogSettingViewController:
 		super.viewDidLoad()
 		registerDropDrownViews(dogBreedDropDownView, dogCharacterDropDownView)
 		
-		dogBreedDropDownView.dataSource = viewModel.dogBreedDataSource
-		dogCharacterDropDownView.dataSource = viewModel.dogCharacterDataSource
 		setupUI()
 	}
 	
@@ -82,13 +82,14 @@ final class SecondDogSettingViewController:
 
 		setViewHierarchy()
 		setConstraints()
+		setDropDown()
 		bind()
 	}
 	
 	override func setViewHierarchy() {
 		super.setViewHierarchy()
 		contentView.addSubviews(
-			navigationBar, onBoardingView, dogBreedDropDownView, dogCharacterDropDownView, buttonStackView, confirmButton
+			navigationBar, onBoardingView, dogBreedDropDownButton, dogCharacterDropDownButton, buttonStackView, confirmButton
 		)
 		buttonStackView.addArrangedSubviews(didNeuterButton, didNotNeuterButton)
 	}
@@ -106,20 +107,32 @@ final class SecondDogSettingViewController:
 			make.trailing.equalToSuperview().offset(-32)
 		}
 		
-		dogBreedDropDownView.snp.makeConstraints { make in
+		dogBreedDropDownButton.snp.makeConstraints { make in
 			make.leading.equalToSuperview().offset(28)
 			make.top.equalTo(onBoardingView.snp.bottom).offset(56)
 			make.width.equalTo(216)
 		}
 		
-		dogCharacterDropDownView.snp.makeConstraints { make in
+		dogCharacterDropDownButton.snp.makeConstraints { make in
 			make.leading.equalToSuperview().offset(28)
-			make.top.equalTo(dogBreedDropDownView.snp.bottom).offset(48)
+			make.top.equalTo(dogBreedDropDownButton.snp.bottom).offset(48)
 			make.width.equalTo(300)
 		}
 		
+		dogBreedDropDownView.setConstraints { [weak self] make in
+			guard let self = self else { return }
+			make.leading.width.equalTo(self.dogBreedDropDownButton)
+			make.top.equalTo(self.dogBreedDropDownButton.snp.bottom)
+		}
+		
+		dogCharacterDropDownView.setConstraints { [weak self] make in
+			guard let self = self else { return }
+			make.leading.width.equalTo(self.dogCharacterDropDownButton)
+			make.top.equalTo(self.dogCharacterDropDownButton.snp.bottom)
+		}
+		
 		buttonStackView.snp.makeConstraints { make in
-			make.top.equalTo(dogCharacterDropDownView.snp.bottom).offset(52)
+			make.top.equalTo(dogCharacterDropDownButton.snp.bottom).offset(52)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 			make.height.equalTo(40)
@@ -134,10 +147,19 @@ final class SecondDogSettingViewController:
 		}
 	}
 	
+	private func setDropDown() {
+		dogBreedDropDownView.anchorView = dogBreedDropDownButton
+		dogCharacterDropDownView.anchorView = dogCharacterDropDownButton
+		
+		dogBreedDropDownView.dataSource = viewModel.dogBreedDataSource
+		dogCharacterDropDownView.dataSource = viewModel.dogCharacterDataSource
+	}
+	
 	// MARK: - UI Binding
 	override func bind() {
 		super.bind()
 		bindNavigationBar()
+		bindDropDown()
 		bindConfirmButton()
 	}
 	
@@ -145,6 +167,20 @@ final class SecondDogSettingViewController:
 		navigationBar.backButton.rx.tap
 			.bind(with: self) { owner, _ in
 				owner.listener?.didTapBackButton()
+			}
+			.disposed(by: disposeBag)
+	}
+	
+	private func bindDropDown() {
+		dogBreedDropDownView.selectedOptionRelay
+			.bind(with: self) { owner, selectedOption in
+				owner.dogBreedDropDownButton.setTitle(selectedOption, for: .option)
+			}
+			.disposed(by: disposeBag)
+		
+		dogCharacterDropDownView.selectedOptionRelay
+			.bind(with: self) { owner, selectedOption in
+				owner.dogCharacterDropDownButton.setTitle(selectedOption, for: .option)
 			}
 			.disposed(by: disposeBag)
 	}
