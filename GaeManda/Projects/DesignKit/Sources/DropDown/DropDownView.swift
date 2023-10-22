@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxCocoa
 import SnapKit
 import GMDExtensions
 
@@ -35,7 +36,12 @@ public final class DropDownView: UIView {
 	}
 		
 	/// DropDown의 현재 선택된 항목을 알 수 있습니다.
-	public private(set) var selectedOption: String?
+	public private(set) var selectedOption: String? {
+		didSet {
+			selectedOptionRelay.accept(selectedOption)
+		}
+	}
+	public let selectedOptionRelay: BehaviorRelay<String?>
 		
 	// MARK: - UI Components
 	private let stackView: UIStackView = {
@@ -53,6 +59,7 @@ public final class DropDownView: UIView {
 	
 	// MARK: - Initializers
 	public init() {
+		self.selectedOptionRelay = BehaviorRelay(value: nil)
 		super.init(frame: .zero)
 		dropDownTableView.dataSource = self
 		dropDownTableView.delegate = self
@@ -66,6 +73,7 @@ public final class DropDownView: UIView {
 		self.init()
 		self.selectedOption = selectedOption
 		
+		self.selectedOptionRelay.accept(selectedOption)
 		self.setButtonTitle(title)
 		self.setButtonOption(selectedOption)
 	}
