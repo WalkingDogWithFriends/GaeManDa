@@ -112,7 +112,8 @@ final class FirstDogSettingViewController:
 	private func setupUI() {
 		dogNameTextField.setRightView(maximumTextCountLabel)
 		calenderTextField.setRightView(calenderButton)
-
+		confirmButton.isPositive = false
+		
 		setViewHierarchy()
 		setConstraints()
 		bind()
@@ -151,7 +152,7 @@ final class FirstDogSettingViewController:
 			make.trailing.equalToSuperview().offset(-32)
 			make.height.equalTo(40)
 		}
-		print((54 - UIDevice.safeAreaBottomHeight))
+
 		confirmButton.snp.makeConstraints { make in
 			make.top.equalTo(buttonStackView.snp.bottom).offset(58)
 			make.leading.equalToSuperview().offset(32)
@@ -168,6 +169,7 @@ final class FirstDogSettingViewController:
 		bindOnboardingView()
 		bindTextField()
 		bindButtons()
+		bindConfirmButton()
 	}
 	
 	private func bindNavigation() {
@@ -239,20 +241,28 @@ final class FirstDogSettingViewController:
 			.map { $0 == .female }
 			.drive(femaleButton.rx.isSelected)
 			.disposed(by: disposeBag)
-		
+	}
+	
+	private func bindConfirmButton() {
 		// 닉네임, 생일 입력 여부 Observable
 		let textFieldsTextEmptyObservable = Observable
 			.combineLatest(
-				dogNameTextField.textField.rx.text.orEmpty,
-				calenderTextField.textField.rx.text.orEmpty
+				dogNameTextField.rx.text.orEmpty,
+				calenderTextField.rx.text.orEmpty,
+				dogWeightTextField.rx.text.orEmpty
 			)
-			.map { (!$0.0.isEmpty, !$0.1.isEmpty) }
-			.asDriver(onErrorJustReturn: (false, false))
+			.map { (!$0.0.isEmpty, !$0.1.isEmpty, !$0.2.isEmpty) }
+			.asDriver(onErrorJustReturn: (false, false, false))
+		
+		textFieldsTextEmptyObservable
+			.map { $0 && $1 && $2 }
+			.drive(confirmButton.rx.isPositive)
+			.disposed(by: disposeBag)
 		
 		// 닉네임, 생일이 모두 입력되었을 경우
 		confirmButton.rx.tap
 			.withLatestFrom(textFieldsTextEmptyObservable)
-			.map { $0 && $1 }
+			.map { $0 && $1 && $2 }
 			.filter { $0 == true }
 			.bind(with: self) { owner, _ in
 				owner.listener?.didTapConfirmButton()
@@ -265,6 +275,7 @@ final class FirstDogSettingViewController:
 			.bind(with: self) { owner, isEmpty in
 				owner.dogNameTextField.mode = isEmpty.0 ? .normal : .warning
 				owner.calenderTextField.mode = isEmpty.1 ? .normal : .warning
+				owner.dogWeightTextField.mode = isEmpty.2 ? .normal : .warning
 			}
 			.disposed(by: disposeBag)
 	}
