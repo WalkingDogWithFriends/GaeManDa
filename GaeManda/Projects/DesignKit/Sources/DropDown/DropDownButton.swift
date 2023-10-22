@@ -10,15 +10,15 @@ import UIKit
 import SnapKit
 import GMDExtensions
 
-final class DropDownButton: UIView {
+public final class DropDownButton: UIView {
 	// MARK: - DropDownTextMode
-	enum DropDownTextMode {
+	public enum DropDownTextMode {
 		case title
 		case option
 	}
 	
 	// MARK: - Properties
-	var textMode: DropDownTextMode = .title {
+	public var textMode: DropDownTextMode = .title {
 		didSet {
 			switch textMode {
 			case .title:
@@ -48,13 +48,18 @@ final class DropDownButton: UIView {
 	}()
 	
 	// MARK: - Initializers
-	init() {
+	public init() {
 		super.init(frame: .zero)
 		layer.cornerRadius = 4
 		layer.borderWidth = 1
 		layer.borderColor = UIColor.gray90.cgColor
 		
 		setupUI()
+	}
+	
+	public convenience init(text: String, mode: DropDownTextMode) {
+		self.init()
+		setTitle(text, for: mode)
 	}
 	
 	@available(*, unavailable)
@@ -88,9 +93,9 @@ private extension DropDownButton {
 	}
 }
 
-// MARK: - Internel Methods
-extension DropDownButton {
-	func setTitle(_ title: String, for mode: DropDownTextMode) {
+// MARK: - Public Methods
+public extension DropDownButton {
+	func setTitle(_ title: String?, for mode: DropDownTextMode) {
 		self.textMode = mode
 		self.label.text = title
 	}
