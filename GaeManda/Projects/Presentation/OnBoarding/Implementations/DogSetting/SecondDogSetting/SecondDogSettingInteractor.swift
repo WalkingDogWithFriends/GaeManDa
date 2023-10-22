@@ -7,8 +7,8 @@ protocol SecondDogSettingPresentable: Presentable {
 }
 
 protocol SecondDogSettingListener: AnyObject {
-	func secondDogSettingDidFinish()
-	func secondDogSettingBackButtonDidTap()
+	func secondDogSettingDidTapConfirmButton()
+	func secondDogSettingDidTaBackButtonp()
 	func secondDogSettingDismiss()
 }
 
@@ -35,12 +35,12 @@ final class SecondDogSettingInteractor:
 
 // MARK: PresentableListener
 extension SecondDogSettingInteractor {
-	func confirmButtonDidTap() {
-		listener?.secondDogSettingDidFinish()
+	func didTapConfirmButton() {
+		listener?.secondDogSettingDidTapConfirmButton()
 	}
 	
-	func backButtonDidTap() {
-		listener?.secondDogSettingBackButtonDidTap()
+	func didTapBackButton() {
+		listener?.secondDogSettingDidTaBackButtonp()
 	}
 	
 	func dismiss() {

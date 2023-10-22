@@ -70,7 +70,7 @@ final class OnBoardingRouter:
 	private let viewController: ViewControllable
 }
 
-// MARK: TermsOfUse
+// MARK: - TermsOfUse
 extension OnBoardingRouter {
 	func termsOfUseAttach() {
 		if termsOfUseRouting != nil { return }
@@ -89,13 +89,9 @@ extension OnBoardingRouter {
 		termsOfUseRouting = nil
 		detachChild(router)
 	}
-	
-	func termsOfUseDidFinish() {
-		addressSettingAttach()
-	}
 }
 
-// MARK: AddressSetting
+// MARK: - AddressSetting
 extension OnBoardingRouter {
 	func addressSettingAttach() {
 		if addressSettingRouting != nil { return }
@@ -121,13 +117,9 @@ extension OnBoardingRouter {
 		addressSettingRouting = nil
 		detachChild(router)
 	}
-	
-	func addressSettingDidFinish() {
-		userSettingAttach()
-	}
 }
 
-// MARK: DetailAddressSetting
+// MARK: - DetailAddressSetting
 extension OnBoardingRouter {
 	func detailAddressSettingAttach() {
 		if detailAddressSettingRouting != nil { return }
@@ -155,7 +147,7 @@ extension OnBoardingRouter {
 	}
 }
 
-// MARK: UserSetting
+// MARK: - UserSetting
 extension OnBoardingRouter {
 	func userSettingAttach() {
 		if userSettingRouting != nil { return }
@@ -181,21 +173,14 @@ extension OnBoardingRouter {
 		userSettingRouting = nil
 		detachChild(router)
 	}
-	
-	func userSettingDidFinish() {
-		dogSettingAttach()
-	}
 }
 
-// MARK: DogSetting
+// MARK: - DogSetting
 extension OnBoardingRouter {
 	func dogSettingAttach() {
 		if dogSettingRouting != nil { return }
 		
-		let router = dogSettingBuildable.build(
-			withListener: interactor,
-			navigationControllerable: navigationControllerable
-		)
+		let router = dogSettingBuildable.build(withListener: interactor)
 		dogSettingRouting = router
 		attachChild(router)
 	}
@@ -208,9 +193,9 @@ extension OnBoardingRouter {
 	}
 }
 	
-// MARK: NavigationControllable Extension
+// MARK: - NavigationControllable Extension
 private extension OnBoardingRouter {
-	private func presentInsideNavigation(_ viewControllable: ViewControllable) {
+	func presentInsideNavigation(_ viewControllable: ViewControllable) {
 		if let navigation = navigationControllerable {
 			navigation.setViewControllers([viewControllable])
 		} else {
@@ -218,7 +203,7 @@ private extension OnBoardingRouter {
 		}
 	}
 	
-	private func createNavigation(_ viewControllable: ViewControllable) {
+	func createNavigation(_ viewControllable: ViewControllable) {
 		let navigation = NavigationControllerable(root: viewControllable)
 		self.navigationControllerable = navigation
 		viewController.present(
@@ -228,7 +213,7 @@ private extension OnBoardingRouter {
 		)
 	}
 	
-	private func dismissPresentedNavigation(completion: (() -> Void)?) {
+	func dismissPresentedNavigation(completion: (() -> Void)?) {
 		if self.navigationControllerable == nil { return }
 		
 		viewController.dismiss(completion: nil)

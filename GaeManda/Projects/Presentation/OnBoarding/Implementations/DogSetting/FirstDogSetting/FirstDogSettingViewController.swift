@@ -10,8 +10,8 @@ import GMDUtils
 import GMDExtensions
 
 protocol FirstDogSettingPresentableListener: AnyObject {
-	func confirmButtonDidTap()
-	func backButtonDidTap()
+	func didTapConfirmButton()
+	func didTapBackButton()
 	func dismiss()
 }
 
@@ -173,7 +173,7 @@ final class FirstDogSettingViewController:
 	private func bindNavigation() {
 		navigationBar.backButton.rx.tap
 			.bind(with: self) { owner, _ in
-				owner.listener?.backButtonDidTap()
+				owner.listener?.didTapBackButton()
 			}
 			.disposed(by: disposeBag)
 	}
@@ -255,7 +255,7 @@ final class FirstDogSettingViewController:
 			.map { $0 && $1 }
 			.filter { $0 == true }
 			.bind(with: self) { owner, _ in
-				owner.listener?.confirmButtonDidTap()
+				owner.listener?.didTapConfirmButton()
 			}
 			.disposed(by: disposeBag)
 		
