@@ -4,7 +4,7 @@ import RxCocoa
 import RxSwift
 import SnapKit
 import DesignKit
-import GMDExtensions
+import Entity
 import GMDUtils
 
 protocol SecondDogSettingPresentableListener: AnyObject {
@@ -138,6 +138,7 @@ final class SecondDogSettingViewController:
 	override func bind() {
 		super.bind()
 		bindNavigationBar()
+		bindButtons()
 		bindConfirmButton()
 	}
 	
@@ -149,7 +150,52 @@ final class SecondDogSettingViewController:
 			.disposed(by: disposeBag)
 	}
 	
-	private func bindConfirmButton() { }
+	private func bindButtons() {
+		// 중성화 버튼 선택 Observable
+		let selectedNeuterObservable = Observable
+			.merge(
+				didNeuterButton.rx.tap.map { Neutered.true },
+				didNotNeuterButton.rx.tap.map { Neutered.false }
+			)
+			.asDriver(onErrorJustReturn: .true)
+		
+		// `중성화 했어요`를 선태한 경우
+		selectedNeuterObservable
+			.map { $0 == .true }
+			.drive(didNeuterButton.rx.isSelected)
+			.disposed(by: disposeBag)
+		
+		// `중성화 안했어요`를 선택한 경우
+		selectedNeuterObservable
+			.map { $0 == .false }
+			.drive(didNotNeuterButton.rx.isSelected)
+			.disposed(by: disposeBag)
+	}
+	
+	private func bindConfirmButton() {
+		// 드롭다운 선택 Observable
+		let dropDownSelectedOptionObservable = Observable
+			.combineLatest(
+				dogBreedDropDownView.selectedOptionRelay,
+				dogCharacterDropDownView.selectedOptionRelay
+			)
+			.map { (($0.0 != nil), ($0.1 != nil) ) }
+			.asDriver(onErrorJustReturn: (false, false))
+	
+		dropDownSelectedOptionObservable
+			.map { $0.0 && $0.1 }
+			.drive(confirmButton.rx.isPositive)
+			.disposed(by: disposeBag)
+		
+		confirmButton.rx.tap
+			.withLatestFrom(dropDownSelectedOptionObservable)
+			.map { $0.0 && $0.1 }
+			.filter { $0 == true }
+			.bind(with: self) { owner, _ in
+				owner.listener?.didTapConfirmButton()
+			}
+			.disposed(by: disposeBag)
+	}
 }
 
 // MARK: - DropDownListener
