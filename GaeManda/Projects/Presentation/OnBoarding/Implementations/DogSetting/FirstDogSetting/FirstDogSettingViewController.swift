@@ -12,12 +12,12 @@ import GMDExtensions
 protocol FirstDogSettingPresentableListener: AnyObject {
 	func confirmButtonDidTap()
 	func backButtonDidTap()
+	func didTapBirthdayPicker()
 	func dismiss()
 }
 
 final class FirstDogSettingViewController:
 	BaseViewController,
-	FirstDogSettingPresentable,
 	FirstDogSettingViewControllable {
 	// MARK: - Properties
 	weak var listener: FirstDogSettingPresentableListener?
@@ -200,7 +200,7 @@ final class FirstDogSettingViewController:
 	private func bindButtons() {
 		calenderButton.rx.tap
 			.bind(with: self) { owner, _ in
-				owner.calenderButtonDidTap()
+				owner.listener?.didTapBirthdayPicker()
 			}
 			.disposed(by: disposeBag)
 		
@@ -254,13 +254,6 @@ final class FirstDogSettingViewController:
 	}
 }
 
-// MARK: - Action
-private extension FirstDogSettingViewController {
-	func calenderButtonDidTap() {
-		print("calenderButtonDidTap")
-	}
-}
-
 extension FirstDogSettingViewController: PHPickerViewControllerDelegate {
 	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
 		picker.dismiss(animated: true)
@@ -271,5 +264,11 @@ extension FirstDogSettingViewController: PHPickerViewControllerDelegate {
 			case .failure: break //
 			}
 		}
+	}
+}
+
+extension FirstDogSettingViewController: FirstDogSettingPresentable {
+	func setBirthday(date: String) {
+		self.calenderTextField.text = date
 	}
 }
