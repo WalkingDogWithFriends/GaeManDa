@@ -2,26 +2,29 @@ import UIKit
 import GMDExtensions
 
 public class GMDOptionButton: UIButton {
+	// MARK: - Properties
 	public override var isSelected: Bool {
 		didSet {
 			isSelected ? buttonSeleceted() : buttonDisSelected()
 		}
 	}
 	
-	public init(title: String) {
+	// MARK: - Initializers
+	public init(title: String, isSelected: Bool = false) {
 		super.init(frame: .zero)
 		
 		self.layer.cornerRadius = 4
-		self.backgroundColor = .gray60
-		self.setTitleColor(.white, for: .normal)
 		self.setTitle(title, for: .normal)
 		self.titleLabel?.font = .b16
+		
+		defer { self.isSelected = isSelected }
 	}
 	
 	required init?(coder: NSCoder) {
 		super.init(coder: coder)
 	}
 	
+	// MARK: - Methods
 	private func buttonDisSelected() {
 		backgroundColor = .gray60
 	}
