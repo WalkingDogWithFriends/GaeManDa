@@ -25,8 +25,7 @@ public extension DropDownListener where Self: UIViewController {
 	func hit(at hitView: UIView) {
 		dropDownViews?.forEach { view in
 			if
-				let hitSuperView = hitView.superview,
-				view === hitSuperView {
+				view.anchorView === hitView {
 				view.isDisplayed.toggle()
 			} else {
 				view.isDisplayed = false

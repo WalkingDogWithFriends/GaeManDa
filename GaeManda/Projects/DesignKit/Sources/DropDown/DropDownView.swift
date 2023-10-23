@@ -7,67 +7,47 @@
 //
 
 import UIKit
+import RxCocoa
+import RxSwift
 import SnapKit
 import GMDExtensions
 
 public final class DropDownView: UIView {
 	// MARK: - Properties
 	public weak var listener: DropDownListener?
+	public weak var anchorView: AnchorView?
 	
-	/// DropDownView에서 button의 buttom Constraint를 리턴합니다.
-	public var viewBottom: ConstraintItem {
-		self.dropDownButton.snp.bottom
-	}
-
-	/// DropDown을 띄울지 여부입니다.
+	/// DropDown을 띄울 Constraint를 적용합니다.
+	private var dropDownConstraints: ((ConstraintMaker) -> Void)?
+	
+	/// DropDown을 display할지 결정합니다.
 	public var isDisplayed: Bool = false {
 		didSet {
-			isDisplayed ? displayDropDown() : hideDropDown()
+			isDisplayed ? displayDropDown(with: dropDownConstraints) : hideDropDown()
 		}
 	}
-	
+
 	/// DropDown에 띄울 목록들을 정의합니다.
 	public var dataSource = [String]() {
-		didSet {
-			updateDropDownTableViewHeight()
-			dropDownTableView.reloadData()
-		}
+		didSet { dropDownTableView.reloadData() }
 	}
 		
 	/// DropDown의 현재 선택된 항목을 알 수 있습니다.
 	public private(set) var selectedOption: String?
-		
-	// MARK: - UI Components
-	private let stackView: UIStackView = {
-		let stackView = UIStackView()
-		stackView.axis = .vertical
-		stackView.alignment = .fill
-		stackView.distribution = .equalSpacing
-		stackView.spacing = 0
-		
-		return stackView
-	}()
 	
-	private let dropDownButton = DropDownButton()
-	private let dropDownTableView = DropDownTableView()
+	// MARK: - UI Components
+	fileprivate let dropDownTableView = DropDownTableView()
 	
 	// MARK: - Initializers
 	public init() {
 		super.init(frame: .zero)
 		dropDownTableView.dataSource = self
 		dropDownTableView.delegate = self
-		setupUI()
 	}
 	
-	convenience public init(
-		title: String? = nil,
-		selectedOption: String? = nil
-	) {
+	convenience public init(selectedOption: String) {
 		self.init()
 		self.selectedOption = selectedOption
-		
-		self.setButtonTitle(title)
-		self.setButtonOption(selectedOption)
 	}
 	
 	@available(*, unavailable)
@@ -76,25 +56,7 @@ public final class DropDownView: UIView {
 	}
 }
 
-// MARK: - UI Methods
-private extension DropDownView {
-	func setupUI() {
-		setViewHierarchy()
-		setConstraints()
-	}
-	
-	func setViewHierarchy() {
-		addSubview(dropDownButton)
-	}
-	
-	func setConstraints() {
-		dropDownButton.snp.makeConstraints { make in
-			make.edges.equalToSuperview()
-		}
-	}
-}
-
-// MARK: - UITableViewDelegate
+// MARK: - UITableViewDataSource
 extension DropDownView: UITableViewDataSource {
 	public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return dataSource.count
@@ -119,52 +81,35 @@ extension DropDownView: UITableViewDelegate {
 		listener?.dropdown(self, didSelectRowAt: indexPath)
 		selectedOption = dataSource[indexPath.row]
 		dropDownTableView.selectRow(at: indexPath)
-		setButtonOption(selectedOption)
 		isDisplayed = false
 	}
 }
 
 // MARK: - DropDown Logic
 extension DropDownView {
+	/// DropDownList를 보여줍니다.
+	public func displayDropDown(with constraints: ((ConstraintMaker) -> Void)?) {
+		guard let constraints = constraints else { return }
+				
+		UIWindow.key?.addSubview(dropDownTableView)
+		dropDownTableView.snp.makeConstraints(constraints)
+	}
+	
 	/// DropDownList를 숨김니다.
 	public func hideDropDown() {
 		dropDownTableView.removeFromSuperview()
 		dropDownTableView.snp.removeConstraints()
 	}
 	
-	/// DropDownList를 보여줍니다.
-	public func displayDropDown() {
-		UIWindow.key?.addSubview(dropDownTableView)
+	public func setConstraints(_ closure: @escaping (_ make: ConstraintMaker) -> Void) {
+		self.dropDownConstraints = closure
+	}
+}
 
-		dropDownTableView.snp.makeConstraints { make in
-			make.width.equalTo(dropDownButton.snp.width)
-			make.leading.equalTo(dropDownButton)
-			make.top.equalTo(viewBottom)
-			make.height.equalTo(self.getTableViewHeight())
-		}
-	}
-	
-	/// DropDownButton의 Title을 설정합니다.
-	public func setButtonTitle(_ title: String?) {
-		guard let title = title else { return }
-		dropDownButton.setTitle(title, for: .title)
-	}
-	
-	/// DropDownButton의 Title을 선택된 Option으로 설정합니다.
-	public func setButtonOption(_ selectedOption: String?) {
-		guard let selectedOption = selectedOption else { return }
-		dropDownButton.setTitle(selectedOption, for: .option)
-	}
-	
-	private func updateDropDownTableViewHeight() {
-		UIView.animate(withDuration: 0.3) {
-			self.dropDownTableView.snp.updateConstraints { make in
-				make.height.equalTo(self.getTableViewHeight())
-			}
-		}
-	}
-	
-	private func getTableViewHeight() -> CGFloat {
-		return min(CGFloat(dataSource.count) * 32, 192)
+public extension Reactive where Base: DropDownView {
+	var selectedOption: ControlEvent<String> {
+		let source = base.dropDownTableView.rx.itemSelected.map { base.dataSource[$0.row] }
+		
+		return ControlEvent(events: source)
 	}
 }
