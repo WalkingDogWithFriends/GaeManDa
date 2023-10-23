@@ -42,9 +42,9 @@ final class SecondDogSettingViewController:
 		return stackView
 	}()
 	
-	private let didNeuterButton = GMDOptionButton(title: "했어요")
+	private let didNeuterButton = GMDOptionButton(title: "했어요", isSelected: true)
 	private let didNotNeuterButton = GMDOptionButton(title: "안 했어요")
-	private let confirmButton = ConfirmButton(title: "확인")
+	private let confirmButton = ConfirmButton(title: "확인", isPositive: false)
 	
 	// MARK: - Life Cycles
 	override func viewDidLoad() {
@@ -78,8 +78,6 @@ final class SecondDogSettingViewController:
 	
 	// MARK: - UI Methods
 	private func setupUI() {
-		didNeuterButton.isSelected = true
-
 		setViewHierarchy()
 		setConstraints()
 		setDropDown()
@@ -183,7 +181,27 @@ final class SecondDogSettingViewController:
 			.disposed(by: disposeBag)
 	}
 	
-	private func bindConfirmButton() { }
+	private func bindConfirmButton() {
+		let dropDownSelectedObservable = Observable.combineLatest(
+			dogBreedDropDownView.rx.isSelectedOption,
+			dogCharacterDropDownView.rx.isSelectedOption
+		)
+			.asDriver(onErrorJustReturn: (false, false))
+		
+		dropDownSelectedObservable
+			.map { $0 && $1 }
+			.drive(confirmButton.rx.isPositive)
+			.disposed(by: disposeBag)
+		
+		confirmButton.rx.tap
+			.withLatestFrom(dropDownSelectedObservable)
+			.map { $0 && $1 }
+			.filter { $0 == true }
+			.bind(with: self) { owner, _ in
+				owner.listener?.didTapConfirmButton()
+			}
+			.disposed(by: disposeBag)
+	}
 }
 
 // MARK: - DropDownListener
