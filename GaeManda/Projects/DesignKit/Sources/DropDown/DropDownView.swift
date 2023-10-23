@@ -8,6 +8,7 @@
 
 import UIKit
 import RxCocoa
+import RxSwift
 import SnapKit
 import GMDExtensions
 
@@ -30,20 +31,15 @@ public final class DropDownView: UIView {
 	public var dataSource = [String]() {
 		didSet { dropDownTableView.reloadData() }
 	}
-	
-	public let selectedOptionRelay: PublishRelay<String?>
 		
 	/// DropDown의 현재 선택된 항목을 알 수 있습니다.
-	public private(set) var selectedOption: String? {
-		didSet { selectedOptionRelay.accept(selectedOption) }
-	}
-		
+	public private(set) var selectedOption: String?
+	
 	// MARK: - UI Components
-	private let dropDownTableView = DropDownTableView()
+	fileprivate let dropDownTableView = DropDownTableView()
 	
 	// MARK: - Initializers
 	public init() {
-		self.selectedOptionRelay = PublishRelay()
 		super.init(frame: .zero)
 		dropDownTableView.dataSource = self
 		dropDownTableView.delegate = self
@@ -52,7 +48,6 @@ public final class DropDownView: UIView {
 	convenience public init(selectedOption: String) {
 		self.init()
 		self.selectedOption = selectedOption
-		self.selectedOptionRelay.accept(selectedOption)
 	}
 	
 	@available(*, unavailable)
@@ -108,5 +103,13 @@ extension DropDownView {
 	
 	public func setConstraints(_ closure: @escaping (_ make: ConstraintMaker) -> Void) {
 		self.dropDownConstraints = closure
+	}
+}
+
+public extension Reactive where Base: DropDownView {
+	var selectedOption: ControlEvent<String> {
+		let source = base.dropDownTableView.rx.itemSelected.map { base.dataSource[$0.row] }
+		
+		return ControlEvent(events: source)
 	}
 }

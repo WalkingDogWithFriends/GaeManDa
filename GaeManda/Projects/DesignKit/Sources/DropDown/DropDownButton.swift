@@ -7,16 +7,17 @@
 //
 
 import UIKit
+import RxSwift
 import SnapKit
 import GMDExtensions
 
+// MARK: - DropDownTextMode
+public enum DropDownTextMode {
+	case title
+	case option
+}
+
 public final class DropDownButton: UIView {
-	// MARK: - DropDownTextMode
-	public enum DropDownTextMode {
-		case title
-		case option
-	}
-	
 	// MARK: - Properties
 	public var textMode: DropDownTextMode = .title {
 		didSet {
@@ -98,5 +99,13 @@ public extension DropDownButton {
 	func setTitle(_ title: String?, for mode: DropDownTextMode) {
 		self.textMode = mode
 		self.label.text = title
+	}
+}
+
+public extension Reactive where Base: DropDownButton {
+	var title: Binder<(title: String?, mode: DropDownTextMode)> {
+		return Binder(self.base) { button, arguments in
+			button.setTitle(arguments.title, for: arguments.mode)
+		}
 	}
 }

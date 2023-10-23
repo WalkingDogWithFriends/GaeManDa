@@ -120,13 +120,13 @@ final class SecondDogSettingViewController:
 		}
 		
 		dogBreedDropDownView.setConstraints { [weak self] make in
-			guard let self = self else { return }
+			guard let self else { return }
 			make.leading.width.equalTo(self.dogBreedDropDownButton)
 			make.top.equalTo(self.dogBreedDropDownButton.snp.bottom)
 		}
 		
 		dogCharacterDropDownView.setConstraints { [weak self] make in
-			guard let self = self else { return }
+			guard let self else { return }
 			make.leading.width.equalTo(self.dogCharacterDropDownButton)
 			make.top.equalTo(self.dogCharacterDropDownButton.snp.bottom)
 		}
@@ -172,16 +172,14 @@ final class SecondDogSettingViewController:
 	}
 	
 	private func bindDropDown() {
-		dogBreedDropDownView.selectedOptionRelay
-			.bind(with: self) { owner, selectedOption in
-				owner.dogBreedDropDownButton.setTitle(selectedOption, for: .option)
-			}
+		dogBreedDropDownView.rx.selectedOption
+			.map { ($0, .option) }
+			.bind(to: dogBreedDropDownButton.rx.title)
 			.disposed(by: disposeBag)
 		
-		dogCharacterDropDownView.selectedOptionRelay
-			.bind(with: self) { owner, selectedOption in
-				owner.dogCharacterDropDownButton.setTitle(selectedOption, for: .option)
-			}
+		dogCharacterDropDownView.rx.selectedOption
+			.map { ($0, .option) }
+			.bind(to: dogCharacterDropDownButton.rx.title)
 			.disposed(by: disposeBag)
 	}
 	
