@@ -1,6 +1,6 @@
 //
 //  BirthdayPicker.swift
-//  OnBoardingImpl
+//  DesignKit
 //
 //  Created by 김영균 on 9/23/23.
 //  Copyright © 2023 com.gaemanda. All rights reserved.

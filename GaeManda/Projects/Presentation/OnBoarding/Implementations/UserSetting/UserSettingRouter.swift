@@ -1,9 +1,9 @@
 import Foundation
 import RIBs
+import DesignKit
 import OnBoarding
 
-protocol UserSettingInteractable: Interactable,
-																	BirthdayPickerListener {
+protocol UserSettingInteractable: Interactable, BirthdayPickerListener {
 	var router: UserSettingRouting? { get set }
 	var listener: UserSettingListener? { get set }
 }

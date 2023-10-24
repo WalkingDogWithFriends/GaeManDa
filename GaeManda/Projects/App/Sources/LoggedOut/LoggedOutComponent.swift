@@ -1,4 +1,5 @@
 import RIBs
+import DesignKit
 import GMDUtils
 import OnBoarding
 import OnBoardingImpl

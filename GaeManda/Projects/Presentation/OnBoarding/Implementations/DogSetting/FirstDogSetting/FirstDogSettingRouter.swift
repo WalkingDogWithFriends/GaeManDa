@@ -1,4 +1,5 @@
 import RIBs
+import DesignKit
 import OnBoarding
 
 protocol FirstDogSettingInteractable: Interactable, BirthdayPickerListener {
