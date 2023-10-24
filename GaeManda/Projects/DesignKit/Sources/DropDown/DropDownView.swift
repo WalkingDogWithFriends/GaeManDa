@@ -112,4 +112,11 @@ public extension Reactive where Base: DropDownView {
 		
 		return ControlEvent(events: source)
 	}
+
+	var isSelectedOption: ControlEvent<Bool> {
+		let itemSelected = base.dropDownTableView.rx.itemSelected.map { _ in true }
+		let source = Observable.of(false).concat(itemSelected)
+		
+		return ControlEvent(events: source)
+	}
 }
