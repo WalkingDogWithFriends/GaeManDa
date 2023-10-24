@@ -15,7 +15,6 @@ public final class ConfirmButton: UIButton {
 	public var isPositive: Bool {
 		didSet {
 			isPositive ? setPositiveState() : setNegativeState()
-			isUserInteractionEnabled = isPositive
 		}
 	}
 	

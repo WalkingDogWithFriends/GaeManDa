@@ -135,16 +135,6 @@ private extension TermsOfUseViewController {
 	}
 }
 
-// MARK: - Inner Action Methods
-private extension TermsOfUseViewController {
-	func setAllButton(to isChecked: Bool) {
-		tableView.visibleCells.forEach {
-			guard let cell = $0 as? TermsOfUseCell else { return }
-			cell.setButtonChecked(isChecked)
-		}
-	}
-}
-
 extension TermsOfUseViewController: TermsOfUsePresentable {
 	func set약관전체동의Button(isChecked: Bool) {
 		agreeAllButton.isChecked = isChecked
@@ -171,6 +161,7 @@ extension TermsOfUseViewController: TermsOfUsePresentable {
 	}
 	
 	func setConfirmButton(isEnabled: Bool) {
+		self.confirmButton.isUserInteractionEnabled = isEnabled
 		self.confirmButton.isPositive = isEnabled
 	}
 }
