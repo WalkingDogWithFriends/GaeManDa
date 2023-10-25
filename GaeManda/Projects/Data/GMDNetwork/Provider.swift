@@ -47,8 +47,8 @@ private extension Provider {
 				Task {
 					let data = try await session.request(request: urlRequest)
 					let decoder = JSONDecoder()
-					let decodedData = try decoder.decode(T.self, from: data)
-					single(.success(decodedData))
+					let decodedData = try decoder.decode(BaseResponse.ExistData<T>.self, from: data)
+					single(.success(decodedData.data))
 				}
 			} catch {
 				single(.failure(error))

@@ -19,42 +19,43 @@ enum UserAPI {
 
 extension UserAPI: TargetType {
 	public var baseURL: URL {
-		return URL(string: "")!
+		return URL(string: "http://117.17.198.45:8000/api/member")!
 	}
 	
 	public var path: String {
 		switch self {
-		case .fetchUser, .updateUser:
-			return "user"
+			case .fetchUser, .updateUser:
+				return "/profile"
 		}
 	}
 	
 	public var method: HTTPMethod {
 		switch self {
-		case .fetchUser:
-			return .get
-		case .updateUser:
-			return .put
+			case .fetchUser:
+				return .get
+			case .updateUser:
+				return .patch
 		}
 	}
 	
 	public var task: TaskType {
 		switch self {
-		case let .fetchUser(id):
-			let requestDTO = UserRequestDTO(id: id)
-			return .requestParameters(parameters: requestDTO.toDictionary, encoding: .queryString)
-		
-		case let .updateUser(nickName, age, sex):
-			let requestDTO = UpdateUserReqeustDTO(
-				nickName: nickName,
-				age: age,
-				sex: sex
-			)
-			
-			return .requestParameters(
-				parameters: requestDTO.toDictionary,
-				encoding: .jsonBody
-			)
+			case .fetchUser:
+				return .requestPlain
+				
+			case let .updateUser(nickName, age, sex):
+				let requestDTO = UserProfilePatchReqeustDTO(
+					nickname: nickName,
+					birthday: "\(age)",
+					gender: sex,
+					profileImage: Data(),
+					isFileChange: false
+				)
+				
+				return .requestParameters(
+					parameters: requestDTO.toDictionary,
+					encoding: .jsonBody
+				)
 		}
 	}
 	
@@ -64,17 +65,14 @@ extension UserAPI: TargetType {
 	
 	public var sampleData: Data {
 		switch self {
-		case .fetchUser:
-			let jsonString = UserResponseDTO.stubData
-			let data = jsonString.data(using: .utf8)
-			
-			return data ?? Data()
-			
-		case .updateUser:
-			let jsonString = UpdateUserResponseDTO.stubData
-			let data = jsonString.data(using: .utf8)
-			
-			return data ?? Data()
+			case .fetchUser:
+				let jsonString = UserProfileResponseDTO.stubData
+				let data = jsonString.data(using: .utf8)
+				
+				return data ?? Data()
+				
+			case .updateUser:
+				return Data()
 		}
 	}
 }

@@ -12,6 +12,6 @@ import Entity
 
 public protocol DogRepository {
 	func fetchDogs(id: Int) -> Single<[Dog]>
-	func updateDog(dog: Dog) -> Single<String>
-	func postNewDog(dog: Dog) -> Single<String>
+	func updateDog(dog: Dog) -> Single<Void>
+	func postNewDog(dog: Dog) -> Single<Void>
 }

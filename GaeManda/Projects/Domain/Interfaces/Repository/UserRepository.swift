@@ -17,5 +17,5 @@ public protocol UserRepository {
 		nickName: String,
 		age: Int,
 		sex: String
-	) -> Single<String>
+	) -> Single<Void>
 }
