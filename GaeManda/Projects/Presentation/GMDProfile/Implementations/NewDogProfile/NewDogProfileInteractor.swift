@@ -63,9 +63,7 @@ extension NewDogProfileInteractor {
 		dependency.gmdProfileUseCase
 			.postNewDog(dog: dog)
 			.observe(on: MainScheduler.instance)
-			.subscribe(with: self) { owner, message in
-				guard message == "success" else { return }
-
+			.subscribe(with: self) { owner, _ in
 				owner.listener?.newDogProfileDidTapConfirmButton()
 			}
 			.disposeOnDeactivate(interactor: self)

@@ -36,7 +36,7 @@ public extension GMDProfileUseCaseImpl {
 		nickName: String,
 		age: Int,
 		sex: String
-	) -> Single<String> {
+	) -> Single<Void> {
 		return userDependency.updateUser(
 			nickName: nickName,
 			age: age,
@@ -51,11 +51,11 @@ public extension GMDProfileUseCaseImpl {
 		return dogDependency.fetchDogs(id: id)
 	}
 	
-	func updateDog(dog: Dog) -> Single<String> {
+	func updateDog(dog: Dog) -> Single<Void> {
 		return dogDependency.updateDog(dog: dog)
 	}
 	
-	func postNewDog(dog: Dog) -> Single<String> {
+	func postNewDog(dog: Dog) -> Single<Void> {
 		return dogDependency.postNewDog(dog: dog)
 	}
 }

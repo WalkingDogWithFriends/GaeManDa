@@ -18,8 +18,8 @@ open class BaseViewController: UIViewController {
 	public var keyboardHideNotification: NSObjectProtocol?
 	
 	// MARK: - UI Components
-	public let scrollView: UIScrollView = {
-		let scrollView = UIScrollView()
+	public let scrollView: PassTouchesScrollView = {
+		let scrollView = PassTouchesScrollView()
 		scrollView.showsVerticalScrollIndicator = false
 		scrollView.showsHorizontalScrollIndicator = false
 		return scrollView
@@ -40,6 +40,8 @@ open class BaseViewController: UIViewController {
 	open override func viewDidLoad() {
 		super.viewDidLoad()
 		self.view.backgroundColor = .white
+		scrollView.touchesDelegate = self
+		
 		self.keyboardShowNotification = registerKeyboardShowNotification()
 		self.keyboardHideNotification = registerKeyboardHideNotification()
 		// bind
@@ -85,3 +87,6 @@ extension BaseViewController: KeyboardListener {
 		scrollView.contentInset = UIEdgeInsets.zero
 	}
 }
+
+// MARK: - PassTouchesScrollViewDelegate
+extension BaseViewController: PassTouchesScrollViewDelegate { }
