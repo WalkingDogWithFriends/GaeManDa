@@ -25,7 +25,7 @@ public extension GMDTextFieldListener where Self: UIViewController {
 		) { [weak self] notification in
 			guard
 				let textField = notification.object as? UnderLineTextField,
-				let gmdTextField = textField.superview?.superview as? GMDTextField
+				let gmdTextField = textField.superview as? GMDTextField
 			else { return }
 			
 			self?.textDidChange(gmdTextField)
@@ -38,7 +38,7 @@ public extension GMDTextFieldListener where Self: UIViewController {
 	}
 	
 	func textDidChange(_ textField: GMDTextField) {
-		textField.titleLabel.alpha = textField.text.isEmpty ? 0.0 : 1.0
+		textField.titleAlpha = textField.text.isEmpty ? 0.0 : 1.0
 		
 		if !textField.text.isEmpty {
 			textField.mode = .normal

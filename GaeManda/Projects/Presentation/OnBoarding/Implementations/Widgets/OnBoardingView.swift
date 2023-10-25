@@ -55,7 +55,7 @@ private extension OnBoardingView {
 				make.top.leading.trailing.equalToSuperview()
 			}
 			profileImageView.snp.makeConstraints { make in
-				make.top.equalTo(label.snp.bottom).offset(48)
+				make.top.equalTo(label.snp.bottom).offset(40)
 				make.width.height.equalTo(140)
 				make.centerX.equalToSuperview()
 				make.bottom.equalToSuperview()
