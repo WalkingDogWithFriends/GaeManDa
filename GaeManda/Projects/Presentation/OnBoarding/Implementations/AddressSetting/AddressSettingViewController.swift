@@ -17,7 +17,6 @@ protocol AddressSettingPresentableListener: AnyObject {
 
 final class AddressSettingViewController:
 	BaseViewController,
-	AddressSettingPresentable,
 	AddressSettingViewControllable {
 	// MARK: - Properties
 	weak var listener: AddressSettingPresentableListener?
@@ -195,4 +194,10 @@ final class AddressSettingViewController:
 			}
 			.disposed(by: disposeBag)
 	}
+}
+
+extension AddressSettingViewController: AddressSettingPresentable {
+    func setDetailAddress(_ address: String) {
+        self.searchTextField.text = address
+    }
 }

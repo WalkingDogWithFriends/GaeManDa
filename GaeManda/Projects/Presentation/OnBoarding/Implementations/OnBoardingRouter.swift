@@ -6,7 +6,6 @@ protocol OnBoardingInteractable:
 	Interactable,
 	TermsOfUseListener,
 	AddressSettingListener,
-	DetailAddressSettingListener,
 	UserSettingListener,
 	DogSettingListener {
 	var router: OnBoardingRouting? { get set }
@@ -26,9 +25,6 @@ final class OnBoardingRouter:
 	private let addressSettingBuildable: AddressSettingBuildable
 	private var addressSettingRouting: ViewableRouting?
 	
-	private let detailAddressSettingBuildable: DetailAddressSettingBuildable
-	private var detailAddressSettingRouting: ViewableRouting?
-	
 	private let userSettingBuildable: UserSettingBuildable
 	private var userSettingRouting: ViewableRouting?
 	
@@ -40,14 +36,12 @@ final class OnBoardingRouter:
 		viewController: ViewControllable,
 		termsOfUseBuildable: TermsOfUseBuildable,
 		addressSettingBuildable: AddressSettingBuildable,
-		detailAddressSettingBuildable: DetailAddressSettingBuildable,
 		userSettingBuildable: UserSettingBuildable,
 		dogSettingBuildable: DogSettingBuildable
 	) {
 		self.viewController = viewController
 		self.termsOfUseBuildable = termsOfUseBuildable
 		self.addressSettingBuildable = addressSettingBuildable
-		self.detailAddressSettingBuildable = detailAddressSettingBuildable
 		self.userSettingBuildable = userSettingBuildable
 		self.dogSettingBuildable = dogSettingBuildable
 		super.init(interactor: interactor)
@@ -119,35 +113,7 @@ extension OnBoardingRouter {
 	}
 }
 
-// MARK: - DetailAddressSetting
-extension OnBoardingRouter {
-	func detailAddressSettingAttach() {
-		if detailAddressSettingRouting != nil { return }
-		
-		let router = detailAddressSettingBuildable.build(withListener: interactor)
-		navigationControllerable?.present(router.viewControllable, animated: true)
-		
-		detailAddressSettingRouting = router
-		attachChild(router)
-	}
-	
-	func detailAddressSettingDetach() {
-		guard let router = detailAddressSettingRouting else { return }
-		
-		navigationControllerable?.dismiss(completion: nil)
-		detailAddressSettingRouting = nil
-		detachChild(router)
-	}
-	
-	func detailAddressSettingDismiss() {
-		guard let router = detailAddressSettingRouting else { return }
-		
-		detailAddressSettingRouting = nil
-		detachChild(router)
-	}
-}
-
-// MARK: - UserSetting
+// MARK: UserSetting
 extension OnBoardingRouter {
 	func userSettingAttach() {
 		if userSettingRouting != nil { return }
