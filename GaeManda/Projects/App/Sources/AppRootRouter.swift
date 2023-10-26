@@ -31,11 +31,6 @@ final class AppRootRouter:
 		interactor.router = self
 	}
 	
-	override func didLoad() {
-		super.didLoad()
-		attachLoggedIn()
-	}
-	
 	func attachLoggedOut() {
 		if loggedOutRouting != nil { return }
 		
@@ -47,8 +42,8 @@ final class AppRootRouter:
 	func detachLoggedOut() {
 		guard let router = loggedOutRouting else { return }
 		
-		loggedOutRouting = nil
 		detachChild(router)
+		loggedOutRouting = nil
 	}
 	
 	func attachLoggedIn() {
