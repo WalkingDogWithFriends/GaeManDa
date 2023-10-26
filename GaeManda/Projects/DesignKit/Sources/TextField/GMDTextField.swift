@@ -158,6 +158,11 @@ public extension GMDTextField {
 		textField.rightView = rightView
 		textField.rightViewMode = viewMode
 	}
+	
+	func setLeftView(_ leftView: UIView, viewMode: UITextField.ViewMode = .always) {
+		textField.leftView = leftView
+		textField.leftViewMode = viewMode
+	}
 }
 
 // MARK: - Reactive Extension

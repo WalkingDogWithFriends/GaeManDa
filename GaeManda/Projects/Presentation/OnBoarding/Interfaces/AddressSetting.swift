@@ -8,5 +8,4 @@ public protocol AddressSettingListener: AnyObject {
 	func addressSettingDidFinish()
 	func addressSettingBackButtonDidTap()
 	func addressSettingDismiss()
-	func addressSettingDidTapSearchTextField()
 }

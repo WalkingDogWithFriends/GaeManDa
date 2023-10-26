@@ -30,7 +30,6 @@ final class AppRootRouter:
 		super.init(interactor: interactor, viewController: viewController)
 		interactor.router = self
 	}
-	
 	func attachLoggedOut() {
 		if loggedOutRouting != nil { return }
 		

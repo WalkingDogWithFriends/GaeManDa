@@ -5,7 +5,6 @@ public protocol OnBoardingDependency: Dependency {
 	var onBoardingViewController: ViewControllable { get }
 	var termsOfUseBuildable: TermsOfUseBuildable { get }
 	var addressSettingBuildable: AddressSettingBuildable { get }
-	var detailAddressSettingBuildable: DetailAddressSettingBuildable { get }
 	var userSettingBuildable: UserSettingBuildable { get }
 	var dogSettingBuildable: DogSettingBuildable { get }
 }
@@ -19,9 +18,6 @@ final class OnBoardingComponent: Component<OnBoardingDependency> {
 	}
 	fileprivate var addressSettingBuildable: AddressSettingBuildable {
 		dependency.addressSettingBuildable
-	}
-	fileprivate var detailAddressSettingBuildable: DetailAddressSettingBuildable {
-		dependency.detailAddressSettingBuildable
 	}
 	fileprivate var userSettingBuildable: UserSettingBuildable {
 		dependency.userSettingBuildable
@@ -47,7 +43,6 @@ public final class OnBoardingBuilder:
 			viewController: component.onBoardingViewController,
 			termsOfUseBuildable: component.termsOfUseBuildable,
 			addressSettingBuildable: component.addressSettingBuildable,
-			detailAddressSettingBuildable: component.detailAddressSettingBuildable,
 			userSettingBuildable: component.userSettingBuildable,
 			dogSettingBuildable: component.dogSettingBuildable
 		)

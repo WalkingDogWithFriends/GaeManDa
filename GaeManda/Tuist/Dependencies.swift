@@ -13,6 +13,9 @@ let dependencies = Dependencies(
 		),
 		.remote(
 			url: "https://github.com/SnapKit/SnapKit.git", requirement: .exact("5.6.0")
+		),
+		.remote(
+			url: "https://github.com/jaemyeong/NMapsMap.git", requirement: .upToNextMajor(from: "3.16.2")
 		)
 	],
 	platforms: [.iOS]

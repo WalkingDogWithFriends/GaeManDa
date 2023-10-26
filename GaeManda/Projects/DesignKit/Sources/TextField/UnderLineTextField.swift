@@ -48,17 +48,26 @@ public class UnderLineTextField: UITextField {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
+	private func textFieldRect(forBounds bounds: CGRect) -> CGRect {
+		let leftViewRect = super.leftViewRect(forBounds: bounds)
+		var boundInset = bounds.inset(by: padding)
+		let leftPadding: CGFloat = 8.0
+		boundInset.origin.x += (leftViewRect.width + leftPadding)
+
+		return boundInset
+	}
+	
 	// MARK: - Method Override
 	open override func textRect(forBounds bounds: CGRect) -> CGRect {
-		return bounds.inset(by: padding)
+		return textFieldRect(forBounds: bounds)
 	}
 	
 	open override func editingRect(forBounds bounds: CGRect) -> CGRect {
-		return bounds.inset(by: padding)
+		return textFieldRect(forBounds: bounds)
 	}
 	
 	open override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
-		return bounds.inset(by: padding)
+		return textFieldRect(forBounds: bounds)
 	}
 	
 	open override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
@@ -68,6 +77,15 @@ public class UnderLineTextField: UITextField {
 		rightViewRect.origin.y -= (padding.bottom / 2)
 		
 		return rightViewRect
+	}
+	
+	public override func leftViewRect(forBounds bounds: CGRect) -> CGRect {
+		var leftViewRect = super.leftViewRect(forBounds: bounds)
+		
+		leftViewRect.origin.x += padding.left
+		leftViewRect.origin.y -= (padding.bottom / 2)
+
+		return leftViewRect
 	}
 }
 

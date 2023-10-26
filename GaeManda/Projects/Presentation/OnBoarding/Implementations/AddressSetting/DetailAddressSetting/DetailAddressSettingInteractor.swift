@@ -13,7 +13,7 @@ import OnBoarding
 protocol DetailAddressSettingRouting: ViewableRouting { }
 
 protocol DetailAddressSettingPresentable: Presentable {
-	var listener: DetailAddressSettingPresentableListener? { get set }
+	var listener: DetailAddressSettingPresentableListener? { get set }    
 }
 
 final class DetailAddressSettingInteractor:
@@ -47,7 +47,7 @@ extension DetailAddressSettingInteractor {
 		listener?.detailAddressSettingCloseButtonDidTap()
 	}
 	
-	func loadLocationButtonDidTap() {
-		print("loadLocationButtonDidTap")
+	func loadLocationButtonDidTap(jibunAddress: String) {
+		listener?.detailAddressSettingLoadLocationButtonDidTap(jibunAddress: jibunAddress)
 	}
 }

@@ -23,7 +23,8 @@ let project = Project.createProject(
 				.Project.DesignKit,
 				.SPM.RxCocoa,
 				.SPM.RxGesture,
-				.SPM.SnapKit
+				.SPM.SnapKit,
+				.SPM.NMapsMap
 			]
 		),
 		.createTestTarget(name: projectName)

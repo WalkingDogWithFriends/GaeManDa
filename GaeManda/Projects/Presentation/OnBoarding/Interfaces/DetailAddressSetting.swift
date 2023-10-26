@@ -15,4 +15,5 @@ public protocol DetailAddressSettingBuildable: Buildable {
 public protocol DetailAddressSettingListener: AnyObject {
 	func detailAddressSettingDidDismiss()
 	func detailAddressSettingCloseButtonDidTap()
+	func detailAddressSettingLoadLocationButtonDidTap(jibunAddress: String)
 }
