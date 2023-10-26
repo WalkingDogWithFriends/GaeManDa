@@ -1,3 +1,4 @@
+import CoreLocation
 import UIKit
 import RIBs
 import RxCocoa
@@ -50,6 +51,11 @@ final class TermsOfUseViewController:
 		return button
 	}()
 	
+	private let locationManager: CLLocationManager = {
+		let locationManager = CLLocationManager()
+		locationManager.desiredAccuracy = kCLLocationAccuracyBest
+		return locationManager
+	}()
 	// MARK: - Life Cycles
 	override func viewDidLoad() {
 		super.viewDidLoad()

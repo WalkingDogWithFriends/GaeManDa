@@ -9,7 +9,6 @@ protocol OnBoardingRouting: Routing {
 	func addressSettingAttach()
 	func addressSettingDetach()
 	func addressSettingDismiss()
-	func addressSettingDidFinish()
 	func userSettingAttach()
 	func userSettingDetach()
 	func userSettingDismiss()

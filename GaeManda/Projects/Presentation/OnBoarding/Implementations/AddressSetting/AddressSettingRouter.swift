@@ -2,7 +2,7 @@ import RIBs
 import GMDUtils
 import OnBoarding
 
-protocol AddressSettingInteractable: 
+protocol AddressSettingInteractable:
 	Interactable,
 	DetailAddressSettingListener {
 	var router: AddressSettingRouting? { get set }
@@ -33,7 +33,7 @@ extension AddressSettingRouter {
 		if detailAddressSettingRouting != nil { return }
 		
 		let router = detailAddressSettingBuildable.build(withListener: interactor)
-        viewControllable.present(router.viewControllable, animated: true)
+		viewControllable.present(router.viewControllable, animated: true)
 		
 		detailAddressSettingRouting = router
 		attachChild(router)
@@ -49,8 +49,7 @@ extension AddressSettingRouter {
 	
 	func detailAddressSettingDismiss() {
 		guard let router = detailAddressSettingRouting else { return }
-        
-        viewControllable.dismiss(completion: nil)
+	
 		detailAddressSettingRouting = nil
 		detachChild(router)
 	}

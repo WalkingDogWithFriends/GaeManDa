@@ -9,14 +9,14 @@ protocol AddressSettingRouting: ViewableRouting {
 
 protocol AddressSettingPresentable: Presentable {
 	var listener: AddressSettingPresentableListener? { get set }
-    
-    func setDetailAddress(_ address: String)
+	
+	func setDetailAddress(_ address: String)
 }
 
 final class AddressSettingInteractor:
 	PresentableInteractor<AddressSettingPresentable>,
 	AddressSettingInteractable,
-    AddressSettingPresentableListener {
+	AddressSettingPresentableListener {
 	weak var router: AddressSettingRouting?
 	weak var listener: AddressSettingListener?
 	
@@ -54,10 +54,10 @@ extension AddressSettingInteractor {
 }
 
 extension AddressSettingInteractor {
-    func searchTextFieldDidTap() {
-        router?.detailAddressSettingAttach()
-    }
-    
+	func searchTextFieldDidTap() {
+		router?.detailAddressSettingAttach()
+	}
+	
 	func addressSettingDidTapSearchTextField() {
 		router?.detailAddressSettingAttach()
 	}
@@ -71,7 +71,7 @@ extension AddressSettingInteractor {
 	}
 	
 	func detailAddressSettingLoadLocationButtonDidTap(jibunAddress: String) {
-        presenter.setDetailAddress(jibunAddress)
+		presenter.setDetailAddress(jibunAddress)
 		router?.detailAddressSettingDismiss()
 	}
 }

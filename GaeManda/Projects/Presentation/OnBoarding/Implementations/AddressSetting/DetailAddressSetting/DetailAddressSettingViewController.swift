@@ -126,7 +126,7 @@ extension DetailAddressSettingViewController: WKScriptMessageHandler {
 			let roadAddress = body["roadAddress"] as? String,
 			let zoneCode = body["zonecode"] as? String
 		else { return }
-		
+		print(jibunAddress, roadAddress, zoneCode)
 		listener?.loadLocationButtonDidTap(jibunAddress: jibunAddress)
 	}
 }
