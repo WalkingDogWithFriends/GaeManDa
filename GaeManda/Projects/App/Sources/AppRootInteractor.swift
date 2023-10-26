@@ -23,7 +23,8 @@ final class AppRootInteractor:
 	weak var listener: AppRootListener?
 	
 	private var isUserLogIn: Bool {
-		UserDefaultsManager.shared.getUser() != nil
+//		UserDefaultsManager.shared.removeAllData()
+		return UserDefaultsManager.shared.getUser() != nil
 	}
 	
 	override init(presenter: AppRootPresentable) {
@@ -33,6 +34,7 @@ final class AppRootInteractor:
 	
 	override func didBecomeActive() {
 		super.didBecomeActive()
+		
 		isUserLogIn ? router?.attachLoggedIn() : router?.attachLoggedOut()
 	}
 	

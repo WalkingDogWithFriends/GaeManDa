@@ -149,7 +149,7 @@ private extension NewDogProfileViewController {
 			.bind(with: self) { owner, _ in
 				owner.listener?.didTapConfirmButton(
 					dog: Dog(
-						id: DogStroage.getID(),
+						id: UserDefaultsManager.shared.getID(),
 						name: owner.scrollView.nickNameTextField.text,
 						sex: owner.scrollView.selectedSexRelay.value,
 						age: "12",

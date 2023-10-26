@@ -39,7 +39,7 @@ final class SecondDogSettingInteractor:
 extension SecondDogSettingInteractor {
 	func didTapConfirmButton() {
 		let dog = Dog(
-			id: DogStroage.getID(),
+			id: UserDefaultsManager.shared.getID(),
 			name: DogStroage.dogName,
 			sex: DogStroage.dogSex,
 			age: DogStroage.dogAge,

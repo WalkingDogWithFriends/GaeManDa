@@ -12,10 +12,17 @@ import Entity
 public final class UserDefaultsManager {
 	public static let shared = UserDefaultsManager()
 	private let userDefaults = UserDefaults.standard
+	private var value = 0 {
+		didSet {
+			UserDefaults.standard.set(self.value, forKey: "ID")
+		}
+	}
+	
 	
 	public func removeAllData() {
 		removeUser()
 		removeDogs()
+		UserDefaults.standard.removeObject(forKey: "ID")
 	}
 	
 	public func removeUser() {
@@ -30,6 +37,15 @@ public final class UserDefaultsManager {
 		if let encodedUser = try? JSONEncoder().encode(user) {
 			userDefaults.setValue(encodedUser, forKey: "User")
 		}
+	}
+	
+	public func getID() -> Int {
+		let id = UserDefaults.standard.integer(forKey: "ID")
+		
+		if id != value { value = id }
+		value += 1
+		
+		return id
 	}
 	
 	public func getUser() -> User? {
@@ -88,8 +104,6 @@ public final class UserDefaultsManager {
 }
 
 public struct DogStroage {
-	private static var id: Int = 0
-	
 	public static var dogName: String = ""
 	public static var dogAge: String = "4"
 	public static var dogWeight: String = ""
@@ -98,9 +112,4 @@ public struct DogStroage {
 	public static var dogCharacter = ""
 	public static var dogSex: Sex = .male
 	public static var dogNNN: Neutered = .true
-	
-	public static func getID() -> Int {
-		id += 1
-		return id
-	}
 }
