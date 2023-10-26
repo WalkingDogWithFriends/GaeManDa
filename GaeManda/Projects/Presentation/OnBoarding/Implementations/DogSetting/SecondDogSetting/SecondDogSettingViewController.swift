@@ -4,6 +4,7 @@ import RxCocoa
 import RxSwift
 import SnapKit
 import DesignKit
+import Entity
 import GMDExtensions
 import GMDUtils
 
@@ -42,8 +43,8 @@ final class SecondDogSettingViewController:
 		return stackView
 	}()
 	
-	private let didNeuterButton = GMDOptionButton(title: "했어요", isSelected: true)
-	private let didNotNeuterButton = GMDOptionButton(title: "안 했어요")
+	private let didNeuterButton = GMDOptionButton(title: "중성화 했어요", isSelected: true)
+	private let didNotNeuterButton = GMDOptionButton(title: "중성화 안 했어요")
 	private let confirmButton = ConfirmButton(title: "확인", isPositive: false)
 	
 	// MARK: - Life Cycles
@@ -158,6 +159,7 @@ final class SecondDogSettingViewController:
 		super.bind()
 		bindNavigationBar()
 		bindDropDown()
+		bindButtons()
 		bindConfirmButton()
 	}
 	
@@ -178,6 +180,28 @@ final class SecondDogSettingViewController:
 		dogCharacterDropDownView.rx.selectedOption
 			.map { ($0, .option) }
 			.bind(to: dogCharacterDropDownButton.rx.title)
+			.disposed(by: disposeBag)
+	}
+	
+	private func bindButtons() {
+		// 중성화 버튼 선택 Observable
+		let selectedNeuteredObservable = Observable
+			.merge(
+				didNeuterButton.rx.tap.map { Neutered.true },
+				didNotNeuterButton.rx.tap.map { Neutered.false }
+			)
+			.asDriver(onErrorJustReturn: .true)
+		
+		// 선택된 성별이 남성일 경우
+		selectedNeuteredObservable
+			.map { $0 == .true }
+			.drive(didNeuterButton.rx.isSelected)
+			.disposed(by: disposeBag)
+		
+		// 선택된 성별이 여성일 경우
+		selectedNeuteredObservable
+			.map { $0 == .false }
+			.drive(didNotNeuterButton.rx.isSelected)
 			.disposed(by: disposeBag)
 	}
 	
