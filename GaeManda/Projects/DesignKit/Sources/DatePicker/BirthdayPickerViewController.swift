@@ -11,6 +11,7 @@ import RIBs
 import RxCocoa
 import RxGesture
 import RxSwift
+import SnapKit
 import GMDExtensions
 
 protocol BirthdayPickerPresentableListener: AnyObject {
@@ -29,7 +30,6 @@ final class BirthdayPickerViewController:
         let label = UILabel()
         label.font = .b16
         label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
     }()
@@ -41,7 +41,6 @@ final class BirthdayPickerViewController:
         picker.locale = Locale(identifier: "ko_KR")
         picker.minimumDate = Calendar(identifier: .gregorian).date(byAdding: .year, value: -20, to: .now)
         picker.maximumDate = .now
-        picker.translatesAutoresizingMaskIntoConstraints = false
         
         return picker
     }()
@@ -51,7 +50,6 @@ final class BirthdayPickerViewController:
         button.setTitle("취소", for: .normal)
         button.setTitleColor(.green100, for: .normal)
         button.titleLabel?.font = .b16
-        button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
     }()
@@ -61,7 +59,6 @@ final class BirthdayPickerViewController:
         button.setTitle("확인", for: .normal)
         button.setTitleColor(.green100, for: .normal)
         button.titleLabel?.font = .b16
-        button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
     }()
@@ -70,7 +67,6 @@ final class BirthdayPickerViewController:
         let stackview = UIStackView()
         stackview.axis = .horizontal
         stackview.spacing = 32
-        stackview.translatesAutoresizingMaskIntoConstraints = false
         
         return stackview
     }()

@@ -9,6 +9,7 @@
 import UIKit
 import RxRelay
 import SnapKit
+import GMDExtensions
 
 open class BottomSheetViewController: UIViewController {
 	// MARK: - Constants
@@ -17,7 +18,6 @@ open class BottomSheetViewController: UIViewController {
 	// MARK: - Properties
 	private let mainContainerView: UIView = {
 		let view = UIView()
-		view.translatesAutoresizingMaskIntoConstraints = false
 		view.backgroundColor = .white
 		view.layer.cornerRadius = 8
 		view.clipsToBounds = true
@@ -25,24 +25,18 @@ open class BottomSheetViewController: UIViewController {
 		return view
 	}()
 	
-	open var contentView: UIView = {
-		let view = UIView()
-		view.translatesAutoresizingMaskIntoConstraints = false
-		
-		return view
-	}()
+	open var contentView = UIView()
 	
 	private let topBarView: UIView = {
 		let view = UIView()
 		view.backgroundColor = .white
-		view.translatesAutoresizingMaskIntoConstraints = false
 		
 		return view
 	}()
 	
 	fileprivate let dimmedView: UIView = {
 		let view = UIView()
-		// view.backgroundColor = UIColor(hexCode: "#4C4C4C", alpha: 0.7)
+		view.backgroundColor = .dimmedColor
 		return view
 	}()
 	
@@ -68,8 +62,7 @@ open class BottomSheetViewController: UIViewController {
 	}
 	
 	private func setViewHierarchy() {
-		view.addSubview(dimmedView)
-		view.addSubview(mainContainerView)
+		view.addSubviews(dimmedView, mainContainerView)
 		mainContainerView.addSubviews(topBarView, contentView)
 	}
 	

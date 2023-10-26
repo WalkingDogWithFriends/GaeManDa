@@ -14,7 +14,6 @@ final class LoggedOutComponent:
 	AddressSettingDependency,
 	DetailAddressSettingDependency,
 	UserSettingDependency,
-	BirthdayPickerDependency,
 	DogSettingDependency {
 	lazy var onBoardingBuildable: OnBoardingBuildable = {
 		return OnBoardingBuilder(dependency: self)
@@ -36,10 +35,6 @@ final class LoggedOutComponent:
 		return UserSettingBuilder(dependency: self)
 	}()
 	
-	lazy var birthdayPickerBuildable: BirthdayPickerBuildable = {
-		return BirthdayPickerBuilder(dependency: self)
-	}()
-	
 	lazy var dogSettingBuildable: DogSettingBuildable = {
 		return DogSettingBuilder(dependency: self)
 	}()
@@ -56,5 +51,9 @@ final class LoggedOutComponent:
 	}
 	var loggedOutViewController: ViewControllable {
 		dependency.loggedOutViewController
+	}
+	
+	var birthdayPickerBuildable: BirthdayPickerBuildable {
+		return dependency.birthdayPickerBuildable
 	}
 }
