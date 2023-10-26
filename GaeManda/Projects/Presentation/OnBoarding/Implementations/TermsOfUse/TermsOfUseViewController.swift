@@ -8,12 +8,16 @@ import Entity
 import GMDUtils
 
 protocol TermsOfUsePresentableListener: AnyObject {
+	func a약관전체동의ButtonDidTap()
+	func a이용약관동의ButtonDidTap()
+	func a개인정보수집및이용동의ButtonDidTap()
+	func a위치정보수집및이용동의DidTap()
+	func a마케팅정보수신동의DidTap()
 	func confirmButtonDidTap()
 }
 
 final class TermsOfUseViewController:
 	UIViewController,
-	TermsOfUsePresentable,
 	TermsOfUseViewControllable {
 	// MARK: - Properties
 	weak var listener: TermsOfUsePresentableListener?
@@ -40,14 +44,9 @@ final class TermsOfUseViewController:
 		return tableView
 	}()
 	
-	private let confirmButton: UIButton = {
-		let button = UIButton()
-		button.setTitle("확인", for: .normal)
-		button.setTitleColor(.white, for: .normal)
-		button.layer.cornerRadius = 4
-		button.backgroundColor = .green100
-		button.titleLabel?.font = .b16
-		
+	private let confirmButton: ConfirmButton = {
+		let button = ConfirmButton(title: "확인")
+		button.isPositive = false
 		return button
 	}()
 	
@@ -110,8 +109,7 @@ private extension TermsOfUseViewController {
 		agreeAllButton.rx.tapGesture()
 			.when(.recognized)
 			.bind(with: self) { owner, _ in
-				owner.agreeAllButton.isChecked.toggle()
-				owner.setAllButton(to: owner.agreeAllButton.isChecked)
+				owner.listener?.a약관전체동의ButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 		
@@ -124,19 +122,46 @@ private extension TermsOfUseViewController {
 		// 약관 선택 시 처리할 뷰 로직은 아래에 구현하면 됩니다.
 		tableView.rx.itemSelected
 			.bind(with: self) { owner, indexPath in
-				let cell = owner.tableView.cellForRow(TermsOfUseCell.self, at: indexPath)
-				cell.toggleButtonChecked()
+				switch indexPath.row {
+				case 0: owner.listener?.a이용약관동의ButtonDidTap()
+				case 1: owner.listener?.a개인정보수집및이용동의ButtonDidTap()
+				case 2: owner.listener?.a위치정보수집및이용동의DidTap()
+				case 3:	owner.listener?.a마케팅정보수신동의DidTap()
+				default:
+					return
+				}
 			}
 			.disposed(by: disposeBag)
 	}
 }
 
-// MARK: - Inner Action Methods
-private extension TermsOfUseViewController {
-	func setAllButton(to isChecked: Bool) {
-		tableView.visibleCells.forEach {
-			guard let cell = $0 as? TermsOfUseCell else { return }
-			cell.setButtonChecked(isChecked)
-		}
+extension TermsOfUseViewController: TermsOfUsePresentable {
+	func set약관전체동의Button(isChecked: Bool) {
+		agreeAllButton.isChecked = isChecked
+	}
+	
+	func set이용약관동의Button(isChecked: Bool) {
+		let cell = tableView.cellForRow(TermsOfUseCell.self, at: IndexPath(row: 0, section: 0))
+		cell.setButtonChecked(isChecked)
+	}
+	
+	func set개인정보수집및이용동의Button(isChecked: Bool) {
+		let cell = tableView.cellForRow(TermsOfUseCell.self, at: IndexPath(row: 1, section: 0))
+		cell.setButtonChecked(isChecked)
+	}
+	
+	func set위치정보수집및이용동의Button(isChecked: Bool) {
+		let cell = tableView.cellForRow(TermsOfUseCell.self, at: IndexPath(row: 2, section: 0))
+		cell.setButtonChecked(isChecked)
+	}
+	
+	func set마케팅정보수신동의Button(isChecked: Bool) {
+		let cell = tableView.cellForRow(TermsOfUseCell.self, at: IndexPath(row: 3, section: 0))
+		cell.setButtonChecked(isChecked)
+	}
+	
+	func setConfirmButton(isEnabled: Bool) {
+		self.confirmButton.isUserInteractionEnabled = isEnabled
+		self.confirmButton.isPositive = isEnabled
 	}
 }
