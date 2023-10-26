@@ -6,7 +6,6 @@ protocol OnBoardingInteractable:
 	Interactable,
 	TermsOfUseListener,
 	AddressSettingListener,
-	DetailAddressSettingListener,
 	UserSettingListener,
 	DogSettingListener {
 	var router: OnBoardingRouting? { get set }
@@ -26,9 +25,6 @@ final class OnBoardingRouter:
 	private let addressSettingBuildable: AddressSettingBuildable
 	private var addressSettingRouting: ViewableRouting?
 	
-	private let detailAddressSettingBuildable: DetailAddressSettingBuildable
-	private var detailAddressSettingRouting: ViewableRouting?
-	
 	private let userSettingBuildable: UserSettingBuildable
 	private var userSettingRouting: ViewableRouting?
 	
@@ -40,14 +36,12 @@ final class OnBoardingRouter:
 		viewController: ViewControllable,
 		termsOfUseBuildable: TermsOfUseBuildable,
 		addressSettingBuildable: AddressSettingBuildable,
-		detailAddressSettingBuildable: DetailAddressSettingBuildable,
 		userSettingBuildable: UserSettingBuildable,
 		dogSettingBuildable: DogSettingBuildable
 	) {
 		self.viewController = viewController
 		self.termsOfUseBuildable = termsOfUseBuildable
 		self.addressSettingBuildable = addressSettingBuildable
-		self.detailAddressSettingBuildable = detailAddressSettingBuildable
 		self.userSettingBuildable = userSettingBuildable
 		self.dogSettingBuildable = dogSettingBuildable
 		super.init(interactor: interactor)
@@ -70,7 +64,7 @@ final class OnBoardingRouter:
 	private let viewController: ViewControllable
 }
 
-// MARK: TermsOfUse
+// MARK: - TermsOfUse
 extension OnBoardingRouter {
 	func termsOfUseAttach() {
 		if termsOfUseRouting != nil { return }
@@ -89,13 +83,9 @@ extension OnBoardingRouter {
 		termsOfUseRouting = nil
 		detachChild(router)
 	}
-	
-	func termsOfUseDidFinish() {
-		addressSettingAttach()
-	}
 }
 
-// MARK: AddressSetting
+// MARK: - AddressSetting
 extension OnBoardingRouter {
 	func addressSettingAttach() {
 		if addressSettingRouting != nil { return }
@@ -115,35 +105,10 @@ extension OnBoardingRouter {
 		detachChild(router)
 	}
 	
-	func addressSettingDidFinish() {
-		userSettingAttach()
-	}
-}
-
-// MARK: DetailAddressSetting
-extension OnBoardingRouter {
-	func detailAddressSettingAttach() {
-		if detailAddressSettingRouting != nil { return }
+	func addressSettingDismiss() {
+		guard let router = addressSettingRouting else { return }
 		
-		let router = detailAddressSettingBuildable.build(withListener: interactor)
-		navigationControllerable?.present(router.viewControllable, animated: true)
-		
-		detailAddressSettingRouting = router
-		attachChild(router)
-	}
-	
-	func detailAddressSettingDetach() {
-		guard let router = detailAddressSettingRouting else { return }
-		
-		navigationControllerable?.dismiss(completion: nil)
-		detailAddressSettingRouting = nil
-		detachChild(router)
-	}
-	
-	func detailAddressSettingDismiss() {
-		guard let router = detailAddressSettingRouting else { return }
-		
-		detailAddressSettingRouting = nil
+		addressSettingRouting = nil
 		detachChild(router)
 	}
 }
@@ -168,20 +133,20 @@ extension OnBoardingRouter {
 		detachChild(router)
 	}
 	
-	func userSettingDidFinish() {
-		dogSettingAttach()
+	func userSettingDismiss() {
+		guard let router = userSettingRouting else { return }
+		
+		userSettingRouting = nil
+		detachChild(router)
 	}
 }
 
-// MARK: DogSetting
+// MARK: - DogSetting
 extension OnBoardingRouter {
 	func dogSettingAttach() {
 		if dogSettingRouting != nil { return }
 		
-		let router = dogSettingBuildable.build(
-			withListener: interactor,
-			navigationControllerable: navigationControllerable
-		)
+		let router = dogSettingBuildable.build(withListener: interactor)
 		dogSettingRouting = router
 		attachChild(router)
 	}
@@ -194,9 +159,9 @@ extension OnBoardingRouter {
 	}
 }
 	
-// MARK: NavigationControllable Extension
+// MARK: - NavigationControllable Extension
 private extension OnBoardingRouter {
-	private func presentInsideNavigation(_ viewControllable: ViewControllable) {
+	func presentInsideNavigation(_ viewControllable: ViewControllable) {
 		if let navigation = navigationControllerable {
 			navigation.setViewControllers([viewControllable])
 		} else {
@@ -204,7 +169,7 @@ private extension OnBoardingRouter {
 		}
 	}
 	
-	private func createNavigation(_ viewControllable: ViewControllable) {
+	func createNavigation(_ viewControllable: ViewControllable) {
 		let navigation = NavigationControllerable(root: viewControllable)
 		self.navigationControllerable = navigation
 		viewController.present(
@@ -214,7 +179,7 @@ private extension OnBoardingRouter {
 		)
 	}
 	
-	private func dismissPresentedNavigation(completion: (() -> Void)?) {
+	func dismissPresentedNavigation(completion: (() -> Void)?) {
 		if self.navigationControllerable == nil { return }
 		
 		viewController.dismiss(completion: nil)

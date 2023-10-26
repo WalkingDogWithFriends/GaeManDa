@@ -53,9 +53,8 @@ final class DogProfileScrollView: UIScrollView {
 	
 	fileprivate let calenderButton: UIButton = {
 		let button = UIButton()
-		let image = UIImage(systemName: "calendar")
 		button.tintColor = .black
-		button.setImage(image, for: .normal)
+		button.setImage(.iconCameraOn, for: .normal)
 		
 		return button
 	}()
@@ -249,12 +248,12 @@ private extension DogProfileScrollView {
 			.bind(to: weightTextField.rx.text)
 			.disposed(by: disposeBag)
 		
-		// suffix부분에 커서가 이동이 안되도록 해줌.
-		weightTextField.textField.rx.cursorChanged
-			.bind(with: self) { owner, _ in
-				owner.weightTextField.textField.moveCusorLeftTo(suffix: "kg")
-			}
-			.disposed(by: disposeBag)
+//		 suffix부분에 커서가 이동이 안되도록 해줌.
+//		weightTextField.textField.rx.cursorChanged
+//			.bind(with: self) { owner, _ in
+//				owner.weightTextField.textField.moveCusorLeftTo(suffix: "kg")
+//			}
+//			.disposed(by: disposeBag)
 	}
 		
 	func textViewBind() {

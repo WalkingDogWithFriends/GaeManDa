@@ -1,9 +1,11 @@
 import RIBs
 import GMDUtils
 import OnBoarding
+import SignIn
 
 protocol LoggedOutInteractable:
 	Interactable,
+	SignInListener,
 	OnBoardingListener {
 	var router: LoggedOutRouting? { get set }
 	var listener: LoggedOutListener? { get set }
@@ -15,13 +17,18 @@ final class LoggedOutRouter: Router<LoggedOutInteractable>, LoggedOutRouting {
 	private let onBoardingBuildable: OnBoardingBuildable
 	private var onBoardingRouting: Routing?
 	
+	private let signInBuildable: SignInBuildable
+	private var signInRouting: ViewableRouting?
+	
 	init(
 		interactor: LoggedOutInteractable,
 		viewController: ViewControllable,
+		signInBuildable: SignInBuildable,
 		onBoardingBuildable: OnBoardingBuildable
 	) {
 		self.viewController = viewController
 		self.onBoardingBuildable = onBoardingBuildable
+		self.signInBuildable = signInBuildable
 		super.init(interactor: interactor)
 		interactor.router = self
 	}
@@ -37,6 +44,36 @@ final class LoggedOutRouter: Router<LoggedOutInteractable>, LoggedOutRouting {
 		}
 	}
 	
+	private let viewController: ViewControllable
+}
+
+// MARK: - SignIn
+extension LoggedOutRouter {
+	func attachSignIn() {
+		if signInRouting != nil { return }
+		
+		let router = signInBuildable.build(withListener: interactor)
+		viewController.present(
+			router.viewControllable,
+			animated: true,
+			modalPresentationStyle: .fullScreen
+		)
+
+		signInRouting = router
+		attachChild(router)
+	}
+	
+	func detachSignIn() {
+		guard let router = signInRouting else { return }
+		
+		viewController.dismiss(completion: nil)
+		signInRouting = nil
+		detachChild(router)
+	}
+}
+
+// MARK: - OnBoarding
+extension LoggedOutRouter {
 	func attachOnBoarding() {
 		if onBoardingRouting != nil { return }
 		
@@ -51,6 +88,4 @@ final class LoggedOutRouter: Router<LoggedOutInteractable>, LoggedOutRouting {
 		onBoardingRouting = nil
 		detachChild(router)
 	}
-	
-	private let viewController: ViewControllable
 }

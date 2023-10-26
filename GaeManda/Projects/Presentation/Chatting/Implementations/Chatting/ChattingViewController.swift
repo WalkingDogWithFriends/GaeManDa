@@ -33,7 +33,7 @@ final class ChattingViewController:
 	// MARK: - UI Components
 	private lazy var navigationBar = GMDNavigationBar(
 		title: "윈터",
-		rightItems: [.setting]
+		rightItems: [.more]
 	)
 	
 	/// view located navigation Bar bottom

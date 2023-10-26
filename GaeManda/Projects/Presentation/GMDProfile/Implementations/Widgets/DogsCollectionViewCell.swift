@@ -145,7 +145,7 @@ final class DogsCollectionViewCell: UICollectionViewCell {
 		titleLabel.text = "\(dog.name) (\(dog.sex.rawValue) / \(dog.age)세)"
 		
 		weightValueLabel.text = "\(dog.weight)kg"
-		neuteringValueLabel.text = dog.didNeutered == true ? "했어요" : "안 했어요"
+		neuteringValueLabel.text = dog.didNeutered == .true ? "했어요" : "안 했어요"
 	}
 }
 

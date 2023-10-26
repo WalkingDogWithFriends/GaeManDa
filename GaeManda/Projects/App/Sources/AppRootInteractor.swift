@@ -1,3 +1,4 @@
+import Foundation
 import RIBs
 
 protocol AppRootRouting: ViewableRouting {
@@ -20,6 +21,10 @@ final class AppRootInteractor:
 	weak var router: AppRootRouting?
 	weak var listener: AppRootListener?
 	
+	private var isUserLogIn: Bool {
+		UserDefaults.standard.string(forKey: "token") != nil
+	}
+	
 	override init(presenter: AppRootPresentable) {
 		super.init(presenter: presenter)
 		presenter.listener = self
@@ -27,9 +32,17 @@ final class AppRootInteractor:
 	
 	override func didBecomeActive() {
 		super.didBecomeActive()
+		isUserLogIn ? router?.attachLoggedIn() : router?.attachLoggedOut()
 	}
 	
 	override func willResignActive() {
 		super.willResignActive()
+	}
+}
+
+extension AppRootInteractor {
+	func loggedOutDidFinish() {
+		router?.detachLoggedOut()
+		router?.attachLoggedIn()
 	}
 }

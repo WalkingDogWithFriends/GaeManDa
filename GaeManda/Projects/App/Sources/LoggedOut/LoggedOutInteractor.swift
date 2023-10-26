@@ -2,11 +2,15 @@ import RIBs
 
 protocol LoggedOutRouting: Routing {
 	func cleanupViews()
+	func attachSignIn()
+	func detachSignIn()
 	func attachOnBoarding()
 	func detachOnBoarding()
 }
 
-protocol LoggedOutListener: AnyObject { }
+protocol LoggedOutListener: AnyObject { 
+	func loggedOutDidFinish()
+}
 
 final class LoggedOutInteractor: Interactor, LoggedOutInteractable {
 	weak var router: LoggedOutRouting?
@@ -29,5 +33,6 @@ final class LoggedOutInteractor: Interactor, LoggedOutInteractable {
 extension LoggedOutInteractor {
 	func onBoardingDidFinish() {
 		router?.detachOnBoarding()
+		listener?.loggedOutDidFinish()
 	}
 }

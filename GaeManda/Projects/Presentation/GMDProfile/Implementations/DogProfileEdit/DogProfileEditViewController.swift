@@ -6,6 +6,7 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
+import PhotosUI
 import UIKit
 import RIBs
 import RxCocoa
@@ -20,6 +21,7 @@ protocol DogProfileEditPresentableListener: AnyObject {
 	func viewDidLoad()
 	func viewWillAppear()
 	func didTapBackButton()
+	func dismiss()
 	func didTapEndEditButton(dog: Dog)
 	func didTapDogDashBoard(at id: Int)
 }
@@ -86,6 +88,14 @@ final class DogProfileEditViewController:
 		
 		removeKeyboardNotification([keyboardShowNotification, keyboardHideNotification])
 		removeTextFieldNotification([textDidChangeNotification])
+	}
+	
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		
+		if isBeingDismissed || isMovingFromParent {
+			listener?.dismiss()
+		}
 	}
 	
 	// MARK: touchedBegan
@@ -165,8 +175,8 @@ extension DogProfileEditViewController {
 		scrollView.weightTextField.text = "\(weight)kg"
 	}
 	
-	func updateDogNeutered(_ isNeutered: Bool) {
-		scrollView.selectedNeuterRelay.accept(isNeutered ? .true : .false)
+	func updateDogNeutered(_ isNeutered: Neutered) {
+		scrollView.selectedNeuterRelay.accept(isNeutered)
 	}
 	
 	func updateDogCharacter(_ character: String) {
@@ -183,6 +193,13 @@ private extension DogProfileEditViewController {
 			}
 			.disposed(by: disposeBag)
 		
+		profileImageView.rx.tapGesture()
+			.when(.recognized)
+			.bind(with: self) { owner, _ in
+				owner.presentPHPickerView()
+			}
+			.disposed(by: disposeBag)
+		
 		scrollView.rx.didTapCalenderButton
 			.bind(with: self) { owner, _ in
 				owner.calenderButtonDidTap()
@@ -196,8 +213,6 @@ private extension DogProfileEditViewController {
 				// 에러 정책 결정하고 구현하면 될거 같아요
 				guard let id = owner.dogViewModels.first(where: { $0.isEdited == true })?.dogId else { return }
 				
-				let didNeuterd = owner.scrollView.selectedNeuterRelay.value
-				
 				owner.listener?.didTapEndEditButton(
 					dog: Dog(
 						id: id,
@@ -205,7 +220,7 @@ private extension DogProfileEditViewController {
 						sex: owner.scrollView.selectedSexRelay.value,
 						age: "12",
 						weight: owner.scrollView.weightTextField.text,
-						didNeutered: didNeuterd == .true ? true : false,
+						didNeutered: owner.scrollView.selectedNeuterRelay.value,
 						character: owner.scrollView.characterTextView.textView.text
 					)
 				)
@@ -283,3 +298,20 @@ extension DogProfileEditViewController: KeyboardListener {
 
 // MARK: - GMDTextFieldListener
 extension DogProfileEditViewController: GMDTextFieldListener { }
+
+// MARK: - PHPickerViewControllerDelegate
+extension DogProfileEditViewController: PHPickerViewControllerDelegate {
+	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+		picker.dismiss(animated: true)
+		guard let firstResult = results.first else { return }
+		firstResult.fetchImage { result in
+			switch result {
+			case let .success(image):
+				DispatchQueue.main.async {
+					self.profileImageView.image = image
+				}
+			case .failure: break
+			}
+		}
+	}
+}

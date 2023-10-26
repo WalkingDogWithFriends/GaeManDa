@@ -1,4 +1,7 @@
 import UIKit
+import RxCocoa
+import RxGesture
+import RxSwift
 import SnapKit
 import DesignKit
 import GMDUtils
@@ -13,7 +16,7 @@ final class OnBoardingView: UIView {
 		return label
 	}()
 	
-	private let profileImageView: RoundImageView = {
+	fileprivate let profileImageView: RoundImageView = {
 		let imageView = RoundImageView()
 		imageView.backgroundColor = .gray30
 		
@@ -52,7 +55,7 @@ private extension OnBoardingView {
 				make.top.leading.trailing.equalToSuperview()
 			}
 			profileImageView.snp.makeConstraints { make in
-				make.top.equalTo(label.snp.bottom).offset(48)
+				make.top.equalTo(label.snp.bottom).offset(40)
 				make.width.height.equalTo(140)
 				make.centerX.equalToSuperview()
 				make.bottom.equalToSuperview()
@@ -73,5 +76,15 @@ extension OnBoardingView {
 	
 	func setProfileImage(_ image: UIImage?) {
 		self.profileImageView.image = image
+	}
+}
+
+// MARK: - Reactive Extension
+extension Reactive where Base: OnBoardingView {
+	// 프로필 이미지 선택 Observable
+	var didTapImageView: Observable<Void> {
+		return base.profileImageView.rx.tapGesture()
+			.when(.recognized)
+			.map { _ in }
 	}
 }

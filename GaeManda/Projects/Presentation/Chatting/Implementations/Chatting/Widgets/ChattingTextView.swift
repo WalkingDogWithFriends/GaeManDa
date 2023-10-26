@@ -17,7 +17,7 @@ final class ChattingTextView: UIView {
 	fileprivate let cameraButton: UIButton = {
 		let button = UIButton()
 		button.setImage(
-			UIImage(systemName: "camera"),
+			.iconCameraOn,
 			for: .normal
 		)
 		button.tintColor = .gray70
@@ -38,7 +38,7 @@ final class ChattingTextView: UIView {
 	fileprivate let sendButton: UIButton = {
 		let button = UIButton()
 		button.setImage(
-			UIImage(systemName: "arrow.up.circle.fill"),
+			.iconSendGreen,
 			for: .normal
 		)
 		button.tintColor = .green100

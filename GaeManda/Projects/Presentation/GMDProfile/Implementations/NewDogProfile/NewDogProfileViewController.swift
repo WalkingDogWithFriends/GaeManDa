@@ -6,18 +6,21 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
+import PhotosUI
 import UIKit
 import RIBs
 import RxCocoa
 import RxSwift
 import SnapKit
 import DesignKit
+import Entity
 import GMDExtensions
 import GMDUtils
 
 protocol NewDogProfilePresentableListener: AnyObject {
 	func didTapBackButton()
-	func didTapConfirmButton()
+	func didTapConfirmButton(dog: Dog)
+	func dismiss()
 }
 
 final class NewDogProfileViewController:
@@ -48,15 +51,27 @@ final class NewDogProfileViewController:
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		
 		hideTabBar()
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		
 		removeKeyboardNotification([keyboardShowNotification, keyboardHideNotification])
 		removeTextFieldNotification([textDidChangeNotification])
 	}
 	
-	// MARK: touchedBegan
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		
+		if isBeingDismissed || isMovingFromParent {
+			listener?.dismiss()
+		}
+	}
+	
+	// MARK: - touchesBegan
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		super.touchesBegan(touches, with: event)
 		self.scrollView.endEditing(true)
@@ -113,6 +128,13 @@ private extension NewDogProfileViewController {
 			}
 			.disposed(by: disposeBag)
 		
+		profileImageView.rx.tapGesture()
+			.when(.recognized)
+			.bind(with: self) { owner, _ in
+				owner.presentPHPickerView()
+			}
+			.disposed(by: disposeBag)
+		
 		scrollView.textFieldModeRelay
 			.map { $0.isValid }
 			.bind(to: confirmButton.rx.isPositive)
@@ -125,7 +147,17 @@ private extension NewDogProfileViewController {
 		confirmButtonWithViewModel
 			.filter { $0.isValid }
 			.bind(with: self) { owner, _ in
-				owner.listener?.didTapConfirmButton()
+				owner.listener?.didTapConfirmButton(
+					dog: Dog(
+						id: 0,
+						name: owner.scrollView.nickNameTextField.text,
+						sex: owner.scrollView.selectedSexRelay.value,
+						age: "12",
+						weight: owner.scrollView.weightTextField.text,
+						didNeutered: owner.scrollView.selectedNeuterRelay.value,
+						character: owner.scrollView.characterTextView.text
+					)
+				)
 			}
 			.disposed(by: disposeBag)
 		
@@ -168,3 +200,20 @@ extension NewDogProfileViewController: KeyboardListener {
 
 // MARK: - GMDTextFieldListener
 extension NewDogProfileViewController: GMDTextFieldListener { }
+
+// MARK: - PHPickerViewControllerDelegate
+extension NewDogProfileViewController: PHPickerViewControllerDelegate {
+	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+		picker.dismiss(animated: true)
+		guard let firstResult = results.first else { return }
+		firstResult.fetchImage { result in
+			switch result {
+			case let .success(image):
+				DispatchQueue.main.async {
+					self.profileImageView.image = image
+				}
+			case .failure: break
+			}
+		}
+	}
+}

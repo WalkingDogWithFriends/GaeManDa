@@ -10,23 +10,6 @@ let project = Project.createProject(
 			sources: ["Entity/**"]
 		),
 		.createTarget(
-			name: "UseCaseImpl",
-			product: .staticLibrary,
-			sources: ["UseCaseImpl/Sources/**"],
-			dependencies: [
-				.Project.DomainLayer.UseCase
-			]
-		),
-		.createTarget(
-			name: "UseCaseTest",
-			product: .unitTests,
-			sources: ["UseCaseImpl/Tests/**"],
-			dependencies: [
-				.Project.DomainLayer.UseCase,
-				.Project.DomainLayer.UseCaseImpl
-			]
-		),
-		.createTarget(
 			name: "UseCase",
 			product: .staticLibrary,
 			sources: ["Interfaces/UseCase/**"],
@@ -37,12 +20,29 @@ let project = Project.createProject(
 			]
 		),
 		.createTarget(
+			name: "UseCaseImpl",
+			product: .staticLibrary,
+			sources: ["UseCaseImpl/Sources/**"],
+			dependencies: [
+				.Project.DomainLayer.UseCase
+			]
+		),
+		.createTarget(
 			name: "Repository",
 			product: .staticLibrary,
 			sources: ["Interfaces/Repository/**"],
 			dependencies: [
 				.Project.DomainLayer.Entity,
 				.SPM.RxSwift
+			]
+		),
+		.createTarget(
+			name: "UseCaseTest",
+			product: .unitTests,
+			sources: ["UseCaseImpl/Tests/**"],
+			dependencies: [
+				.Project.DomainLayer.UseCase,
+				.Project.DomainLayer.UseCaseImpl
 			]
 		)
 	]

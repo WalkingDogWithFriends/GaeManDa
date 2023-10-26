@@ -19,12 +19,10 @@ protocol UserProfileEditPresentable: Presentable {
 	
 	func updateUsername(_ name: String)
 	func updateUserSex(_ sex: Sex)
-	
-	func userNameIsEmpty()
 }
 
 protocol UserProfileEditInteractorDependency {
-	var userProfileUseCase: UserProfileUseCase { get }
+	var gmdProfileUseCase: GMDProfileUseCase { get }
 }
 
 final class UserProfileEditInteractor:
@@ -57,7 +55,7 @@ final class UserProfileEditInteractor:
 // MARK: PresentableListener
 extension UserProfileEditInteractor {
 	func viewWillAppear() {
-		dependency.userProfileUseCase
+		dependency.gmdProfileUseCase
 			.userDependency
 			.fetchUser(id: 0)
 			.observe(on: MainScheduler.instance)
@@ -72,19 +70,18 @@ extension UserProfileEditInteractor {
 		listener?.userProfileEditDidTapBackButton()
 	}
 	
+	func dismiss() {
+		listener?.userProfileEditDismiss()
+	}
+	
 	func didTapEndEditingButton(name: String, sex: Sex) {
 		debugPrint(name, sex)
-		if name.isEmpty {
-			presenter.userNameIsEmpty()
-		} else {
-			dependency.userProfileUseCase
-				.updateUser(nickName: name, age: 20, sex: sex.rawValue)
-				.observe(on: MainScheduler.instance)
-				.subscribe(with: self) { owner, result in
-					guard result == "success" else { return }
-					owner.listener?.userProfileEndEditing()
-				}
-				.disposeOnDeactivate(interactor: self)
-		}
+		dependency.gmdProfileUseCase
+			.updateUser(nickName: name, age: 20, sex: sex.rawValue)
+			.observe(on: MainScheduler.instance)
+			.subscribe(with: self) { owner, _ in
+				owner.listener?.gmdProfileEndEditing()
+			}
+			.disposeOnDeactivate(interactor: self)
 	}
 }

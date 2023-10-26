@@ -1,5 +1,7 @@
+import CoreLocation
 import UIKit
 import RIBs
+import NMapsMap
 import RxCocoa
 import RxSwift
 import SnapKit
@@ -10,14 +12,20 @@ import GMDUtils
 protocol AddressSettingPresentableListener: AnyObject {
 	func confirmButtonDidTap()
 	func backButtonDidTap()
+	func dismiss()
 	func searchTextFieldDidTap()
 	func loadLocationButtonDidTap()
 }
 
 final class AddressSettingViewController:
 	BaseViewController,
-	AddressSettingPresentable,
 	AddressSettingViewControllable {
+	private enum Constant {
+		static let defaultCameraPosition = NMFCameraPosition( NMGLatLng(lat: 37.5666102, lng: 126.9783881), zoom: 14)
+		static let defaultCameraZoomLevel = 18.0
+		static let defaultCameraAnimation = NMFCameraUpdateAnimation.easeIn
+		static let defaultCameraAnimationDuration = 0.3
+	}
 	// MARK: - Properties
 	weak var listener: AddressSettingPresentableListener?
 	
@@ -30,8 +38,8 @@ final class AddressSettingViewController:
 		let underLineTextField = UnderLineTextField()
 		underLineTextField.underLineColor = .black
 		underLineTextField.placeholder = "도로명 또는 지번 주소를 입력해주세요"
-		let image = UIImage(systemName: "magnifyingglass")
-		underLineTextField.setLeftImage(image, size: 24)
+		underLineTextField.leftView = UIImageView(image: .iconSearch)
+		underLineTextField.leftViewMode = .always
 		underLineTextField.setPlaceholdColor(.gray90)
 		
 		return underLineTextField
@@ -57,12 +65,19 @@ final class AddressSettingViewController:
 		return button
 	}()
 	
-	private let mapView: UIView = {
-		let view = UIView()
-		view.backgroundColor = .gray
-		view.layer.cornerRadius = 24
-		
-		return view
+	/// 네이버 지도 뷰
+	private let mapView: NMFMapView = {
+		let mapView = NMFMapView()
+		mapView.moveCamera(NMFCameraUpdate(position: Constant.defaultCameraPosition))
+		mapView.locationOverlay.hidden = false
+		mapView.isUserInteractionEnabled = false
+		return mapView
+	}()
+	
+	private let locationManager: CLLocationManager = {
+		let locationManager = CLLocationManager()
+		locationManager.desiredAccuracy = kCLLocationAccuracyBest
+		return locationManager
 	}()
 	
 	private let noticeLabel: UILabel = {
@@ -87,6 +102,15 @@ final class AddressSettingViewController:
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
+		self.locationManager.requestWhenInUseAuthorization()
+	}
+	
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		
+		if isBeingDismissed || isMovingFromParent {
+			listener?.dismiss()
+		}
 	}
 	
 	// MARK: - UI Methods
@@ -157,6 +181,7 @@ final class AddressSettingViewController:
 	
 	override func bind() {
 		super.bind()
+		bindCLLocationManager()
 		searchTextField.rx.controlEvent(.editingDidBegin)
 			.withUnretained(self)
 			.do(onNext: { owner, _ in
@@ -171,7 +196,7 @@ final class AddressSettingViewController:
 		
 		loadLocationButton.rx.tap
 			.bind(with: self) { owner, _ in
-				owner.listener?.loadLocationButtonDidTap()
+				owner.loadLocation()
 			}
 			.disposed(by: disposeBag)
 		
@@ -186,5 +211,81 @@ final class AddressSettingViewController:
 				owner.listener?.backButtonDidTap()
 			}
 			.disposed(by: disposeBag)
+	}
+	
+	func bindCLLocationManager() {
+		locationManager.rx.didUpdateLocations
+			.filter { !$0.locations.isEmpty }
+			.bind(with: self) { owner, clLocationsEvent in
+				clLocationsEvent.manager.stopUpdatingLocation()
+				let location = clLocationsEvent.locations.last!.latLng
+				let cameraUpdatePosition = NMFCameraUpdate(
+					scrollTo: location,
+					zoomTo: Constant.defaultCameraZoomLevel,
+					cameraAnimation: Constant.defaultCameraAnimation,
+					duration: Constant.defaultCameraAnimationDuration
+				)
+				
+				owner.mapView.moveCamera(cameraUpdatePosition)
+				owner.mapView.locationOverlay.location = location
+			}
+			.disposed(by: disposeBag)
+		
+		locationManager.rx.didChangeAuthorization
+			.filter { $0.status == .notDetermined }
+			.bind { clLocationEvent in
+				clLocationEvent.manager.requestWhenInUseAuthorization()
+			}
+			.disposed(by: disposeBag)
+		
+		locationManager.rx.didError
+			.bind { clLocationEvent in
+				print("error: \(clLocationEvent.error)")
+			}
+			.disposed(by: disposeBag)
+	}
+	
+	func loadLocation() {
+		if locationManager.authorizationStatus == .authorizedAlways ||
+				locationManager.authorizationStatus == .authorizedWhenInUse {
+			locationManager.startUpdatingLocation()
+		} else {
+			/// 권한이 없다면 권한이 없다는 알림창을 보여주고, 권한 설정 페이지로 이동합니다.
+			let alert = UIAlertController(title: "위치 권한이 없습니다.", message: "위치 권한을 허용해주세요.", preferredStyle: .alert)
+			let okAction = UIAlertAction(title: "확인", style: .default) { _ in
+				guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+				UIApplication.shared.open(url, options: [:], completionHandler: nil)
+			}
+			let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+			alert.addAction(okAction)
+			alert.addAction(cancelAction)
+			present(alert, animated: true, completion: nil)
+		}
+	}
+}
+
+extension AddressSettingViewController: AddressSettingPresentable {
+	func setDetailAddress(_ address: String) {
+		self.searchTextField.text = address
+	}
+}
+
+/// 부드럽게 지도 위치를 이동하기 위한 확장자
+fileprivate extension NMFCameraUpdate {
+	convenience init(
+		scrollTo: NMGLatLng,
+		zoomTo: Double,
+		cameraAnimation: NMFCameraUpdateAnimation,
+		duration: Double
+	) {
+		self.init(scrollTo: scrollTo, zoomTo: zoomTo)
+		animation = cameraAnimation
+		animationDuration = duration
+	}
+}
+
+fileprivate extension CLLocation {
+	var latLng: NMGLatLng {
+		return NMGLatLng(lat: coordinate.latitude, lng: coordinate.longitude)
 	}
 }

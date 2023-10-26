@@ -7,12 +7,20 @@
 //
 
 import RIBs
+import RxCocoa
+import RxSwift
+import Entity
 import GMDProfile
+import UseCase
 
 protocol NewDogProfileRouting: ViewableRouting { }
 
 protocol NewDogProfilePresentable: Presentable {
 	var listener: NewDogProfilePresentableListener? { get set }
+}
+
+protocol NewDogProfileInteractorDependency {
+	var gmdProfileUseCase: GMDProfileUseCase { get }
 }
 
 final class NewDogProfileInteractor:
@@ -21,8 +29,13 @@ final class NewDogProfileInteractor:
 	NewDogProfilePresentableListener {
 	weak var router: NewDogProfileRouting?
 	weak var listener: NewDogProfileListener?
+	private let dependency: NewDogProfileInteractorDependency
 	
-	override init(presenter: NewDogProfilePresentable) {
+	init(
+		presenter: NewDogProfilePresentable,
+		dependency: NewDogProfileInteractorDependency
+	) {
+		self.dependency = dependency
 		super.init(presenter: presenter)
 		presenter.listener = self
 	}
@@ -42,8 +55,19 @@ extension NewDogProfileInteractor {
 		listener?.newDogProfileDidTapBackButton()
 	}
 	
-	func didTapConfirmButton() {
-		// 서버에 보내는 로직 추가
+	func dismiss() {
+		listener?.newDogProfileDismiss()
+	}
+	
+	func didTapConfirmButton(dog: Dog) {
+		dependency.gmdProfileUseCase
+			.postNewDog(dog: dog)
+			.observe(on: MainScheduler.instance)
+			.subscribe(with: self) { owner, _ in
+				owner.listener?.newDogProfileDidTapConfirmButton()
+			}
+			.disposeOnDeactivate(interactor: self)
+		
 		listener?.newDogProfileDidTapConfirmButton()
 	}
 }

@@ -1,3 +1,4 @@
+import PhotosUI
 import UIKit
 import RIBs
 import RxCocoa
@@ -11,6 +12,8 @@ import GMDUtils
 protocol UserSettingPresentableListener: AnyObject {
 	func confirmButtonDidTap()
 	func backButtonDidTap()
+	func birthdayPickerDidTap()
+	func dismiss()
 }
 
 final class UserSettingViewController:
@@ -35,9 +38,8 @@ final class UserSettingViewController:
 	
 	private let calenderButton: UIButton = {
 		let button = UIButton()
-		let image = UIImage(systemName: "calendar")
 		button.tintColor = .black
-		button.setImage(image, for: .normal)
+		button.setImage(.iconCalendar, for: .normal)
 		
 		return button
 	}()
@@ -71,6 +73,14 @@ final class UserSettingViewController:
 	
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
+	}
+	
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		
+		if isBeingDismissed || isMovingFromParent {
+			listener?.dismiss()
+		}
 	}
 	
 	// MARK: - UI Methods
@@ -140,6 +150,7 @@ final class UserSettingViewController:
 	override func bind() {
 		super.bind()
 		bindNavigation()
+		bindOnboardingView() 
 		bindTextField()
 		bindButtons()
 	}
@@ -148,6 +159,14 @@ final class UserSettingViewController:
 		navigationBar.backButton.rx.tap
 			.bind(with: self) { owner, _ in
 				owner.listener?.backButtonDidTap()
+			}
+			.disposed(by: disposeBag)
+	}
+	
+	private func bindOnboardingView() {
+		onBoardingView.rx.didTapImageView
+			.bind(with: self) { owner, _ in
+				owner.presentPHPickerView()
 			}
 			.disposed(by: disposeBag)
 	}
@@ -236,9 +255,32 @@ final class UserSettingViewController:
 	}
 }
 
+// MARK: - Presentable {
+extension UserSettingViewController {
+	func displayBirthday(date: String) {
+		self.calenderTextField.text = date
+	}
+}
+
 // MARK: - Action
 private extension UserSettingViewController {
 	func calenderButtonDidTap() {
-		print("calenderButtonDidTap")
+		listener?.birthdayPickerDidTap()
+	}
+}
+
+extension UserSettingViewController: PHPickerViewControllerDelegate {
+	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+		picker.dismiss(animated: true)
+		guard let firstResult = results.first else { return }
+		firstResult.fetchImage { result in
+			switch result {
+			case let .success(image):
+				DispatchQueue.main.async {
+					self.onBoardingView.setProfileImage(image)
+				}
+			case .failure: break //
+			}
+		}
 	}
 }

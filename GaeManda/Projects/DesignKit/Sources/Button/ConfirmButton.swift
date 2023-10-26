@@ -12,22 +12,21 @@ import RxSwift
 
 public final class ConfirmButton: UIButton {
 	// MARK: - Properties
-	public var isPositive: Bool {
+	public var isPositive: Bool = true {
 		didSet {
 			isPositive ? setPositiveState() : setNegativeState()
 		}
 	}
 	
 	// MARK: - Initializers
-	public init(title: String) {
-		self.isPositive = true
+	public init(title: String, isPositive: Bool = true) {
 		super.init(frame: .zero)
-		
 		self.layer.cornerRadius = 4
-		self.backgroundColor = .green100
 		self.setTitleColor(.white, for: .normal)
 		self.setTitle(title, for: .normal)
 		self.titleLabel?.font = .b16
+		
+		defer { self.isPositive = isPositive }
 	}
 	
 	@available(*, unavailable)

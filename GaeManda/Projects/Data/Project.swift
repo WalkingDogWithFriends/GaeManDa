@@ -7,17 +7,15 @@ let project = Project.createProject(
 		.createTarget(
 			name: "DTO",
 			product: .staticLibrary,
-			sources: ["DTO/Sources/**"],
-			dependencies: [
-				.Project.DomainLayer.Entity
-			]
+			sources: ["DTO/**"]
 		),
 		.createTarget(
-			name: "DTOTest",
-			product: .unitTests,
-			sources: ["DTO/Tests/**"],
+			name: "DataMapper",
+			product: .staticLibrary,
+			sources: ["DataMapper/**"],
 			dependencies: [
-				.Project.DataLayer.DTO
+				.Project.DataLayer.DTO,
+				.Project.DomainLayer.Entity
 			]
 		),
 		.createTarget(
@@ -26,16 +24,8 @@ let project = Project.createProject(
 			sources: ["RepositoryImpl/Sources/**"],
 			dependencies: [
 				.Project.DataLayer.DTO,
-				.Project.DomainLayer.Repository,
-				.Project.DataLayer.GMDNetwork
-			]
-		),
-		.createTarget(
-			name: "RepositoryImplTest",
-			product: .unitTests,
-			sources: ["RepositoryImpl/Tests/**"],
-			dependencies: [
-				.Project.DataLayer.RepositoryImpl,
+				.Project.DataLayer.GMDNetwork,
+				.Project.DataLayer.DataMapper,
 				.Project.DomainLayer.Repository
 			]
 		),
@@ -45,6 +35,15 @@ let project = Project.createProject(
 			sources: ["GMDNetwork/**"],
 			dependencies: [
 				.Project.DataLayer.DTO
+			]
+		),
+		.createTarget(
+			name: "RepositoryImplTest",
+			product: .unitTests,
+			sources: ["RepositoryImpl/Tests/**"],
+			dependencies: [
+				.Project.DataLayer.RepositoryImpl,
+				.Project.DomainLayer.Repository
 			]
 		)
 	]

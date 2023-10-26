@@ -22,12 +22,12 @@ protocol DogProfileEditPresentable: Presentable {
 	func updateDogName(_ name: String)
 	func updateDogSex(_ sex: Sex)
 	func updateDogWeight(_ weight: String)
-	func updateDogNeutered(_ isNeutered: Bool)
+	func updateDogNeutered(_ isNeutered: Neutered)
 	func updateDogCharacter(_ character: String)
 }
 
 protocol DogProfileEditInteractorDependency {
-	var userProfileUseCase: UserProfileUseCase { get }
+	var gmdProfileUseCase: GMDProfileUseCase { get }
 }
 
 final class DogProfileEditInteractor:
@@ -75,12 +75,15 @@ extension DogProfileEditInteractor {
 		listener?.dogProfileEditDidTapBackButton()
 	}
 	
+	func dismiss() {
+		listener?.dogProfileEditDismiss()
+	}
+	
 	func didTapEndEditButton(dog: Dog) {
-		dependency.userProfileUseCase
+		dependency.gmdProfileUseCase
 			.updateDog(dog: dog)
 			.observe(on: MainScheduler.instance)
-			.subscribe(with: self) { owner, result in
-				guard result == "success" else { return }
+			.subscribe(with: self) { owner, _ in
 				owner.listener?.dogProfileEndEditing()
 			}
 			.disposeOnDeactivate(interactor: self)
@@ -94,7 +97,7 @@ extension DogProfileEditInteractor {
 // MARK: - Interactor Logic
 private extension DogProfileEditInteractor {
 	func updateDogs() {
-		dependency.userProfileUseCase
+		dependency.gmdProfileUseCase
 			.fetchDogs(id: 0)
 			.subscribe(with: self) { owner, dogs in
 				owner.dogs.accept(dogs)

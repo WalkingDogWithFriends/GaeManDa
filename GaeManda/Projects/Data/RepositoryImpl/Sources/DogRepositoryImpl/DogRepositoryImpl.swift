@@ -8,25 +8,37 @@
 
 import Foundation
 import RxSwift
+import DataMapper
 import DTO
 import Entity
 import GMDNetwork
 import Repository
 
 public struct DogRepositoryImpl: DogRepository {
-	public init() { }
+	private let dogDataMapper: DogDataMapper
+	
+	public init(dogDataMapper: DogDataMapper) {
+		self.dogDataMapper = dogDataMapper
+	}
 	
 	public func fetchDogs(id: Int) -> Single<[Dog]> {
 		return  Provider<DogAPI>
 			.init(stubBehavior: .immediate)
 			.request(DogAPI.fetchDogs(id: id), type: [DogResponseDTO].self)
-			.map { $0.map { $0.toDomain } }
+			.map { $0.map { dogDataMapper.mapToDog(from: $0) } }
 	}
 	
-	public func updateDog(dog: Dog) -> Single<String> {
+	public func updateDog(dog: Dog) -> Single<Void> {
 		return Provider<DogAPI>
 			.init(stubBehavior: .immediate)
-			.request(DogAPI.updateDogs(dog: dog), type: UpdateDogResponseDTO.self)
-			.map { $0.message }
+			.request(DogAPI.updateDogs(dog: dog), type: VoidResponse.self)
+			.map { _ in }
+	}
+	
+	public func postNewDog(dog: Dog) -> Single<Void> {
+		return Provider<DogAPI>
+			.init(stubBehavior: .immediate)
+			.request(DogAPI.postNewDog(dog: dog), type: VoidResponse.self)
+			.map { _ in }
 	}
 }

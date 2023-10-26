@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import WebKit
 import RIBs
 import RxCocoa
 import RxSwift
@@ -18,31 +19,16 @@ import GMDUtils
 protocol DetailAddressSettingPresentableListener: AnyObject {
 	func detailAddressSettingDidDismiss()
 	func closeButtonDidTap()
-	func loadLocationButtonDidTap()
+	func loadLocationButtonDidTap(jibunAddress: String)
 }
 
 final class DetailAddressSettingViewController:
 	UIViewController,
 	DetailAddressSettingPresentable,
 	DetailAddressSettingViewControllable {
+	// MARK: - Properties
 	weak var listener: DetailAddressSettingPresentableListener?
 	private let disposeBag = DisposeBag()
-	
-	private let topStackView: UIStackView = {
-		let stackView = UIStackView()
-		stackView.spacing = 20
-		stackView.axis = .vertical
-		stackView.alignment = .fill
-		stackView.distribution = .fill
-		
-		return stackView
-	}()
-	
-	private let topBarView: UIView = {
-		let view = UIView()
-		
-		return view
-	}()
 	
 	private let titleLabel: UILabel = {
 		let label = UILabel()
@@ -54,149 +40,111 @@ final class DetailAddressSettingViewController:
 	
 	private let closeButton: UIButton = {
 		let button = UIButton()
-		let image = UIImage(
-			systemName: "xmark",
-			withConfiguration: UIImage.SymbolConfiguration(pointSize: 18, weight: .semibold)
-		)
+		let image = UIImage.iconCloseRound
 		button.setImage(image, for: .normal)
 		button.tintColor = .black
 		
 		return button
 	}()
 	
-	private let textField: UITextField = {
-		let textField = UITextField()
-		textField.placeholder = "지번, 도로명, 건물명으로 검색"
-		textField.layer.cornerRadius = 7
-		textField.layer.borderWidth = 1.2
-		textField.layer.borderColor = UIColor.black.cgColor
-		let image = UIImage(
-			systemName: "magnifyingglass",
-			withConfiguration: UIImage.SymbolConfiguration(weight: .bold)
-		)
-		textField.setLeftImage(image, size: 15, leftPadding: 8)
-		textField.setPlaceholdColor(.gray90)
-		textField.font = .r12
+	private lazy var webView: WKWebView = {
+		let userContentController = WKUserContentController()
+		userContentController.add(MessageHandler(delegate: self), name: "callBackHandler")
+		let configuration = WKWebViewConfiguration()
+		configuration.userContentController = userContentController
+		let webView = WKWebView(frame: self.view.bounds, configuration: configuration)
 		
-		return textField
+		return webView
 	}()
 	
-	private let loadLocationButton: UIButton = {
-		let button = UIButton()
-		var configuration = UIButton.Configuration.plain()
-		let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 12, weight: .light)
-		let image = UIImage(
-			systemName: "location.north.circle.fill",
-			withConfiguration: imageConfiguration
-		)
-		configuration.image = image
-		configuration.imagePadding = 10
-		
-		var titleAttribute = AttributedString.init("현재 위치로 설정")
-		titleAttribute.font = .b12
-		configuration.attributedTitle = titleAttribute
-		
-		configuration.contentInsets = NSDirectionalEdgeInsets(
-			top: 4,
-			leading: 0,
-			bottom: 4,
-			trailing: 0
-		)
-		configuration.background.backgroundColor = .black
-		
-		button.configuration = configuration
-		button.tintColor = .white
-		button.layer.cornerRadius = 4
-		
-		return button
-	}()
-	
-	private let bottomView: UIView = {
-		let view = UIView()
-		view.backgroundColor = .init(hexCode: "#F6F6F6")
-		
-		return view
-	}()
-	
+	// MARK: - View LifeCycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		setupUI()
+		setUI()
+		loadWebView()
 	}
 	
-	private func setupUI() {
-		view.backgroundColor = .white
-		
-		setupSubviews()
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		listener?.detailAddressSettingDidDismiss()
+	}
+}
+
+private extension DetailAddressSettingViewController {
+	func setUI() {
+		self.view.backgroundColor = .white
+		setViewHierarchy()
 		setConstraints()
 		bind()
 	}
 	
-	private func setupSubviews() {
-		view.addSubview(topStackView)
-		view.addSubview(bottomView)
-		
-		topBarView.addSubview(titleLabel)
-		topBarView.addSubview(closeButton)
-		
-		topStackView.addArrangedSubview(topBarView)
-		topStackView.addArrangedSubview(textField)
-		topStackView.addArrangedSubview(loadLocationButton)
+	func setViewHierarchy() {
+		view.addSubviews(titleLabel, closeButton, webView)
 	}
 	
-	private func setConstraints() {
-		topStackView.snp.makeConstraints { make in
-			make.top.equalToSuperview().offset(36)
-			make.leading.equalToSuperview().offset(32)
-			make.trailing.equalToSuperview().offset(-32)
+	func setConstraints() {
+		titleLabel.snp.makeConstraints {
+			$0.top.equalTo(view).offset(24)
+			$0.leading.equalToSuperview().offset(16)
 		}
 		
-		topBarView.snp.makeConstraints {  make in make.height.equalTo(28)
+		closeButton.snp.makeConstraints {
+			$0.centerY.equalTo(titleLabel)
+			$0.trailing.equalToSuperview().offset(-12)
 		}
 		
-		titleLabel.snp.makeConstraints { make in
-			make.leading.top.equalTo(topBarView)
-		}
-		
-		closeButton.snp.makeConstraints { make in
-			make.trailing.top.equalTo(topBarView)
-		}
-		
-		textField.snp.makeConstraints { make in
-			make.height.equalTo(32)
-		}
-		
-		loadLocationButton.snp.makeConstraints { make in
-			make.height.equalTo(28)
-		}
-		
-		bottomView.snp.makeConstraints { make in
-			make.top.equalTo(topStackView.snp.bottom).offset(36)
-			make.leading.trailing.bottom.equalToSuperview()
+		webView.snp.makeConstraints {
+			$0.top.equalTo(titleLabel.snp.bottom).offset(8)
+			$0.leading.trailing.equalToSuperview()
+			$0.bottom.equalToSuperview().offset(32)
 		}
 	}
 	
-	private func bind() {
-		self.rx.viewDidDisappear
-			.withUnretained(self)
-			.subscribe(
-				onNext: { owner, _ in
-					owner.listener?.detailAddressSettingDidDismiss()
-				}
-			)
-			.disposed(by: disposeBag)
-		
-		loadLocationButton.rx.tap
-			.withUnretained(self)
-			.bind { owner, _ in
-				owner.listener?.loadLocationButtonDidTap()
-			}
-			.disposed(by: disposeBag)
-		
+	func bind() {
 		closeButton.rx.tap
-			.withUnretained(self)
-			.bind { owner, _ in
+			.bind(with: self, onNext: { owner, _ in
 				owner.listener?.closeButtonDidTap()
-			}
-			.disposed(by: disposeBag)
+			})
+			.disposed(by: disposeBag)	
+	}
+	
+	func loadWebView() {
+		guard let url = URL(string: "https://walkingdogwithfriends.github.io/kakao-postcode/") else { return }
+		let request = URLRequest(url: url)
+		webView.load(request)
+	}
+}
+
+extension DetailAddressSettingViewController: WKScriptMessageHandler {
+	func userContentController(
+		_ userContentController: WKUserContentController,
+		didReceive message: WKScriptMessage
+	) {
+		guard
+			let body = message.body as? [String: Any],
+			let jibunAddress = body["jibunAddress"] as? String,
+			let roadAddress = body["roadAddress"] as? String,
+			let zoneCode = body["zonecode"] as? String
+		else { return }
+		print(jibunAddress, roadAddress, zoneCode)
+		listener?.loadLocationButtonDidTap(jibunAddress: jibunAddress)
+	}
+}
+
+fileprivate extension DetailAddressSettingViewController {
+	class MessageHandler: NSObject, WKScriptMessageHandler {
+		weak var delegate: WKScriptMessageHandler?
+		
+		init(delegate: WKScriptMessageHandler) {
+			self.delegate = delegate
+			super.init()
+		}
+		
+		func userContentController(
+			_ userContentController: WKUserContentController,
+			didReceive message: WKScriptMessage
+		) {
+			self.delegate?.userContentController(userContentController, didReceive: message)
+		}
 	}
 }

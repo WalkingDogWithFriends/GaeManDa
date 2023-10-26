@@ -1,9 +1,16 @@
 import RIBs
 import OnBoarding
 
-protocol AddressSettingRouting: ViewableRouting {}
+protocol AddressSettingRouting: ViewableRouting {
+	func detailAddressSettingAttach()
+	func detailAddressSettingDetach()
+	func detailAddressSettingDismiss()
+}
+
 protocol AddressSettingPresentable: Presentable {
 	var listener: AddressSettingPresentableListener? { get set }
+	
+	func setDetailAddress(_ address: String)
 }
 
 final class AddressSettingInteractor:
@@ -37,11 +44,34 @@ extension AddressSettingInteractor {
 		listener?.addressSettingBackButtonDidTap()
 	}
 	
-	func searchTextFieldDidTap() {
-		listener?.addressSettingDidTapSearchTextField()
+	func dismiss() {
+		listener?.addressSettingDismiss()
 	}
 	
 	func loadLocationButtonDidTap() {
 		print("loadLocation")
+	}
+}
+
+extension AddressSettingInteractor {
+	func searchTextFieldDidTap() {
+		router?.detailAddressSettingAttach()
+	}
+	
+	func addressSettingDidTapSearchTextField() {
+		router?.detailAddressSettingAttach()
+	}
+	
+	func detailAddressSettingDidDismiss() {
+		router?.detailAddressSettingDismiss()
+	}
+	
+	func detailAddressSettingCloseButtonDidTap() {
+		router?.detailAddressSettingDetach()
+	}
+	
+	func detailAddressSettingLoadLocationButtonDidTap(jibunAddress: String) {
+		presenter.setDetailAddress(jibunAddress)
+		router?.detailAddressSettingDismiss()
 	}
 }

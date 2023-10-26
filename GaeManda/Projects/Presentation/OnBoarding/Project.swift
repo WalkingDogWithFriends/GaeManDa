@@ -9,7 +9,6 @@ let project = Project.createProject(
 		.createIntefaceTarget(
 			name: projectName,
 			dependencies: [
-				.Project.DomainLayer.Entity,
 				.Project.CoreLayer.GMDUtils,
 				.SPM.RIBs
 			]
@@ -18,12 +17,14 @@ let project = Project.createProject(
 			name: projectName,
 			dependencies: [
 				.Project.PresentationLayer.OnBoarding,
-				.Project.DesignKit,
 				.Project.CoreLayer.GMDExtensions,
 				.Project.DomainLayer.UseCase,
+				.Project.DomainLayer.Entity,
+				.Project.DesignKit,
 				.SPM.RxCocoa,
 				.SPM.RxGesture,
-				.SPM.SnapKit
+				.SPM.SnapKit,
+				.SPM.NMapsMap
 			]
 		),
 		.createTestTarget(name: projectName)

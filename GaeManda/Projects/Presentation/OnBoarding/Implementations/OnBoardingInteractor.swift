@@ -6,23 +6,19 @@ protocol OnBoardingRouting: Routing {
 	func cleanupViews()
 	func termsOfUseAttach()
 	func termsOfUseDetach()
-	func termsOfUseDidFinish()
 	func addressSettingAttach()
 	func addressSettingDetach()
-	func addressSettingDidFinish()
-	func detailAddressSettingAttach()
-	func detailAddressSettingDetach()
-	func detailAddressSettingDismiss()
+	func addressSettingDismiss()
 	func userSettingAttach()
 	func userSettingDetach()
-	func userSettingDidFinish()
+	func userSettingDismiss()
 	func dogSettingAttach()
 	func dogSettingDetach()
 }
 
 final class OnBoardingInteractor:
 	Interactor,
-	OnBoardingInteractable {
+    OnBoardingInteractable {
 	weak var router: OnBoardingRouting?
 	weak var listener: OnBoardingListener?
 	
@@ -42,44 +38,37 @@ final class OnBoardingInteractor:
 // MARK: TermsOfUseListener
 extension OnBoardingInteractor {
 	func termsOfUseDidFinish() {
-		router?.termsOfUseDidFinish()
+		router?.addressSettingAttach()
 	}
 }
 
 // MARK: AddressSettingListener
 extension OnBoardingInteractor {
 	func addressSettingDidFinish() {
-		router?.addressSettingDidFinish()
+		router?.userSettingAttach()
 	}
 	
 	func addressSettingBackButtonDidTap() {
 		router?.addressSettingDetach()
 	}
-}
-
-// MARK: DetailAddressSettingListener
-extension OnBoardingInteractor {
-	func addressSettingDidTapSearchTextField() {
-		router?.detailAddressSettingAttach()
-	}
 	
-	func detailAddressSettingDidDismiss() {
-		router?.detailAddressSettingDismiss()
-	}
-	
-	func detailAddressSettingCloseButtonDidTap() {
-		router?.detailAddressSettingDetach()
+	func addressSettingDismiss() {
+		router?.addressSettingDismiss()
 	}
 }
 
 // MARK: UserSettingListener
 extension OnBoardingInteractor {
 	func userSettingDidFinish() {
-		router?.userSettingDidFinish()
+		router?.dogSettingAttach()
 	}
 	
 	func userSettingBackButtonDidTap() {
 		router?.userSettingDetach()
+	}
+	
+	func userSettingDismiss() {
+		router?.userSettingDismiss()
 	}
 }
 
@@ -90,6 +79,10 @@ extension OnBoardingInteractor {
 	}
 	
 	func dogSettingBackButtonDidTap() {
+		router?.dogSettingDetach()
+	}
+	
+	func dogSettingDismiss() {
 		router?.dogSettingDetach()
 	}
 }

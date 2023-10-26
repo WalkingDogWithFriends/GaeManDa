@@ -1,6 +1,8 @@
 import RIBs
+import DesignKit
 
 protocol LoggedOutDependency: Dependency {
+	var birthdayPickerBuildable: BirthdayPickerBuildable { get }
 	var loggedOutViewController: ViewControllable { get }
 }
 
@@ -23,6 +25,7 @@ final class LoggedOutBuilder:
 		return LoggedOutRouter(
 			interactor: interactor,
 			viewController: component.loggedOutViewController,
+			signInBuildable: component.signInBuildable,
 			onBoardingBuildable: component.onBoardingBuildable
 		)
 	}

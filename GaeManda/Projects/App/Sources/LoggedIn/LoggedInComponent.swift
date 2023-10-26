@@ -9,8 +9,9 @@
 import RIBs
 import Chatting
 import ChattingImpl
-import DogsOnAround
-import DogsOnAroundImpl
+import DataMapper
+import GMDMap
+import GMDMapImpl
 import GMDProfile
 import GMDProfileImpl
 import Repository
@@ -22,8 +23,8 @@ final class LoggedInComponent:
 	Component<LoggedInDependency>,
 	ChattingListDependency,
 	ChattingDependency,
-	DogsOnAroundDependency,
-	UserProfileDependency,
+	GMDMapDependency,
+	GMDProfileDependency,
 	UserProfileEditDependency,
 	DogProfileEditDependency,
 	NewDogProfileDependency {
@@ -36,12 +37,12 @@ final class LoggedInComponent:
 		return ChattingBuilder(dependency: self)
 	}()
 	
-	lazy var dogsOnAroundBuildable: DogsOnAroundBuildable = {
-		return DogsOnAroundBuilder(dependency: self)
+	lazy var gmdMapBuildable: GMDMapBuildable = {
+		return GMDMapBuilder(dependency: self)
 	}()
 	
-	lazy var userProfileBuildable: UserProfileBuildable = {
-		return UserProfileBuilder(dependency: self)
+	lazy var gmdProfileBuildable: GMDProfileBuildable = {
+		return GMDProfileBuilder(dependency: self)
 	}()
 	
 	lazy var userProfileEditBuildable: UserProfileEditBuildable = {
@@ -58,16 +59,16 @@ final class LoggedInComponent:
 	
 	// MARK: - Repository
 	lazy var dogRepository: DogRepository = {
-		return DogRepositoryImpl()
+		return DogRepositoryImpl(dogDataMapper: DogDataMapperImpl())
 	}()
 	
 	lazy var userRepository: UserRepository = {
-		return UserRepositoryImpl()
+		return UserRepositoryImpl(userDataMapper: UserProfileDataMapperImpl())
 	}()
 	
 	// MARK: - UseCase
-	lazy var userProfileUseCase: UserProfileUseCase = {
-		return UserProfileUseCaseImpl(
+	lazy var gmdProfileUseCase: GMDProfileUseCase = {
+		return GMDProfileUseCaseImpl(
 			dogDependecy: dogRepository,
 			userDependency: userRepository
 		)
