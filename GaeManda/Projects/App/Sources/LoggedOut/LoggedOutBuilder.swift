@@ -1,6 +1,8 @@
 import RIBs
+import DesignKit
 
 protocol LoggedOutDependency: Dependency {
+	var birthdayPickerBuildable: BirthdayPickerBuildable { get }
 	var loggedOutViewController: ViewControllable { get }
 }
 

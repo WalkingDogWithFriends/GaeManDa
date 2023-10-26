@@ -1,9 +1,11 @@
 import RIBs
+import DesignKit
 import GMDUtils
 import OnBoarding
 
 public protocol DogSettingDependency: Dependency {
 	var dogSettingViewController: ViewControllable { get }
+	var birthdayPickerBuildable: BirthdayPickerBuildable { get }
 }
 
 final class DogSettingComponent:
@@ -12,6 +14,10 @@ final class DogSettingComponent:
 	SecondDogSettingDependency {
 	fileprivate var dogSettingViewController: ViewControllable {
 		return dependency.dogSettingViewController
+	}
+	
+	var birthdayPickerBuildable: BirthdayPickerBuildable {
+		return dependency.birthdayPickerBuildable
 	}
 }
 

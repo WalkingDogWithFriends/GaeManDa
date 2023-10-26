@@ -12,6 +12,7 @@ import GMDUtils
 protocol UserSettingPresentableListener: AnyObject {
 	func confirmButtonDidTap()
 	func backButtonDidTap()
+	func birthdayPickerDidTap()
 	func dismiss()
 }
 
@@ -254,10 +255,17 @@ final class UserSettingViewController:
 	}
 }
 
+// MARK: - Presentable {
+extension UserSettingViewController {
+	func displayBirthday(date: String) {
+		self.calenderTextField.text = date
+	}
+}
+
 // MARK: - Action
 private extension UserSettingViewController {
 	func calenderButtonDidTap() {
-		print("calenderButtonDidTap")
+		listener?.birthdayPickerDidTap()
 	}
 }
 

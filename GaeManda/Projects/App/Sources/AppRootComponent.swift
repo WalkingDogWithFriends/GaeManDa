@@ -1,10 +1,16 @@
 import RIBs
+import DesignKit
 import GMDUtils
 
 final class AppRootComponent:
 	Component<AppRootDependency>,
 	LoggedOutDependency,
-	LoggedInDependency {
+	LoggedInDependency,
+	BirthdayPickerDependency {
+	lazy var birthdayPickerBuildable: BirthdayPickerBuildable = {
+		return BirthdayPickerBuilder(dependency: self)
+	}()
+	
 	lazy var loggedOutBuildable: LoggedOutBuildable = {
 		return LoggedOutBuilder(dependency: self)
 	}()

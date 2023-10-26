@@ -1,4 +1,5 @@
 import RIBs
+import DesignKit
 import GMDUtils
 import OnBoarding
 import OnBoardingImpl
@@ -50,5 +51,9 @@ final class LoggedOutComponent:
 	}
 	var loggedOutViewController: ViewControllable {
 		dependency.loggedOutViewController
+	}
+	
+	var birthdayPickerBuildable: BirthdayPickerBuildable {
+		return dependency.birthdayPickerBuildable
 	}
 }
