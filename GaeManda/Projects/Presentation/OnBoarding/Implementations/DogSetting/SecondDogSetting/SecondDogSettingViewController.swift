@@ -21,6 +21,9 @@ final class SecondDogSettingViewController:
 	// MARK: - Properties
 	weak var listener: SecondDogSettingPresentableListener?
 	var dropDownViews: [DropDownView]?
+	private var selectedBreed = ""
+	private var selectedNNN = Neutered.true
+	private var selectedCharacter = ""
 	
 	private let viewModel = SecondDogSettingViewModel()
 	
@@ -53,6 +56,13 @@ final class SecondDogSettingViewController:
 		registerDropDrownViews(dogBreedDropDownView, dogCharacterDropDownView)
 		
 		setupUI()
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		
+		guard let data = DogStroage.dogImage else { return }
+		self.onBoardingView.setProfileImage(UIImage(data: data))
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {
@@ -192,6 +202,12 @@ final class SecondDogSettingViewController:
 			)
 			.asDriver(onErrorJustReturn: .true)
 		
+		selectedNeuteredObservable
+			.drive(with: self) { owner, nnn in
+				owner.selectedNNN = nnn
+			}
+			.disposed(by: disposeBag)
+		
 		// 선택된 성별이 남성일 경우
 		selectedNeuteredObservable
 			.map { $0 == .true }
@@ -222,6 +238,10 @@ final class SecondDogSettingViewController:
 			.map { $0 && $1 }
 			.filter { $0 == true }
 			.bind(with: self) { owner, _ in
+				DogStroage.dogNNN = owner.selectedNNN
+				DogStroage.dogBreed = owner.dogBreedDropDownView.selectedOption ?? ""
+				DogStroage.dogCharacter = owner.dogCharacterDropDownView.selectedOption ?? ""
+				
 				owner.listener?.didTapConfirmButton()
 			}
 			.disposed(by: disposeBag)

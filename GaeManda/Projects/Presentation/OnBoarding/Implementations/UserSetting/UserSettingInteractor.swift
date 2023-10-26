@@ -1,5 +1,7 @@
 import RIBs
 import OnBoarding
+import Entity
+import GMDExtensions
 
 protocol UserSettingRouting: ViewableRouting {
 	func attachBirthdayPicker()
@@ -40,7 +42,9 @@ final class UserSettingInteractor:
 
 // MARK: - PresentableListener
 extension UserSettingInteractor {
-	func confirmButtonDidTap() {
+	func confirmButtonDidTap(_ user: User) {
+		UserDefaultsManager.shared.setUser(user: user)
+		
 		listener?.userSettingDidFinish()
 	}
 	

@@ -21,7 +21,7 @@ protocol UserProfileEditPresentableListener: AnyObject {
 	func viewWillAppear()
 	func didTapBackbutton()
 	func dismiss()
-	func didTapEndEditingButton(name: String, sex: Sex)
+	func didTapEndEditingButton(_ user: User)
 }
 
 final class UserProfileEditViewController:
@@ -34,6 +34,7 @@ final class UserProfileEditViewController:
 	
 	private let maxTextCount = 20
 	private let selectedSexRelay = BehaviorRelay<Sex>(value: .male)
+	private var profileImage: UIImage? = UIImage()
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "프로필 수정")
@@ -201,11 +202,23 @@ private extension UserProfileEditViewController {
 // MARK: - UI Update
 extension UserProfileEditViewController {
 	func updateUsername(_ name: String) {
-		nickNameTextField.text = name
+//		nickNameTextField.text = name
 	}
 	
 	func updateUserSex(_ sex: Sex) {
-		selectedSexRelay.accept(sex)
+//		selectedSexRelay.accept(sex)
+	}
+	
+	func updateUser(_ user: User) {
+		nickNameTextField.text = user.name
+		selectedSexRelay.accept(user.sex)
+		calenderTextField.text = "1998.01.30"
+		
+		if let image = user.image {
+			let uiImage = UIImage(data: image)
+			self.profileImageView.image = uiImage
+			self.profileImage = uiImage
+		}
 	}
 }
 
@@ -262,10 +275,18 @@ private extension UserProfileEditViewController {
 		confirmButtonTappedWithTextFieldModes
 			.filter { $0.0 == .normal && $0.1 == .normal }
 			.bind(with: self) { owner, _ in
-				owner.listener?.didTapEndEditingButton(
+				let user = User(
 					name: owner.nickNameTextField.text,
-					sex: owner.selectedSexRelay.value
+					sex: owner.selectedSexRelay.value,
+					age: "25",
+					image: owner.profileImage?.pngData()
 				)
+				
+				owner.listener?.didTapEndEditingButton(user)
+//				owner.listener?.didTapEndEditingButton(
+//					name: owner.nickNameTextField.text,
+//					sex: owner.selectedSexRelay.value
+//				)
 			}
 			.disposed(by: disposeBag)
 	}
@@ -345,6 +366,7 @@ extension UserProfileEditViewController: PHPickerViewControllerDelegate {
 			case let .success(image):
 				DispatchQueue.main.async {
 					self.profileImageView.image = image
+					self.profileImage = image
 				}
 			case .failure: break
 			}

@@ -25,6 +25,8 @@ final class FirstDogSettingViewController:
 	
 	private let kgSuffix = "kg"
 	private let maximumTextCount = 20
+	private var selectedSex = Sex.male
+	private var profileImage: UIImage? = UIImage()
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "")
@@ -222,6 +224,12 @@ final class FirstDogSettingViewController:
 			)
 			.asDriver(onErrorJustReturn: .male)
 		
+		selectedSexObservable
+			.drive(with: self) { owner, sex in
+				owner.selectedSex = sex
+			}
+			.disposed(by: disposeBag)
+		
 		// 선택된 성별이 남성일 경우
 		selectedSexObservable
 			.map { $0 == .male }
@@ -258,6 +266,10 @@ final class FirstDogSettingViewController:
 			.map { $0 && $1 && $2 }
 			.filter { $0 == true }
 			.bind(with: self) { owner, _ in
+				DogStroage.dogName = owner.dogNameTextField.text
+				DogStroage.dogWeight = owner.dogWeightTextField.text
+				DogStroage.dogSex = owner.selectedSex
+				DogStroage.dogImage = owner.profileImage?.pngData()
 				owner.listener?.didTapConfirmButton()
 			}
 			.disposed(by: disposeBag)
@@ -284,7 +296,9 @@ extension FirstDogSettingViewController: PHPickerViewControllerDelegate {
 		guard let firstResult = results.first else { return }
 		firstResult.fetchImage { result in
 			switch result {
-			case let .success(image): self.onBoardingView.setProfileImage(image)
+			case let .success(image): 
+				self.onBoardingView.setProfileImage(image)
+				self.profileImage = image
 			case .failure: break //
 			}
 		}

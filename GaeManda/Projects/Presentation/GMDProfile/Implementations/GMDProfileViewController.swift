@@ -214,6 +214,7 @@ extension GMDProfileViewController {
 	}
 	
 	func updateDogPageControl() {
+		dogPageControl.setCurrentPage(at: 0)
 		dogPageControl.setNumberOfPages(with: carouselViewModel.dogsCount)
 		setDogPageControlConstraints(with: carouselViewModel.dogsCount)
 	}
@@ -339,5 +340,17 @@ extension GMDProfileViewController: UICollectionViewDelegateFlowLayout {
 			width: collectionView.frame.width,
 			height: collectionView.frame.height
 		)
+	}
+}
+
+// MARK: - TEST
+extension GMDProfileViewController {
+	func updateUser(_ user: User) {
+		self.nickNameLabel.text = user.name
+		self.sexAndAgeLabel.text = "\(user.sex.rawValue) \(user.age)세"
+		
+		if let imageData = user.image {
+			self.profileImageView.image = UIImage(data: imageData)
+		}
 	}
 }

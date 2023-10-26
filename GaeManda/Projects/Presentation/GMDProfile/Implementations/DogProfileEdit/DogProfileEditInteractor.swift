@@ -12,18 +12,19 @@ import RxSwift
 import Entity
 import GMDProfile
 import UseCase
+import GMDExtensions
 
 protocol DogProfileEditRouting: ViewableRouting { }
 
 protocol DogProfileEditPresentable: Presentable {
 	var listener: DogProfileEditPresentableListener? { get set }
 	
-	func updateDogDashBoard(dogViewModels: [DogDashBoardViewModel])
 	func updateDogName(_ name: String)
 	func updateDogSex(_ sex: Sex)
 	func updateDogWeight(_ weight: String)
 	func updateDogNeutered(_ isNeutered: Neutered)
 	func updateDogCharacter(_ character: String)
+	func updateDog(_ dog: Dog)
 }
 
 protocol DogProfileEditInteractorDependency {
@@ -64,7 +65,7 @@ final class DogProfileEditInteractor:
 // MARK: - PresentableListener
 extension DogProfileEditInteractor {
 	func viewDidLoad() {
-		bind()
+//		bind()
 	}
 	
 	func viewWillAppear() {
@@ -97,12 +98,19 @@ extension DogProfileEditInteractor {
 // MARK: - Interactor Logic
 private extension DogProfileEditInteractor {
 	func updateDogs() {
-		dependency.gmdProfileUseCase
-			.fetchDogs(id: 0)
-			.subscribe(with: self) { owner, dogs in
-				owner.dogs.accept(dogs)
+		if let dogs = UserDefaultsManager.shared
+			.getDogs() {
+				if let dog = dogs.first(where: { $0.id == self.editDogId.value }) {
+					presenter.updateDog(dog)
+				}
 			}
-			.disposeOnDeactivate(interactor: self)
+		
+//		dependency.gmdProfileUseCase
+//			.fetchDogs(id: 0)
+//			.subscribe(with: self) { owner, dogs in
+//				owner.dogs.accept(dogs)
+//			}
+//			.disposeOnDeactivate(interactor: self)
 	}
 	
 	func updateEditDog(_ dog: Dog) {
@@ -114,38 +122,38 @@ private extension DogProfileEditInteractor {
 	}
 	
 	func bind() {
-		let combineObservable = Observable
-			.combineLatest(editDogId, dogs)
-			.share()
-		
-		combineObservable
-			.map { id, dogs in
-				dogs.map {
-					DogDashBoardViewModel(
-						dogId: $0.id,
-						profileImage: "",
-						isEdited: $0.id == id
-					)
-				}
-			}
-			.bind(with: self) { owner, viewModels in
-				owner.presenter.updateDogDashBoard(dogViewModels: viewModels)
-			}
-			.disposeOnDeactivate(interactor: self)
-		
-		combineObservable
-			.map { id, dogs in
-				// id값으로 수정할 강아지를 찾습니다.
-				dogs.first(where: { $0.id == id })
-			}
-			.bind(with: self) { owner, dog in
-				guard let dog = dog else {
-					// 해당 코드를 사용하면 에러가 납니다..
-					// owner.listener?.dogProfileEditBackButtonDidTap()
-					return
-				}
-				owner.updateEditDog(dog)
-			}
-			.disposeOnDeactivate(interactor: self)
+//		let combineObservable = Observable
+//			.combineLatest(editDogId, dogs)
+//			.share()
+//		
+//		combineObservable
+//			.map { id, dogs in
+//				dogs.map {
+//					DogDashBoardViewModel(
+//						dogId: $0.id,
+//						profileImage: "",
+//						isEdited: $0.id == id
+//					)
+//				}
+//			}
+//			.bind(with: self) { owner, viewModels in
+//				owner.presenter.updateDogDashBoard(dogViewModels: viewModels)
+//			}
+//			.disposeOnDeactivate(interactor: self)
+//		
+//		combineObservable
+//			.map { id, dogs in
+//				// id값으로 수정할 강아지를 찾습니다.
+//				dogs.first(where: { $0.id == id })
+//			}
+//			.bind(with: self) { owner, dog in
+//				guard let dog = dog else {
+//					// 해당 코드를 사용하면 에러가 납니다..
+//					// owner.listener?.dogProfileEditBackButtonDidTap()
+//					return
+//				}
+//				owner.updateEditDog(dog)
+//			}
+//			.disposeOnDeactivate(interactor: self)
 	}
 }

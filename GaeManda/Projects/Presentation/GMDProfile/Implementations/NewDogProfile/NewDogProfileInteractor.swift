@@ -12,6 +12,7 @@ import RxSwift
 import Entity
 import GMDProfile
 import UseCase
+import GMDExtensions
 
 protocol NewDogProfileRouting: ViewableRouting { }
 
@@ -60,13 +61,15 @@ extension NewDogProfileInteractor {
 	}
 	
 	func didTapConfirmButton(dog: Dog) {
-		dependency.gmdProfileUseCase
-			.postNewDog(dog: dog)
-			.observe(on: MainScheduler.instance)
-			.subscribe(with: self) { owner, _ in
-				owner.listener?.newDogProfileDidTapConfirmButton()
-			}
-			.disposeOnDeactivate(interactor: self)
+		UserDefaultsManager.shared
+			.setDogs(dog: dog)
+//		dependency.gmdProfileUseCase
+//			.postNewDog(dog: dog)
+//			.observe(on: MainScheduler.instance)
+//			.subscribe(with: self) { owner, _ in
+//				owner.listener?.newDogProfileDidTapConfirmButton()
+//			}
+//			.disposeOnDeactivate(interactor: self)
 		
 		listener?.newDogProfileDidTapConfirmButton()
 	}

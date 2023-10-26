@@ -1,4 +1,6 @@
 import RIBs
+import Entity
+import GMDExtensions
 
 protocol SecondDogSettingRouting: ViewableRouting { }
 
@@ -36,6 +38,19 @@ final class SecondDogSettingInteractor:
 // MARK: PresentableListener
 extension SecondDogSettingInteractor {
 	func didTapConfirmButton() {
+		let dog = Dog(
+			id: DogStroage.getID(),
+			name: DogStroage.dogName,
+			sex: DogStroage.dogSex,
+			age: DogStroage.dogAge,
+			weight: DogStroage.dogWeight,
+			didNeutered: DogStroage.dogNNN,
+			character: DogStroage.dogCharacter,
+			image: DogStroage.dogImage
+		)
+		
+		UserDefaultsManager.shared.initDogs(dog: dog)
+		
 		listener?.secondDogSettingDidTapConfirmButton()
 	}
 	

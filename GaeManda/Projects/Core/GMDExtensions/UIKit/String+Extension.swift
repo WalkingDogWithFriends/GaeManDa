@@ -48,4 +48,14 @@ public extension String {
 		
 		return self
 	}
+	
+	func remove(suffix: String) -> String {
+		if self.contains(suffix) {
+			let count = self.count - suffix.count
+			let index = self.index(self.startIndex, offsetBy: count)
+			return String(self[..<index])
+		} else {
+			return self
+		}
+	}
 }

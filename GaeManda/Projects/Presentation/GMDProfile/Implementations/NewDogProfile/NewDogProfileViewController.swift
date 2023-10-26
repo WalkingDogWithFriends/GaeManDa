@@ -149,13 +149,14 @@ private extension NewDogProfileViewController {
 			.bind(with: self) { owner, _ in
 				owner.listener?.didTapConfirmButton(
 					dog: Dog(
-						id: 0,
+						id: DogStroage.getID(),
 						name: owner.scrollView.nickNameTextField.text,
 						sex: owner.scrollView.selectedSexRelay.value,
 						age: "12",
-						weight: owner.scrollView.weightTextField.text,
+						weight: owner.scrollView.weightTextField.text.remove(suffix: "kg"),
 						didNeutered: owner.scrollView.selectedNeuterRelay.value,
-						character: owner.scrollView.characterTextView.text
+						character: owner.scrollView.characterTextView.text,
+						image: owner.profileImageView.image?.pngData()
 					)
 				)
 			}

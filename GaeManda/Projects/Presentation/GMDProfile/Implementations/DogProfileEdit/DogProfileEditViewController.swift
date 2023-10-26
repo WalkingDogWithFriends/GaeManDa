@@ -117,7 +117,7 @@ private extension DogProfileEditViewController {
 	}
 	
 	func setViewHierarchy() {
-		view.addSubviews(navigationBar, dogProfileDashBoard, profileImageView, scrollView, endEditingButton)
+		view.addSubviews(navigationBar, profileImageView, scrollView, endEditingButton)
 	}
 	
 	func setConstraints() {
@@ -127,15 +127,15 @@ private extension DogProfileEditViewController {
 			make.height.equalTo(44)
 		}
 		
-		dogProfileDashBoard.snp.makeConstraints { make in
-			make.leading.equalToSuperview().offset(24)
-			make.trailing.equalToSuperview()
-			make.top.equalTo(navigationBar.snp.bottom).offset(16)
-			make.height.equalTo(56)
-		}
+//		dogProfileDashBoard.snp.makeConstraints { make in
+//			make.leading.equalToSuperview().offset(24)
+//			make.trailing.equalToSuperview()
+//			make.top.equalTo(navigationBar.snp.bottom).offset(16)
+//			make.height.equalTo(56)
+//		}
 		
 		profileImageView.snp.makeConstraints { make in
-			make.top.equalTo(dogProfileDashBoard.snp.bottom).offset(20)
+			make.top.equalTo(navigationBar.snp.bottom).offset(96)
 			make.centerX.equalToSuperview()
 			make.width.height.equalTo(140)
 		}
@@ -182,6 +182,20 @@ extension DogProfileEditViewController {
 	func updateDogCharacter(_ character: String) {
 		scrollView.characterTextView.text = character
 	}
+	
+	func updateDog(_ dog: Dog) {
+		scrollView.nickNameTextField.text = dog.name
+		scrollView.selectedSexRelay.accept(dog.sex)
+		scrollView.weightTextField.text = "\(dog.weight)kg"
+		
+		if let data = dog.image {
+			profileImageView.image = UIImage(data: data)
+		}
+
+		scrollView.selectedNeuterRelay.accept(dog.didNeutered)
+		scrollView.characterTextView.text = dog.character
+
+	}
 }
 
 // MARK: - Action Bind
@@ -213,17 +227,17 @@ private extension DogProfileEditViewController {
 				// 에러 정책 결정하고 구현하면 될거 같아요
 				guard let id = owner.dogViewModels.first(where: { $0.isEdited == true })?.dogId else { return }
 				
-				owner.listener?.didTapEndEditButton(
-					dog: Dog(
-						id: id,
-						name: owner.scrollView.nickNameTextField.text,
-						sex: owner.scrollView.selectedSexRelay.value,
-						age: "12",
-						weight: owner.scrollView.weightTextField.text,
-						didNeutered: owner.scrollView.selectedNeuterRelay.value,
-						character: owner.scrollView.characterTextView.textView.text
-					)
+				let dog = Dog(id: id,
+											name: owner.scrollView.nickNameTextField.text,
+											sex: owner.scrollView.selectedSexRelay.value,
+											age: "12",
+											weight: owner.scrollView.weightTextField.text,
+											didNeutered: owner.scrollView.selectedNeuterRelay.value,
+											character: owner.scrollView.characterTextView.textView.text,
+											image: owner.profileImageView.image?.pngData()
 				)
+				
+				owner.listener?.didTapEndEditButton(dog: dog)
 			}
 			.disposed(by: disposeBag)
 		

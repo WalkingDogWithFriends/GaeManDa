@@ -8,15 +8,24 @@
 
 import Foundation
 
-public struct User {
+public struct User: Codable {
 	public let name: String
 	public let sex: Sex
 	public let age: String
+	public let image: Data?
 	
 	public init(name: String, sex: Sex, age: String) {
 		self.name = name
 		self.sex = sex
 		self.age = age
+		self.image = nil
+	}
+	
+	public init(name: String, sex: Sex, age: String, image: Data?) {
+		self.name = name
+		self.sex = sex
+		self.age = age
+		self.image = image
 	}
 }
 

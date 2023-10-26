@@ -1,5 +1,6 @@
 import Foundation
 import RIBs
+import GMDExtensions
 
 protocol AppRootRouting: ViewableRouting {
 	func attachLoggedOut()
@@ -22,7 +23,7 @@ final class AppRootInteractor:
 	weak var listener: AppRootListener?
 	
 	private var isUserLogIn: Bool {
-		UserDefaults.standard.string(forKey: "token") != nil
+		UserDefaultsManager.shared.getUser() != nil
 	}
 	
 	override init(presenter: AppRootPresentable) {

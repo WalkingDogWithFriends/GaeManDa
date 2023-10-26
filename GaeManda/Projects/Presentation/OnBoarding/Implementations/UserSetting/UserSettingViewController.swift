@@ -10,7 +10,7 @@ import GMDExtensions
 import GMDUtils
 
 protocol UserSettingPresentableListener: AnyObject {
-	func confirmButtonDidTap()
+	func confirmButtonDidTap(_ user: User)
 	func backButtonDidTap()
 	func birthdayPickerDidTap()
 	func dismiss()
@@ -24,6 +24,10 @@ final class UserSettingViewController:
 	weak var listener: UserSettingPresentableListener?
 	
 	private let maximumTextCount = 20
+	private var userSex: Sex = .male
+	private var userName: String = ""
+	private var userAge: String = ""
+	private var userImage: UIImage = UIImage()
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "")
@@ -213,6 +217,9 @@ final class UserSettingViewController:
 			)
 			.asDriver(onErrorJustReturn: .male)
 		
+		selectedSexObservable
+			.drive(with: self) { owner, sex in owner.userSex = sex }.disposed(by: disposeBag)
+		
 		// 선택된 성별이 남성일 경우
 		selectedSexObservable
 			.map { $0 == .male }
@@ -240,10 +247,16 @@ final class UserSettingViewController:
 			.map { $0 && $1 }
 			.filter { $0 == true }
 			.bind(with: self) { owner, _ in
-				owner.listener?.confirmButtonDidTap()
+				let user = User(
+					name: owner.nickNameTextField.text,
+					sex: owner.userSex,
+					age: "25",
+					image: owner.userImage.pngData()
+				)
+				owner.listener?.confirmButtonDidTap(user)
 			}
+
 			.disposed(by: disposeBag)
-		
 		// 닉네임, 생일이 입력되지 않은 경우
 		confirmButton.rx.tap
 			.withLatestFrom(textFieldsTextEmptyObservable)
@@ -278,6 +291,7 @@ extension UserSettingViewController: PHPickerViewControllerDelegate {
 			case let .success(image):
 				DispatchQueue.main.async {
 					self.onBoardingView.setProfileImage(image)
+					self.userImage = image
 				}
 			case .failure: break //
 			}

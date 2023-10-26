@@ -12,6 +12,7 @@ import Entity
 import GMDProfile
 import GMDUtils
 import UseCase
+import GMDExtensions
 
 protocol GMDProfileRouting: ViewableRouting {
 	func userProfileEditAttach()
@@ -31,6 +32,7 @@ protocol GMDProfilePresentable: Presentable {
 	func updateUserName(_ name: String)
 	func updateUserSexAndAge(_ sexAndAge: String)
 	func updateDogs(with viewModel: DogsCarouselViewModel)
+	func updateUser(_ user: User)
 }
 
 protocol GMDProfileInteractorDependency {
@@ -134,30 +136,41 @@ extension GMDProfileInteractor {
 // MARK: - Fetch Data From Dependency
 private extension GMDProfileInteractor {
 	func fetchUser() {
-		dependency.gmdProfileUseCase
-			.userDependency
-			.fetchUser(id: 0)
-			.observe(on: MainScheduler.instance)
-			.subscribe(with: self) { owner, user in
-				let sexAndAge = "\(user.sex.rawValue) \(user.age)세"
-
-				owner.presenter.updateUserName(user.name)
-				owner.presenter.updateUserSexAndAge(sexAndAge)
-			}
-			.disposeOnDeactivate(interactor: self)
+		if let user = UserDefaultsManager.shared.getUser() {
+			presenter.updateUser(user)
+		}
+//		dependency.gmdProfileUseCase
+//			.userDependency
+//			.fetchUser(id: 0)
+//			.observe(on: MainScheduler.instance)
+//			.subscribe(with: self) { owner, user in
+//				let sexAndAge = "\(user.sex.rawValue) \(user.age)세"
+//
+//				owner.presenter.updateUserName(user.name)
+//				owner.presenter.updateUserSexAndAge(sexAndAge)
+//			}
+//			.disposeOnDeactivate(interactor: self)
 	}
 	
 	func fetchDogs() {
-		dependency.gmdProfileUseCase
-			.dogDependency
-			.fetchDogs(id: 0)
-			.observe(on: MainScheduler.instance)
-			.subscribe(with: self) { owner, dogs in
-				let dogsCarousel = owner.convertToDogsCarousel(with: dogs)
-				let viewMoel = DogsCarouselViewModel(dogs: dogsCarousel)
-				owner.presenter.updateDogs(with: viewMoel)
-			}
-			.disposeOnDeactivate(interactor: self)
+		if let dogs = UserDefaultsManager.shared.getDogs() {
+			print("dogs = \(dogs)")
+			let dataModel = convertToDogsCarousel(with: dogs)
+			let viewMoel = DogsCarouselViewModel(dogs: dataModel)
+			
+			presenter.updateDogs(with: viewMoel)
+		}
+		
+//		dependency.gmdProfileUseCase
+//			.dogDependency
+//			.fetchDogs(id: 0)
+//			.observe(on: MainScheduler.instance)
+//			.subscribe(with: self) { owner, dogs in
+//				let dogsCarousel = owner.convertToDogsCarousel(with: dogs)
+//				let viewMoel = DogsCarouselViewModel(dogs: dogsCarousel)
+//				owner.presenter.updateDogs(with: viewMoel)
+//			}
+//			.disposeOnDeactivate(interactor: self)
 	}
 }
 

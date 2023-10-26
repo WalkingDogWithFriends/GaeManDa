@@ -39,7 +39,7 @@ final class BirthdayPickerViewController:
         picker.preferredDatePickerStyle = .wheels
         picker.datePickerMode = .date
         picker.locale = Locale(identifier: "ko_KR")
-        picker.minimumDate = Calendar(identifier: .gregorian).date(byAdding: .year, value: -20, to: .now)
+        picker.minimumDate = Calendar(identifier: .gregorian).date(byAdding: .year, value: -50, to: .now)
         picker.maximumDate = .now
         
         return picker
