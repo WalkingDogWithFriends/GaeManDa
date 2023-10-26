@@ -49,18 +49,17 @@ public final class GMDTextField: UIView {
 		}
 	}
 	
-	// MARK: - UI Components
-	private let stackView: UIStackView = {
-		let stackView = UIStackView()
-		stackView.spacing = 7
-		stackView.axis = .vertical
-		stackView.alignment = .fill
-		stackView.distribution = .fillProportionally
-		
-		return stackView
-	}()
+	public var textFieldPadding: UIEdgeInsets {
+		get {
+			textField.padding
+		}
+		set {
+			textField.padding = newValue
+		}
+	}
 	
-	public let titleLabel: UILabel = {
+	// MARK: - UI Components
+	private let titleLabel: UILabel = {
 		let label = UILabel()
 		label.textColor = .gray90
 		label.numberOfLines = 1
@@ -74,6 +73,7 @@ public final class GMDTextField: UIView {
 		let textField = UnderLineTextField()
 		textField.font = .r15
 		textField.underLineColor = .gray90
+		textField.setPlaceholdColor(.gray90)
 		
 		return textField
 	}()
@@ -114,20 +114,27 @@ public final class GMDTextField: UIView {
 // MARK: - UI Setting
 private extension GMDTextField {
 	func setupUI() {
-		textField.setPlaceholdColor(.gray90)
-		
 		setViewHierarchy()
 		setConstraints()
 	}
 	
 	func setViewHierarchy() {
-		addSubview(stackView)
-		stackView.addArrangedSubviews(titleLabel, textField, warningLabel)
+		addSubviews(titleLabel, textField, warningLabel)
 	}
 	
 	func setConstraints() {
-		stackView.snp.makeConstraints { make in
-			make.edges.equalToSuperview()
+		titleLabel.snp.makeConstraints { make in
+			make.leading.top.equalToSuperview()
+		}
+		
+		textField.snp.makeConstraints { make in
+			make.leading.trailing.equalToSuperview()
+			make.top.equalTo(titleLabel.snp.bottom).offset(8)
+		}
+		
+		warningLabel.snp.makeConstraints { make in
+			make.leading.bottom.equalToSuperview()
+			make.top.equalTo(textField.snp.bottom).offset(2)
 		}
 	}
 }
@@ -142,6 +149,14 @@ private extension GMDTextField {
 	func changeWarningMode() {
 		textField.underLineColor = .red100
 		warningLabel.layer.opacity = 1.0
+	}
+}
+
+// MARK: - Public Methods
+public extension GMDTextField {
+	func setRightView(_ rightView: UIView, viewMode: UITextField.ViewMode = .always) {
+		textField.rightView = rightView
+		textField.rightViewMode = viewMode
 	}
 }
 

@@ -6,14 +6,9 @@ protocol DogSettingRouting: Routing {
 	func firstDogSettingAttach()
 	func firstDogSettingDetach()
 	func firstDogSettingDismiss()
-	func firstDogSettingDidFinish()
 	func secondDogSettingAttach()
 	func secondDogSettingDetach()
 	func secondDogSettingDismiss()
-	func secondDogSettingDidFinish()
-	func thirdDogSettingAttach()
-	func thirdDogSettingDetach()
-	func thirdDogSettingDismiss()
 }
 
 final class DogSettingInteractor: Interactor, DogSettingInteractable {
@@ -35,46 +30,30 @@ final class DogSettingInteractor: Interactor, DogSettingInteractable {
 
 // MARK: FirstDogSetting
 extension DogSettingInteractor {
-	func firstDogSettingDidFinish() {
-		router?.firstDogSettingDidFinish()
+	func firstDogSettingDidTapConfirmButton() {
+		router?.secondDogSettingAttach()
 	}
 	
-	func firstDogSettingBackButtonDidTap() {
+	func firstDogSettingDidTapBackButton() {
 		listener?.dogSettingBackButtonDidTap()
 	}
 	
 	func firstDogSettingDismiss() {
-		router?.firstDogSettingDismiss()
 		listener?.dogSettingDismiss()
 	}
 }
 
 // MARK: SecondDogSetting
 extension DogSettingInteractor {
-	func secondDogSettingDidFinish() {
-		router?.secondDogSettingDidFinish()
+	func secondDogSettingDidTapConfirmButton() {
+		listener?.dogSettingDidFinish()
 	}
 	
-	func secondDogSettingBackButtonDidTap() {
+	func secondDogSettingDidTaBackButtonp() {
 		router?.secondDogSettingDetach()
 	}
 	
 	func secondDogSettingDismiss() {
 		router?.secondDogSettingDismiss()
-	}
-}
-
-// MARK: ThirdDogSetting
-extension DogSettingInteractor {
-	func thirdDogSettingDidFinish() {
-		listener?.dogSettingDidFinish()
-	}
-	
-	func thirdDogSettingBackButtonDidTap() {
-		router?.thirdDogSettingDetach()
-	}
-	
-	func thirdDogSettingDismiss() {
-		router?.thirdDogSettingDismiss()
 	}
 }
