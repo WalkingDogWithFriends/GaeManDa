@@ -10,6 +10,6 @@ final class AppRootViewController:
 	weak var listener: AppRootPresentableListener?
 	
 	override func viewDidLoad() {
-		self.view.backgroundColor = .systemPink
+		self.view.backgroundColor = .clear
 	}
 }

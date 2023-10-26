@@ -32,11 +32,17 @@ final class AppRootInteractor:
 	
 	override func didBecomeActive() {
 		super.didBecomeActive()
-		
 		isUserLogIn ? router?.attachLoggedIn() : router?.attachLoggedOut()
 	}
 	
 	override func willResignActive() {
 		super.willResignActive()
+	}
+}
+
+extension AppRootInteractor {
+	func loggedOutDidFinish() {
+		router?.detachLoggedOut()
+		router?.attachLoggedIn()
 	}
 }
