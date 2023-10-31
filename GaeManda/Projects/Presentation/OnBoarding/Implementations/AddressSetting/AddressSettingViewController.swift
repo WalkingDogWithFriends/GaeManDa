@@ -45,25 +45,7 @@ final class AddressSettingViewController:
 		return underLineTextField
 	}()
 	
-	private let buttonConfiguration: UIButton.Configuration = {
-		var configuration = UIButton.Configuration.plain()
-		configuration.image = UIImage.iconGps.withTintColor(.gmdWhite)
-		configuration.imagePadding = 12
-		configuration.attributedTitle = AttributedString("현재 위치 불러오기".attributedString(font: .b12, color: .white))
-		configuration.contentInsets = NSDirectionalEdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0)
-		configuration.background.backgroundColor = .black
-		
-		return configuration
-	}()
-	
-	private lazy var loadLocationButton: UIButton = {
-		let button = UIButton()
-		button.configuration = self.buttonConfiguration
-		button.tintColor = .white
-		button.layer.cornerRadius = 4
-		
-		return button
-	}()
+	private let loadLocationButton = LocationLoadButton()
 	
 	/// 네이버 지도 뷰
 	private let mapView: NMFMapView = {
@@ -80,21 +62,7 @@ final class AddressSettingViewController:
 		return locationManager
 	}()
 	
-	private let noticeLabel: UILabel = {
-		let label = UILabel()
-		let text =
- """
- 사생활 보호를 위해 등록된 주소에서 반경 500M 내에는
- 보호자의 위치가 노출되지 않습니다.
- 주소를 비롯한 보호자의 개인정보는 타인에게 공유되지
- 않으니 안심하고 서비스를 이용해주세요.
- """
-		
-		label.numberOfLines = 0
-		label.lineBreakMode = .byWordWrapping
-		label.attributedText = text.attributedString(font: .r12, color: .black, lineSpacing: 12, lineHeightMultiple: 0.73)
-		return label
-	}()
+	private let noticeLabel = NoticeLabel()
 	
 	private let confirmButton = ConfirmButton(title: "확인")
 	
@@ -183,15 +151,15 @@ final class AddressSettingViewController:
 		super.bind()
 		bindCLLocationManager()
 		searchTextField.rx.controlEvent(.editingDidBegin)
-			.withUnretained(self)
-			.do(onNext: { owner, _ in
-				if owner.searchTextField.canBecomeFirstResponder {
-					owner.searchTextField.resignFirstResponder()
-				}
-			})
-			.bind(onNext: { owner, _ in
+			.bind(with: self) { owner, _ in
+				owner.searchTextField.resignFirstResponder()
+			}
+			.disposed(by: disposeBag)
+		
+		searchTextField.rx.tapGesture().when(.recognized)
+			.bind(with: self) { owner, _ in
 				owner.listener?.searchTextFieldDidTap()
-			})
+			}
 			.disposed(by: disposeBag)
 		
 		loadLocationButton.rx.tap
@@ -240,7 +208,7 @@ final class AddressSettingViewController:
 		
 		locationManager.rx.didError
 			.bind { clLocationEvent in
-				print("error: \(clLocationEvent.error)")
+				debugPrint("error: \(clLocationEvent.error)")
 			}
 			.disposed(by: disposeBag)
 	}
