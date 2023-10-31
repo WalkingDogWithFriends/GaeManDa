@@ -10,7 +10,7 @@ protocol AddressSettingRouting: ViewableRouting {
 protocol AddressSettingPresentable: Presentable {
 	var listener: AddressSettingPresentableListener? { get set }
 	
-	func setDetailAddress(_ address: String)
+	func setDetailAddress(latitude: Double, longitude: Double)
 }
 
 final class AddressSettingInteractor:
@@ -70,8 +70,9 @@ extension AddressSettingInteractor {
 		router?.detailAddressSettingDetach()
 	}
 	
-	func detailAddressSettingLoadLocationButtonDidTap(jibunAddress: String) {
-		presenter.setDetailAddress(jibunAddress)
-		router?.detailAddressSettingDismiss()
+	func detailAddressSettingLoadLocationButtonDidTap(latitude: String, longitude: String) {
+		guard let latitude = Double(latitude), let longitude = Double(longitude) else { return }
+		presenter.setDetailAddress(latitude: latitude, longitude: longitude)
+		router?.detailAddressSettingDetach()
 	}
 }

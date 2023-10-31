@@ -265,8 +265,15 @@ final class AddressSettingViewController:
 }
 
 extension AddressSettingViewController: AddressSettingPresentable {
-	func setDetailAddress(_ address: String) {
-		self.searchTextField.text = address
+	func setDetailAddress(latitude: Double, longitude: Double) {
+		let cameraUpdatePosition = NMFCameraUpdate(
+			scrollTo: NMGLatLng(lat: latitude, lng: longitude),
+			zoomTo: Constant.defaultCameraZoomLevel,
+			cameraAnimation: Constant.defaultCameraAnimation,
+			duration: Constant.defaultCameraAnimationDuration
+		)
+		self.mapView.moveCamera(cameraUpdatePosition)
+		self.mapView.locationOverlay.location = .init(lat: latitude, lng: longitude)
 	}
 }
 

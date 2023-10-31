@@ -7,13 +7,15 @@
 //
 
 import RIBs
+import RxSwift
 import GMDUtils
 import OnBoarding
+import UseCase
 
 protocol DetailAddressSettingRouting: ViewableRouting { }
 
 protocol DetailAddressSettingPresentable: Presentable {
-	var listener: DetailAddressSettingPresentableListener? { get set }    
+	var listener: DetailAddressSettingPresentableListener? { get set }
 }
 
 final class DetailAddressSettingInteractor:
@@ -22,8 +24,11 @@ final class DetailAddressSettingInteractor:
 	DetailAddressSettingPresentableListener {
 	weak var router: DetailAddressSettingRouting?
 	weak var listener: DetailAddressSettingListener?
-
-	override init(presenter: DetailAddressSettingPresentable) {
+	
+	private let detailAddressUseCase: DetailAddressSettingUseCase
+	
+	init(presenter: DetailAddressSettingPresentable, detailAddressUseCase: DetailAddressSettingUseCase) {
+		self.detailAddressUseCase = detailAddressUseCase
 		super.init(presenter: presenter)
 		presenter.listener = self
 	}
@@ -48,6 +53,20 @@ extension DetailAddressSettingInteractor {
 	}
 	
 	func loadLocationButtonDidTap(jibunAddress: String) {
-		listener?.detailAddressSettingLoadLocationButtonDidTap(jibunAddress: jibunAddress)
+		detailAddressUseCase.fetchGeocode(for: jibunAddress)
+			.observe(on: MainScheduler.instance)
+			.subscribe(
+				with: self,
+				onSuccess: { owner, coordinate in
+					owner.listener?.detailAddressSettingLoadLocationButtonDidTap(
+						latitude: coordinate.latitude,
+						longitude: coordinate.longitude
+					)
+				},
+				onFailure: { _, error in
+					print(error)
+				}
+			)
+			.disposeOnDeactivate(interactor: self)
 	}
 }

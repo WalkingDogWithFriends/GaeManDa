@@ -5,6 +5,10 @@ import OnBoarding
 import OnBoardingImpl
 import SignIn
 import SignInImpl
+import UseCase
+import UseCaseImpl
+import Repository
+import RepositoryImpl
 
 final class LoggedOutComponent:
 	Component<LoggedOutDependency>,
@@ -27,9 +31,18 @@ final class LoggedOutComponent:
 		return AddressSettingBuilder(dependency: self)
 	}()
 	
+	// MARK: Detail Address Setting
 	lazy var detailAddressSettingBuildable: DetailAddressSettingBuildable = {
 		return DetailAddressSettingBuilder(dependency: self)
 	}()
+	
+	lazy var geocodeRepository: GeocodeRepository = {
+		return GeocodingRepositoryImpl()
+	}()
+	
+	var detailAddressUseCase: DetailAddressSettingUseCase {
+		return DetailAddressSettingUseCaseImpl(geocodeRepository: geocodeRepository)
+	}
 	
 	lazy var userSettingBuildable: UserSettingBuildable = {
 		return UserSettingBuilder(dependency: self)
