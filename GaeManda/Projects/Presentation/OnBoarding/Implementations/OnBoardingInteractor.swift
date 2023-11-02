@@ -18,7 +18,7 @@ protocol OnBoardingRouting: Routing {
 
 final class OnBoardingInteractor:
 	Interactor,
-    OnBoardingInteractable {
+	OnBoardingInteractable {
 	weak var router: OnBoardingRouting?
 	weak var listener: OnBoardingListener?
 	
