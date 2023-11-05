@@ -42,6 +42,8 @@ let project = Project.createProject(
 				.Project.PresentationLayer.OnBoardingImpl,
 				.Project.PresentationLayer.GMDProfileImpl,
 				.Project.CoreLayer.GMDUtils,
+				.Project.DomainLayer.UseCase,
+				.Project.DomainLayer.Repository,
 				.Project.DomainLayer.UseCaseImpl,
 				.Project.DataLayer.RepositoryImpl
 			],

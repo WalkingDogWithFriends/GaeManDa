@@ -32,6 +32,9 @@ public enum NetworkError: Error {
 		case httpNoResponse
 		case clientError(errorCode: Int)
 		case serverError(errorCode: Int)
+		case jsonDecodingFailed
+		case noData
+		case noHttpURLRepsonse
 		
 		var localizedDescription: String {
 			switch self {
@@ -43,6 +46,15 @@ public enum NetworkError: Error {
 			
 			case .serverError(let errorCode):
 				return "server error: \(errorCode)"
+				
+			case .jsonDecodingFailed:
+				return "jsonDecodingFailed"
+				
+			case .noData:
+				return "noData"
+				
+			case .noHttpURLRepsonse:
+				return "noHttpURLRepsonse"
 			}
 		}
 	}

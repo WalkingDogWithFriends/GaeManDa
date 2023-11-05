@@ -124,5 +124,5 @@ public extension TargetDependency.SPM {
 	static let RxCocoa = TargetDependency.external(name: "RxCocoa")
 	static let RxGesture = TargetDependency.external(name: "RxGesture")
 	static let SnapKit = TargetDependency.external(name: "SnapKit")
-	static let NMapsMap = TargetDependency.external(name: "NMapsMap")
+	static let NMapsMap = TargetDependency.external(name: "NMapsMapSPM")
 }

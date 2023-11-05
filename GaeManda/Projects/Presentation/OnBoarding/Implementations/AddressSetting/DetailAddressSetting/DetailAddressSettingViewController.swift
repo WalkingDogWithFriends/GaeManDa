@@ -15,6 +15,7 @@ import SnapKit
 import DesignKit
 import GMDExtensions
 import GMDUtils
+import NMapsGeometry
 
 protocol DetailAddressSettingPresentableListener: AnyObject {
 	func detailAddressSettingDidDismiss()

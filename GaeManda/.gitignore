@@ -123,3 +123,6 @@ Tuist/Dependencies/
 
 # Fastlane.swift runner binary
 **/fastlane/FastlaneRunner
+
+# config
+**/Projects/App/xcconfigs/GaeManda.shared.xcconfig

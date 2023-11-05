@@ -9,14 +9,14 @@
 import RIBs
 import OnBoarding
 
-public protocol AddressSettingDependency: Dependency {    
-    var detailAddressSettingBuildable: DetailAddressSettingBuildable { get }
+public protocol AddressSettingDependency: Dependency {
+	var detailAddressSettingBuildable: DetailAddressSettingBuildable { get }
 }
 
 final class AddressSettingComponent: Component<AddressSettingDependency> {
-    fileprivate var detailAddressSettingBuildable: DetailAddressSettingBuildable {
-        dependency.detailAddressSettingBuildable
-    }
+	fileprivate var detailAddressSettingBuildable: DetailAddressSettingBuildable {
+		dependency.detailAddressSettingBuildable
+	}
 }
 
 public final class AddressSettingBuilder:
@@ -27,7 +27,7 @@ public final class AddressSettingBuilder:
 	}
 	
 	public func build(withListener listener: AddressSettingListener) -> ViewableRouting {
-        let component = AddressSettingComponent(dependency: dependency)
+		let component = AddressSettingComponent(dependency: dependency)
 		let viewController = AddressSettingViewController()
 		let interactor = AddressSettingInteractor(presenter: viewController)
 		interactor.listener = listener
@@ -35,7 +35,7 @@ public final class AddressSettingBuilder:
 		return AddressSettingRouter(
 			interactor: interactor,
 			viewController: viewController,
-            detailAddressSettingBuildable: component.detailAddressSettingBuildable
+			detailAddressSettingBuildable: component.detailAddressSettingBuildable
 		)
 	}
 }

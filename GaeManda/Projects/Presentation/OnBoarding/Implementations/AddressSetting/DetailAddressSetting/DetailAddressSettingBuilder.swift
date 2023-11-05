@@ -9,10 +9,15 @@
 import RIBs
 import GMDUtils
 import OnBoarding
+import UseCase
 
-public protocol DetailAddressSettingDependency: Dependency { }
+public protocol DetailAddressSettingDependency: Dependency {
+	var detailAddressUseCase: DetailAddressSettingUseCase { get }
+}
 
-final class DetailAddressSettingComponent: Component<DetailAddressSettingDependency> { }
+final class DetailAddressSettingComponent: Component<DetailAddressSettingDependency> { 
+	var detailAddressUseCase: DetailAddressSettingUseCase { dependency.detailAddressUseCase }
+}
 
 public final class DetailAddressSettingBuilder:
 	Builder<DetailAddressSettingDependency>,
@@ -22,8 +27,12 @@ public final class DetailAddressSettingBuilder:
 	}
 	
 	public func build(withListener listener: DetailAddressSettingListener) -> ViewableRouting {
+		let component = DetailAddressSettingComponent(dependency: dependency)
 		let viewController = DetailAddressSettingViewController()
-		let interactor = DetailAddressSettingInteractor(presenter: viewController)
+		let interactor = DetailAddressSettingInteractor(
+			presenter: viewController,
+			detailAddressUseCase: component.detailAddressUseCase
+		)
 		interactor.listener = listener
 		return DetailAddressSettingRouter(
 			interactor: interactor,
