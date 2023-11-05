@@ -1,6 +1,7 @@
 default_platform(:ios)
 
 platform :ios do
+  # bundle exec fastlane ios beta new_version_number:버전정보 new_build_number:현재시간
   desc "Push a new beta build to TestFlight"
   lane :beta do |options|
     new_version_number = options[:new_version_number]
@@ -15,10 +16,10 @@ platform :ios do
 
     clear_derived_data
 
-    gym(
-      clean: true,
-      export_method: "app-store"
-    )
+    #gym(
+    #  clean: true,
+    #  export_method: "app-store"
+    #)
 
     update_and_build_app("PROD")
     upload_to_testflight(skip_waiting_for_build_processing: true)
@@ -36,10 +37,10 @@ platform :ios do
 
     clear_derived_data
 
-    gym(
-      clean: true,
-      export_method: "app-store"
-    )
+    #gym(
+    #  clean: true,
+    #  export_method: "app-store"
+    #)
 
     update_and_build_app("PROD")
     upload_to_testflight(skip_waiting_for_build_processing: true)
@@ -50,6 +51,7 @@ platform :ios do
     )
   end
 
+  # bundle exec fastlane ios prod new_version_number:버전정보 new_build_number:현재시간
   desc "Push a new production build to TestFlight"
   lane :prod do |options|
     new_version_number = options[:new_version_number]
@@ -64,10 +66,10 @@ platform :ios do
 
     clear_derived_data
     
-    gym(
-      clean: true,
-      export_method: "app-store"
-    )
+    #gym(
+    #  clean: true,
+    #  export_method: "app-store"
+    #)
     
     update_and_build_app("PROD")
     upload_to_testflight(skip_waiting_for_build_processing: true)
@@ -78,6 +80,7 @@ platform :ios do
     )
   end
 
+  # bundle exec fastlane ios dev new_version_number:버전정보 new_build_number:현재시간
   desc "Push a new dev build to TestFlight"
   lane :dev do |options|
     new_version_number = options[:new_version_number]
@@ -92,10 +95,10 @@ platform :ios do
     
     clear_derived_data
 
-    gym(
-      clean: true,
-      export_method: "app-store"
-    )
+    #gym(
+    #  clean: true,
+    #  export_method: "app-store"
+    #)
 
     update_and_build_app("DEV")
     upload_to_testflight(skip_waiting_for_build_processing: true)
