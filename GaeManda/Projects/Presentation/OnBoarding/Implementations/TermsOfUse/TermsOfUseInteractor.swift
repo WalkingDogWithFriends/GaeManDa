@@ -1,7 +1,10 @@
 import RIBs
 import OnBoarding
 
-protocol TermsOfUseRouting: ViewableRouting { }
+protocol TermsOfUseRouting: ViewableRouting { 
+	func attachTermsBottomSheet(type: BottomSheetType, with terms: String)
+	func detachTermsBottomSheet()
+}
 
 protocol TermsOfUsePresentable: Presentable {
 	var listener: TermsOfUsePresentableListener? { get set }
@@ -17,7 +20,7 @@ protocol TermsOfUsePresentable: Presentable {
 final class TermsOfUseInteractor:
 	PresentableInteractor<TermsOfUsePresentable>,
 	TermsOfUseInteractable,
-	TermsOfUsePresentableListener {
+	TermsOfUsePresentableListener {	
 	weak var router: TermsOfUseRouting?
 	weak var listener: TermsOfUseListener?
 	private var termsOfUseViewModel = TermsOfUseViewModel()
@@ -44,23 +47,43 @@ extension TermsOfUseInteractor {
 	}
 	
 	func a약관전체동의ButtonDidTap() {
-		termsOfUseViewModel.a약관전체동의ButtonDidTap()
+		if !termsOfUseViewModel.termsOfUseReadState.is전체동의Read {
+			router?.attachTermsBottomSheet(type: .a약관전체동의, with: "약관동의")
+		} else {
+			termsOfUseViewModel.termsButtonDidTap(type: .a약관전체동의)
+		}
 	}
 	
 	func a이용약관동의ButtonDidTap() {
-		termsOfUseViewModel.a이용약관동의ButtonDidTap()
+		if !termsOfUseViewModel.termsOfUseReadState.is이용약관Read {
+			router?.attachTermsBottomSheet(type: .a이용약관동의, with: "이용약관동의")
+		} else {
+			termsOfUseViewModel.termsButtonDidTap(type: .a이용약관동의)
+		}
 	}
 	
 	func a개인정보수집및이용동의ButtonDidTap() {
-		termsOfUseViewModel.a개인정보수집및이용동의ButtonDidTap()
+		if !termsOfUseViewModel.termsOfUseReadState.is개인정보수집및이용Read {
+			router?.attachTermsBottomSheet(type: .a개인정보수집및이용동의, with: "개인정보수집및이용동의")
+		} else {
+			termsOfUseViewModel.termsButtonDidTap(type: .a개인정보수집및이용동의)
+		}
 	}
 	
 	func a위치정보수집및이용동의DidTap() {
-		termsOfUseViewModel.a위치정보수집및이용동의ButtonDidTap()
+		if !termsOfUseViewModel.termsOfUseReadState.is위치정보수집및이용Read {
+			router?.attachTermsBottomSheet(type: .a위치정보수집및이용동의, with: "위치정보수집및이용동의")
+		} else {
+			termsOfUseViewModel.termsButtonDidTap(type: .a위치정보수집및이용동의)
+		}
 	}
 	
 	func a마케팅정보수신동의DidTap() {
-		termsOfUseViewModel.a마케팅정보수신동의ButtonDidTap()
+		if !termsOfUseViewModel.termsOfUseReadState.is마케팅정보수신Read {
+			router?.attachTermsBottomSheet(type: .a마케팅정보수신동의, with: "마케팅정보수신동의")
+		} else {
+			termsOfUseViewModel.termsButtonDidTap(type: .a마케팅정보수신동의)
+		}
 	}
 }
 
@@ -101,5 +124,17 @@ private extension TermsOfUseInteractor {
 				owner.presenter.setConfirmButton(isEnabled: isChecked)
 			}
 			.disposeOnDeactivate(interactor: self)
+	}
+}
+
+// MARK: - TermsBottomSheetListener
+extension TermsOfUseInteractor {
+	func termsBottomSheetDismiss() {
+		router?.detachTermsBottomSheet()
+	}
+	
+	func termsBottomSheetDidFinish(type: BottomSheetType) {
+		router?.detachTermsBottomSheet()
+		termsOfUseViewModel.termsButtonDidTap(type: type)
 	}
 }
