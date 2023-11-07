@@ -20,7 +20,7 @@ final class KMeans<T: ClusterData>: Operation {
 	private(set) var isChanged: Bool
 	
 	/// Cluster들의 Centriods
-	var centriods: [Location] { clusters.map { $0.centriod } }
+	var centroids: [Location] { clusters.map { $0.centroid } }
 	
 	private(set) var dbi = Double.greatestFiniteMagnitude
 	
@@ -97,7 +97,7 @@ private extension KMeans {
 	
 	/// Cluster를 생성합니다.
 	func generateClusters(centroids: [T]) -> [Cluster<T>] {
-		return centroids.map { Cluster(centriod: $0.location) }
+		return centroids.map { Cluster(centroid: $0.location) }
 	}
 	
 	/// 각 data들을 가장 가까운 클러스터에 `insert`합니다.
@@ -110,7 +110,7 @@ private extension KMeans {
 private extension KMeans {
 	/// Centroid를 업데이트 합니다.
 	func updateCentroids() {
-		clusters.forEach { $0.updateCentriod() }
+		clusters.forEach { $0.updateCentroid() }
 	}
 	
 	/// data들을 가장 가까운 클러스터로 업데이트합니다.
@@ -135,7 +135,7 @@ private extension KMeans {
 		var nearestClusterIndex = 0
 		
 		clusters.enumerated().forEach { index, cluster in
-			let distance = cluster.centriod.distance(with: data.location)
+			let distance = cluster.centroid.distance(with: data.location)
 			
 			if distance < minDistance {
 				nearestClusterIndex = index
@@ -158,7 +158,7 @@ extension KMeans {
 			for j in 0..<clusters.count where i != j {
 				let sumOfDevations = deviations[i] + deviations[j]
 				
-				let distanceCenters = clusters[i].centriod.distance(with: clusters[j].centriod)
+				let distanceCenters = clusters[i].centroid.distance(with: clusters[j].centroid)
 				
 				maxValue = max(maxValue, sumOfDevations / distanceCenters)
 			}

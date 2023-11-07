@@ -9,6 +9,9 @@
 import Foundation
 
 public struct ClusterResult<T: ClusterData> {
-	public let centriod: Location
+	/// 클러스터의 Centroid 좌표
+	public let centroid: Location
+	
+	/// 클러스터 내의 데이터
 	public let group: [T]
 }
