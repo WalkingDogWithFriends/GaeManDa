@@ -8,6 +8,7 @@
 
 import RxRelay
 import OnBoarding
+import Entity
 
 struct AgreementReadState {
 	var is전체동의Read: Bool {
@@ -20,6 +21,10 @@ struct AgreementReadState {
 }
 
 final class TermsOfUseViewModel {
+	/// 약관동의 데이터
+	var termsOfUse: Terms?
+	
+	/// 약관동의 읽은 상태
 	var termsOfUseReadState: AgreementReadState = AgreementReadState()
 	
 	var is약관전체동의Chekced: Bool = false {
