@@ -15,7 +15,7 @@ public protocol TermsBottomSheetRouting: ViewableRouting {}
 protocol TermsBottomSheetPresentable: Presentable {
 	var listener: TermsBottomSheetPresentableListener? { get set }
 	
-	func setTextView(text: String)
+	func setTextView(text: String?)
 }
 
 final class TermsBottomSheetInteractor:
@@ -26,9 +26,9 @@ final class TermsBottomSheetInteractor:
 	weak var listener: TermsBottomSheetListener?
 	
 	private let type: BottomSheetType
-	private let terms: String
+	private var terms: String?
 	
-	init(presenter: TermsBottomSheetPresentable, type: BottomSheetType, terms: String) {
+	init(presenter: TermsBottomSheetPresentable, type: BottomSheetType, terms: String?) {
 		self.type = type
 		self.terms = terms
 		super.init(presenter: presenter)

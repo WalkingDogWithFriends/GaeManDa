@@ -94,7 +94,7 @@ final class TermsBottomSheetViewController:
 }
 
 extension TermsBottomSheetViewController: TermsBottomSheetPresentable {
-	func setTextView(text: String) {
+	func setTextView(text: String?) {
 		self.textView.text = text
 	}
 }

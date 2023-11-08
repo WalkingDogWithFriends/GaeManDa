@@ -30,7 +30,7 @@ final class TermsOfUseRouter:
 
 // MARK: - TermsBottomSheet
 extension TermsOfUseRouter: TermsBottomSheetRouting {
-	func attachTermsBottomSheet(type: BottomSheetType, with terms: String) {
+	func attachTermsBottomSheet(type: BottomSheetType, with terms: String?) {
 		guard termsBottomSheetRouting == nil else { return }
 		let router = termsBottomSheetBuildable.build(withListener: interactor, type: type, terms: terms)
 		self.termsBottomSheetRouting = router

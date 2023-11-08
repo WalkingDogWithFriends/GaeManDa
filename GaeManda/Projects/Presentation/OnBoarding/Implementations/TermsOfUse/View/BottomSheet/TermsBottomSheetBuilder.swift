@@ -11,12 +11,12 @@ import OnBoarding
 
 final class TermsBottomSheetComponent: Component<TermsBottomSheetDependency> {
 	let type: BottomSheetType
-	let terms: String
+	var terms: String?
 	
 	init(
 		dependency: TermsBottomSheetDependency,
 		type: BottomSheetType,
-		terms: String
+		terms: String?
 	) {
 		self.type = type
 		self.terms = terms
@@ -33,7 +33,7 @@ public final class TermsBottomSheetBuilder: Builder<TermsBottomSheetDependency>,
 	public func build(
 		withListener listener: TermsBottomSheetListener,
 		type: BottomSheetType,
-		terms: String
+		terms: String?
 	) -> ViewableRouting {
 		let component = TermsBottomSheetComponent(
 			dependency: dependency,

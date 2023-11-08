@@ -22,7 +22,7 @@ public protocol TermsBottomSheetBuildable: Buildable {
 	func build(
 		withListener listener: TermsBottomSheetListener,
 		type: BottomSheetType,
-		terms: String
+		terms: String?
 	) -> ViewableRouting
 }
 
