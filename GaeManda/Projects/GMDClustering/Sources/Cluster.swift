@@ -68,11 +68,11 @@ extension Cluster {
 	/// Cluster의 Centriod로부터 분산을 리턴합니다.
 	func deviation(from data: T) -> Double {
 		// 해당 데이터가 클러스터내에 위치한다면, -1을 해줍니다.
-		let devideValue = group.contain(data) ? group.size - 1 : group.size
+		let divisor = group.contain(data) ? group.size - 1 : group.size
 		
 		return group.allValues()
 			.map { $0.location }
-			.reduce(0) { $0 + data.location.distance(with: $1) } / Double(group.size)
+			.reduce(0) { $0 + data.location.distance(with: $1) } / Double(divisor)
 	}
 }
 
