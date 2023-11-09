@@ -65,7 +65,7 @@ private extension KMeans {
 	}
 	
 	func runIteration(at iteration: inout Int) {
-		run(operations: updateGroups, updateCentroids)
+		run(operations: updateClusters, updateCentroids)
 		iteration += 1
 	}
 	
@@ -103,20 +103,41 @@ private extension KMeans {
 		clusters.forEach { $0.updateCentroid() }
 	}
 	
-	/// data들을 가장 가까운 클러스터로 업데이트합니다.
-	func updateGroups() {
+	/// Cluster를 업데이트 합니다.
+	/// 시간 복잡도 : `O(N)`
+	func updateClusters() {
 		isChanged = false
 		
 		clusters.forEach { cluster in
-			cluster.group.allValues()
-				.map { ($0, neareastCluster(from: $0)) }
-				.filter { cluster != $1 }
-				.forEach {
-					isChanged = true
-					$1.insert($0)
-					cluster.remove($0)
-				}
+			if isChanged { return }
+			
+			self.isChanged = isChanged(cluster: cluster)
 		}
+		
+		// Cluster의 데이터 이동이 있으면, Cluster를 재생성합니다.
+		if isChanged {
+			self.clusters = generateClusters(centroids: centroids)
+			classifyDataToNearestCluster()
+		}
+	}
+	
+	/// cluster의 data의 이동이 있는지 확인합니다.
+	func isChanged(cluster: Cluster<T>) -> Bool {
+		let changedCluster = cluster.group.allValues()
+			.map { neareastCluster(from: $0) }
+			.first(where: { $0 != cluster })
+		
+		return changedCluster != nil
+	}
+	
+	/// Cluster를 생성합니다.
+	func generateClusters(centroids: [Location]) -> [Cluster<T>] {
+		return centroids.map { Cluster(centroid: $0) }
+	}
+	
+	/// 각 data들을 가장 가까운 클러스터에 `insert`합니다.
+	func classifyDataToNearestCluster() {
+		data.forEach { neareastCluster(from: $0).insert($0) }
 	}
 	
 	/// 해당 location으로 부터 가장 가까운 Cluster를 리턴합니다.
@@ -132,7 +153,7 @@ private extension KMeans {
 				minDistance = distance
 			}
 		}
-
+		
 		return clusters[nearestClusterIndex]
 	}
 }
