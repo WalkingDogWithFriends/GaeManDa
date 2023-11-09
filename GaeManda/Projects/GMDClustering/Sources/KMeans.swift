@@ -80,29 +80,19 @@ private extension KMeans {
 // MARK: - Setup methods
 private extension KMeans {
 	/// 랜덤하게 `k`만큼 centroid를 지정합니다.
-	func randomCenteroids(count: Int, data: [T]) -> [T] {
-		guard data.count > count else { return data }
+	func randomCenteroids(count: Int, data: [T]) -> [Location] {
+		guard count != data.count else { return data.map { $0.location } }
+		var result = Array<T>()
 		
-		guard let firstData = data.first else { return [] }
+		while(result.count != count) {
+			if
+				let randomElement = data.randomElement(),
+				!result.contains(randomElement) {
+				result.append(randomElement)
+			}
+		}
 		
-		if count == 1 { return [firstData] }
-		
-		var result = [firstData]
-		let diff = data.count / (count - 1)
-		
-		(1..<count).forEach { result.append(data[$0 * diff - 1]) }
-		
-		return result
-	}
-	
-	/// Cluster를 생성합니다.
-	func generateClusters(centroids: [T]) -> [Cluster<T>] {
-		return centroids.map { Cluster(centroid: $0.location) }
-	}
-	
-	/// 각 data들을 가장 가까운 클러스터에 `insert`합니다.
-	func classifyDataToNearestCluster() {
-		data.forEach { neareastCluster(from: $0).insert($0) }
+		return result.map { $0.location }
 	}
 }
 
