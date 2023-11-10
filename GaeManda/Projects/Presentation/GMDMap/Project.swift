@@ -21,6 +21,7 @@ let project = Project.createProject(
 				.Project.DomainLayer.Entity,
 				.Project.DomainLayer.UseCase,
 				.Project.DesignKit,
+				.Project.GMDClustering,
 				.SPM.RxCocoa,
 				.SPM.RxGesture,
 				.SPM.SnapKit

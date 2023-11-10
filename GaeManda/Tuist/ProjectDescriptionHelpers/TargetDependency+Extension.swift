@@ -11,6 +11,11 @@ public extension TargetDependency.Project {
 	struct DomainLayer {}
 	struct DataLayer {}
 	
+	static let GMDClustering = TargetDependency.project(
+		target: "GMDClustering",
+		path: .relativeToRoot("Projects/GMDClustering")
+	)
+	
 	static let DesignKit = TargetDependency.project(
 		target: "DesignKit",
 		path: .relativeToRoot("Projects/DesignKit")

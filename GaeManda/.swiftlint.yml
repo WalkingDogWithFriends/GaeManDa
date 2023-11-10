@@ -118,4 +118,5 @@ included:
 excluded:
 - ./Projects/App/Sources/AppLifeCycle/AppDelegate.swift
 - ./Projects/App/Sources/AppLifeCycle/SceneDelegate.swift
+- ./Projects/GMDClustering/Sources/*
 reporter: "xcode"
