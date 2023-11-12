@@ -12,7 +12,6 @@ import RxCocoa
 import RxSwift
 import SnapKit
 import DesignKit
-import OnBoarding
 
 protocol TermsBottomSheetPresentableListener: AnyObject {
 	func viewDidLoad()

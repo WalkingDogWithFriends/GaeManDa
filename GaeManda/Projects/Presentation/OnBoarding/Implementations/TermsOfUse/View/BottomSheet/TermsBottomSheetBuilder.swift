@@ -9,20 +9,7 @@
 import RIBs
 import OnBoarding
 
-final class TermsBottomSheetComponent: Component<TermsBottomSheetDependency> {
-	let type: BottomSheetType
-	var terms: String?
-	
-	init(
-		dependency: TermsBottomSheetDependency,
-		type: BottomSheetType,
-		terms: String?
-	) {
-		self.type = type
-		self.terms = terms
-		super.init(dependency: dependency)
-	}
-}
+final class TermsBottomSheetComponent: Component<TermsBottomSheetDependency> {}
 
 // MARK: - Builder
 public final class TermsBottomSheetBuilder: Builder<TermsBottomSheetDependency>, TermsBottomSheetBuildable {
@@ -35,16 +22,11 @@ public final class TermsBottomSheetBuilder: Builder<TermsBottomSheetDependency>,
 		type: BottomSheetType,
 		terms: String?
 	) -> ViewableRouting {
-		let component = TermsBottomSheetComponent(
-			dependency: dependency,
-			type: type,
-			terms: terms
-		)
 		let viewController = TermsBottomSheetViewController()
 		let interactor = TermsBottomSheetInteractor(
 			presenter: viewController,
-			type: component.type,
-			terms: component.terms
+			type: type,
+			terms: terms
 		)
 		interactor.listener = listener
 		return TermsBottomSheetRouter(interactor: interactor, viewController: viewController)
