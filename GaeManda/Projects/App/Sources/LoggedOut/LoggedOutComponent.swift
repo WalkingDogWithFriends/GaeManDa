@@ -1,4 +1,5 @@
 import RIBs
+import DataMapper
 import DesignKit
 import GMDUtils
 import OnBoarding
@@ -68,5 +69,13 @@ final class LoggedOutComponent:
 	
 	var birthdayPickerBuildable: BirthdayPickerBuildable {
 		return dependency.birthdayPickerBuildable
+	}
+	
+	var onboardingRepositry: OnboardingRepository {
+		shared { OnboardingRepositoryImpl(dataMapper: TermsMapperImpl()) }
+	}
+	
+	var termsOfUseUseCase: TermsofUseUseCase {
+		return TermsofUseUseCaseImpl(repository: onboardingRepositry)
 	}
 }

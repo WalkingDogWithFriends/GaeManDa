@@ -5,6 +5,12 @@ let project = Project.createProject(
 	name: "Data",
 	targets: [
 		.createTarget(
+			name: "LocalStorage",
+			product: .staticFramework,
+			sources: ["LocalStorage/Sources/**"],
+			resources: ["LocalStorage/Resources/**"]
+		),
+		.createTarget(
 			name: "DTO",
 			product: .staticLibrary,
 			sources: ["DTO/**"]
@@ -23,6 +29,7 @@ let project = Project.createProject(
 			product: .staticLibrary,
 			sources: ["RepositoryImpl/Sources/**"],
 			dependencies: [
+				.Project.DataLayer.LocalStorage,
 				.Project.DataLayer.DTO,
 				.Project.DataLayer.GMDNetwork,
 				.Project.DataLayer.DataMapper,

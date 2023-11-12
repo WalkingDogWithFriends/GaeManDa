@@ -104,6 +104,10 @@ public extension TargetDependency.Project.DomainLayer {
 
 //MARK: - Data Dependency
 public extension TargetDependency.Project.DataLayer {
+	static let LocalStorage = TargetDependency.project(
+		target: "LocalStorage",
+		path: .relativeToRoot("Projects/Data")
+	)
 	static let DTO = TargetDependency.project(
 		target: "DTO",
 		path: .relativeToRoot("Projects/Data")

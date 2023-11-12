@@ -1,5 +1,6 @@
 import RIBs
 import OnBoarding
+import UseCase
 
 public protocol OnBoardingDependency: Dependency {
 	var onBoardingViewController: ViewControllable { get }
@@ -7,6 +8,7 @@ public protocol OnBoardingDependency: Dependency {
 	var addressSettingBuildable: AddressSettingBuildable { get }
 	var userSettingBuildable: UserSettingBuildable { get }
 	var dogSettingBuildable: DogSettingBuildable { get }
+	var termsOfUseUseCase: TermsofUseUseCase { get }
 }
 
 final class OnBoardingComponent: Component<OnBoardingDependency> {
@@ -24,6 +26,9 @@ final class OnBoardingComponent: Component<OnBoardingDependency> {
 	}
 	fileprivate var dogSettingBuildable: DogSettingBuildable {
 		dependency.dogSettingBuildable
+	}
+	fileprivate var termsOfUseUseCase: TermsofUseUseCase {
+		dependency.termsOfUseUseCase
 	}
 }
 
