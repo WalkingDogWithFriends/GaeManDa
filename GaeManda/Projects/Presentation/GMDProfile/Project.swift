@@ -15,6 +15,7 @@ let project = Project.createProject(
 		.createImplementationTarget(
 			name: projectName,
 			dependencies: [
+				.Project.PresentationLayer.CorePresentation,
 				.Project.PresentationLayer.GMDProfile,
 				.Project.CoreLayer.GMDExtensions,
 				.Project.CoreLayer.GMDUtils,

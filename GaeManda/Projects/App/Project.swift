@@ -11,6 +11,7 @@ let project = Project.createProject(
 			infoPlist: .file(path: .relativeToRoot("Projects/App/Info.plist")),
 			resources: ["Resources/**"],
 			dependencies: [
+				.Project.PresentationLayer.CorePresentationImpl,
 				.Project.PresentationLayer.ChattingImpl,
 				.Project.PresentationLayer.SignInImpl,
 				.Project.PresentationLayer.GMDMapImpl,
@@ -36,6 +37,7 @@ let project = Project.createProject(
 			infoPlist: .file(path: .relativeToRoot("Projects/App/Info.plist")),
 			resources: ["Resources/**"],
 			dependencies: [
+				.Project.PresentationLayer.CorePresentationImpl,
 				.Project.PresentationLayer.ChattingImpl,
 				.Project.PresentationLayer.SignInImpl,
 				.Project.PresentationLayer.GMDMapImpl,
