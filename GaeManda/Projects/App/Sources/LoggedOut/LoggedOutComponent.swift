@@ -1,4 +1,5 @@
 import RIBs
+import CorePresentation
 import DataMapper
 import DesignKit
 import GMDUtils

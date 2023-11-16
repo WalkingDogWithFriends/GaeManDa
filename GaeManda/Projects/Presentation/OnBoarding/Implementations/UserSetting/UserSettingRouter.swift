@@ -1,5 +1,6 @@
 import Foundation
 import RIBs
+import CorePresentation
 import DesignKit
 import OnBoarding
 
@@ -28,7 +29,7 @@ final class ProfileSettingRouter:
 }
 
 // MARK: - BirthdayPicker
-extension ProfileSettingRouter: BirthdayPickerRouting {
+extension ProfileSettingRouter {
 	func attachBirthdayPicker() {
 		guard birthdayPickerRouting == nil else { return }
 		let router = birthdayPickerBuildable.build(withListener: interactor)
