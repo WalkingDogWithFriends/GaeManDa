@@ -45,3 +45,13 @@ public struct Dog {
 		self.character = character
 	}
 }
+
+public struct DogCharacter {
+	public let id: Int
+	public let character: String
+	
+	public init(id: Int, character: String) {
+		self.id = id
+		self.character = character
+	}
+}

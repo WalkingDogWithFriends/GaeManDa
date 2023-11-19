@@ -11,6 +11,7 @@ import Entity
 
 public protocol DogDataMapper {
 	func mapToDog(from dto: DogResponseDTO) -> Dog
+	func mapToDogCharacter(from dto: [DogCharacterResponseDTO]) -> [DogCharacter]
 }
 
 public struct DogDataMapperImpl: DogDataMapper {
@@ -26,5 +27,9 @@ public struct DogDataMapperImpl: DogDataMapper {
 			didNeutered: dto.isNeutered ? .true : .false,
 			character: dto.personality
 		)
+	}
+	
+	public func mapToDogCharacter(from dto: [DogCharacterResponseDTO]) -> [DogCharacter] {
+		return dto.map { DogCharacter(id: $0.id, character: $0.character) }
 	}
 }
