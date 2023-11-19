@@ -54,3 +54,32 @@ final class DogCharacterPickerInteractor:
 		super.willResignActive()
 	}
 }
+
+// MARK: - PresentableListener
+extension DogCharacterPickerInteractor {
+	func viewDidLoad() {
+		dependency.gmdProfileUseCase
+			.fetchDogCharacters()
+			.observe(on: MainScheduler.instance)
+			.subscribe(with: self) { owner, characters in
+				let result = owner.convertToDogCharacterViewModels(from: characters)
+				 owner.presenter.updateDogCharacterCell(result)
+			}
+			.disposeOnDeactivate(interactor: self)
+	}
+}
+
+// MARK: - Private Method
+private extension DogCharacterPickerInteractor {
+	func convertToDogCharacterViewModels(from characters: [DogCharacter]) -> [DogCharacterViewModel] {
+		return characters.map { dogCharacter in
+			var viewModel = DogCharacterViewModel(dogCharacter: dogCharacter)
+
+			if self.selectedId.contains(dogCharacter.id) {
+				viewModel.isChoice = true
+			}
+			
+			return viewModel
+		}
+	}
+}

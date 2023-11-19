@@ -97,6 +97,14 @@ private extension DogCharacterPickerViewController {
 	}
 }
 
+// MARK: - Update Methods
+extension DogCharacterPickerViewController {
+	func updateDogCharacterCell(_ viewModel: [DogCharacterViewModel]) {
+		self.dogCharacterViewModels = viewModel
+		collectionView.reloadData()
+	}
+}
+
 // MARK: - UICollectionViewDataSource
 extension DogCharacterPickerViewController: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
