@@ -27,7 +27,7 @@ open class BottomSheetViewController: UIViewController {
 	
 	open var contentView = UIView()
 	
-	private let topBarView: UIView = {
+	public let topBarView: UIView = {
 		let view = UIView()
 		view.backgroundColor = .white
 		
