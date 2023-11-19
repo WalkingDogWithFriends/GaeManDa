@@ -1,0 +1,38 @@
+[
+	{
+		"id": 0,
+		"character": "온순해요"
+	},
+	{
+		"id": 1,
+		"character": "풀을 좋아해요"
+	},
+	{
+		"id": 2,
+		"character": "안 짖어요"
+	},
+	{
+		"id": 3,
+		"character": "낯을 가려요"
+	},
+	{
+		"id": 4,
+		"character": "잘 뛰어요"
+	},
+	{
+		"id": 5,
+		"character": "안 물어요"
+	},
+	{
+		"id": 6,
+		"character": "잘 짖어요"
+	},
+	{
+		"id": 7,
+		"character": "잘 물어요"
+	},
+	{
+		"id": 8,
+		"character": "사나워요"
+	}
+]
