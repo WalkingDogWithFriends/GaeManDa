@@ -7,12 +7,22 @@
 //
 
 import RIBs
+import RxCocoa
+import RxSwift
 import CorePresentation
+import Entity
+import UseCase
 
 protocol DogCharacterPickerRouting: ViewableRouting { }
 
 protocol DogCharacterPickerPresentable: Presentable {
 	var listener: DogCharacterPickerPresentableListener? { get set }
+	
+	func updateDogCharacterCell(_ viewModel: [DogCharacterViewModel])
+}
+
+protocol DogCharacterPickerInteractorDependency {
+	var gmdProfileUseCase: GMDProfileUseCase { get }
 }
 
 final class DogCharacterPickerInteractor:
@@ -22,7 +32,16 @@ final class DogCharacterPickerInteractor:
 	weak var router: DogCharacterPickerRouting?
 	weak var listener: DogCharacterPickerListener?
 	
-	override init(presenter: DogCharacterPickerPresentable) {
+	var dependency: DogCharacterPickerInteractorDependency
+	var selectedId: [Int]
+	
+	init(
+		presenter: DogCharacterPickerPresentable,
+		dependency: DogCharacterPickerInteractorDependency,
+		selectedId: [Int]?
+	) {
+		self.dependency = dependency
+		self.selectedId = selectedId ?? []
 		super.init(presenter: presenter)
 		presenter.listener = self
 	}

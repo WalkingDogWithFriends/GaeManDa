@@ -7,8 +7,11 @@
 //
 
 import RIBs
+import UseCase
 
-protocol LoggedInDependency: Dependency { }
+protocol LoggedInDependency: Dependency { 
+	var gmdProfileUseCase: GMDProfileUseCase { get }
+}
 
 // MARK: - Builder
 protocol LoggedInBuildable: Buildable {

@@ -8,19 +8,39 @@
 
 import RIBs
 import CorePresentation
+import UseCase
 
-protocol DogCharacterPickerDependency: Dependency { }
+public protocol DogCharacterPickerDependency: Dependency {
+	var gmdProfileUseCase: GMDProfileUseCase { get }
+}
 
-final class DogCharacterPickerBuilder:
+final class DogCharacterPickerComponent:
+	Component<DogCharacterPickerDependency>,
+	DogCharacterPickerInteractorDependency {
+	var gmdProfileUseCase: GMDProfileUseCase {
+		return dependency.gmdProfileUseCase
+	}
+}
+
+public final class DogCharacterPickerBuilder:
 	Builder<DogCharacterPickerDependency>,
 	DogCharacterPickerBuildable {
-	override init(dependency: DogCharacterPickerDependency) {
+	public override init(dependency: DogCharacterPickerDependency) {
 		super.init(dependency: dependency)
 	}
 	
-	func build(withListener listener: DogCharacterPickerListener) -> ViewableRouting {
+	public func build(
+		withListener listener: DogCharacterPickerListener,
+		selectedId: [Int]?
+	) -> ViewableRouting {
+		let component = DogCharacterPickerComponent(dependency: dependency)
 		let viewController = DogCharacterPickerViewController()
-		let interactor = DogCharacterPickerInteractor(presenter: viewController)
+		
+		let interactor = DogCharacterPickerInteractor(
+			presenter: viewController,
+			dependency: component,
+			selectedId: selectedId
+		)
 		interactor.listener = listener
 		return DogCharacterPickerRouter(
 			interactor: interactor,

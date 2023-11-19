@@ -21,6 +21,10 @@ final class LoggedOutComponent:
 	DetailAddressSettingDependency,
 	UserSettingDependency,
 	DogSettingDependency {
+	var dogCharacterPickerBuildable: DogCharacterPickerBuildable {
+		return dependency.dogCharacterPickerBuildable
+	}
+	
 	lazy var onBoardingBuildable: OnBoardingBuildable = {
 		return OnBoardingBuilder(dependency: self)
 	}()

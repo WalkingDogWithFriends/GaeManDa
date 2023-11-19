@@ -9,7 +9,10 @@
 import RIBs
 
 public protocol DogCharacterPickerBuildable: Buildable {
-		func build(withListener listener: DogCharacterPickerListener) -> ViewableRouting
+	func build(
+		withListener listener: DogCharacterPickerListener,
+		selectedId: [Int]?
+	) -> ViewableRouting
 }
 
 public protocol DogCharacterPickerListener: AnyObject { }
