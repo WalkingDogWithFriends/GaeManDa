@@ -30,4 +30,5 @@ public protocol GMDProfileUseCase {
 	
 	func updateDog(dog: Dog) -> Single<Void>
 	func postNewDog(dog: Dog) -> Single<Void>
+	func fetchDogCharacters() -> Single<[DogCharacter]>
 }

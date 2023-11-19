@@ -58,4 +58,8 @@ public extension GMDProfileUseCaseImpl {
 	func postNewDog(dog: Dog) -> Single<Void> {
 		return dogDependency.postNewDog(dog: dog)
 	}
+	
+	func fetchDogCharacters() -> Single<[DogCharacter]> {
+		return dogDependency.fetchDogCharacters()
+	}
 }
