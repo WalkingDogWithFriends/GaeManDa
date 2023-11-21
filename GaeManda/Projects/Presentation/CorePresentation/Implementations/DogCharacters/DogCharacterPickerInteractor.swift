@@ -77,6 +77,10 @@ extension DogCharacterPickerInteractor {
 		
 		listener?.dogCharactersSelected(selectedCharacters)
 	}
+	
+	func dismiss() {
+		listener?.dogCharacterPickerDismiss()
+	}
 }
 
 // MARK: - Private Method

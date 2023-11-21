@@ -14,9 +14,10 @@ import SnapKit
 import DesignKit
 import GMDExtensions
 
-protocol DogCharacterPickerPresentableListener: AnyObject { 
+protocol DogCharacterPickerPresentableListener: AnyObject {
 	func viewDidLoad()
 	func didTapConfirmButton(with selectedId: [Int])
+	func dismiss()
 }
 
 final class DogCharacterPickerViewController:
@@ -31,7 +32,7 @@ final class DogCharacterPickerViewController:
 	
 	/// 선택된 성격 Observable
 	private let selectedId = BehaviorRelay<[Int]>(value: [])
-
+	
 	// MARK: - UI Components
 	private let upperView: UIView = {
 		let view = UIView()
@@ -119,17 +120,24 @@ extension DogCharacterPickerViewController {
 // MARK: - Bind Methods
 private extension DogCharacterPickerViewController {
 	func bind() {
+		self.didDismissBottomSheet
+			.bind(with: self) { owner, _ in
+				owner.listener?.dismiss()
+			}
+			.disposed(by: disposeBag)
+		
 		self.selectedId
 			.map { !$0.isEmpty }
 			.bind(to: confirmButton.rx.isPositive)
 			.disposed(by: disposeBag)
-	
+		
 		confirmButton.rx.tap
 			.withLatestFrom(self.selectedId)
 			.filter { !$0.isEmpty }
 			.bind(with: self) { owner, selectedId in
 				let sortedId = selectedId.sorted(by: { $0 < $1 })
 				owner.listener?.didTapConfirmButton(with: sortedId)
+				owner.dismissBottomSheet()
 			}
 			.disposed(by: disposeBag)
 	}

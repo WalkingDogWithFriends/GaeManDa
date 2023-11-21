@@ -18,4 +18,5 @@ public protocol DogCharacterPickerBuildable: Buildable {
 
 public protocol DogCharacterPickerListener: AnyObject {
 	func dogCharactersSelected(_ dogCharacters: [DogCharacter])
+	func dogCharacterPickerDismiss()
 }
