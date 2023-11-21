@@ -16,6 +16,7 @@ let project = Project.createProject(
 		.createIntefaceTarget(
 			name: projectName,
 			dependencies: [
+				.Project.DomainLayer.Entity,
 				.SPM.RIBs
 			]
 		),
@@ -25,7 +26,6 @@ let project = Project.createProject(
 				.Project.PresentationLayer.CorePresentation,
 				.Project.CoreLayer.GMDUtils,
 				.Project.CoreLayer.GMDExtensions,
-				.Project.DomainLayer.Entity,
 				.Project.DomainLayer.UseCase,
 				.Project.DesignKit,
 				.SPM.RxCocoa,
