@@ -7,6 +7,7 @@
 //
 
 import RIBs
+import Entity
 
 public protocol DogCharacterPickerBuildable: Buildable {
 	func build(
@@ -15,4 +16,6 @@ public protocol DogCharacterPickerBuildable: Buildable {
 	) -> ViewableRouting
 }
 
-public protocol DogCharacterPickerListener: AnyObject { }
+public protocol DogCharacterPickerListener: AnyObject {
+	func dogCharactersSelected(_ dogCharacters: [DogCharacter])
+}

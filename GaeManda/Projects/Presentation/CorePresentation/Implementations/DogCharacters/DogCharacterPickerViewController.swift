@@ -16,6 +16,7 @@ import GMDExtensions
 
 protocol DogCharacterPickerPresentableListener: AnyObject { 
 	func viewDidLoad()
+	func didTapConfirmButton(with selectedId: [Int])
 }
 
 final class DogCharacterPickerViewController:
@@ -24,9 +25,13 @@ final class DogCharacterPickerViewController:
 	DogCharacterPickerViewControllable {
 	// MARK: - Properties
 	weak var listener: DogCharacterPickerPresentableListener?
+	private let disposeBag = DisposeBag()
 	// 강아지 성격리스트
-	private var dogCharacterViewModels = [DogCharacterViewModel]()
+	fileprivate var dogCharacterViewModels = [DogCharacterViewModel]()
 	
+	/// 선택된 성격 Observable
+	private let selectedId = BehaviorRelay<[Int]>(value: [])
+
 	// MARK: - UI Components
 	private let upperView: UIView = {
 		let view = UIView()
@@ -65,6 +70,7 @@ private extension DogCharacterPickerViewController {
 	func setupUI() {
 		setViewHierarhcy()
 		setConstraints()
+		bind()
 	}
 	
 	func setViewHierarhcy() {
@@ -101,7 +107,31 @@ private extension DogCharacterPickerViewController {
 extension DogCharacterPickerViewController {
 	func updateDogCharacterCell(_ viewModel: [DogCharacterViewModel]) {
 		self.dogCharacterViewModels = viewModel
+		let ids = dogCharacterViewModels
+			.filter { $0.isChoice }
+			.map { $0.id }
+		
+		selectedId.accept(ids)
 		collectionView.reloadData()
+	}
+}
+
+// MARK: - Bind Methods
+private extension DogCharacterPickerViewController {
+	func bind() {
+		self.selectedId
+			.map { !$0.isEmpty }
+			.bind(to: confirmButton.rx.isPositive)
+			.disposed(by: disposeBag)
+	
+		confirmButton.rx.tap
+			.withLatestFrom(self.selectedId)
+			.filter { !$0.isEmpty }
+			.bind(with: self) { owner, selectedId in
+				let sortedId = selectedId.sorted(by: { $0 < $1 })
+				owner.listener?.didTapConfirmButton(with: sortedId)
+			}
+			.disposed(by: disposeBag)
 	}
 }
 
@@ -125,11 +155,27 @@ extension DogCharacterPickerViewController: UICollectionViewDelegate {
 		guard let cell = collectionView.cellForItem(at: indexPath) as? DogCharacterCell else { return }
 		
 		cell.isChoice.toggle()
-
-		var selectedCharacter = dogCharacterViewModels
-			.filter { $0.id == cell.characterId }
-			.first
 		
-		selectedCharacter?.isChoice = cell.isChoice
+		cell.isChoice ? appendToSelectedId(cell.characterId) : removeFromSelectedId(cell.characterId)
+	}
+}
+
+// MARK: - Private Method
+private extension DogCharacterPickerViewController {
+	func removeFromSelectedId(_ value: Int) {
+		var values = selectedId.value
+		guard let index = values.firstIndex(of: value) else { return }
+		
+		values.remove(at: index)
+		selectedId.accept(values)
+	}
+	
+	func appendToSelectedId(_ value: Int) {
+		var values = selectedId.value
+		
+		guard !values.contains(where: { $0 == value }) else { return }
+		
+		values.append(value)
+		selectedId.accept(values)
 	}
 }

@@ -34,6 +34,7 @@ final class DogCharacterPickerInteractor:
 	
 	var dependency: DogCharacterPickerInteractorDependency
 	var selectedId: [Int]
+	var dogCharacters: [DogCharacter] = []
 	
 	init(
 		presenter: DogCharacterPickerPresentable,
@@ -62,10 +63,19 @@ extension DogCharacterPickerInteractor {
 			.fetchDogCharacters()
 			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, characters in
+				owner.dogCharacters = characters
+				
 				let result = owner.convertToDogCharacterViewModels(from: characters)
-				 owner.presenter.updateDogCharacterCell(result)
+				owner.presenter.updateDogCharacterCell(result)
 			}
 			.disposeOnDeactivate(interactor: self)
+	}
+	
+	func didTapConfirmButton(with selectedId: [Int]) {
+		let selectedCharacters = selectedId
+			.compactMap { id in dogCharacters.first { $0.id == id } }
+		
+		listener?.dogCharactersSelected(selectedCharacters)
 	}
 }
 
@@ -74,7 +84,7 @@ private extension DogCharacterPickerInteractor {
 	func convertToDogCharacterViewModels(from characters: [DogCharacter]) -> [DogCharacterViewModel] {
 		return characters.map { dogCharacter in
 			var viewModel = DogCharacterViewModel(dogCharacter: dogCharacter)
-
+			
 			if self.selectedId.contains(dogCharacter.id) {
 				viewModel.isChoice = true
 			}
