@@ -226,6 +226,13 @@ final class SecondDogSettingViewController:
 	}
 }
 
+// MARK: - Presentable
+extension SecondDogSettingViewController {
+	func updateDogCharacter(with selectedCharaters: [DogCharacter]) {
+		self.selectedCharacters = selectedCharaters
+	}
+}
+
 // MARK: - DropDownListener
 extension SecondDogSettingViewController: DropDownListener {	
 	func dropdown(_ dropDown: DropDownView, didSelectRowAt indexPath: IndexPath) { }

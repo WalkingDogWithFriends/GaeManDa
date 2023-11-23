@@ -8,6 +8,8 @@ protocol SecondDogSettingRouting: ViewableRouting {
 
 protocol SecondDogSettingPresentable: Presentable {
 	var listener: SecondDogSettingPresentableListener? { get set }
+	
+	func updateDogCharacter(with selectedCharaters: [DogCharacter])
 }
 
 protocol SecondDogSettingListener: AnyObject {
@@ -59,7 +61,7 @@ extension SecondDogSettingInteractor {
 // MARK: - DogCharacterPickerListener
 extension SecondDogSettingInteractor {
 	func dogCharactersSelected(_ dogCharacters: [DogCharacter]) {
-		print("\(dogCharacters)")
+		presenter.updateDogCharacter(with: dogCharacters)
 	}
 	
 	func dogCharacterPickerDismiss() {
