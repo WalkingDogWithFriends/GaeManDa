@@ -7,12 +7,17 @@ import OnBoarding
 public protocol DogSettingDependency: Dependency {
 	var dogSettingViewController: ViewControllable { get }
 	var birthdayPickerBuildable: BirthdayPickerBuildable { get }
+	var dogCharacterPickerBuildable: DogCharacterPickerBuildable { get }
 }
 
 final class DogSettingComponent:
 	Component<DogSettingDependency>,
 	FirstDogSettingDependency,
 	SecondDogSettingDependency {
+	var dogCharacterPickerBuildable: DogCharacterPickerBuildable {
+		return dependency.dogCharacterPickerBuildable
+	}
+	
 	fileprivate var dogSettingViewController: ViewControllable {
 		return dependency.dogSettingViewController
 	}

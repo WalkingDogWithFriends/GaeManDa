@@ -1,6 +1,10 @@
 import RIBs
+import Entity
 
-protocol SecondDogSettingRouting: ViewableRouting { }
+protocol SecondDogSettingRouting: ViewableRouting {
+	func dogCharacterPickerAttach(with selectedId: [Int])
+	func dogCharacterPickerDetach()
+}
 
 protocol SecondDogSettingPresentable: Presentable {
 	var listener: SecondDogSettingPresentableListener? { get set }
@@ -45,5 +49,20 @@ extension SecondDogSettingInteractor {
 	
 	func dismiss() {
 		listener?.secondDogSettingDismiss()
+	}
+	
+	func didTapAddDogCharacterButton(with selectedCharaters: [DogCharacter]) {
+		router?.dogCharacterPickerAttach(with: selectedCharaters.map { $0.id })
+	}
+}
+
+// MARK: - DogCharacterPickerListener
+extension SecondDogSettingInteractor {
+	func dogCharactersSelected(_ dogCharacters: [DogCharacter]) {
+		print("\(dogCharacters)")
+	}
+	
+	func dogCharacterPickerDismiss() {
+		router?.dogCharacterPickerDetach()
 	}
 }

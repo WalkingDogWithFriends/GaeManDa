@@ -11,6 +11,7 @@ import GMDUtils
 protocol SecondDogSettingPresentableListener: AnyObject {
 	func didTapConfirmButton()
 	func didTapBackButton()
+	func didTapAddDogCharacterButton(with selectedCharaters: [DogCharacter])
 	func dismiss()
 }
 
@@ -21,6 +22,7 @@ final class SecondDogSettingViewController:
 	// MARK: - Properties
 	weak var listener: SecondDogSettingPresentableListener?
 	var dropDownViews: [DropDownView]?
+	private var selectedCharacters: [DogCharacter] = []
 	
 	private let viewModel = SecondDogSettingViewModel()
 	
@@ -170,11 +172,6 @@ final class SecondDogSettingViewController:
 			.map { ($0, .option) }
 			.bind(to: dogBreedDropDownButton.rx.title)
 			.disposed(by: disposeBag)
-		
-		dogCharacterDropDownView.rx.selectedOption
-			.map { ($0, .option) }
-			.bind(to: dogCharacterDropDownButton.rx.title)
-			.disposed(by: disposeBag)
 	}
 	
 	private func bindButtons() {
@@ -197,12 +194,19 @@ final class SecondDogSettingViewController:
 			.map { $0 == .false }
 			.drive(didNotNeuterButton.rx.isSelected)
 			.disposed(by: disposeBag)
+		
+		// 강아지 성격 추가 버튼 눌렀을 경우
+		addDogCharacterButton.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.listener?.didTapAddDogCharacterButton(with: owner.selectedCharacters)
+			}
+			.disposed(by: disposeBag)
 	}
 	
 	private func bindConfirmButton() {
 		let dropDownSelectedObservable = Observable.combineLatest(
 			dogBreedDropDownView.rx.isSelectedOption,
-			dogCharacterDropDownView.rx.isSelectedOption
+			dogBreedDropDownView.rx.isSelectedOption
 		)
 			.asDriver(onErrorJustReturn: (false, false))
 		
