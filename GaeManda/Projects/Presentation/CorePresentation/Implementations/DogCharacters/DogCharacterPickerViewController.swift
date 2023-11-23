@@ -180,7 +180,6 @@ private extension DogCharacterPickerViewController {
 	
 	func appendToSelectedId(_ value: Int) {
 		var values = selectedId.value
-		
 		guard !values.contains(where: { $0 == value }) else { return }
 		
 		values.append(value)

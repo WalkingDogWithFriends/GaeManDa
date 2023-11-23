@@ -6,7 +6,6 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
-import Foundation
 import Entity
 
 struct DogCharacterViewModel {
