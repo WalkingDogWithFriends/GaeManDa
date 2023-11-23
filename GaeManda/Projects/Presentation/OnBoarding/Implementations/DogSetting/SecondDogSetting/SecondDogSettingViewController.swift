@@ -29,9 +29,9 @@ final class SecondDogSettingViewController:
 	private let onBoardingView = OnBoardingView(willDisplayImageView: true, title: "우리 아이를 등록해주세요! (2/2)")
 	
 	private let dogBreedDropDownButton = DropDownButton(text: "우리 아이 종", mode: .title)
-	private let dogCharacterDropDownButton = DropDownButton(text: "우리 아이 성격", mode: .title)
 	private let dogBreedDropDownView = DropDownView()
-	private let dogCharacterDropDownView = DropDownView()
+	
+	private let addDogCharacterButton = AddDogCharacterButton()
 	
 	private let buttonStackView: UIStackView = {
 		let stackView = UIStackView()
@@ -50,7 +50,7 @@ final class SecondDogSettingViewController:
 	// MARK: - Life Cycles
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		registerDropDrownViews(dogBreedDropDownView, dogCharacterDropDownView)
+		registerDropDrownViews(dogBreedDropDownView)
 		
 		setupUI()
 	}
@@ -88,7 +88,7 @@ final class SecondDogSettingViewController:
 	override func setViewHierarchy() {
 		super.setViewHierarchy()
 		contentView.addSubviews(
-			navigationBar, onBoardingView, dogBreedDropDownButton, dogCharacterDropDownButton, buttonStackView, confirmButton
+			navigationBar, onBoardingView, dogBreedDropDownButton, buttonStackView, addDogCharacterButton, confirmButton
 		)
 		buttonStackView.addArrangedSubviews(didNeuterButton, didNotNeuterButton)
 	}
@@ -107,38 +107,34 @@ final class SecondDogSettingViewController:
 		}
 		
 		dogBreedDropDownButton.snp.makeConstraints { make in
-			make.leading.equalToSuperview().offset(28)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
 			make.top.equalTo(onBoardingView.snp.bottom).offset(56)
-			make.width.equalTo(216)
-		}
-		
-		dogCharacterDropDownButton.snp.makeConstraints { make in
-			make.leading.equalToSuperview().offset(28)
-			make.top.equalTo(dogBreedDropDownButton.snp.bottom).offset(48)
-			make.width.equalTo(300)
 		}
 		
 		dogBreedDropDownView.setConstraints { [weak self] make in
 			guard let self else { return }
-			make.leading.width.equalTo(self.dogBreedDropDownButton)
+			make.leading.trailing.equalTo(self.dogBreedDropDownButton)
 			make.top.equalTo(self.dogBreedDropDownButton.snp.bottom)
 		}
 		
-		dogCharacterDropDownView.setConstraints { [weak self] make in
-			guard let self else { return }
-			make.leading.width.equalTo(self.dogCharacterDropDownButton)
-			make.top.equalTo(self.dogCharacterDropDownButton.snp.bottom)
-		}
-		
 		buttonStackView.snp.makeConstraints { make in
-			make.top.equalTo(dogCharacterDropDownButton.snp.bottom).offset(52)
+			make.top.equalTo(dogBreedDropDownButton.snp.bottom).offset(32)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 			make.height.equalTo(40)
 		}
-				
+		
+		addDogCharacterButton.backgroundColor = .red
+		addDogCharacterButton.snp.makeConstraints { make in
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+			make.height.equalTo(40)
+			make.top.equalTo(buttonStackView.snp.bottom).offset(32)
+		}
+		
 		confirmButton.snp.makeConstraints { make in
-			make.top.equalTo(buttonStackView.snp.bottom).offset(108)
+			make.top.equalTo(addDogCharacterButton.snp.bottom).offset(154)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 			make.bottom.equalToSuperview().offset(-(54 - UIDevice.safeAreaBottomHeight))
@@ -148,10 +144,8 @@ final class SecondDogSettingViewController:
 	
 	private func setDropDown() {
 		dogBreedDropDownView.anchorView = dogBreedDropDownButton
-		dogCharacterDropDownView.anchorView = dogCharacterDropDownButton
 		
 		dogBreedDropDownView.dataSource = viewModel.dogBreedDataSource
-		dogCharacterDropDownView.dataSource = viewModel.dogCharacterDataSource
 	}
 	
 	// MARK: - UI Binding
