@@ -1,8 +1,10 @@
 import RIBs
+import CorePresentation
 import DesignKit
 
 protocol LoggedOutDependency: Dependency {
 	var birthdayPickerBuildable: BirthdayPickerBuildable { get }
+	var dogCharacterPickerBuildable: DogCharacterPickerBuildable { get }
 	var loggedOutViewController: ViewControllable { get }
 }
 

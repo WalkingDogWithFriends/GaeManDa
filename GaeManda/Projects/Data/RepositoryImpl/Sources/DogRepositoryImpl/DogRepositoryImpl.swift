@@ -12,6 +12,7 @@ import DataMapper
 import DTO
 import Entity
 import GMDNetwork
+import LocalStorage
 import Repository
 
 public struct DogRepositoryImpl: DogRepository {
@@ -40,5 +41,20 @@ public struct DogRepositoryImpl: DogRepository {
 			.init(stubBehavior: .immediate)
 			.request(DogAPI.postNewDog(dog: dog), type: VoidResponse.self)
 			.map { _ in }
+	}
+	
+	public func fetchDogCharacters() -> Single<[DogCharacter]> {
+		return Single.create { single in
+			let result = FileProvider<OnboardingFileAPI>()
+				.request(DogFileAPI.fetchCharacters, type: [DogCharacterResponseDTO].self)
+				.map { dogDataMapper.mapToDogCharacter(from: $0) }
+			
+			switch result {
+				case .success(let characters): single(.success(characters))
+				case .failure(let error): single(.failure(error))
+			}
+			
+			return Disposables.create()
+		}
 	}
 }

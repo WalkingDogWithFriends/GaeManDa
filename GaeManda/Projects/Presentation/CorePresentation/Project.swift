@@ -1,7 +1,14 @@
+//
+//  Project.swift
+//  ProjectDescriptionHelpers
+//
+//  Created by jung on 11/16/23.
+//
+
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-private let projectName = "OnBoarding"
+private let projectName = "CorePresentation"
 
 let project = Project.createProject(
 	name: projectName,
@@ -9,7 +16,7 @@ let project = Project.createProject(
 		.createIntefaceTarget(
 			name: projectName,
 			dependencies: [
-				.Project.CoreLayer.GMDUtils,
+				.Project.DomainLayer.Entity,
 				.SPM.RIBs
 			]
 		),
@@ -17,17 +24,14 @@ let project = Project.createProject(
 			name: projectName,
 			dependencies: [
 				.Project.PresentationLayer.CorePresentation,
-				.Project.PresentationLayer.OnBoarding,
+				.Project.CoreLayer.GMDUtils,
 				.Project.CoreLayer.GMDExtensions,
 				.Project.DomainLayer.UseCase,
-				.Project.DomainLayer.Entity,
 				.Project.DesignKit,
 				.SPM.RxCocoa,
 				.SPM.RxGesture,
-				.SPM.SnapKit,
-				.SPM.NMapsMap
+				.SPM.SnapKit
 			]
-		),
-		.createTestTarget(name: projectName)
+		)
 	]
 )

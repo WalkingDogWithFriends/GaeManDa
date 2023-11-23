@@ -28,6 +28,10 @@ public extension TargetDependency.Project.PresentationLayer {
 		target: "Presentation",
 		path: .relativeToRoot("Projects/Presentation")
 	)
+	static let CorePresentation = TargetDependency.project(
+		target: "CorePresentation",
+		path: .relativeToRoot("Projects/Presentation/CorePresentation")
+	)
 	static let GMDMap = TargetDependency.project(
 		target: "GMDMap",
 		path: .relativeToRoot("Projects/Presentation/GMDMap")
@@ -47,6 +51,10 @@ public extension TargetDependency.Project.PresentationLayer {
 	static let GMDProfile = TargetDependency.project(
 		target: "GMDProfile",
 		path: .relativeToRoot("Projects/Presentation/GMDProfile")
+	)
+	static let CorePresentationImpl = TargetDependency.project(
+		target: "CorePresentationImpl",
+		path: .relativeToRoot("Projects/Presentation/CorePresentation")
 	)
 	static let GMDMapImpl = TargetDependency.project(
 		target: "GMDMapImpl",

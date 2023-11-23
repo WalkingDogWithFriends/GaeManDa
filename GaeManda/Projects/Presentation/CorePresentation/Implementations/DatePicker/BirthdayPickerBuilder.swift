@@ -7,6 +7,7 @@
 //
 
 import RIBs
+import CorePresentation
 
 public protocol BirthdayPickerDependency: Dependency {}
 

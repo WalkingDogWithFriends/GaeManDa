@@ -57,20 +57,7 @@ final class LoggedInComponent:
 		return NewDogProfileBuilder(dependency: self)
 	}()
 	
-	// MARK: - Repository
-	lazy var dogRepository: DogRepository = {
-		return DogRepositoryImpl(dogDataMapper: DogDataMapperImpl())
-	}()
-	
-	lazy var userRepository: UserRepository = {
-		return UserRepositoryImpl(userDataMapper: UserProfileDataMapperImpl())
-	}()
-	
-	// MARK: - UseCase
-	lazy var gmdProfileUseCase: GMDProfileUseCase = {
-		return GMDProfileUseCaseImpl(
-			dogDependecy: dogRepository,
-			userDependency: userRepository
-		)
-	}()
+	var gmdProfileUseCase: GMDProfileUseCase {
+		dependency.gmdProfileUseCase
+	}
 }

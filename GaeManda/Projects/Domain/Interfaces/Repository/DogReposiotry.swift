@@ -14,4 +14,5 @@ public protocol DogRepository {
 	func fetchDogs(id: Int) -> Single<[Dog]>
 	func updateDog(dog: Dog) -> Single<Void>
 	func postNewDog(dog: Dog) -> Single<Void>
+	func fetchDogCharacters() -> Single<[DogCharacter]>
 }
