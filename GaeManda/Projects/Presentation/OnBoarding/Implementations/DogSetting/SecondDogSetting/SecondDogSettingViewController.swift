@@ -25,8 +25,10 @@ final class SecondDogSettingViewController:
 	private var selectedCharacters: [DogCharacter] = [] {
 		didSet {
 			selectedCharacterCollectionView.reloadData()
+			isSelectedCharacters.accept(!selectedCharacters.isEmpty)
 		}
 	}
+	private var isSelectedCharacters = BehaviorRelay<Bool>(value: false)
 	
 	private let viewModel = SecondDogSettingViewModel()
 	
@@ -242,7 +244,7 @@ final class SecondDogSettingViewController:
 	private func bindConfirmButton() {
 		let dropDownSelectedObservable = Observable.combineLatest(
 			dogBreedDropDownView.rx.isSelectedOption,
-			dogBreedDropDownView.rx.isSelectedOption
+			isSelectedCharacters
 		)
 			.asDriver(onErrorJustReturn: (false, false))
 		
