@@ -1,5 +1,6 @@
 import RIBs
 import CorePresentation
+import Entity
 
 protocol DogProfileSecondSettingInteractable: Interactable, DogCharacterPickerListener {
 	var router: DogProfileSecondSettingRouting? { get set }
@@ -24,10 +25,14 @@ final class DogProfileSecondSettingRouter:
 		interactor.router = self
 	}
 	
-	func dogCharacterPickerAttach(with selectedId: [Int]) {
+	func dogCharacterPickerAttach(characters: [DogCharacter], selectedId: [Int]) {
 		if dogCharacterRouter != nil { return }
 		
-		let router = dogCharacterPickerBuildable.build(withListener: interactor, selectedId: selectedId)
+		let router = dogCharacterPickerBuildable.build(
+			withListener: interactor,
+			dogCharacters: characters,
+			selectedId: selectedId
+		)
 		
 		viewController.present(
 			router.viewControllable,
