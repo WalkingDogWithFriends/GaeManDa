@@ -7,6 +7,7 @@ import OnBoarding
 public protocol DogProfileSettingDependency: Dependency {
 	var dogProfileSettingViewController: ViewControllable { get }
 	var birthdayPickerBuildable: BirthdayPickerBuildable { get }
+	var dogCharacterPickerBuildable: DogCharacterPickerBuildable { get }
 }
 
 final class DogProfileSettingComponent:
@@ -19,6 +20,10 @@ final class DogProfileSettingComponent:
 	
 	var birthdayPickerBuildable: BirthdayPickerBuildable {
 		return dependency.birthdayPickerBuildable
+	}
+	
+	var dogCharacterPickerBuildable: DogCharacterPickerBuildable {
+		return dependency.dogCharacterPickerBuildable
 	}
 }
 
