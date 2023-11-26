@@ -22,35 +22,54 @@ public struct DogRepositoryImpl: DogRepository {
 		self.dogDataMapper = dogDataMapper
 	}
 	
-	public func fetchDogs(id: Int) -> Single<[Dog]> {
+	public func fetchDogs() -> Single<[Dog]> {
 		return  Provider<DogAPI>
 			.init(stubBehavior: .immediate)
-			.request(DogAPI.fetchDogs(id: id), type: [DogResponseDTO].self)
+			.request(DogAPI.fetchDogs, type: [FetchDogsResponseDTO].self)
 			.map { $0.map { dogDataMapper.mapToDog(from: $0) } }
 	}
 	
-	public func updateDog(dog: Dog) -> Single<Void> {
+	public func updateDog(_ dog: Dog, isProfileImageChanged: Bool) -> Single<Void> {
+		let resquestDTO = dogDataMapper.mapToUpdateDogRequestDTO(from: dog, isProfileImageChaged: isProfileImageChanged)
+		
 		return Provider<DogAPI>
 			.init(stubBehavior: .immediate)
-			.request(DogAPI.updateDogs(dog: dog), type: VoidResponse.self)
+			.request(DogAPI.updateDog(resquestDTO), type: VoidResponse.self)
 			.map { _ in }
 	}
 	
-	public func postNewDog(dog: Dog) -> Single<Void> {
+	public func createDog(_ dog: Dog) -> Single<Void> {
+		let resquestDTO = dogDataMapper.mapToCreateDogRequestDTO(from: dog)
+
 		return Provider<DogAPI>
 			.init(stubBehavior: .immediate)
-			.request(DogAPI.postNewDog(dog: dog), type: VoidResponse.self)
+			.request(DogAPI.createDog(resquestDTO), type: VoidResponse.self)
 			.map { _ in }
 	}
 	
 	public func fetchDogCharacters() -> Single<[DogCharacter]> {
 		return Single.create { single in
-			let result = FileProvider<OnboardingFileAPI>()
+			let result = FileProvider<DogFileAPI>()
 				.request(DogFileAPI.fetchCharacters, type: [DogCharacterResponseDTO].self)
 				.map { dogDataMapper.mapToDogCharacter(from: $0) }
 			
 			switch result {
 				case .success(let characters): single(.success(characters))
+				case .failure(let error): single(.failure(error))
+			}
+			
+			return Disposables.create()
+		}
+	}
+	
+	public func fetchDogSpecies() -> Single<[String]> {
+		return Single.create { single in
+			let result = FileProvider<DogFileAPI>()
+				.request(DogFileAPI.fetchSpecies, type: [DogSpeciesResponseDTO].self)
+				.map { $0.map { $0.species } }
+			
+			switch result {
+				case .success(let species): single(.success(species))
 				case .failure(let error): single(.failure(error))
 			}
 			

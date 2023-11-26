@@ -17,6 +17,6 @@ public struct UserProfileDataMapperImpl: UserDataMapper {
 	public init() {}
 	
 	public func mapToUser(from dto: UserProfileResponseDTO) -> User {
-		return User(name: dto.nickname, sex: Sex(rawValue: dto.gender) ?? .male, age: "\(dto.age)")
+		return User(name: dto.nickname, sex: Gender(rawValue: dto.gender) ?? .male, age: "\(dto.age)")
 	}
 }

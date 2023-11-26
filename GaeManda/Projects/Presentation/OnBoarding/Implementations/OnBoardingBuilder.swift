@@ -9,6 +9,7 @@ public protocol OnBoardingDependency: Dependency {
 	var userProfileSettingBuildable: UserProfileSettingBuildable { get }
 	var dogProfileSettingBuildable: DogProfileSettingBuildable { get }
 	var termsOfUseUseCase: TermsofUseUseCase { get }
+	var onBoardingUseCase: OnBoardingUseCase { get }
 }
 
 final class OnBoardingComponent: Component<OnBoardingDependency> {

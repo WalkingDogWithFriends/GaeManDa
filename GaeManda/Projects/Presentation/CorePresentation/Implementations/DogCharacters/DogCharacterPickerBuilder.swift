@@ -8,19 +8,10 @@
 
 import RIBs
 import CorePresentation
+import Entity
 import UseCase
 
-public protocol DogCharacterPickerDependency: Dependency {
-	var gmdProfileUseCase: GMDProfileUseCase { get }
-}
-
-final class DogCharacterPickerComponent:
-	Component<DogCharacterPickerDependency>,
-	DogCharacterPickerInteractorDependency {
-	var gmdProfileUseCase: GMDProfileUseCase {
-		return dependency.gmdProfileUseCase
-	}
-}
+public protocol DogCharacterPickerDependency: Dependency { }
 
 public final class DogCharacterPickerBuilder:
 	Builder<DogCharacterPickerDependency>,
@@ -31,14 +22,14 @@ public final class DogCharacterPickerBuilder:
 	
 	public func build(
 		withListener listener: DogCharacterPickerListener,
+		dogCharacters: [DogCharacter],
 		selectedId: [Int]?
 	) -> ViewableRouting {
-		let component = DogCharacterPickerComponent(dependency: dependency)
 		let viewController = DogCharacterPickerViewController()
 		
 		let interactor = DogCharacterPickerInteractor(
 			presenter: viewController,
-			dependency: component,
+			dogCharacters: dogCharacters,
 			selectedId: selectedId
 		)
 		interactor.listener = listener

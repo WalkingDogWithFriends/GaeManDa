@@ -21,7 +21,7 @@ protocol UserProfileEditPresentableListener: AnyObject {
 	func viewWillAppear()
 	func didTapBackbutton()
 	func dismiss()
-	func didTapEndEditingButton(name: String, sex: Sex)
+	func didTapEndEditingButton(name: String, sex: Gender)
 }
 
 final class UserProfileEditViewController:
@@ -33,7 +33,7 @@ final class UserProfileEditViewController:
 	private let disposeBag = DisposeBag()
 	
 	private let maxTextCount = 20
-	private let selectedSexRelay = BehaviorRelay<Sex>(value: .male)
+	private let selectedSexRelay = BehaviorRelay<Gender>(value: .male)
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "프로필 수정")
@@ -204,7 +204,7 @@ extension UserProfileEditViewController {
 		nickNameTextField.text = name
 	}
 	
-	func updateUserSex(_ sex: Sex) {
+	func updateUserSex(_ sex: Gender) {
 		selectedSexRelay.accept(sex)
 	}
 }
@@ -306,8 +306,8 @@ private extension UserProfileEditViewController {
 		
 		// 성별 버튼 선택 Observable
 		Observable.merge(
-			maleButton.rx.tap.map { Sex.male },
-			femaleButton.rx.tap.map { Sex.female }
+			maleButton.rx.tap.map { Gender.male },
+			femaleButton.rx.tap.map { Gender.female }
 		)
 		.subscribe(with: self) { owner, sex in
 			owner.selectedSexRelay.accept(sex)

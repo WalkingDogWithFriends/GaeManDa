@@ -6,8 +6,6 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
-import Foundation
-
 public struct DogCharacterResponseDTO: Decodable {
 	public let id: Int
 	public let character: String

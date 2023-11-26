@@ -1,32 +1,16 @@
 //
 //  DogProfileSecondSettingViewModel.swift
-//  OnBoarding
+//  OnBoardingImpl
 //
-//  Created by jung on 10/20/23.
+//  Created by jung on 11/26/23.
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
 import Foundation
 
 struct DogProfileSecondSettingViewModel {
-	var dogBreedDataSource = [
-		"말티즈",
-		"푸들",
-		"포메라니안",
-		"치와와",
-		"시츄",
-		"골든 리트리버",
-		"진돗개",
-		"기타"
-	]
-	
-	var dogCharacterDataSource = [
-		"온순해요",
-		"물지 않아요",
-		"조금 짖는 편이예요",
-		"조금 낯 가려요",
-		"뛰는 걸 좋아해요",
-		"풀을 좋아해요",
-		"기타"
-	]
+	let species: String
+	let isNeutered: Bool
+	let characterIds: [Int]
+	let profileImage: Data?
 }

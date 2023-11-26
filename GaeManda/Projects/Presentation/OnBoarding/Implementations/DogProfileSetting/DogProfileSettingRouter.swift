@@ -1,3 +1,4 @@
+import Foundation
 import RIBs
 import GMDUtils
 import OnBoarding
@@ -83,10 +84,11 @@ extension DogProfileSettingRouter {
 
 // MARK: DogProfileSecondSetting
 extension DogProfileSettingRouter {
-	func dogProfileSecondSettingAttach() {
+	func dogProfileSecondSettingAttach(profileImage: Data?) {
 		if dogProfileSecondSettingRouting != nil { return }
 		
-		let router = dogProfileSecondSettingBuildable.build(withListener: interactor)
+		let router = dogProfileSecondSettingBuildable.build(withListener: interactor, profileImage: profileImage)
+		
 		viewController.pushViewController(
 			router.viewControllable,
 			animated: true
@@ -94,7 +96,7 @@ extension DogProfileSettingRouter {
 		dogProfileSecondSettingRouting = router
 		attachChild(router)
 	}
-	
+
 	func dogProfileSecondSettingDetach() {
 		guard let router = dogProfileSecondSettingRouting else { return }
 		

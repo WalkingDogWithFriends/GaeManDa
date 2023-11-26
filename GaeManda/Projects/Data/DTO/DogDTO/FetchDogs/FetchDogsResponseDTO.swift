@@ -6,78 +6,76 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
-import Foundation
-
-public struct DogResponseDTO: Decodable {
+public struct FetchDogsResponseDTO: Decodable {
 	public let petId: Int
 	public let name: String
-	public let age: String
 	public let birthday: String
 	public let species: String
-	public let weight: String
+	public let gender: String
+	public let weight: Int
 	public let isNeutered: Bool
-	public let personality: String
+	public let personalites: [Int]
 	public let profileImage: String
 	
 	public init(
 		petId: Int,
 		name: String,
-		age: String,
 		birthday: String,
 		species: String,
-		weight: String,
+		gender: String,
+		weight: Int,
 		isNeutered: Bool,
-		personality: String,
+		personalites: [Int],
 		profileImage: String
 	) {
 		self.petId = petId
 		self.name = name
-		self.age = age
 		self.birthday = birthday
 		self.species = species
+		self.gender = gender
 		self.weight = weight
 		self.isNeutered = isNeutered
-		self.personality = personality
+		self.personalites = personalites
 		self.profileImage = profileImage
 	}
 }
 
 #if DEBUG
-extension DogResponseDTO {
+extension FetchDogsResponseDTO {
 	public static let stubData =
  """
  [
  {
  "petId": 1,
  "name": "얌이",
- "age": "12",
  "birthday": "20180303",
  "species": "시츄",
- "weight": "5",
+ "gender": "M",
+ "weight": 5,
  "isNeutered": true,
- "personality": "착함",
+ "personalities": [2],
  "profileImage": ""
  },
  {
  "petId": 2,
  "name": "얌이",
- "age": "14",
  "birthday": "20190303",
  "species": "진돗개",
- "weight": "3",
+ "gender": "F",
+ "weight": 3,
  "isNeutered": false,
- "personality": "저희 강아지는 온순해요",
+ "personalities": [1, 3, 4],
  "profileImage": ""
  },
  {
  "petId": 3,
  "name": "루비",
- "age": "5",
  "birthday": "20210303",
  "species": "말티즈",
- "weight": "22",
+ "gender": "M",
+ "weight": 22,
  "isNeutered": false,
- "personality": "저희 강아지는 활발해요",
+ "personalities": [1, 2, ,5],
  "profileImage": ""
  }
  ]

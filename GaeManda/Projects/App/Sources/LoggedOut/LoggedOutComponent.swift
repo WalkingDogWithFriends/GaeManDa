@@ -80,6 +80,10 @@ final class LoggedOutComponent:
 		shared { OnboardingRepositoryImpl(dataMapper: TermsMapperImpl()) }
 	}
 	
+	var onBoardingUseCase: OnBoardingUseCase {
+		return OnBoardingUseCaseImpl(dogRepository: dependency.dogRepository, userRepository: dependency.userRepository)
+	}
+	
 	var termsOfUseUseCase: TermsofUseUseCase {
 		return TermsofUseUseCaseImpl(repository: onboardingRepositry)
 	}

@@ -1,4 +1,5 @@
 import RIBs
+import Entity
 import GMDUtils
 import OnBoarding
 
@@ -74,7 +75,13 @@ extension OnBoardingInteractor {
 
 // MARK: DogProfileSettingListener
 extension OnBoardingInteractor {
-	func dogProfileSettingDidFinish() {
+	func dogProfileSettingDidFinish(with dog: Dog?) {
+		guard let dog = dog else {
+			// 에러로 인해 끝난 경우, 강아지 설정 이전 페이지로 이동
+			router?.dogProfileSettingDetach()
+			return
+		}
+		// 정상 종료된 경우, 온보딩으로 데이터 전달.
 		listener?.onBoardingDidFinish()
 	}
 	

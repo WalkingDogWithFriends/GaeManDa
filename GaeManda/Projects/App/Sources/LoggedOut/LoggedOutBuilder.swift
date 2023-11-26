@@ -1,11 +1,14 @@
 import RIBs
 import CorePresentation
 import DesignKit
+import Repository
 
 protocol LoggedOutDependency: Dependency {
 	var birthdayPickerBuildable: BirthdayPickerBuildable { get }
 	var dogCharacterPickerBuildable: DogCharacterPickerBuildable { get }
 	var loggedOutViewController: ViewControllable { get }
+	var dogRepository: DogRepository { get }
+	var userRepository: UserRepository { get }
 }
 
 protocol LoggedOutBuildable: Buildable {

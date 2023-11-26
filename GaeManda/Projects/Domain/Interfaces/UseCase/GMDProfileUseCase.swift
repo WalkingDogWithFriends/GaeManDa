@@ -12,15 +12,12 @@ import Entity
 import Repository
 
 public protocol GMDProfileUseCase {
-	var dogDependency: DogRepository { get }
-	var userDependency: UserRepository { get }
-
 	init(
-		dogDependecy: DogRepository,
-		userDependency: UserRepository
+		dogRepository: DogRepository,
+		userRepository: UserRepository
 	)
 	
-	func fetchDogs(id: Int) -> Single<[Dog]>
+	func fetchDogs() -> Single<[Dog]>
 	func fetchUser(id: Int) -> Single<User>
 	func updateUser(
 		nickName: String,
@@ -28,7 +25,8 @@ public protocol GMDProfileUseCase {
 		sex: String
 	) -> Single<Void>
 	
-	func updateDog(dog: Dog) -> Single<Void>
-	func postNewDog(dog: Dog) -> Single<Void>
+	func updateDog(_ dog: Dog, isProfileImageChanged: Bool) -> Single<Void>
+	func createDog(_ dog: Dog) -> Single<Void>
 	func fetchDogCharacters() -> Single<[DogCharacter]>
+	func fetchDogSpecies() -> Single<[String]>
 }

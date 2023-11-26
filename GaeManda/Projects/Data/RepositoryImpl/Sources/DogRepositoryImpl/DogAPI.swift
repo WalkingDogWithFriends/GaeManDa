@@ -8,26 +8,23 @@
 
 import Foundation
 import DTO
-import Entity
 import GMDNetwork
 
 public enum DogAPI {
-	case fetchDogs(id: Int)
-	case updateDogs(dog: Dog)
-	case postNewDog(dog: Dog)
+	case fetchDogs
+	case updateDog(_ dto: UpdateDogRequestDTO)
+	case createDog(_ dto: CreateDogRequestDTO)
 }
 
 extension DogAPI: TargetType {
-	public var baseURL: URL { return URL(string: "")! }
+	public var baseURL: URL {
+		return URL(string: "http://117.17.198.45:8000/api/pet")!
+	}
 	
 	public var path: String {
 		switch self {
-			case .fetchDogs:
-				return "fetchDog"
-			case .updateDogs:
-				return "updateDog"
-			case .postNewDog:
-				return "postNewDog"
+			case .fetchDogs, .updateDog, .createDog:
+				return "profile"
 		}
 	}
 	
@@ -35,9 +32,9 @@ extension DogAPI: TargetType {
 		switch self {
 			case . fetchDogs:
 				return .get
-			case .updateDogs:
-				return .put
-			case .postNewDog:
+			case .updateDog:
+				return .patch
+			case .createDog:
 				return .post
 		}
 	}
@@ -47,13 +44,11 @@ extension DogAPI: TargetType {
 			case .fetchDogs:
 				return .requestPlain
 				
-			case .updateDogs:
-				// TODO: requestDTO 만들기
-				return .requestPlain
+			case let .updateDog(requestDTO):
+				return .requestParameters(parameters: requestDTO.toDictionary, encoding: .jsonBody)
 				
-			case .postNewDog:
-				// TODO: requestDTO 만들기
-				return .requestPlain
+			case let .createDog(requestDTO):
+				return .requestParameters(parameters: requestDTO.toDictionary, encoding: .jsonBody)
 		}
 	}
 	
@@ -64,12 +59,12 @@ extension DogAPI: TargetType {
 	public var sampleData: Data {
 		switch self {
 			case .fetchDogs:
-				let jsonString = DogResponseDTO.stubData
+				let jsonString = FetchDogsResponseDTO.stubData
 				let data = jsonString.data(using: .utf8)
 				
 				return data ?? Data()
 				
-			case .updateDogs, .postNewDog:
+			case .updateDog, .createDog:
 				return  Data()
 		}
 	}

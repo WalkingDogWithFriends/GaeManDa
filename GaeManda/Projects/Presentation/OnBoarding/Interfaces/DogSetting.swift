@@ -1,4 +1,5 @@
 import RIBs
+import Entity
 import GMDUtils
 
 public protocol DogProfileSettingBuildable: Buildable {
@@ -6,7 +7,7 @@ public protocol DogProfileSettingBuildable: Buildable {
 }
 
 public protocol DogProfileSettingListener: AnyObject {
-	func dogProfileSettingDidFinish()
+	func dogProfileSettingDidFinish(with dog: Dog?)
 	func dogProfileSettingBackButtonDidTap()
 	func dogProfileSettingDismiss()
 }

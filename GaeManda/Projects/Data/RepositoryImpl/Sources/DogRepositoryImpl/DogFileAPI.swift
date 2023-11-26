@@ -10,24 +10,30 @@ import LocalStorage
 
 public enum DogFileAPI {
 	case fetchCharacters
+	case fetchSpecies
 }
 
 extension DogFileAPI: TargetType {
 	public var filename: String {
 		switch self {
-		case .fetchCharacters: return "DogCharacters"
+			case .fetchCharacters:
+				return "DogCharacters"
+			case .fetchSpecies:
+				return "DogSpecies"
 		}
 	}
 	
 	public var task: TaskType {
 		switch self {
-		case .fetchCharacters: return .read
+			case .fetchCharacters, .fetchSpecies:
+				return .read
 		}
 	}
 	
 	public var fileType: FileType {
 		switch self {
-		case .fetchCharacters: return .json
+			case .fetchCharacters, .fetchSpecies:
+				return .json
 		}
 	}
 }

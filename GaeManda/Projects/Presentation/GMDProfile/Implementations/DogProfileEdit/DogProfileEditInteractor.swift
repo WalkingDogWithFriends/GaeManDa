@@ -20,9 +20,9 @@ protocol DogProfileEditPresentable: Presentable {
 	
 	func updateDogDashBoard(dogViewModels: [DogDashBoardViewModel])
 	func updateDogName(_ name: String)
-	func updateDogSex(_ sex: Sex)
+	func updateDogSex(_ sex: Gender)
 	func updateDogWeight(_ weight: String)
-	func updateDogNeutered(_ isNeutered: Neutered)
+	func updateDogNeutered(_ isNeutered: Bool)
 	func updateDogCharacter(_ character: String)
 }
 
@@ -81,7 +81,7 @@ extension DogProfileEditInteractor {
 	
 	func didTapEndEditButton(dog: Dog) {
 		dependency.gmdProfileUseCase
-			.updateDog(dog: dog)
+			.updateDog(dog, isProfileImageChanged: true)
 			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, _ in
 				owner.listener?.dogProfileEndEditing()
@@ -98,7 +98,7 @@ extension DogProfileEditInteractor {
 private extension DogProfileEditInteractor {
 	func updateDogs() {
 		dependency.gmdProfileUseCase
-			.fetchDogs(id: 0)
+			.fetchDogs()
 			.subscribe(with: self) { owner, dogs in
 				owner.dogs.accept(dogs)
 			}
@@ -107,10 +107,11 @@ private extension DogProfileEditInteractor {
 	
 	func updateEditDog(_ dog: Dog) {
 		presenter.updateDogName(dog.name)
-		presenter.updateDogSex(dog.sex)
-		presenter.updateDogWeight(dog.weight)
-		presenter.updateDogNeutered(dog.didNeutered)
-		presenter.updateDogCharacter(dog.character)
+		presenter.updateDogSex(dog.gender)
+		presenter.updateDogWeight("\(dog.weight)")
+		presenter.updateDogNeutered(dog.isNeutered)
+		//		presenter.updateDogCharacter(dog.characterIds)
+		presenter.updateDogCharacter("0")
 	}
 	
 	func bind() {

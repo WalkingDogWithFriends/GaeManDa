@@ -39,8 +39,8 @@ final class AppRootComponent:
 	// MARK: - UseCase
 	lazy var gmdProfileUseCase: GMDProfileUseCase = {
 		return GMDProfileUseCaseImpl(
-			dogDependecy: dogRepository,
-			userDependency: userRepository
+			dogRepository: dogRepository,
+			userRepository: userRepository
 		)
 	}()
 	

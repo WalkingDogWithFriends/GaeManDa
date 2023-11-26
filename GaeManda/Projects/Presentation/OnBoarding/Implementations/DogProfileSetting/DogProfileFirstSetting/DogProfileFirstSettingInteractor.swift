@@ -1,3 +1,4 @@
+import Foundation
 import RIBs
 
 protocol DogProfileFirstSettingRouting: ViewableRouting {
@@ -12,7 +13,7 @@ protocol DogProfileFirstSettingPresentable: Presentable {
 }
 
 protocol DogProfileFirstSettingListener: AnyObject {
-	func dogProfileFirstSettingDidTapConfirmButton()
+	func dogProfileFirstSettingDidTapConfirmButton(with viewModel: DogProfileFirstSettingViewModel)
 	func dogProfileFirstSettingDidTapBackButton()
 	func dogProfileFirstSettingDismiss()
 }
@@ -40,8 +41,8 @@ final class DogProfileFirstSettingInteractor:
 
 // MARK: PresentableListener
 extension DogProfileFirstSettingInteractor {
-	func didTapConfirmButton() {
-		listener?.dogProfileFirstSettingDidTapConfirmButton()
+	func didTapConfirmButton(with viewModel: DogProfileFirstSettingViewModel) {
+		listener?.dogProfileFirstSettingDidTapConfirmButton(with: viewModel)
 	}
 	
 	func didTapBackButton() {

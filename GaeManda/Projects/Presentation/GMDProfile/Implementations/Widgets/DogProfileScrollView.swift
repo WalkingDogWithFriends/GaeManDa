@@ -22,8 +22,8 @@ final class DogProfileScrollView: UIScrollView {
 	private let disposeBag = DisposeBag()
 	private let kgSuffix = "kg"
 	
-	let selectedSexRelay = BehaviorRelay<Sex>(value: .male)
-	let selectedNeuterRelay = BehaviorRelay<Neutered>(value: .true)
+	let selectedSexRelay = BehaviorRelay<Gender>(value: .male)
+	let selectedNeuterRelay = BehaviorRelay<Bool>(value: true)
 	let textFieldModeRelay = BehaviorRelay<ScollViewUIComponentMode>(value: ScollViewUIComponentMode())
 	
 	// MARK: - UI Components
@@ -302,8 +302,8 @@ private extension DogProfileScrollView {
 	func buttonBind() {
 		// 성별 버튼 선택 Observable
 		Observable.merge(
-			maleButton.rx.tap.map { Sex.male },
-			femaleButton.rx.tap.map { Sex.female }
+			maleButton.rx.tap.map { Gender.male },
+			femaleButton.rx.tap.map { Gender.female }
 		)
 		.subscribe(with: self) { owner, sex in
 			owner.selectedSexRelay.accept(sex)
@@ -324,8 +324,8 @@ private extension DogProfileScrollView {
 		
 		// 중성화 버튼 선택 Observable
 		Observable.merge(
-			didNeuterButton.rx.tap.map { Neutered.true },
-			didNotNeuterButton.rx.tap.map { Neutered.false }
+			didNeuterButton.rx.tap.map { true },
+			didNotNeuterButton.rx.tap.map { false }
 		)
 		.subscribe(with: self) { owner, neutered in
 			owner.selectedNeuterRelay.accept(neutered)
@@ -334,13 +334,13 @@ private extension DogProfileScrollView {
 		
 		// 중성화 한 경우
 		selectedNeuterRelay
-			.map { $0 == .true }
+			.map { $0 == true }
 			.bind(to: didNeuterButton.rx.isSelected)
 			.disposed(by: disposeBag)
 		
 		// 중성화 안한 경우
 		selectedNeuterRelay
-			.map { $0 == .false }
+			.map { $0 == false }
 			.bind(to: didNotNeuterButton.rx.isSelected)
 			.disposed(by: disposeBag)
 	}
