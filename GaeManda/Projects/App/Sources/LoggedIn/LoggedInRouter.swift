@@ -52,7 +52,7 @@ final class LoggedInRouter:
 		interactor.router = self
 	}
 	
-	func attachTabs() {
+	func attachTabItems() {
 		let gmdMapRouting = gmdMapBuildable.build(withListener: interactor)
 		let gmdProfileRouting = gmdProfileBuildable.build(withListener: interactor)
 		let chattingListRouting = chattingListBuildable.build(withListener: interactor)

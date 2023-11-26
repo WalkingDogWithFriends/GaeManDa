@@ -1,5 +1,5 @@
 //
-//  SecondDogSettingViewModel.swift
+//  DogProfileSecondSettingViewModel.swift
 //  OnBoarding
 //
 //  Created by jung on 10/20/23.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct SecondDogSettingViewModel {
+struct DogProfileSecondSettingViewModel {
 	var dogBreedDataSource = [
 		"말티즈",
 		"푸들",
