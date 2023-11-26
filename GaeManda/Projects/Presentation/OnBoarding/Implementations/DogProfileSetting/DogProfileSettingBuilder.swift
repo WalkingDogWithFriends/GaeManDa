@@ -3,11 +3,13 @@ import CorePresentation
 import DesignKit
 import GMDUtils
 import OnBoarding
+import UseCase
 
 public protocol DogProfileSettingDependency: Dependency {
 	var dogProfileSettingViewController: ViewControllable { get }
 	var birthdayPickerBuildable: BirthdayPickerBuildable { get }
 	var dogCharacterPickerBuildable: DogCharacterPickerBuildable { get }
+	var onBoardingUseCase: OnBoardingUseCase { get }
 }
 
 final class DogProfileSettingComponent:
@@ -16,6 +18,10 @@ final class DogProfileSettingComponent:
 	DogProfileSecondSettingDependency {
 	fileprivate var dogProfileSettingViewController: ViewControllable {
 		return dependency.dogProfileSettingViewController
+	}
+	
+	var onBoardingUseCase: OnBoardingUseCase {
+		return dependency.onBoardingUseCase
 	}
 	
 	var birthdayPickerBuildable: BirthdayPickerBuildable {
