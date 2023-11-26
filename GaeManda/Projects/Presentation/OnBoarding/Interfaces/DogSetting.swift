@@ -7,7 +7,7 @@ public protocol DogProfileSettingBuildable: Buildable {
 }
 
 public protocol DogProfileSettingListener: AnyObject {
-	func dogProfileSettingDidFinish(with dog: Dog)
+	func dogProfileSettingDidFinish(with dog: Dog?)
 	func dogProfileSettingBackButtonDidTap()
 	func dogProfileSettingDismiss()
 }

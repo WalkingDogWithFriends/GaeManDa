@@ -10,6 +10,7 @@ import Foundation
 import RxSwift
 import Entity
 import Repository
+import UseCase
 
 public struct OnBoardingUseCaseImpl: OnBoardingUseCase {
 	private let dogRepository: DogRepository

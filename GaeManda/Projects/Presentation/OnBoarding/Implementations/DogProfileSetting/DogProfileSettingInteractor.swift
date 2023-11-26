@@ -16,8 +16,8 @@ protocol DogProfileSettingRouting: Routing {
 final class DogProfileSettingInteractor: Interactor, DogProfileSettingInteractable {
 	weak var router: DogProfileSettingRouting?
 	weak var listener: DogProfileSettingListener?
-	
-	private var dogSettingFirstViewModel: DogProfileFirstSettingViewModel = .default
+
+	private var dogSettingFirstViewModel: DogProfileFirstSettingViewModel?
 	
 	override init() {}
 	
@@ -51,6 +51,11 @@ extension DogProfileSettingInteractor {
 // MARK: DogProfileSecondSetting
 extension DogProfileSettingInteractor {
 	func dogProfileSecondSettingDidTapConfirmButton(with viewModel: DogProfileSecondSettingViewModel) {
+		guard let dogSettingFirstViewModel = dogSettingFirstViewModel else {
+			listener?.dogProfileSettingDidFinish(with: nil)
+			return
+		}
+		
 		let dog = convertToDog(from: dogSettingFirstViewModel, viewModel)
 
 		listener?.dogProfileSettingDidFinish(with: dog)

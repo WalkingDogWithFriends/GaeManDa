@@ -20,15 +20,7 @@ public struct Dog {
 	public let characterIds: [Int]
 	
 	public var age: Int { convertToAge() }
-	
-	private let dateFormatter: DateFormatter = {
-		let dateFormatter = DateFormatter()
-		dateFormatter.locale = Locale(identifier: "ko_KR")
-		dateFormatter.dateFormat = "YYYYMMdd"
-		
-		return dateFormatter
-	}()
-	
+
 	public init(
 		id: Int,
 		name: String,
@@ -54,12 +46,13 @@ public struct Dog {
 
 private extension Dog {
 	func convertToAge() -> Int {
-		guard let date = dateFormatter.date(from: birthday) else {
-			return 0
-		}
+		let dateFormatter = DateFormatter()
+		dateFormatter.locale = Locale(identifier: "ko_KR")
+		dateFormatter.dateFormat = "YYYYMMdd"
+		
+		guard let date = dateFormatter.date(from: birthday) else { return 0 }
 		
 		let now = Date()
-		
 		let ageComponents = Calendar.current.dateComponents([.year], from: date, to: now)
 		
 		return ageComponents.year ?? 0

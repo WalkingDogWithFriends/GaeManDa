@@ -16,9 +16,3 @@ struct DogProfileFirstSettingViewModel {
 	let weight: Int
 	let profileImage: Data?
 }
-
-extension DogProfileFirstSettingViewModel {
-	static let `default` = DogProfileFirstSettingViewModel(
-		name: "", birthday: "", gender: .male, weight: 0, profileImage: nil
-	)
-}
