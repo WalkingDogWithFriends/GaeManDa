@@ -14,22 +14,23 @@ import UseCase
 
 public struct GMDProfileUseCaseImpl: GMDProfileUseCase {
 	// MARK: - Repositories
-	public let dogDependency: DogRepository
-	public let userDependency: UserRepository
+	public let dogRepository: DogRepository
+	public let userRepository: UserRepository
 	
 	// MARK: - Initalizers
 	public init(
-		dogDependecy: DogRepository,
-		userDependency: UserRepository
+		dogRepository: DogRepository,
+		userRepository: UserRepository
 	) {
-		self.dogDependency = dogDependecy
-		self.userDependency = userDependency
+		self.dogRepository = dogRepository
+		self.userRepository = userRepository
 	}
 }
+
 // MARK: - User Profile Use Case
 public extension GMDProfileUseCaseImpl {
 	func fetchUser(id: Int) -> Single<User> {
-		return userDependency.fetchUser(id: id)
+		return userRepository.fetchUser(id: id)
 	}
 	
 	func updateUser(
@@ -37,7 +38,7 @@ public extension GMDProfileUseCaseImpl {
 		age: Int,
 		sex: String
 	) -> Single<Void> {
-		return userDependency.updateUser(
+		return userRepository.updateUser(
 			nickName: nickName,
 			age: age,
 			sex: sex
@@ -47,19 +48,23 @@ public extension GMDProfileUseCaseImpl {
 
 // MARK: - Dog Profile Use Case
 public extension GMDProfileUseCaseImpl {
-	func fetchDogs(id: Int) -> Single<[Dog]> {
-		return dogDependency.fetchDogs(id: id)
+	func fetchDogs() -> Single<[Dog]> {
+		return dogRepository.fetchDogs()
 	}
 	
-	func updateDog(dog: Dog) -> Single<Void> {
-		return dogDependency.updateDog(dog: dog)
+	func updateDog(_ dog: Dog, isProfileImageChanged: Bool) -> Single<Void> {
+		return dogRepository.updateDog(dog, isProfileImageChanged: isProfileImageChanged)
 	}
 	
-	func postNewDog(dog: Dog) -> Single<Void> {
-		return dogDependency.postNewDog(dog: dog)
+	func createDog(_ dog: Dog) -> Single<Void> {
+		return dogRepository.createDog(dog)
 	}
 	
 	func fetchDogCharacters() -> Single<[DogCharacter]> {
-		return dogDependency.fetchDogCharacters()
+		return dogRepository.fetchDogCharacters()
+	}
+	
+	func fetchDogSpecies() -> Single<[String]> {
+		return dogRepository.fetchDogSpecies()
 	}
 }
