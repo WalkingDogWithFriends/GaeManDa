@@ -9,11 +9,11 @@ protocol OnBoardingRouting: Routing {
 	func addressSettingAttach()
 	func addressSettingDetach()
 	func addressSettingDismiss()
-	func userSettingAttach()
-	func userSettingDetach()
-	func userSettingDismiss()
-	func dogSettingAttach()
-	func dogSettingDetach()
+	func userProfileSettingAttach()
+	func userProfileSettingDetach()
+	func userProfileSettingDismiss()
+	func dogProfileSettingAttach()
+	func dogProfileSettingDetach()
 }
 
 final class OnBoardingInteractor:
@@ -45,7 +45,7 @@ extension OnBoardingInteractor {
 // MARK: AddressSettingListener
 extension OnBoardingInteractor {
 	func addressSettingDidFinish() {
-		router?.userSettingAttach()
+		router?.userProfileSettingAttach()
 	}
 	
 	func addressSettingBackButtonDidTap() {
@@ -57,32 +57,32 @@ extension OnBoardingInteractor {
 	}
 }
 
-// MARK: UserSettingListener
+// MARK: UserProfileSettingListener
 extension OnBoardingInteractor {
-	func userSettingDidFinish() {
-		router?.dogSettingAttach()
+	func userProfileSettingDidFinish() {
+		router?.dogProfileSettingAttach()
 	}
 	
-	func userSettingBackButtonDidTap() {
-		router?.userSettingDetach()
+	func userProfileSettingBackButtonDidTap() {
+		router?.userProfileSettingDetach()
 	}
 	
-	func userSettingDismiss() {
-		router?.userSettingDismiss()
+	func userProfileSettingDismiss() {
+		router?.userProfileSettingDismiss()
 	}
 }
 
-// MARK: DogSettingListener
+// MARK: DogProfileSettingListener
 extension OnBoardingInteractor {
-	func dogSettingDidFinish() {
+	func dogProfileSettingDidFinish() {
 		listener?.onBoardingDidFinish()
 	}
 	
-	func dogSettingBackButtonDidTap() {
-		router?.dogSettingDetach()
+	func dogProfileSettingBackButtonDidTap() {
+		router?.dogProfileSettingDetach()
 	}
 	
-	func dogSettingDismiss() {
-		router?.dogSettingDetach()
+	func dogProfileSettingDismiss() {
+		router?.dogProfileSettingDetach()
 	}
 }

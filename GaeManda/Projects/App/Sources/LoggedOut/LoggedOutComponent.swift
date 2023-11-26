@@ -19,8 +19,8 @@ final class LoggedOutComponent:
 	TermsOfUseDependency,
 	AddressSettingDependency,
 	DetailAddressSettingDependency,
-	UserSettingDependency,
-	DogSettingDependency {
+	UserProfileSettingDependency,
+	DogProfileSettingDependency {
 	var dogCharacterPickerBuildable: DogCharacterPickerBuildable {
 		return dependency.dogCharacterPickerBuildable
 	}
@@ -50,12 +50,12 @@ final class LoggedOutComponent:
 		return DetailAddressSettingUseCaseImpl(geocodeRepository: geocodeRepository)
 	}
 	
-	lazy var userSettingBuildable: UserSettingBuildable = {
-		return UserSettingBuilder(dependency: self)
+	lazy var userProfileSettingBuildable: UserProfileSettingBuildable = {
+		return UserProfileSettingBuilder(dependency: self)
 	}()
 	
-	lazy var dogSettingBuildable: DogSettingBuildable = {
-		return DogSettingBuilder(dependency: self)
+	lazy var dogProfileSettingBuildable: DogProfileSettingBuildable = {
+		return DogProfileSettingBuilder(dependency: self)
 	}()
 	
 	lazy var signInBuildable: SignInBuildable = {
@@ -65,7 +65,7 @@ final class LoggedOutComponent:
 	var onBoardingViewController: ViewControllable {
 		dependency.loggedOutViewController
 	}
-	var dogSettingViewController: ViewControllable {
+	var dogProfileSettingViewController: ViewControllable {
 		loggedOutViewController.topViewControllable
 	}
 	var loggedOutViewController: ViewControllable {

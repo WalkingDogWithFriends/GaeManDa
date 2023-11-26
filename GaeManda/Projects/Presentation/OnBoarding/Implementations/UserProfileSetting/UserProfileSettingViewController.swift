@@ -6,39 +6,42 @@ import RxSwift
 import SnapKit
 import DesignKit
 import Entity
-import GMDUtils
 import GMDExtensions
+import GMDUtils
 
-protocol FirstDogSettingPresentableListener: AnyObject {
-	func didTapConfirmButton()
-	func didTapBackButton()
-	func didTapBirthdayPicker()
+protocol UserProfileSettingPresentableListener: AnyObject {
+	func confirmButtonDidTap()
+	func backButtonDidTap()
+	func birthdayPickerDidTap()
 	func dismiss()
 }
 
-final class FirstDogSettingViewController:
+final class UserProfileSettingViewController:
 	BaseViewController,
-	FirstDogSettingViewControllable {
+	UserProfileSettingPresentable,
+	UserProfileSettingViewControllable {
 	// MARK: - Properties
-	weak var listener: FirstDogSettingPresentableListener?
-	var textDidChangeNotification: NSObjectProtocol?
+	weak var listener: UserProfileSettingPresentableListener?
 	
-	private let kgSuffix = "kg"
 	private let maximumTextCount = 20
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "")
 	
-	private let onBoardingView = OnBoardingView(willDisplayImageView: true, title: "우리 아이를 등록해주세요! (1/2)")
+	private let onBoardingView = OnBoardingView(willDisplayImageView: true, title: "보호자의 프로필을 설정해주세요!")
 	
-	private let textStackView: UIStackView = {
-		let stackView = UIStackView()
-		stackView.axis = .vertical
-		stackView.alignment = .fill
-		stackView.spacing = 8
-		stackView.distribution = .fillEqually
+	private let nickNameTextField = GMDTextField(title: "닉네임", warningText: "닉네임을 입력해주세요.")
+	
+	private let maximumTextCountLabel = UILabel()
+	
+	private let calenderTextField = GMDTextField(title: "생년월일", warningText: "생년월일을 입력해주세요.")
+	
+	private let calenderButton: UIButton = {
+		let button = UIButton()
+		button.tintColor = .black
+		button.setImage(.iconCalendar, for: .normal)
 		
-		return stackView
+		return button
 	}()
 	
 	private let buttonStackView: UIStackView = {
@@ -51,39 +54,20 @@ final class FirstDogSettingViewController:
 		return stackView
 	}()
 	
-	private let dogNameTextField = GMDTextField(title: "우리 아이 이름", warningText: "우리 아이 이름을 작성해주세요")
-	
-	private let maximumTextCountLabel = UILabel()
-	
-	private let calenderTextField = GMDTextField(title: "우리 아이 생년월일", warningText: "생년월일을 입력해주세요.")
-	
-	private let calenderButton: UIButton = {
-		let button = UIButton()
-		button.tintColor = .black
-		button.setImage(.iconCalendar, for: .normal)
+	private let maleButton: GMDOptionButton = {
+		let button = GMDOptionButton(title: "남")
+		button.isSelected = true
 		
 		return button
 	}()
 	
-	private let dogWeightTextField: GMDTextField = {
-		let gmdTextField = GMDTextField(
-			title: "우리 아이 몸무게 (kg)",
-			warningText: "우리 아이 몸무게 (kg)을 입력해주세요."
-		)
-		gmdTextField.textField.keyboardType = .numberPad
-		
-		return gmdTextField
-	}()
-		
-	private let maleButton = GMDOptionButton(title: "남", isSelected: true)
 	private let femaleButton = GMDOptionButton(title: "여")
-	private let confirmButton = ConfirmButton(title: "확인", isPositive: false)
+	
+	private let confirmButton = ConfirmButton(title: "확인")
 	
 	// MARK: - Life Cycles
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
-		textDidChangeNotification = registerTextFieldNotification()
 		setupUI()
 	}
 	
@@ -94,8 +78,6 @@ final class FirstDogSettingViewController:
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 		
-		removeTextFieldNotification([textDidChangeNotification])
-		
 		if isBeingDismissed || isMovingFromParent {
 			listener?.dismiss()
 		}
@@ -103,19 +85,23 @@ final class FirstDogSettingViewController:
 	
 	// MARK: - UI Methods
 	private func setupUI() {
-		dogNameTextField.setRightView(maximumTextCountLabel)
-		calenderTextField.setRightView(calenderButton)
-		
+		setTextField(nickNameTextField.textField, rightView: maximumTextCountLabel)
+		setTextField(calenderTextField.textField, rightView: calenderButton)
 		setViewHierarchy()
 		setConstraints()
 		bind()
 	}
 	
+	func setTextField(_ textField: UITextField, rightView: UIView) {
+		textField.rightView = rightView
+		textField.rightViewMode = .always
+	}
+	
 	override func setViewHierarchy() {
 		super.setViewHierarchy()
-		contentView.addSubviews(navigationBar, onBoardingView, textStackView, buttonStackView, confirmButton)
-		
-		textStackView.addArrangedSubviews(dogNameTextField, calenderTextField, dogWeightTextField)
+		contentView.addSubviews(
+			navigationBar, onBoardingView, nickNameTextField, calenderTextField, buttonStackView, confirmButton
+		)
 		buttonStackView.addArrangedSubviews(maleButton, femaleButton)
 	}
 	
@@ -132,21 +118,27 @@ final class FirstDogSettingViewController:
 			make.trailing.equalToSuperview().offset(-32)
 		}
 		
-		textStackView.snp.makeConstraints { make in
-			make.top.equalTo(onBoardingView.snp.bottom).offset(24)
+		nickNameTextField.snp.makeConstraints { make in
+			make.top.equalTo(onBoardingView.snp.bottom).offset(48)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 		}
-
+		
+		calenderTextField.snp.makeConstraints { make in
+			make.top.equalTo(nickNameTextField.snp.bottom).offset(16)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+		}
+		
 		buttonStackView.snp.makeConstraints { make in
-			make.top.equalTo(textStackView.snp.bottom).offset(28)
+			make.top.equalTo(calenderTextField.snp.bottom).offset(44)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 			make.height.equalTo(40)
 		}
-
+		
 		confirmButton.snp.makeConstraints { make in
-			make.top.equalTo(buttonStackView.snp.bottom).offset(58)
+			make.top.equalTo(buttonStackView.snp.bottom).offset(98)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 			make.bottom.equalToSuperview().offset(-(54 - UIDevice.safeAreaBottomHeight))
@@ -158,16 +150,15 @@ final class FirstDogSettingViewController:
 	override func bind() {
 		super.bind()
 		bindNavigation()
-		bindOnboardingView()
+		bindOnboardingView() 
 		bindTextField()
 		bindButtons()
-		bindConfirmButton()
 	}
 	
 	private func bindNavigation() {
 		navigationBar.backButton.rx.tap
 			.bind(with: self) { owner, _ in
-				owner.listener?.didTapBackButton()
+				owner.listener?.backButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 	}
@@ -181,23 +172,23 @@ final class FirstDogSettingViewController:
 	}
 	
 	private func bindTextField() {
-		dogNameTextField.textField.rx.text
+		nickNameTextField.textField.rx.text
 			.orEmpty
 			.withUnretained(self)
 			.map { owner, text in
 				return text.trimmingSuffix(with: owner.maximumTextCount)
 			}
 			.bind(with: self) { owner, text in
-				owner.dogNameTextField.textField.attributedText = text.inputText()
+				owner.nickNameTextField.textField.attributedText = text.inputText()
 				owner.maximumTextCountLabel.attributedText =
 				"\(text.count)/\(owner.maximumTextCount)".inputText(color: .gray90)
 			}
 			.disposed(by: disposeBag)
 		
-		dogNameTextField.textField.rx.text
+		nickNameTextField.textField.rx.text
 			.orEmpty
 			.map { _ in GMDTextFieldMode.normal }
-			.bind(to: dogNameTextField.rx.mode)
+			.bind(to: nickNameTextField.rx.mode)
 			.disposed(by: disposeBag)
 		
 		calenderTextField.textField.rx.controlEvent(.editingDidBegin)
@@ -210,7 +201,7 @@ final class FirstDogSettingViewController:
 	private func bindButtons() {
 		calenderButton.rx.tap
 			.bind(with: self) { owner, _ in
-				owner.listener?.didTapBirthdayPicker()
+				owner.calenderButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 		
@@ -233,32 +224,23 @@ final class FirstDogSettingViewController:
 			.map { $0 == .female }
 			.drive(femaleButton.rx.isSelected)
 			.disposed(by: disposeBag)
-	}
-	
-	func bindConfirmButton() {
-		// 닉네임, 생일, 몸무게 입력 여부 Observable
+		
+		// 닉네임, 생일 입력 여부 Observable
 		let textFieldsTextEmptyObservable = Observable
 			.combineLatest(
-				dogNameTextField.rx.text.orEmpty,
-				calenderTextField.rx.text.orEmpty,
-				dogWeightTextField.rx.text.orEmpty
+				nickNameTextField.textField.rx.text.orEmpty,
+				calenderTextField.textField.rx.text.orEmpty
 			)
-			.map { (!$0.0.isEmpty, !$0.1.isEmpty, !$0.2.isEmpty) }
-			.asDriver(onErrorJustReturn: (false, false, false))
+			.map { (!$0.0.isEmpty, !$0.1.isEmpty) }
+			.asDriver(onErrorJustReturn: (false, false))
 		
-		// Confirm버튼 활성화
-		textFieldsTextEmptyObservable
-			.map { $0 && $1 && $2 }
-			.drive(confirmButton.rx.isPositive)
-			.disposed(by: disposeBag)
-		
-		// 닉네임, 생일, 몸무게가 모두 입력되었을 경우
+		// 닉네임, 생일이 모두 입력되었을 경우
 		confirmButton.rx.tap
 			.withLatestFrom(textFieldsTextEmptyObservable)
-			.map { $0 && $1 && $2 }
+			.map { $0 && $1 }
 			.filter { $0 == true }
 			.bind(with: self) { owner, _ in
-				owner.listener?.didTapConfirmButton()
+				owner.listener?.confirmButtonDidTap()
 			}
 			.disposed(by: disposeBag)
 		
@@ -266,33 +248,39 @@ final class FirstDogSettingViewController:
 		confirmButton.rx.tap
 			.withLatestFrom(textFieldsTextEmptyObservable)
 			.bind(with: self) { owner, isEmpty in
-				owner.dogNameTextField.mode = isEmpty.0 ? .normal : .warning
+				owner.nickNameTextField.mode = isEmpty.0 ? .normal : .warning
 				owner.calenderTextField.mode = isEmpty.1 ? .normal : .warning
-				owner.dogWeightTextField.mode = isEmpty.2 ? .normal : .warning
 			}
 			.disposed(by: disposeBag)
 	}
 }
 
-// MARK: - GMDTextFieldListener
-extension FirstDogSettingViewController: GMDTextFieldListener {}
+// MARK: - Presentable {
+extension UserProfileSettingViewController {
+	func displayBirthday(date: String) {
+		self.calenderTextField.text = date
+	}
+}
 
-// MARK: - PHPickerViewControllerDelegate
-extension FirstDogSettingViewController: PHPickerViewControllerDelegate {
+// MARK: - Action
+private extension UserProfileSettingViewController {
+	func calenderButtonDidTap() {
+		listener?.birthdayPickerDidTap()
+	}
+}
+
+extension UserProfileSettingViewController: PHPickerViewControllerDelegate {
 	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
 		picker.dismiss(animated: true)
 		guard let firstResult = results.first else { return }
 		firstResult.fetchImage { result in
 			switch result {
-			case let .success(image): self.onBoardingView.setProfileImage(image)
+			case let .success(image):
+				DispatchQueue.main.async {
+					self.onBoardingView.setProfileImage(image)
+				}
 			case .failure: break //
 			}
 		}
-	}
-}
-
-extension FirstDogSettingViewController: FirstDogSettingPresentable {
-	func setBirthday(date: String) {
-		self.calenderTextField.text = date
 	}
 }

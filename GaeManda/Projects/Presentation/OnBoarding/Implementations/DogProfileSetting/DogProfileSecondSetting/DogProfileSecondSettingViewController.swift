@@ -8,19 +8,20 @@ import Entity
 import GMDExtensions
 import GMDUtils
 
-protocol SecondDogSettingPresentableListener: AnyObject {
+// swiftlint:disable:next type_name
+protocol DogProfileSecondSettingPresentableListener: AnyObject {
 	func didTapConfirmButton()
 	func didTapBackButton()
 	func didTapAddDogCharacterButton(with selectedCharaters: [DogCharacter])
 	func dismiss()
 }
 
-final class SecondDogSettingViewController:
+final class DogProfileSecondSettingViewController:
 	BaseViewController,
-	SecondDogSettingPresentable,
-	SecondDogSettingViewControllable {
+	DogProfileSecondSettingPresentable,
+	DogProfileSecondSettingViewControllable {
 	// MARK: - Properties
-	weak var listener: SecondDogSettingPresentableListener?
+	weak var listener: DogProfileSecondSettingPresentableListener?
 	var dropDownViews: [DropDownView]?
 	private var selectedCharacters: [DogCharacter] = [] {
 		didSet {
@@ -30,7 +31,7 @@ final class SecondDogSettingViewController:
 	}
 	private var isSelectedCharacters = BehaviorRelay<Bool>(value: false)
 	
-	private let viewModel = SecondDogSettingViewModel()
+	private let viewModel = DogProfileSecondSettingViewModel()
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "")
@@ -278,14 +279,14 @@ final class SecondDogSettingViewController:
 }
 
 // MARK: - Presentable
-extension SecondDogSettingViewController {
+extension DogProfileSecondSettingViewController {
 	func updateDogCharacter(with selectedCharaters: [DogCharacter]) {
 		self.selectedCharacters = selectedCharaters
 	}
 }
 
 // MARK: - CollectionViewDataSource
-extension SecondDogSettingViewController: UICollectionViewDataSource {
+extension DogProfileSecondSettingViewController: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return selectedCharacters.count
 	}
@@ -299,7 +300,7 @@ extension SecondDogSettingViewController: UICollectionViewDataSource {
 	}
 }
 
-extension SecondDogSettingViewController: UICollectionViewDelegateFlowLayout {
+extension DogProfileSecondSettingViewController: UICollectionViewDelegateFlowLayout {
 	func collectionView(
 		_ collectionView: UICollectionView,
 		layout collectionViewLayout: UICollectionViewLayout,
@@ -316,6 +317,6 @@ extension SecondDogSettingViewController: UICollectionViewDelegateFlowLayout {
 }
 
 // MARK: - DropDownListener
-extension SecondDogSettingViewController: DropDownListener {
+extension DogProfileSecondSettingViewController: DropDownListener {	
 	func dropdown(_ dropDown: DropDownView, didSelectRowAt indexPath: IndexPath) { }
 }

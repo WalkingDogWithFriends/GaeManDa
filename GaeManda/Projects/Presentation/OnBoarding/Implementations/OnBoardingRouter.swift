@@ -6,8 +6,8 @@ protocol OnBoardingInteractable:
 	Interactable,
 	TermsOfUseListener,
 	AddressSettingListener,
-	UserSettingListener,
-	DogSettingListener {
+	UserProfileSettingListener,
+	DogProfileSettingListener {
 	var router: OnBoardingRouting? { get set }
 	var listener: OnBoardingListener? { get set }
 }
@@ -25,25 +25,25 @@ final class OnBoardingRouter:
 	private let addressSettingBuildable: AddressSettingBuildable
 	private var addressSettingRouting: ViewableRouting?
 	
-	private let userSettingBuildable: UserSettingBuildable
-	private var userSettingRouting: ViewableRouting?
+	private let userProfileSettingBuildable: UserProfileSettingBuildable
+	private var userProfileSettingRouting: ViewableRouting?
 	
-	private let dogSettingBuildable: DogSettingBuildable
-	private var dogSettingRouting: Routing?
+	private let dogProfileSettingBuildable: DogProfileSettingBuildable
+	private var dogProfileSettingRouting: Routing?
 	
 	init(
 		interactor: OnBoardingInteractable,
 		viewController: ViewControllable,
 		termsOfUseBuildable: TermsOfUseBuildable,
 		addressSettingBuildable: AddressSettingBuildable,
-		userSettingBuildable: UserSettingBuildable,
-		dogSettingBuildable: DogSettingBuildable
+		userProfileSettingBuildable: UserProfileSettingBuildable,
+		dogProfileSettingBuildable: DogProfileSettingBuildable
 	) {
 		self.viewController = viewController
 		self.termsOfUseBuildable = termsOfUseBuildable
 		self.addressSettingBuildable = addressSettingBuildable
-		self.userSettingBuildable = userSettingBuildable
-		self.dogSettingBuildable = dogSettingBuildable
+		self.userProfileSettingBuildable = userProfileSettingBuildable
+		self.dogProfileSettingBuildable = dogProfileSettingBuildable
 		super.init(interactor: interactor)
 		interactor.router = self
 	}
@@ -113,48 +113,48 @@ extension OnBoardingRouter {
 	}
 }
 
-// MARK: UserSetting
+// MARK: UserProfileSetting
 extension OnBoardingRouter {
-	func userSettingAttach() {
-		if userSettingRouting != nil { return }
+	func userProfileSettingAttach() {
+		if userProfileSettingRouting != nil { return }
 		
-		let router = userSettingBuildable.build(withListener: interactor)
+		let router = userProfileSettingBuildable.build(withListener: interactor)
 		navigationControllerable?.pushViewControllerable(router.viewControllable, animated: true)
 
-		userSettingRouting = router
+		userProfileSettingRouting = router
 		attachChild(router)
 	}
 
-	func userSettingDetach() {
-		guard let router = userSettingRouting else { return }
+	func userProfileSettingDetach() {
+		guard let router = userProfileSettingRouting else { return }
 		
 		navigationControllerable?.popViewControllerable(animated: true)
-		userSettingRouting = nil
+		userProfileSettingRouting = nil
 		detachChild(router)
 	}
 	
-	func userSettingDismiss() {
-		guard let router = userSettingRouting else { return }
+	func userProfileSettingDismiss() {
+		guard let router = userProfileSettingRouting else { return }
 		
-		userSettingRouting = nil
+		userProfileSettingRouting = nil
 		detachChild(router)
 	}
 }
 
-// MARK: - DogSetting
+// MARK: - DogProfileSetting
 extension OnBoardingRouter {
-	func dogSettingAttach() {
-		if dogSettingRouting != nil { return }
+	func dogProfileSettingAttach() {
+		if dogProfileSettingRouting != nil { return }
 		
-		let router = dogSettingBuildable.build(withListener: interactor)
-		dogSettingRouting = router
+		let router = dogProfileSettingBuildable.build(withListener: interactor)
+		dogProfileSettingRouting = router
 		attachChild(router)
 	}
 	
-	func dogSettingDetach() {
-		guard let router = dogSettingRouting else { return }
+	func dogProfileSettingDetach() {
+		guard let router = dogProfileSettingRouting else { return }
 		
-		dogSettingRouting = nil
+		dogProfileSettingRouting = nil
 		detachChild(router)
 	}
 }

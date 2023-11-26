@@ -1,22 +1,22 @@
 import RIBs
 import CorePresentation
 
-protocol SecondDogSettingInteractable: Interactable, DogCharacterPickerListener {
-	var router: SecondDogSettingRouting? { get set }
-	var listener: SecondDogSettingListener? { get set }
+protocol DogProfileSecondSettingInteractable: Interactable, DogCharacterPickerListener {
+	var router: DogProfileSecondSettingRouting? { get set }
+	var listener: DogProfileSecondSettingListener? { get set }
 }
 
-protocol SecondDogSettingViewControllable: ViewControllable { }
+protocol DogProfileSecondSettingViewControllable: ViewControllable { }
 
-final class SecondDogSettingRouter:
-	ViewableRouter<SecondDogSettingInteractable, SecondDogSettingViewControllable>,
-	SecondDogSettingRouting {
+final class DogProfileSecondSettingRouter:
+	ViewableRouter<DogProfileSecondSettingInteractable, DogProfileSecondSettingViewControllable>,
+	DogProfileSecondSettingRouting {
 	private let dogCharacterPickerBuildable: DogCharacterPickerBuildable
 	private var dogCharacterRouter: ViewableRouting?
 	
 	init(
-		interactor: SecondDogSettingInteractable,
-		viewController: SecondDogSettingViewControllable,
+		interactor: DogProfileSecondSettingInteractable,
+		viewController: DogProfileSecondSettingViewControllable,
 		dogCharacterPickerBuildable: DogCharacterPickerBuildable
 	) {
 		self.dogCharacterPickerBuildable = dogCharacterPickerBuildable
