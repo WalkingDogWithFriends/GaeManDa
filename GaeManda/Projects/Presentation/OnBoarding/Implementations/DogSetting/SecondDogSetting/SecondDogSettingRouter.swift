@@ -31,7 +31,7 @@ final class SecondDogSettingRouter:
 		
 		viewController.present(
 			router.viewControllable,
-			animated: true,
+			animated: false,
 			modalPresentationStyle: .overFullScreen
 		)
 		
