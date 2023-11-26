@@ -12,6 +12,7 @@ import Entity
 public protocol DogCharacterPickerBuildable: Buildable {
 	func build(
 		withListener listener: DogCharacterPickerListener,
+		dogCharacters: [DogCharacter],
 		selectedId: [Int]?
 	) -> ViewableRouting
 }

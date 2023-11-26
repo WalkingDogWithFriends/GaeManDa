@@ -21,10 +21,6 @@ protocol DogCharacterPickerPresentable: Presentable {
 	func updateDogCharacterCell(_ viewModel: [DogCharacterViewModel])
 }
 
-protocol DogCharacterPickerInteractorDependency {
-	var gmdProfileUseCase: GMDProfileUseCase { get }
-}
-
 final class DogCharacterPickerInteractor:
 	PresentableInteractor<DogCharacterPickerPresentable>,
 	DogCharacterPickerInteractable,
@@ -32,16 +28,15 @@ final class DogCharacterPickerInteractor:
 	weak var router: DogCharacterPickerRouting?
 	weak var listener: DogCharacterPickerListener?
 	
-	var dependency: DogCharacterPickerInteractorDependency
 	var selectedId: [Int]
 	var dogCharacters: [DogCharacter] = []
 	
 	init(
 		presenter: DogCharacterPickerPresentable,
-		dependency: DogCharacterPickerInteractorDependency,
+		dogCharacters: [DogCharacter],
 		selectedId: [Int]?
 	) {
-		self.dependency = dependency
+		self.dogCharacters = dogCharacters
 		self.selectedId = selectedId ?? []
 		super.init(presenter: presenter)
 		presenter.listener = self
@@ -59,16 +54,9 @@ final class DogCharacterPickerInteractor:
 // MARK: - PresentableListener
 extension DogCharacterPickerInteractor {
 	func viewDidLoad() {
-		dependency.gmdProfileUseCase
-			.fetchDogCharacters()
-			.observe(on: MainScheduler.instance)
-			.subscribe(with: self) { owner, characters in
-				owner.dogCharacters = characters
-				
-				let result = owner.convertToDogCharacterViewModels(from: characters)
-				owner.presenter.updateDogCharacterCell(result)
-			}
-			.disposeOnDeactivate(interactor: self)
+		let viewModel = convertToDogCharacterViewModels(from: dogCharacters)
+		
+		presenter.updateDogCharacterCell(viewModel)
 	}
 	
 	func didTapConfirmButton(with selectedId: [Int]) {
