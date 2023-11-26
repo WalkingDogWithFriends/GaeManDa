@@ -135,7 +135,6 @@ extension GMDProfileInteractor {
 private extension GMDProfileInteractor {
 	func fetchUser() {
 		dependency.gmdProfileUseCase
-			.userDependency
 			.fetchUser(id: 0)
 			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, user in
@@ -149,8 +148,7 @@ private extension GMDProfileInteractor {
 	
 	func fetchDogs() {
 		dependency.gmdProfileUseCase
-			.dogDependency
-			.fetchDogs(id: 0)
+			.fetchDogs()
 			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, dogs in
 				let dogsCarousel = owner.convertToDogsCarousel(with: dogs)

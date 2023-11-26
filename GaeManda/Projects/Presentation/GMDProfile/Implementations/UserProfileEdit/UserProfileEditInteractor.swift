@@ -18,7 +18,7 @@ protocol UserProfileEditPresentable: Presentable {
 	var listener: UserProfileEditPresentableListener? { get set }
 	
 	func updateUsername(_ name: String)
-	func updateUserSex(_ sex: Sex)
+	func updateUserSex(_ sex: Gender)
 }
 
 protocol UserProfileEditInteractorDependency {
@@ -56,7 +56,6 @@ final class UserProfileEditInteractor:
 extension UserProfileEditInteractor {
 	func viewWillAppear() {
 		dependency.gmdProfileUseCase
-			.userDependency
 			.fetchUser(id: 0)
 			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, user in
@@ -74,7 +73,7 @@ extension UserProfileEditInteractor {
 		listener?.userProfileEditDismiss()
 	}
 	
-	func didTapEndEditingButton(name: String, sex: Sex) {
+	func didTapEndEditingButton(name: String, sex: Gender) {
 		debugPrint(name, sex)
 		dependency.gmdProfileUseCase
 			.updateUser(nickName: name, age: 20, sex: sex.rawValue)

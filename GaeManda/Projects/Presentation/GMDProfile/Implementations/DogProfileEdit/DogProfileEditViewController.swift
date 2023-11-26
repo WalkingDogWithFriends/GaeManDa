@@ -167,7 +167,7 @@ extension DogProfileEditViewController {
 		scrollView.nickNameTextField.text = name
 	}
 	
-	func updateDogSex(_ sex: Sex) {
+	func updateDogSex(_ sex: Gender) {
 		scrollView.selectedSexRelay.accept(sex)
 	}
 	
@@ -175,7 +175,7 @@ extension DogProfileEditViewController {
 		scrollView.weightTextField.text = "\(weight)kg"
 	}
 	
-	func updateDogNeutered(_ isNeutered: Neutered) {
+	func updateDogNeutered(_ isNeutered: Bool) {
 		scrollView.selectedNeuterRelay.accept(isNeutered)
 	}
 	
@@ -215,13 +215,15 @@ private extension DogProfileEditViewController {
 				
 				owner.listener?.didTapEndEditButton(
 					dog: Dog(
-						id: id,
-						name: owner.scrollView.nickNameTextField.text,
-						sex: owner.scrollView.selectedSexRelay.value,
-						age: "12",
-						weight: owner.scrollView.weightTextField.text,
-						didNeutered: owner.scrollView.selectedNeuterRelay.value,
-						character: owner.scrollView.characterTextView.textView.text
+						id: 1,
+						name: "",
+						profileImage: nil,
+						species: .ETC,
+						gender: .male,
+						birthday: "",
+						weight: 1,
+						isNeutered: true,
+						characterIds: []
 					)
 				)
 			}

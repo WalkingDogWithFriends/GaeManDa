@@ -208,8 +208,8 @@ final class UserProfileSettingViewController:
 		// 성별 버튼 선택 Observable
 		let selectedSexObservable = Observable
 			.merge(
-				maleButton.rx.tap.map { Sex.male },
-				femaleButton.rx.tap.map { Sex.female }
+				maleButton.rx.tap.map { Gender.male },
+				femaleButton.rx.tap.map { Gender.female }
 			)
 			.asDriver(onErrorJustReturn: .male)
 		

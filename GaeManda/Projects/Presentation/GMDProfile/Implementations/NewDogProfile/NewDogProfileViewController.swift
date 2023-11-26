@@ -148,14 +148,17 @@ private extension NewDogProfileViewController {
 			.filter { $0.isValid }
 			.bind(with: self) { owner, _ in
 				owner.listener?.didTapConfirmButton(
+					// TODO: - 디자인 수정 이후 변경 필요!
 					dog: Dog(
-						id: 0,
-						name: owner.scrollView.nickNameTextField.text,
-						sex: owner.scrollView.selectedSexRelay.value,
-						age: "12",
-						weight: owner.scrollView.weightTextField.text,
-						didNeutered: owner.scrollView.selectedNeuterRelay.value,
-						character: owner.scrollView.characterTextView.text
+						id: 1, 
+						name: "",
+						profileImage: nil,
+						species: .ETC,
+						gender: .female,
+						birthday: "",
+						weight: 1,
+						isNeutered: false,
+						characterIds: [0]
 					)
 				)
 			}

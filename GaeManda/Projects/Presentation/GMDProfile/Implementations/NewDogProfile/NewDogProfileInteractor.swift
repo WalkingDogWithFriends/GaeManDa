@@ -61,7 +61,7 @@ extension NewDogProfileInteractor {
 	
 	func didTapConfirmButton(dog: Dog) {
 		dependency.gmdProfileUseCase
-			.postNewDog(dog: dog)
+			.createDog(dog)
 			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, _ in
 				owner.listener?.newDogProfileDidTapConfirmButton()
