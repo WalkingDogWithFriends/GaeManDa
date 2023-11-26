@@ -1,4 +1,5 @@
 import RIBs
+import Entity
 import GMDUtils
 import OnBoarding
 
@@ -74,7 +75,7 @@ extension OnBoardingInteractor {
 
 // MARK: DogProfileSettingListener
 extension OnBoardingInteractor {
-	func dogProfileSettingDidFinish() {
+	func dogProfileSettingDidFinish(with dog: Dog) {
 		listener?.onBoardingDidFinish()
 	}
 	

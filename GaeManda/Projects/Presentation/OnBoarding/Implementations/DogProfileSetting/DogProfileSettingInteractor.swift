@@ -50,8 +50,10 @@ extension DogProfileSettingInteractor {
 
 // MARK: DogProfileSecondSetting
 extension DogProfileSettingInteractor {
-	func dogProfileSecondSettingDidTapConfirmButton() {
-		listener?.dogProfileSettingDidFinish()
+	func dogProfileSecondSettingDidTapConfirmButton(with viewModel: DogProfileSecondSettingViewModel) {
+		let dog = convertToDog(from: dogSettingFirstViewModel, viewModel)
+
+		listener?.dogProfileSettingDidFinish(with: dog)
 	}
 	
 	func dogProfileSecondSettingDidTaBackButtonp() {
@@ -60,5 +62,25 @@ extension DogProfileSettingInteractor {
 	
 	func dogProfileSecondSettingDismiss() {
 		router?.dogProfileSecondSettingDismiss()
+	}
+}
+
+// MARK: - Private Methods
+private extension DogProfileSettingInteractor {
+	func convertToDog(
+		from firstViewModel: DogProfileFirstSettingViewModel,
+		_ secondViewModel: DogProfileSecondSettingViewModel
+	) -> Dog {
+		return Dog(
+			id: 0,
+			name: firstViewModel.name,
+			profileImage: secondViewModel.profileImage,
+			species: DogSpecies(krRawValue: secondViewModel.species) ?? .ETC,
+			gender: firstViewModel.gender,
+			birthday: firstViewModel.birthday,
+			weight: firstViewModel.weight,
+			isNeutered: secondViewModel.isNeutered,
+			characterIds: secondViewModel.characterIds
+		)
 	}
 }
