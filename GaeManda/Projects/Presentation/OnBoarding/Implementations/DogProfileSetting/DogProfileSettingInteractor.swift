@@ -1,4 +1,6 @@
+import Foundation
 import RIBs
+import Entity
 import OnBoarding
 
 protocol DogProfileSettingRouting: Routing {
@@ -6,7 +8,7 @@ protocol DogProfileSettingRouting: Routing {
 	func dogProfileFirstSettingAttach()
 	func dogProfileFirstSettingDetach()
 	func dogProfileFirstSettingDismiss()
-	func dogProfileSecondSettingAttach()
+	func dogProfileSecondSettingAttach(profileImage: Data?)
 	func dogProfileSecondSettingDetach()
 	func dogProfileSecondSettingDismiss()
 }
