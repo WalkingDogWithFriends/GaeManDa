@@ -1,30 +1,30 @@
 import RIBs
 import OnBoarding
 
-protocol UserSettingRouting: ViewableRouting {
+protocol UserProfileSettingRouting: ViewableRouting {
 	func attachBirthdayPicker()
 	func detachBirthdayPicker()
 }
 
-protocol UserSettingPresentable: Presentable {
-	var listener: UserSettingPresentableListener? { get set }
+protocol UserProfileSettingPresentable: Presentable {
+	var listener: UserProfileSettingPresentableListener? { get set }
 	
 	func displayBirthday(date: String)
 }
 
-final class UserSettingInteractor:
-	PresentableInteractor<UserSettingPresentable>,
-	UserSettingInteractable,
-	UserSettingPresentableListener {
+final class UserProfileSettingInteractor:
+	PresentableInteractor<UserProfileSettingPresentable>,
+	UserProfileSettingInteractable,
+	UserProfileSettingPresentableListener {
 	func birthdaySelected(date: String) {
 		presenter.displayBirthday(date: date)
 		router?.detachBirthdayPicker()
 	}
 	
-	weak var router: UserSettingRouting?
-	weak var listener: UserSettingListener?
+	weak var router: UserProfileSettingRouting?
+	weak var listener: UserProfileSettingListener?
 	
-	override init(presenter: UserSettingPresentable) {
+	override init(presenter: UserProfileSettingPresentable) {
 		super.init(presenter: presenter)
 		presenter.listener = self
 	}
@@ -39,13 +39,13 @@ final class UserSettingInteractor:
 }
 
 // MARK: - PresentableListener
-extension UserSettingInteractor {
+extension UserProfileSettingInteractor {
 	func confirmButtonDidTap() {
-		listener?.userSettingDidFinish()
+		listener?.userProfileSettingDidFinish()
 	}
 	
 	func backButtonDidTap() {
-		listener?.userSettingBackButtonDidTap()
+		listener?.userProfileSettingBackButtonDidTap()
 	}
 	
 	func birthdayPickerDidTap() {
@@ -53,12 +53,12 @@ extension UserSettingInteractor {
 	}
 	
 	func dismiss() {
-		listener?.userSettingDismiss()
+		listener?.userProfileSettingDismiss()
 	}
 }
 
 // MARK: - BirthdayPickerListener
-extension UserSettingInteractor {
+extension UserProfileSettingInteractor {
 	func didTapBirthdayPicker() {
 		router?.attachBirthdayPicker()
 	}

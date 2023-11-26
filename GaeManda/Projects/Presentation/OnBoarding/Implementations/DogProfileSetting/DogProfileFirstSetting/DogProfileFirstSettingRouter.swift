@@ -3,22 +3,22 @@ import CorePresentation
 import DesignKit
 import OnBoarding
 
-protocol FirstDogSettingInteractable: Interactable, BirthdayPickerListener {
-	var router: FirstDogSettingRouting? { get set }
-	var listener: FirstDogSettingListener? { get set }
+protocol DogProfileFirstSettingInteractable: Interactable, BirthdayPickerListener {
+	var router: DogProfileFirstSettingRouting? { get set }
+	var listener: DogProfileFirstSettingListener? { get set }
 }
 
-protocol FirstDogSettingViewControllable: ViewControllable { }
+protocol DogProfileFirstSettingViewControllable: ViewControllable { }
 
-final class FirstDogSettingRouter:
-	ViewableRouter<FirstDogSettingInteractable, FirstDogSettingViewControllable>,
-	FirstDogSettingRouting {
+final class DogProfileFirstSettingRouter:
+	ViewableRouter<DogProfileFirstSettingInteractable, DogProfileFirstSettingViewControllable>,
+	DogProfileFirstSettingRouting {
 	private let birthdayPickerBuildable: BirthdayPickerBuildable
 	private var birthdayPickerRouting: ViewableRouting?
 	
 	init(
-		interactor: FirstDogSettingInteractable,
-		viewController: FirstDogSettingViewControllable,
+		interactor: DogProfileFirstSettingInteractable,
+		viewController: DogProfileFirstSettingViewControllable,
 		birthdayPickerBuildable: BirthdayPickerBuildable
 	) {
 		self.birthdayPickerBuildable = birthdayPickerBuildable
@@ -27,7 +27,7 @@ final class FirstDogSettingRouter:
 	}
 }
 
-extension FirstDogSettingRouter {
+extension DogProfileFirstSettingRouter {
 	func attachBirthdayPicker() {
 		guard birthdayPickerRouting == nil else { return }
 		let router = birthdayPickerBuildable.build(withListener: interactor)

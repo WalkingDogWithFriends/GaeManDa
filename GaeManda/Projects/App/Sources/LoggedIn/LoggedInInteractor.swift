@@ -9,7 +9,7 @@
 import RIBs
 
 protocol LoggedInRouting: ViewableRouting {
-	func attachTabs()
+	func attachTabItems()
 }
 
 protocol LoggedInPresentable: Presentable {
@@ -33,7 +33,7 @@ final class LoggedInInteractor:
 	override func didBecomeActive() {
 		super.didBecomeActive()
 		
-		router?.attachTabs()
+		router?.attachTabItems()
 	}
 	
 	override func willResignActive() {

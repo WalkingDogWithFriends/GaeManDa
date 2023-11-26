@@ -4,22 +4,22 @@ import CorePresentation
 import DesignKit
 import OnBoarding
 
-protocol UserSettingInteractable: Interactable, BirthdayPickerListener {
-	var router: UserSettingRouting? { get set }
-	var listener: UserSettingListener? { get set }
+protocol UserProfileSettingInteractable: Interactable, BirthdayPickerListener {
+	var router: UserProfileSettingRouting? { get set }
+	var listener: UserProfileSettingListener? { get set }
 }
 
-protocol UserSettingViewControllable: ViewControllable { }
+protocol UserProfileSettingViewControllable: ViewControllable { }
 
 final class ProfileSettingRouter:
-	ViewableRouter<UserSettingInteractable, UserSettingViewControllable>,
-	UserSettingRouting {
+	ViewableRouter<UserProfileSettingInteractable, UserProfileSettingViewControllable>,
+	UserProfileSettingRouting {
 	private let birthdayPickerBuildable: BirthdayPickerBuildable
 	private var birthdayPickerRouting: ViewableRouting?
 	
 	init(
-		interactor: UserSettingInteractable,
-		viewController: UserSettingViewControllable,
+		interactor: UserProfileSettingInteractable,
+		viewController: UserProfileSettingViewControllable,
 		birthdayPickerBuildable: BirthdayPickerBuildable
 	) {
 		self.birthdayPickerBuildable = birthdayPickerBuildable
