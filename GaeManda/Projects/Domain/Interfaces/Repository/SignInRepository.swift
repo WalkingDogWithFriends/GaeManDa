@@ -7,9 +7,7 @@
 //
 
 import Foundation
-import RxSwift
-import Entity
 
 public protocol SignInRepository {
-	func tryKakaoSignIn() -> Observable<Bool>
+	func tryKakaoSignIn() async -> Bool
 }

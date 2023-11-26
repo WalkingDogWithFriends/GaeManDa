@@ -7,37 +7,82 @@
 //
 
 import Foundation
+import KakaoSDKAuth
 import KakaoSDKUser
-import RxKakaoSDKUser
-import RxSwift
 import DTO
 import GMDNetwork
+import LocalStorage
 import Repository
 
-public struct SignInRepositoryImpl: SignInRepository {
-	public init() { }
+public struct SignInRepositoryImpl {
+	private let keychainStorage: KeyChainStorage
+	
+	public init(keychainStorage: KeyChainStorage = .shared) {
+		self.keychainStorage = keychainStorage
+	}
+}
 
-	public func tryKakaoSignIn() -> Observable<Bool> {
-		// 유저가 KakaoTalk이 있는 경우
-		if UserApi.isKakaoTalkLoginAvailable() {
-			return UserApi.shared.rx.loginWithKakaoTalk()
-				.flatMap { tryKakaoSignIn(with: $0.accessToken) }
-		// 유저가 KakaoTalk이 없는 경우
-		} else {
-			return UserApi.shared.rx.loginWithKakaoAccount()
-				.flatMap { tryKakaoSignIn(with: $0.accessToken) }
+extension SignInRepositoryImpl: SignInRepository {
+	public func tryKakaoSignIn() async -> Bool {
+		do {
+			let kakaoToken = try await tryAuthentication()
+			let localToken = try await saveAuthorization(kakaoToken.accessToken)
+			try saveToken(accessToken: localToken.accessToken, refreshToken: localToken.refreshToken)
+			return true
+		} catch {
+			return false
 		}
 	}
 }
 
 // MARK: - Login Extension
 private extension SignInRepositoryImpl {
-	/// Kakao Login
-	func tryKakaoSignIn(with accessToken: String) -> Observable<Bool> {
-		return Provider<SignInAPI>
-			.init(stubBehavior: .immediate)
+	func saveAuthorization(_ accessToken: String) async throws -> SignInResponseDTO {
+		return try await Provider<SignInAPI>
+			.init()
 			.request(SignInAPI.tryKakaoSignIn(token: accessToken), type: SignInResponseDTO.self)
-			.asObservable()
-			.map { $0.userDidSignIn }
+	}
+	
+	@MainActor
+	func tryAuthentication() async throws -> SignInResponseDTO {
+		if UserApi.isKakaoTalkLoginAvailable() {
+			return try await withCheckedThrowingContinuation { continuation in
+				UserApi.shared.loginWithKakaoTalk { token, error in
+					handleKakaoLoginResponse(token: token, error: error, with: continuation)
+				}
+			}
+		} else {
+			return try await withCheckedThrowingContinuation { continuation in
+				UserApi.shared.loginWithKakaoAccount { token, error in
+					handleKakaoLoginResponse(token: token, error: error, with: continuation)
+				}
+			}
+		}
+	}
+	
+	func saveToken(accessToken: String, refreshToken: String) throws {
+		try keychainStorage.setAccessToken(accessToken)
+		try keychainStorage.setRefreshToken(refreshToken)
+	}
+	
+	func handleKakaoLoginResponse(
+		token: OAuthToken?,
+		error: Error?,
+		with continuation: CheckedContinuation<SignInResponseDTO, Error>
+	) {
+		if let error = error {
+			continuation.resume(throwing: error)
+			return
+		}
+		
+		if let token = token {
+			continuation.resume(
+				returning: SignInResponseDTO(
+					accessToken: token.accessToken,
+					refreshToken: token.refreshToken
+				)
+			)
+			return
+		}
 	}
 }

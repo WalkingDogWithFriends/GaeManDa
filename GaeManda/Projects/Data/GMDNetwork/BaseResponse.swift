@@ -10,7 +10,7 @@ import Foundation
 
 public enum BaseResponse {
 	public struct ExistData<ResponseType: Decodable>: Decodable {
-		public let count: Int
+		public let count: Int?
 		public let data: ResponseType
 	}
 	

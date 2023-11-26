@@ -9,12 +9,15 @@
 import Foundation
 
 public struct SignInResponseDTO: Decodable {
-	public let token: String
-	public let userDidSignIn: Bool
+	public let accessToken: String
+	public let refreshToken: String
 	
-	public init(token: String, userDidSignIn: Bool) {
-		self.token = token
-		self.userDidSignIn = userDidSignIn
+	public init(
+		accessToken: String,
+		refreshToken: String
+	) {
+		self.accessToken = accessToken
+		self.refreshToken = refreshToken
 	}
 }
 
@@ -23,8 +26,8 @@ extension SignInResponseDTO {
 	public static let stubData =
 	"""
 	{
-		"token": "111",
-		"userDidSignIn": true
+		"accessToken": "111",
+		"refreshToken": "111"
 	}
 	"""
 }

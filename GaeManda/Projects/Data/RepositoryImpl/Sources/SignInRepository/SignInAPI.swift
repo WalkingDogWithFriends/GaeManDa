@@ -16,10 +16,13 @@ public enum SignInAPI {
 }
 
 extension SignInAPI: TargetType {
-	public var baseURL: URL { return URL(string: "")! }
+	public var baseURL: URL {		
+		// let baseUrlString = Bundle.main.infoDictionary?["BASE_URL"] as? String
+		return URL(string: "http://117.17.198.45:9000/")!
+	}
 	
 	public var path: String {
-		return "login"
+		return "api/member/kakao"
 	}
 	
 	public var method: HTTPMethod {
@@ -32,10 +35,7 @@ extension SignInAPI: TargetType {
 	public var task: TaskType {
 		switch self {
 		case let .tryKakaoSignIn(token):
-			let requestDTO = SignInRequestDTO(
-				token: token,
-				loginType: .kakao
-			)
+			let requestDTO = SignInRequestDTO(accessToken: token)
 			
 			return .requestParameters(
 				parameters: requestDTO.toDictionary,

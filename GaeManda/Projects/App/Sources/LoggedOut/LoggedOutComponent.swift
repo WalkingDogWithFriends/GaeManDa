@@ -19,8 +19,8 @@ final class LoggedOutComponent:
 	TermsOfUseDependency,
 	AddressSettingDependency,
 	DetailAddressSettingDependency,
-	UserSettingDependency,
-	DogSettingDependency {
+	UserProfileSettingDependency,
+	DogProfileSettingDependency {
 	// MARK: - Buildable
 	var dogCharacterPickerBuildable: DogCharacterPickerBuildable {
 		return dependency.dogCharacterPickerBuildable
@@ -63,14 +63,10 @@ final class LoggedOutComponent:
 	}()
 	
 	// MARK: - Repositories
-	lazy var signInRepository: SignInRepository = {
-		return SignInRepositoryImpl()
-	}()
+	var signInRepository: SignInRepository = SignInRepositoryImpl()
 	
 	// MARK: - UseCases
-	lazy var signInUseCase: SignInUseCase = {
-		return SignInUseCaseImpl(dependency: signInRepository)
-	}()
+	lazy var signInUseCase: SignInUseCase = SignInUseCaseImpl(signinRespository: signInRepository)
 	
 	// MARK: - ViewControllerable
 	var onBoardingViewController: ViewControllable {

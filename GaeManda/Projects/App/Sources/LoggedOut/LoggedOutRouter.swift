@@ -35,7 +35,7 @@ final class LoggedOutRouter: Router<LoggedOutInteractable>, LoggedOutRouting {
 	
 	override func didLoad() {
 		super.didLoad()
-		attachOnBoarding()
+		attachSignIn()
 	}
 	
 	func cleanupViews() {

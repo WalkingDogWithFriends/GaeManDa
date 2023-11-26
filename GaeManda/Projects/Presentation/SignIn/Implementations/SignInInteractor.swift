@@ -44,12 +44,15 @@ final class SignInInteractor:
 		// Apple Login Bussiness Logic 구현
 	}
 	
+	@MainActor
 	func didTapKakaoLoginButton() {
-		dependency.signInUseCase
-			.tryKakaoSignIn()
-			.subscribe(with: self) { owner, isFrirstSignIn in
-				owner.listener?.didSignIn(isFirst: isFrirstSignIn)
+		Task {
+			let result = await dependency.signInUseCase.kakaoLogin()
+			if result {
+				await MainActor.run {
+					listener?.didSignIn(isFirst: false)
+				}
 			}
-			.disposeOnDeactivate(interactor: self)
+		}
 	}
 }

@@ -7,21 +7,21 @@
 //
 
 import Foundation
-import RxSwift
 import Repository
 import UseCase
 
-public struct SignInUseCaseImpl: SignInUseCase {
+public struct SignInUseCaseImpl {
 	// MARK: - Properties
-	public let dependency: SignInRepository
+	private let signinRespository: SignInRepository
 	
 	// MARK: - Initializers
-	public init(dependency: SignInRepository) {
-		self.dependency = dependency
+	public init(signinRespository: SignInRepository) {
+		self.signinRespository = signinRespository
 	}
-	
-	// MARK: - tryKakaoSignIn
-	public func tryKakaoSignIn() -> Observable<Bool> {
-		return dependency.tryKakaoSignIn()
+}
+
+extension SignInUseCaseImpl: SignInUseCase {
+	public func kakaoLogin() async -> Bool {
+		return await signinRespository.tryKakaoSignIn()
 	}
 }
