@@ -6,14 +6,12 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
-import Foundation
-
 public struct User {
 	public let name: String
-	public let sex: Sex
+	public let sex: Gender
 	public let age: String
 	
-	public init(name: String, sex: Sex, age: String) {
+	public init(name: String, sex: Gender, age: String) {
 		self.name = name
 		self.sex = sex
 		self.age = age
