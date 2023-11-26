@@ -12,15 +12,15 @@ import Security
 public final class KeyChainStorage {
 	public static let shared: KeyChainStorage = KeyChainStorage()
 	
-	enum KeychainError: Error {
+	public enum KeyChainError: Error {
 		case noAccessToken
 		case noRefreshToken
 		case valueEncodingError
 	}
 	
-	enum KeyChanKey {
-		static let accessTokenKey = "accessTokenKey"
-		static let refreshTokenKey = "refreshTokenKey"
+	public enum KeyChainKey: String {
+		case accessTokenKey
+		case refreshTokenKey
 	}
 	
 	private init() { }
@@ -28,36 +28,53 @@ public final class KeyChainStorage {
 
 public extension KeyChainStorage {
 	func setAccessToken(_ token: String) throws {
-		try saveToKeychain(value: token, forKey: KeyChanKey.accessTokenKey)
+		try saveToKeychain(value: token, forKey: KeyChainKey.accessTokenKey)
 	}
 	
 	func setRefreshToken(_ token: String) throws {
-		try saveToKeychain(value: token, forKey: KeyChanKey.refreshTokenKey)
+		try saveToKeychain(value: token, forKey: KeyChainKey.refreshTokenKey)
 	}
 	
 	func getAccessToken() throws -> String {
-		guard let accessToken = try loadFromKeychain(forKey: KeyChanKey.accessTokenKey) else {
-			throw KeychainError.noAccessToken
+		guard let accessToken = try loadFromKeychain(forKey: KeyChainKey.accessTokenKey) else {
+			throw KeyChainError.noAccessToken
 		}
 		return accessToken
 	}
 	
 	func getRefreshToken() throws -> String {
-		guard let accessToken = try loadFromKeychain(forKey: KeyChanKey.accessTokenKey) else {
-			throw KeychainError.noRefreshToken
+		guard let accessToken = try loadFromKeychain(forKey: KeyChainKey.accessTokenKey) else {
+			throw KeyChainError.noRefreshToken
 		}
 		return accessToken
+	}
+	
+	func hasAccessToken() -> Bool {
+		do {
+			let token = try getAccessToken()
+			return true
+		} catch {
+			return false
+		}
+	}
+	
+	func clearKeyChain(forKey key: KeyChainKey) throws {
+		let keychainQuery: [String: Any] = [
+			kSecClass as String: kSecClassGenericPassword,
+			kSecAttrAccount as String: key.rawValue
+		]
+		SecItemDelete(keychainQuery as CFDictionary)
 	}
 }
 
 private extension KeyChainStorage {
-	func saveToKeychain(value: String, forKey key: String) throws {
+	func saveToKeychain(value: String, forKey key: KeyChainKey) throws {
 		guard let valueData = value.data(using: .utf8) else {
-			throw KeychainError.valueEncodingError
+			throw KeyChainError.valueEncodingError
 		}
 		let keychainQuery: [String: Any] = [
 			kSecClass as String: kSecClassGenericPassword,
-			kSecAttrAccount as String: key,
+			kSecAttrAccount as String: key.rawValue,
 			kSecValueData as String: valueData
 		]
 		
@@ -65,10 +82,10 @@ private extension KeyChainStorage {
 		SecItemAdd(keychainQuery as CFDictionary, nil)
 	}
 	
-	func loadFromKeychain(forKey key: String) throws -> String? {
+	func loadFromKeychain(forKey key: KeyChainKey) throws -> String? {
 		let keychainQuery: [String: Any] = [
 			kSecClass as String: kSecClassGenericPassword,
-			kSecAttrAccount as String: key,
+			kSecAttrAccount as String: key.rawValue,
 			kSecReturnData as String: kCFBooleanTrue!,
 			kSecMatchLimit as String: kSecMatchLimitOne
 		]
