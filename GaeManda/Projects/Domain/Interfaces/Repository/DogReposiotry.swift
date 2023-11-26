@@ -11,8 +11,9 @@ import RxSwift
 import Entity
 
 public protocol DogRepository {
-	func fetchDogs(id: Int) -> Single<[Dog]>
-	func updateDog(dog: Dog) -> Single<Void>
-	func postNewDog(dog: Dog) -> Single<Void>
+	func fetchDogs() -> Single<[Dog]>
+	func updateDog(_ dog: Dog, isProfileImageChanged: Bool) -> Single<Void>
+	func createDog(_ dog: Dog) -> Single<Void>
 	func fetchDogCharacters() -> Single<[DogCharacter]>
+	func fetchDogSpecies() -> Single<[String]>
 }
