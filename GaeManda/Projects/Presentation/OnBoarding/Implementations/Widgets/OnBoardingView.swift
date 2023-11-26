@@ -75,7 +75,9 @@ extension OnBoardingView {
 	}
 	
 	func setProfileImage(_ image: UIImage?) {
-		self.profileImageView.image = image
+		DispatchQueue.main.async {
+			self.profileImageView.image = image
+		}
 	}
 }
 

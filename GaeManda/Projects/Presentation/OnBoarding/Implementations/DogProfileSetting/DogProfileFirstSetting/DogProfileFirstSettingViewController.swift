@@ -11,7 +11,7 @@ import GMDExtensions
 
 // swiftlint:disable:next type_name
 protocol DogProfileFirstSettingPresentableListener: AnyObject {
-	func didTapConfirmButton()
+	func didTapConfirmButton(with viewModel: DogProfileFirstSettingViewModel)
 	func didTapBackButton()
 	func didTapBirthdayPicker()
 	func dismiss()
@@ -20,12 +20,15 @@ protocol DogProfileFirstSettingPresentableListener: AnyObject {
 final class DogProfileFirstSettingViewController:
 	BaseViewController,
 	DogProfileFirstSettingViewControllable {
+	// MARK: - Constants
+	private let kgSuffix = "kg"
+	private let maximumTextCount = 20
+	
 	// MARK: - Properties
 	weak var listener: DogProfileFirstSettingPresentableListener?
 	var textDidChangeNotification: NSObjectProtocol?
 	
-	private let kgSuffix = "kg"
-	private let maximumTextCount = 20
+	var selectedProfileImage: UIImage?
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "")
@@ -75,7 +78,7 @@ final class DogProfileFirstSettingViewController:
 		
 		return gmdTextField
 	}()
-		
+	
 	private let maleButton = GMDOptionButton(title: "남", isSelected: true)
 	private let femaleButton = GMDOptionButton(title: "여")
 	private let confirmButton = ConfirmButton(title: "확인", isPositive: false)
@@ -138,14 +141,14 @@ final class DogProfileFirstSettingViewController:
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 		}
-
+		
 		buttonStackView.snp.makeConstraints { make in
 			make.top.equalTo(textStackView.snp.bottom).offset(28)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 			make.height.equalTo(40)
 		}
-
+		
 		confirmButton.snp.makeConstraints { make in
 			make.top.equalTo(buttonStackView.snp.bottom).offset(58)
 			make.leading.equalToSuperview().offset(32)
@@ -218,8 +221,8 @@ final class DogProfileFirstSettingViewController:
 		// 성별 버튼 선택 Observable
 		let selectedSexObservable = Observable
 			.merge(
-				maleButton.rx.tap.map { Sex.male },
-				femaleButton.rx.tap.map { Sex.female }
+				maleButton.rx.tap.map { Gender.male },
+				femaleButton.rx.tap.map { Gender.female }
 			)
 			.asDriver(onErrorJustReturn: .male)
 		
@@ -259,7 +262,17 @@ final class DogProfileFirstSettingViewController:
 			.map { $0 && $1 && $2 }
 			.filter { $0 == true }
 			.bind(with: self) { owner, _ in
-				owner.listener?.didTapConfirmButton()
+				let gender: Gender = owner.maleButton.isSelected ? .male : .female
+				
+				owner.listener?.didTapConfirmButton(
+					with: DogProfileFirstSettingViewModel(
+						name: owner.dogNameTextField.text,
+						birthday: owner.calenderTextField.text.trimmingCharacters(in: ["."]), 
+						gender: gender,
+						weight: Int(owner.dogWeightTextField.text) ?? 0,
+						profileImage: owner.selectedProfileImage?.pngData()
+					)
+				)
 			}
 			.disposed(by: disposeBag)
 		
@@ -285,8 +298,10 @@ extension DogProfileFirstSettingViewController: PHPickerViewControllerDelegate {
 		guard let firstResult = results.first else { return }
 		firstResult.fetchImage { result in
 			switch result {
-			case let .success(image): self.onBoardingView.setProfileImage(image)
-			case .failure: break //
+				case let .success(image):
+					self.onBoardingView.setProfileImage(image)
+					self.selectedProfileImage = image
+				case .failure: break //
 			}
 		}
 	}

@@ -15,6 +15,8 @@ final class DogProfileSettingInteractor: Interactor, DogProfileSettingInteractab
 	weak var router: DogProfileSettingRouting?
 	weak var listener: DogProfileSettingListener?
 	
+	private var dogSettingFirstViewModel: DogProfileFirstSettingViewModel = .default
+	
 	override init() {}
 	
 	override func didBecomeActive() {
@@ -30,8 +32,9 @@ final class DogProfileSettingInteractor: Interactor, DogProfileSettingInteractab
 
 // MARK: DogProfileFirstSetting
 extension DogProfileSettingInteractor {
-	func dogProfileFirstSettingDidTapConfirmButton() {
-		router?.dogProfileSecondSettingAttach()
+	func dogProfileFirstSettingDidTapConfirmButton(with viewModel: DogProfileFirstSettingViewModel) {
+		self.dogSettingFirstViewModel = viewModel
+		router?.dogProfileSecondSettingAttach(profileImage: viewModel.profileImage)
 	}
 	
 	func dogProfileFirstSettingDidTapBackButton() {
