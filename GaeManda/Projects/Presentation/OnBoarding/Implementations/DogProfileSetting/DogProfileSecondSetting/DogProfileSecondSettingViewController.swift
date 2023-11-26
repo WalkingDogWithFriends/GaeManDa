@@ -1,4 +1,5 @@
 import UIKit
+import PhotosUI
 import RIBs
 import RxCocoa
 import RxSwift
@@ -10,7 +11,8 @@ import GMDUtils
 
 // swiftlint:disable:next type_name
 protocol DogProfileSecondSettingPresentableListener: AnyObject {
-	func didTapConfirmButton()
+	func viewDidLoad()
+	func didTapConfirmButton(with viewModel: DogProfileSecondSettingViewModel)
 	func didTapBackButton()
 	func didTapAddDogCharacterButton(with selectedCharaters: [DogCharacter])
 	func dismiss()
@@ -18,27 +20,28 @@ protocol DogProfileSecondSettingPresentableListener: AnyObject {
 
 final class DogProfileSecondSettingViewController:
 	BaseViewController,
-	DogProfileSecondSettingPresentable,
 	DogProfileSecondSettingViewControllable {
 	// MARK: - Properties
 	weak var listener: DogProfileSecondSettingPresentableListener?
 	var dropDownViews: [DropDownView]?
+	
+	private var selectedProfileImage: UIImage?
+	private var selectedSpecies: String = ""
 	private var selectedCharacters: [DogCharacter] = [] {
 		didSet {
 			selectedCharacterCollectionView.reloadData()
 			isSelectedCharacters.accept(!selectedCharacters.isEmpty)
 		}
 	}
-	private var isSelectedCharacters = BehaviorRelay<Bool>(value: false)
 	
-	private let viewModel = DogProfileSecondSettingViewModel()
+	private var isSelectedCharacters = BehaviorRelay<Bool>(value: false)
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "")
 	private let onBoardingView = OnBoardingView(willDisplayImageView: true, title: "우리 아이를 등록해주세요! (2/2)")
 	
-	private let dogBreedDropDownButton = DropDownButton(text: "우리 아이 종", mode: .title)
-	private let dogBreedDropDownView = DropDownView()
+	private let dogSpeciesDropDownButton = DropDownButton(text: "우리 아이 종", mode: .title)
+	private let dogSpeciesDropDownView = DropDownView()
 	
 	private let addDogCharacterButton = AddDogCharacterButton()
 	
@@ -76,10 +79,12 @@ final class DogProfileSecondSettingViewController:
 	// MARK: - Life Cycles
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		registerDropDrownViews(dogBreedDropDownView)
+		registerDropDrownViews(dogSpeciesDropDownView)
 		
 		selectedCharacterCollectionView.dataSource = self
 		selectedCharacterCollectionView.delegate = self
+		
+		listener?.viewDidLoad()
 		
 		setupUI()
 	}
@@ -119,7 +124,7 @@ final class DogProfileSecondSettingViewController:
 		contentView.addSubviews(
 			navigationBar,
 			onBoardingView,
-			dogBreedDropDownButton,
+			dogSpeciesDropDownButton,
 			buttonStackView,
 			addDogCharacterButton,
 			selectedCharacterCollectionView,
@@ -141,20 +146,20 @@ final class DogProfileSecondSettingViewController:
 			make.trailing.equalToSuperview().offset(-32)
 		}
 		
-		dogBreedDropDownButton.snp.makeConstraints { make in
+		dogSpeciesDropDownButton.snp.makeConstraints { make in
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 			make.top.equalTo(onBoardingView.snp.bottom).offset(56)
 		}
 		
-		dogBreedDropDownView.setConstraints { [weak self] make in
+		dogSpeciesDropDownView.setConstraints { [weak self] make in
 			guard let self else { return }
-			make.leading.trailing.equalTo(self.dogBreedDropDownButton)
-			make.top.equalTo(self.dogBreedDropDownButton.snp.bottom)
+			make.leading.trailing.equalTo(self.dogSpeciesDropDownButton)
+			make.top.equalTo(self.dogSpeciesDropDownButton.snp.bottom)
 		}
 		
 		buttonStackView.snp.makeConstraints { make in
-			make.top.equalTo(dogBreedDropDownButton.snp.bottom).offset(32)
+			make.top.equalTo(dogSpeciesDropDownButton.snp.bottom).offset(32)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 			make.height.equalTo(40)
@@ -184,9 +189,7 @@ final class DogProfileSecondSettingViewController:
 	}
 	
 	private func setDropDown() {
-		dogBreedDropDownView.anchorView = dogBreedDropDownButton
-		
-		dogBreedDropDownView.dataSource = viewModel.dogBreedDataSource
+		dogSpeciesDropDownView.anchorView = dogSpeciesDropDownButton
 	}
 	
 	// MARK: - UI Binding
@@ -207,9 +210,9 @@ final class DogProfileSecondSettingViewController:
 	}
 	
 	private func bindDropDown() {
-		dogBreedDropDownView.rx.selectedOption
+		dogSpeciesDropDownView.rx.selectedOption
 			.map { ($0, .option) }
-			.bind(to: dogBreedDropDownButton.rx.title)
+			.bind(to: dogSpeciesDropDownButton.rx.title)
 			.disposed(by: disposeBag)
 	}
 	
@@ -217,20 +220,20 @@ final class DogProfileSecondSettingViewController:
 		// 중성화 버튼 선택 Observable
 		let selectedNeuteredObservable = Observable
 			.merge(
-				didNeuterButton.rx.tap.map { Neutered.true },
-				didNotNeuterButton.rx.tap.map { Neutered.false }
+				didNeuterButton.rx.tap.map { true },
+				didNotNeuterButton.rx.tap.map { false }
 			)
-			.asDriver(onErrorJustReturn: .true)
+			.asDriver(onErrorJustReturn: true)
 		
 		// 선택된 성별이 남성일 경우
 		selectedNeuteredObservable
-			.map { $0 == .true }
+			.map { $0 == true }
 			.drive(didNeuterButton.rx.isSelected)
 			.disposed(by: disposeBag)
 		
 		// 선택된 성별이 여성일 경우
 		selectedNeuteredObservable
-			.map { $0 == .false }
+			.map { $0 == false }
 			.drive(didNotNeuterButton.rx.isSelected)
 			.disposed(by: disposeBag)
 		
@@ -244,7 +247,7 @@ final class DogProfileSecondSettingViewController:
 	
 	private func bindConfirmButton() {
 		let dropDownSelectedObservable = Observable.combineLatest(
-			dogBreedDropDownView.rx.isSelectedOption,
+			dogSpeciesDropDownView.rx.isSelectedOption,
 			isSelectedCharacters
 		)
 			.asDriver(onErrorJustReturn: (false, false))
@@ -259,7 +262,16 @@ final class DogProfileSecondSettingViewController:
 			.map { $0 && $1 }
 			.filter { $0 == true }
 			.bind(with: self) { owner, _ in
-				owner.listener?.didTapConfirmButton()
+				let isNeutered = owner.didNeuterButton.isSelected ? true : false
+				
+				owner.listener?.didTapConfirmButton(
+					with: DogProfileSecondSettingViewModel(
+						species: owner.selectedSpecies,
+						isNeutered: isNeutered,
+						characterIds: owner.selectedCharacters.map { $0.id },
+						profileImage: owner.selectedProfileImage?.pngData()
+					)
+				)
 			}
 			.disposed(by: disposeBag)
 	}
@@ -279,9 +291,24 @@ final class DogProfileSecondSettingViewController:
 }
 
 // MARK: - Presentable
-extension DogProfileSecondSettingViewController {
+extension DogProfileSecondSettingViewController: DogProfileSecondSettingPresentable {
+	func updateDogSpecies(with dogSpecies: [String]) {
+		dogSpeciesDropDownView.dataSource = dogSpecies
+	}
+	
 	func updateDogCharacter(with selectedCharaters: [DogCharacter]) {
 		self.selectedCharacters = selectedCharaters
+	}
+	
+	func updateProfileImage(with profileImage: Data?) {
+		guard
+			let profileImageData = profileImage,
+			let profileImage = UIImage(data: profileImageData)
+		else {
+			return
+		}
+		selectedProfileImage = profileImage
+		onBoardingView.setProfileImage(selectedProfileImage)
 	}
 }
 
@@ -295,11 +322,12 @@ extension DogProfileSecondSettingViewController: UICollectionViewDataSource {
 		let cell = collectionView.dequeueCell(SelectedDogCharacterCell.self, for: indexPath)
 		cell.configure(with: selectedCharacters[indexPath.row])
 		bind(for: cell)
-
+		
 		return cell
 	}
 }
 
+// MARK: - UICollectionViewDelegateFlowLayout
 extension DogProfileSecondSettingViewController: UICollectionViewDelegateFlowLayout {
 	func collectionView(
 		_ collectionView: UICollectionView,
@@ -317,6 +345,8 @@ extension DogProfileSecondSettingViewController: UICollectionViewDelegateFlowLay
 }
 
 // MARK: - DropDownListener
-extension DogProfileSecondSettingViewController: DropDownListener {	
-	func dropdown(_ dropDown: DropDownView, didSelectRowAt indexPath: IndexPath) { }
+extension DogProfileSecondSettingViewController: DropDownListener {
+	func dropdown(_ dropDown: DropDownView, didSelectRowAt indexPath: IndexPath) {
+		selectedSpecies = dropDown.dataSource[indexPath.row]
+	}
 }
