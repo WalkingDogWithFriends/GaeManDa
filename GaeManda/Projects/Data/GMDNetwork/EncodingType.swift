@@ -30,13 +30,15 @@ public extension EncodingType {
 
 public extension Encodable {
 	var toDictionary: [String: Any] {
-		guard let object = try? JSONEncoder().encode(self) else { return [:] }
-		guard let dictionary = try? JSONSerialization.jsonObject(
-			with: object,
-			options: []
-		) as? [String: Any] else {
-			return [:]
+		var dictionary = [String: Any]()
+		
+		let reflect = Mirror(reflecting: self)
+		reflect.children.forEach { (key, value) in
+			if let key = key {
+				dictionary[key] = value
+			}
 		}
+		
 		return dictionary
 	}
 }
