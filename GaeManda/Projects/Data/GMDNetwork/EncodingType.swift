@@ -11,6 +11,7 @@ import Foundation
 public enum EncodingType {
 	case jsonBody
 	case queryString
+	case multipartFormData
 }
 
 public extension EncodingType {
@@ -24,6 +25,9 @@ public extension EncodingType {
 			
 		case .queryString:
 			return try URLEncoding.queryString.encode(urlRequest, with: parameters)
+			
+		case .multipartFormData:
+			return try MultipartEncoding.httpBody.encode(urlRequest, with: parameters)
 		}
 	}
 }

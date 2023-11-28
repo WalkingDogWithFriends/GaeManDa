@@ -25,7 +25,7 @@ extension TargetType {
 		urlRequest = try addParameter(to: urlRequest)
 		return urlRequest
 	}
-
+	
 	private func addParameter(to request: URLRequest) throws -> URLRequest {
 		var request = request
 		
@@ -45,6 +45,9 @@ extension TargetType {
 		case let .requestCompositeParameters(query, body):
 			request = try EncodingType.queryString.encode(request, with: query)
 			request = try EncodingType.jsonBody.encode(request, with: body)
+			
+		case let.uploadMultipart(parameters):
+			request = try EncodingType.multipartFormData.encode(request, with: parameters)
 		}
 		
 		return request

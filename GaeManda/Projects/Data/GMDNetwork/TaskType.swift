@@ -19,4 +19,6 @@ public enum TaskType {
 	case requestParameters(parameters: [String: Any], encoding: EncodingType)
 	/// A requests body set with encoded parameters combined with url parameters.
 	case requestCompositeParameters(urlParameters: [String: Any], bodyParameters: [String: Any])
+	/// A "multipart/form-data" upload task.
+	case uploadMultipart(parameters: [String: Any])
 }
