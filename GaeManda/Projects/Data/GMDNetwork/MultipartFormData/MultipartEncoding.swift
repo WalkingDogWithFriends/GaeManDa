@@ -25,7 +25,7 @@ public struct MultipartEncoding: ParameterEncoding {
 		
 		let boundary = randomBoundary
 		
-		let (properties, images) = convertToMultipartFormDataType(parameters)
+		let (properties, images) = convertToMultipartFormData(parameters)
 		let multiPartBody = createBodyData(properties: properties, file: images, boundary: boundary)
 		
 		urlRequest.headers.update(.contentType("multipart/form-data; boundary=\(boundary)"))
@@ -35,9 +35,12 @@ public struct MultipartEncoding: ParameterEncoding {
 	}
 }
 
-// MARK: - MultipartFormDataEncoding
-private extension MultipartFormDataEncoding {
-	func convertToMultipartFormDataType(_ parameters: Parameters) -> (properties: MultipartFormDataType, images: MultipartFormDataType) {
+// MARK: - Private Methods
+private extension MultipartEncoding {
+	func convertToMultipartFormData(_ parameters: Parameters) -> (
+		properties: MultipartFormDataType, 
+		images: MultipartFormDataType
+	) {
 		var properties = [String: Any]()
 		var images = [String: Data]()
 		
@@ -50,7 +53,6 @@ private extension MultipartFormDataEncoding {
 		}
 		
 		return (.properties(properties), .images(images))
-		
 	}
 	
 	func createBodyData(
