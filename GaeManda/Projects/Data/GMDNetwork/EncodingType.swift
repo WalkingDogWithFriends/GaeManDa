@@ -11,6 +11,7 @@ import Foundation
 public enum EncodingType {
 	case jsonBody
 	case queryString
+	case multipartFormData
 }
 
 public extension EncodingType {
@@ -24,19 +25,24 @@ public extension EncodingType {
 			
 		case .queryString:
 			return try URLEncoding.queryString.encode(urlRequest, with: parameters)
+			
+		case .multipartFormData:
+			return try MultipartEncoding.httpBody.encode(urlRequest, with: parameters)
 		}
 	}
 }
 
 public extension Encodable {
 	var toDictionary: [String: Any] {
-		guard let object = try? JSONEncoder().encode(self) else { return [:] }
-		guard let dictionary = try? JSONSerialization.jsonObject(
-			with: object,
-			options: []
-		) as? [String: Any] else {
-			return [:]
+		var dictionary = [String: Any]()
+		
+		let reflect = Mirror(reflecting: self)
+		reflect.children.forEach { (key, value) in
+			if let key = key {
+				dictionary[key] = value
+			}
 		}
+		
 		return dictionary
 	}
 }
