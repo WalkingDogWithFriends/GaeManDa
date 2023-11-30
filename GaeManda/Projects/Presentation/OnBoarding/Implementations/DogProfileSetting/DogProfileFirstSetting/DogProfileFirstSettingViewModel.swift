@@ -6,13 +6,13 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
-import Foundation
 import Entity
+import GMDUtils
 
 struct DogProfileFirstSettingViewModel {
 	let name: String
 	let birthday: String
 	let gender: Gender
 	let weight: Int
-	let profileImage: Data?
+	let profileImage: UIImageWrapper
 }

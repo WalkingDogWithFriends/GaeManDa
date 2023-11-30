@@ -45,10 +45,10 @@ extension DogAPI: TargetType {
 				return .requestPlain
 				
 			case let .updateDog(requestDTO):
-				return .requestParameters(parameters: requestDTO.toDictionary, encoding: .jsonBody)
+				return .uploadMultipart(parameters: requestDTO.toDictionary)
 				
 			case let .createDog(requestDTO):
-				return .requestParameters(parameters: requestDTO.toDictionary, encoding: .jsonBody)
+				return .uploadMultipart(parameters: requestDTO.toDictionary)
 		}
 	}
 	

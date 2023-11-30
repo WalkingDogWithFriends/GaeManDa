@@ -24,13 +24,13 @@ public struct DogDataMapperImpl: DogDataMapper {
 		return Dog(
 			id: dto.petId,
 			name: dto.name,
-			profileImage: dto.profileImage.data(using: .utf8),
 			species: DogSpecies(rawValue: dto.species) ?? .ETC,
 			gender: Gender(rawValue: dto.gender) ?? .male,
 			birthday: dto.birthday,
 			weight: dto.weight,
 			isNeutered: dto.isNeutered,
-			characterIds: dto.personalites
+			characterIds: dto.personalites,
+			imageURL: dto.profileImageURL
 		)
 	}
 	
@@ -48,7 +48,7 @@ public struct DogDataMapperImpl: DogDataMapper {
 			weight: entity.weight,
 			isNeutered: entity.isNeutered,
 			personalites: entity.characterIds,
-			profileImage: convertToString(from: entity.profileImage),
+			profileImage: entity.profileImage ?? Data(),
 			isFileChange: isProfileImageChaged
 		)
 	}
@@ -62,16 +62,7 @@ public struct DogDataMapperImpl: DogDataMapper {
 			weight: entity.weight,
 			isNeutered: entity.isNeutered,
 			personalites: entity.characterIds,
-			profileImage: convertToString(from: entity.profileImage)
+			profileImage: entity.profileImage ?? Data()
 		)
-	}
-}
-
-// MARK: - Private Methods
-private extension DogDataMapperImpl {
-	func convertToString(from data: Data?) -> String {
-		guard let data = data else { return "" }
-		
-		return String(decoding: data, as: UTF8.self)
 	}
 }

@@ -3,6 +3,7 @@ import RIBs
 import RxCocoa
 import RxSwift
 import Entity
+import GMDUtils
 import UseCase
 
 protocol DogProfileSecondSettingRouting: ViewableRouting {
@@ -15,7 +16,7 @@ protocol DogProfileSecondSettingPresentable: Presentable {
 	
 	func updateDogCharacter(with selectedCharaters: [DogCharacter])
 	func updateDogSpecies(with dogSpecies: [String])
-	func updateProfileImage(with profileImage: Data?)
+	func updateProfileImage(with profileImage: UIImageWrapper)
 }
 
 protocol DogProfileSecondSettingListener: AnyObject {
@@ -37,12 +38,12 @@ final class DogProfileSecondSettingInteractor:
 	weak var listener: DogProfileSecondSettingListener?
 	
 	let dependency: DogProfileSecondSettingInteractorDependency
-	private let profileImage: Data?
+	private let profileImage: UIImageWrapper
 	
 	init(
 		presenter: DogProfileSecondSettingPresentable,
 		dependency: DogProfileSecondSettingInteractorDependency,
-		profileImage: Data?
+		profileImage: UIImageWrapper
 	) {
 		self.dependency = dependency
 		self.profileImage = profileImage

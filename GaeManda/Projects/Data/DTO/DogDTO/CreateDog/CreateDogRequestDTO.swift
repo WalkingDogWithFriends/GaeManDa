@@ -6,6 +6,8 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
+import Foundation
+
 public struct CreateDogRequestDTO: Encodable {
 	public let name: String
 	public let birthday: String
@@ -14,7 +16,7 @@ public struct CreateDogRequestDTO: Encodable {
 	public let weight: Int
 	public let isNeutered: Bool
 	public let personalites: [Int]
-	public let profileImage: String
+	public let profileImage: Data
 	
 	public init(
 		name: String,
@@ -24,7 +26,7 @@ public struct CreateDogRequestDTO: Encodable {
 		weight: Int,
 		isNeutered: Bool,
 		personalites: [Int],
-		profileImage: String
+		profileImage: Data
 	) {
 		self.name = name
 		self.birthday = birthday

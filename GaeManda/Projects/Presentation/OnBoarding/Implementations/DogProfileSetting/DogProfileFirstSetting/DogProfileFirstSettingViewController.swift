@@ -270,7 +270,7 @@ final class DogProfileFirstSettingViewController:
 						birthday: owner.calenderTextField.text.trimmingCharacters(in: ["."]), 
 						gender: gender,
 						weight: Int(owner.dogWeightTextField.text) ?? 0,
-						profileImage: owner.selectedProfileImage?.pngData()
+						profileImage: .init(owner.selectedProfileImage)
 					)
 				)
 			}

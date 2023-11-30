@@ -84,7 +84,7 @@ extension DogProfileSettingRouter {
 
 // MARK: DogProfileSecondSetting
 extension DogProfileSettingRouter {
-	func dogProfileSecondSettingAttach(profileImage: Data?) {
+	func dogProfileSecondSettingAttach(profileImage: UIImageWrapper) {
 		if dogProfileSecondSettingRouting != nil { return }
 		
 		let router = dogProfileSecondSettingBuildable.build(withListener: interactor, profileImage: profileImage)

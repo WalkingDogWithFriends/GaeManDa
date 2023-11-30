@@ -152,13 +152,13 @@ private extension NewDogProfileViewController {
 					dog: Dog(
 						id: 1, 
 						name: "",
-						profileImage: nil,
 						species: .ETC,
 						gender: .female,
 						birthday: "",
 						weight: 1,
 						isNeutered: false,
-						characterIds: [0]
+						characterIds: [0],
+						profileImage: Data()
 					)
 				)
 			}
