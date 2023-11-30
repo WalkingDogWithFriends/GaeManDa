@@ -6,11 +6,11 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
-import Foundation
+import GMDUtils
 
 struct DogProfileSecondSettingViewModel {
 	let species: String
 	let isNeutered: Bool
 	let characterIds: [Int]
-	let profileImage: Data?
+	let profileImage: UIImageWrapper
 }
