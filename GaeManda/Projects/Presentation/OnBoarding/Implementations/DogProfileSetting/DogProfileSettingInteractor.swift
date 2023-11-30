@@ -1,6 +1,7 @@
 import Foundation
 import RIBs
 import Entity
+import GMDUtils
 import OnBoarding
 
 protocol DogProfileSettingRouting: Routing {
@@ -8,7 +9,7 @@ protocol DogProfileSettingRouting: Routing {
 	func dogProfileFirstSettingAttach()
 	func dogProfileFirstSettingDetach()
 	func dogProfileFirstSettingDismiss()
-	func dogProfileSecondSettingAttach(profileImage: Data?)
+	func dogProfileSecondSettingAttach(profileImage: UIImageWrapper)
 	func dogProfileSecondSettingDetach()
 	func dogProfileSecondSettingDismiss()
 }
@@ -19,7 +20,7 @@ final class DogProfileSettingInteractor: Interactor, DogProfileSettingInteractab
 
 	private var dogSettingFirstViewModel: DogProfileFirstSettingViewModel?
 	
-	override init() {}
+	override init() { }
 	
 	override func didBecomeActive() {
 		super.didBecomeActive()
@@ -79,13 +80,13 @@ private extension DogProfileSettingInteractor {
 		return Dog(
 			id: 0,
 			name: firstViewModel.name,
-			profileImage: secondViewModel.profileImage,
 			species: DogSpecies(krRawValue: secondViewModel.species) ?? .ETC,
 			gender: firstViewModel.gender,
 			birthday: firstViewModel.birthday,
 			weight: firstViewModel.weight,
 			isNeutered: secondViewModel.isNeutered,
-			characterIds: secondViewModel.characterIds
+			characterIds: secondViewModel.characterIds,
+			profileImage: secondViewModel.profileImage.toData
 		)
 	}
 }

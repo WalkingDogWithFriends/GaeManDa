@@ -1,6 +1,7 @@
 import Foundation
 import RIBs
 import CorePresentation
+import GMDUtils
 import UseCase
 
 protocol DogProfileSecondSettingDependency: Dependency {
@@ -23,7 +24,7 @@ final class DogProfileSecondSettingComponent:
 protocol DogProfileSecondSettingBuildable: Buildable {
 	func build(
 		withListener listener: DogProfileSecondSettingListener,
-		profileImage: Data?
+		profileImage: UIImageWrapper
 	) -> ViewableRouting
 }
 
@@ -36,7 +37,7 @@ final class DogProfileSecondSettingBuilder:
 	
 	func build(
 		withListener listener: DogProfileSecondSettingListener,
-		profileImage: Data?
+		profileImage: UIImageWrapper
 	) -> ViewableRouting {
 		let component = DogProfileSecondSettingComponent(dependency: dependency)
 		let viewController = DogProfileSecondSettingViewController()

@@ -269,7 +269,7 @@ final class DogProfileSecondSettingViewController:
 						species: owner.selectedSpecies,
 						isNeutered: isNeutered,
 						characterIds: owner.selectedCharacters.map { $0.id },
-						profileImage: owner.selectedProfileImage?.pngData()
+						profileImage: .init(owner.selectedProfileImage)
 					)
 				)
 			}
@@ -300,13 +300,9 @@ extension DogProfileSecondSettingViewController: DogProfileSecondSettingPresenta
 		self.selectedCharacters = selectedCharaters
 	}
 	
-	func updateProfileImage(with profileImage: Data?) {
-		guard
-			let profileImageData = profileImage,
-			let profileImage = UIImage(data: profileImageData)
-		else {
-			return
-		}
+	func updateProfileImage(with profileImage: UIImageWrapper) {
+		guard let profileImage = profileImage.image else { return }
+		
 		selectedProfileImage = profileImage
 		onBoardingView.setProfileImage(selectedProfileImage)
 	}
