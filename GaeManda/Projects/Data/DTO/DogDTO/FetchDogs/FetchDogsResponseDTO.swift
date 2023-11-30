@@ -15,7 +15,7 @@ public struct FetchDogsResponseDTO: Decodable {
 	public let weight: Int
 	public let isNeutered: Bool
 	public let personalites: [Int]
-	public let profileImage: String
+	public let profileImageURL: String
 	
 	public init(
 		petId: Int,
@@ -26,7 +26,7 @@ public struct FetchDogsResponseDTO: Decodable {
 		weight: Int,
 		isNeutered: Bool,
 		personalites: [Int],
-		profileImage: String
+		profileImageURL: String
 	) {
 		self.petId = petId
 		self.name = name
@@ -36,7 +36,7 @@ public struct FetchDogsResponseDTO: Decodable {
 		self.weight = weight
 		self.isNeutered = isNeutered
 		self.personalites = personalites
-		self.profileImage = profileImage
+		self.profileImageURL = profileImageURL
 	}
 }
 
@@ -54,7 +54,7 @@ extension FetchDogsResponseDTO {
  "weight": 5,
  "isNeutered": true,
  "personalities": [2],
- "profileImage": ""
+ "profileImageURL": ""
  },
  {
  "petId": 2,
@@ -65,7 +65,7 @@ extension FetchDogsResponseDTO {
  "weight": 3,
  "isNeutered": false,
  "personalities": [1, 3, 4],
- "profileImage": ""
+ "profileImageURL": ""
  },
  {
  "petId": 3,
@@ -76,7 +76,7 @@ extension FetchDogsResponseDTO {
  "weight": 22,
  "isNeutered": false,
  "personalities": [1, 2, ,5],
- "profileImage": ""
+ "profileImageURL": ""
  }
  ]
  """

@@ -6,6 +6,8 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
+import Foundation
+
 public struct UpdateDogRequestDTO: Encodable {
 	public let petId: Int
 	public let name: String
@@ -15,7 +17,7 @@ public struct UpdateDogRequestDTO: Encodable {
 	public let weight: Int
 	public let isNeutered: Bool
 	public let personalites: [Int]
-	public let profileImage: String
+	public let profileImage: Data
 	/// 프로필 이미지의 변경이 있는지 없는지 여부.
 	public let isFileChange: Bool
 	
@@ -28,7 +30,7 @@ public struct UpdateDogRequestDTO: Encodable {
 		weight: Int,
 		isNeutered: Bool,
 		personalites: [Int],
-		profileImage: String,
+		profileImage: Data,
 		isFileChange: Bool
 	) {
 		self.petId = petId
