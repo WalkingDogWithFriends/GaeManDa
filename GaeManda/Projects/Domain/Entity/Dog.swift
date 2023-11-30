@@ -11,7 +11,6 @@ import Foundation
 public struct Dog {
 	public let id: Int
 	public let name: String
-	public let profileImage: Data?
 	public let species: DogSpecies
 	public let gender: Gender
 	public let birthday: String
@@ -19,28 +18,59 @@ public struct Dog {
 	public let isNeutered: Bool
 	public let characterIds: [Int]
 	
+	/// Profile Image의 데이터 타입
+	public let profileImage: Data?
+	/// API를 통해 받아온 Profile image URL
+	public let imageURL: String?
+	
 	public var age: Int { convertToAge() }
 
+	/// Data타입의 Profile Image가 있는 경우
 	public init(
 		id: Int,
 		name: String,
-		profileImage: Data?,
 		species: DogSpecies,
 		gender: Gender,
 		birthday: String,
 		weight: Int,
 		isNeutered: Bool,
-		characterIds: [Int]
+		characterIds: [Int],
+		profileImage: Data
 	) {
 		self.id = id
 		self.name = name
-		self.profileImage = profileImage
 		self.species = species
 		self.gender = gender
 		self.birthday = birthday
 		self.weight = weight
 		self.isNeutered = isNeutered
 		self.characterIds = characterIds
+		self.profileImage = profileImage
+		self.imageURL =	nil
+	}
+	
+	/// Profile Image가 URL 형식으로 있는 경우
+	public init(
+		id: Int,
+		name: String,
+		species: DogSpecies,
+		gender: Gender,
+		birthday: String,
+		weight: Int,
+		isNeutered: Bool,
+		characterIds: [Int],
+		imageURL: String
+	) {
+		self.id = id
+		self.name = name
+		self.species = species
+		self.gender = gender
+		self.birthday = birthday
+		self.weight = weight
+		self.isNeutered = isNeutered
+		self.characterIds = characterIds
+		self.imageURL =	imageURL
+		self.profileImage = nil
 	}
 }
 
@@ -59,7 +89,7 @@ private extension Dog {
 	}
 }
 
-// MARK: DogSpecies
+// MARK: - DogSpecies
 public enum DogSpecies: String {
 	case MALTESE
 	case POODLE
