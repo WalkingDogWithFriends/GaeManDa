@@ -217,13 +217,13 @@ private extension DogProfileEditViewController {
 					dog: Dog(
 						id: 1,
 						name: "",
-						profileImage: nil,
 						species: .ETC,
 						gender: .male,
 						birthday: "",
 						weight: 1,
 						isNeutered: true,
-						characterIds: []
+						characterIds: [],
+						profileImage: Data()
 					)
 				)
 			}
