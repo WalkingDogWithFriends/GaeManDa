@@ -223,7 +223,7 @@ private extension DogProfileEditViewController {
 						weight: 1,
 						isNeutered: true,
 						characterIds: [],
-						profileImage: Data()
+						profileImage: ""
 					)
 				)
 			}

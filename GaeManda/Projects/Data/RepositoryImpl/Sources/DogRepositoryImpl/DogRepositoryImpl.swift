@@ -30,20 +30,20 @@ public struct DogRepositoryImpl: DogRepository {
 	}
 	
 	public func updateDog(_ dog: Dog, isProfileImageChanged: Bool) -> Single<Void> {
-		let resquestDTO = dogDataMapper.mapToUpdateDogRequestDTO(from: dog, isProfileImageChaged: isProfileImageChanged)
+		let requestDTO = dogDataMapper.mapToUpdateDogRequestDTO(from: dog, isProfileImageChaged: isProfileImageChanged)
 		
 		return Provider<DogAPI>
 			.init(stubBehavior: .immediate)
-			.request(DogAPI.updateDog(resquestDTO), type: VoidResponse.self)
+			.request(DogAPI.updateDog(requestDTO), type: VoidResponse.self)
 			.map { _ in }
 	}
 	
 	public func createDog(_ dog: Dog) -> Single<Void> {
-		let resquestDTO = dogDataMapper.mapToCreateDogRequestDTO(from: dog)
+		let requestDTO = dogDataMapper.mapToCreateDogRequestDTO(from: dog)
 
 		return Provider<DogAPI>
 			.init(stubBehavior: .immediate)
-			.request(DogAPI.createDog(resquestDTO), type: VoidResponse.self)
+			.request(DogAPI.createDog(requestDTO), type: VoidResponse.self)
 			.map { _ in }
 	}
 	

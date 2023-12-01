@@ -86,7 +86,7 @@ private extension DogProfileSettingInteractor {
 			weight: firstModel.weight,
 			isNeutered: secondModel.isNeutered,
 			characterIds: secondModel.characterIds,
-			profileImage: secondModel.profileImage.toData
+			profileImage: secondModel.profileImage.toUTF8
 		)
 	}
 }
