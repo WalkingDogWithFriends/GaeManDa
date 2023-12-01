@@ -20,4 +20,7 @@ public protocol OnBoardingUseCase {
 	func createDogs(_ dog: Dog) -> Single<Void>
 	func fetchDogCharacters() -> Single<[DogCharacter]>
 	func fetchDogSpecies() -> Single<[String]>
+	
+	func createUser(_ user: User) -> Single<Void>
+	func checkDuplicated(nickName: String) -> Single<Void>
 }
