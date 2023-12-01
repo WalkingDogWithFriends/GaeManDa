@@ -1,5 +1,6 @@
 import Foundation
 import RIBs
+import OnBoarding
 
 protocol DogProfileFirstSettingRouting: ViewableRouting {
 	func attachBirthdayPicker()
@@ -13,7 +14,7 @@ protocol DogProfileFirstSettingPresentable: Presentable {
 }
 
 protocol DogProfileFirstSettingListener: AnyObject {
-	func dogProfileFirstSettingDidTapConfirmButton(with viewModel: DogProfileFirstSettingViewModel)
+	func dogProfileFirstSettingDidTapConfirmButton(with passingModel: DogProfileFirstSettingPassingModel)
 	func dogProfileFirstSettingDidTapBackButton()
 	func dogProfileFirstSettingDismiss()
 }
@@ -41,8 +42,8 @@ final class DogProfileFirstSettingInteractor:
 
 // MARK: PresentableListener
 extension DogProfileFirstSettingInteractor {
-	func didTapConfirmButton(with viewModel: DogProfileFirstSettingViewModel) {
-		listener?.dogProfileFirstSettingDidTapConfirmButton(with: viewModel)
+	func didTapConfirmButton(with passingModel: DogProfileFirstSettingPassingModel) {
+		listener?.dogProfileFirstSettingDidTapConfirmButton(with: passingModel)
 	}
 	
 	func didTapBackButton() {

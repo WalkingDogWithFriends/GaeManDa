@@ -8,10 +8,11 @@ import DesignKit
 import Entity
 import GMDUtils
 import GMDExtensions
+import OnBoarding
 
 // swiftlint:disable:next type_name
 protocol DogProfileFirstSettingPresentableListener: AnyObject {
-	func didTapConfirmButton(with viewModel: DogProfileFirstSettingViewModel)
+	func didTapConfirmButton(with passingModel: DogProfileFirstSettingPassingModel)
 	func didTapBackButton()
 	func didTapBirthdayPicker()
 	func dismiss()
@@ -265,7 +266,7 @@ final class DogProfileFirstSettingViewController:
 				let gender: Gender = owner.maleButton.isSelected ? .male : .female
 				
 				owner.listener?.didTapConfirmButton(
-					with: DogProfileFirstSettingViewModel(
+					with: DogProfileFirstSettingPassingModel(
 						name: owner.dogNameTextField.text,
 						birthday: owner.calenderTextField.text.trimmingCharacters(in: ["."]), 
 						gender: gender,

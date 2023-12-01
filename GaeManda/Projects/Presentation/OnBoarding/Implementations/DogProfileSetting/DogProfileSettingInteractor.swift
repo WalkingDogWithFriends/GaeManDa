@@ -18,7 +18,7 @@ final class DogProfileSettingInteractor: Interactor, DogProfileSettingInteractab
 	weak var router: DogProfileSettingRouting?
 	weak var listener: DogProfileSettingListener?
 
-	private var dogSettingFirstViewModel: DogProfileFirstSettingViewModel?
+	private var dogProfileFirstSettingModel: DogProfileFirstSettingPassingModel?
 	
 	override init() { }
 	
@@ -35,9 +35,9 @@ final class DogProfileSettingInteractor: Interactor, DogProfileSettingInteractab
 
 // MARK: DogProfileFirstSetting
 extension DogProfileSettingInteractor {
-	func dogProfileFirstSettingDidTapConfirmButton(with viewModel: DogProfileFirstSettingViewModel) {
-		self.dogSettingFirstViewModel = viewModel
-		router?.dogProfileSecondSettingAttach(profileImage: viewModel.profileImage)
+	func dogProfileFirstSettingDidTapConfirmButton(with passingModel: DogProfileFirstSettingPassingModel) {
+		self.dogProfileFirstSettingModel = passingModel
+		router?.dogProfileSecondSettingAttach(profileImage: passingModel.profileImage)
 	}
 	
 	func dogProfileFirstSettingDidTapBackButton() {
@@ -51,13 +51,13 @@ extension DogProfileSettingInteractor {
 
 // MARK: DogProfileSecondSetting
 extension DogProfileSettingInteractor {
-	func dogProfileSecondSettingDidTapConfirmButton(with viewModel: DogProfileSecondSettingViewModel) {
-		guard let dogSettingFirstViewModel = dogSettingFirstViewModel else {
+	func dogProfileSecondSettingDidTapConfirmButton(with passingModel: DogProfileSecondSettingPassingModel) {
+		guard let dogProfileFirstSettingModel = dogProfileFirstSettingModel else {
 			listener?.dogProfileSettingDidFinish(with: nil)
 			return
 		}
 		
-		let dog = convertToDog(from: dogSettingFirstViewModel, viewModel)
+		let dog = convertToDog(from: dogProfileFirstSettingModel, passingModel)
 
 		listener?.dogProfileSettingDidFinish(with: dog)
 	}
@@ -74,19 +74,19 @@ extension DogProfileSettingInteractor {
 // MARK: - Private Methods
 private extension DogProfileSettingInteractor {
 	func convertToDog(
-		from firstViewModel: DogProfileFirstSettingViewModel,
-		_ secondViewModel: DogProfileSecondSettingViewModel
+		from firstModel: DogProfileFirstSettingPassingModel,
+		_ secondModel: DogProfileSecondSettingPassingModel
 	) -> Dog {
 		return Dog(
 			id: 0,
-			name: firstViewModel.name,
-			species: DogSpecies(krRawValue: secondViewModel.species) ?? .ETC,
-			gender: firstViewModel.gender,
-			birthday: firstViewModel.birthday,
-			weight: firstViewModel.weight,
-			isNeutered: secondViewModel.isNeutered,
-			characterIds: secondViewModel.characterIds,
-			profileImage: secondViewModel.profileImage.toData
+			name: firstModel.name,
+			species: DogSpecies(krRawValue: secondModel.species) ?? .ETC,
+			gender: firstModel.gender,
+			birthday: firstModel.birthday,
+			weight: firstModel.weight,
+			isNeutered: secondModel.isNeutered,
+			characterIds: secondModel.characterIds,
+			profileImage: secondModel.profileImage.toData
 		)
 	}
 }

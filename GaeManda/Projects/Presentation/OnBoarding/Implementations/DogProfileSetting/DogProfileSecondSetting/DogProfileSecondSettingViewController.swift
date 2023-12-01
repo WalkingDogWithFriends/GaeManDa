@@ -8,11 +8,12 @@ import DesignKit
 import Entity
 import GMDExtensions
 import GMDUtils
+import OnBoarding
 
 // swiftlint:disable:next type_name
 protocol DogProfileSecondSettingPresentableListener: AnyObject {
 	func viewDidLoad()
-	func didTapConfirmButton(with viewModel: DogProfileSecondSettingViewModel)
+	func didTapConfirmButton(with passingModel: DogProfileSecondSettingPassingModel)
 	func didTapBackButton()
 	func didTapAddDogCharacterButton(with selectedCharaters: [DogCharacter])
 	func dismiss()
@@ -265,7 +266,7 @@ final class DogProfileSecondSettingViewController:
 				let isNeutered = owner.didNeuterButton.isSelected ? true : false
 				
 				owner.listener?.didTapConfirmButton(
-					with: DogProfileSecondSettingViewModel(
+					with: DogProfileSecondSettingPassingModel(
 						species: owner.selectedSpecies,
 						isNeutered: isNeutered,
 						characterIds: owner.selectedCharacters.map { $0.id },
