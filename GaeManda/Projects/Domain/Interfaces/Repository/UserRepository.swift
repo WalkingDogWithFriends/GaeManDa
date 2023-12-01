@@ -11,11 +11,8 @@ import RxSwift
 import Entity
 
 public protocol UserRepository {
-	func fetchUser(id: Int) -> Single<User>
-	
-	func updateUser(
-		nickName: String,
-		age: Int,
-		sex: String
-	) -> Single<Void>
+	func fetchUser() -> Single<User>
+	func updateUser(_ user: User, isProfileImageChanged: Bool) -> Single<Void>
+	func createUser(_ user: User) -> Single<Void>
+	func checkDuplicated(nickName: String) -> Single<Void>
 }
