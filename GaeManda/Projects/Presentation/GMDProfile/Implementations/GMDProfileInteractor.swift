@@ -135,10 +135,10 @@ extension GMDProfileInteractor {
 private extension GMDProfileInteractor {
 	func fetchUser() {
 		dependency.gmdProfileUseCase
-			.fetchUser(id: 0)
+			.fetchUser()
 			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, user in
-				let sexAndAge = "\(user.sex.rawValue) \(user.age)세"
+				let sexAndAge = "\(user.gender.rawValue) \(user.age)세"
 
 				owner.presenter.updateUserName(user.name)
 				owner.presenter.updateUserSexAndAge(sexAndAge)

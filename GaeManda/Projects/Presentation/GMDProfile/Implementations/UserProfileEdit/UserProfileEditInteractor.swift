@@ -6,6 +6,7 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
+import Foundation
 import RIBs
 import RxSwift
 import Entity
@@ -56,11 +57,11 @@ final class UserProfileEditInteractor:
 extension UserProfileEditInteractor {
 	func viewWillAppear() {
 		dependency.gmdProfileUseCase
-			.fetchUser(id: 0)
+			.fetchUser()
 			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, user in
 				owner.presenter.updateUsername(user.name)
-				owner.presenter.updateUserSex(user.sex)
+				owner.presenter.updateUserSex(user.gender)
 			}
 			.disposeOnDeactivate(interactor: self)
 	}
@@ -74,9 +75,14 @@ extension UserProfileEditInteractor {
 	}
 	
 	func didTapEndEditingButton(name: String, sex: Gender) {
+		// 추후 Profile페이지 시에 수정 예정
+		let user = User(
+			id: 0, name: name, gender: sex, address: Location(latitude: 0, longitude: 0), birthday: "", profileImage: ""
+		)
+		
 		debugPrint(name, sex)
 		dependency.gmdProfileUseCase
-			.updateUser(nickName: name, age: 20, sex: sex.rawValue)
+			.updateUser(user, isProfileImageChanged: true)
 			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, _ in
 				owner.listener?.gmdProfileEndEditing()

@@ -18,12 +18,8 @@ public protocol GMDProfileUseCase {
 	)
 	
 	func fetchDogs() -> Single<[Dog]>
-	func fetchUser(id: Int) -> Single<User>
-	func updateUser(
-		nickName: String,
-		age: Int,
-		sex: String
-	) -> Single<Void>
+	func fetchUser() -> Single<User>
+	func updateUser(_ user: User, isProfileImageChanged: Bool) -> Single<Void>
 	
 	func updateDog(_ dog: Dog, isProfileImageChanged: Bool) -> Single<Void>
 	func createDog(_ dog: Dog) -> Single<Void>
