@@ -7,6 +7,15 @@ import DesignKit
 import GMDUtils
 
 final class OnBoardingView: UIView {
+	enum OnBoardingViewMode {
+		/// Label만 있는 경우
+		case `default`
+		/// Label과 수정 가능한 이미지 뷰
+		case editableImageView
+		/// Label과 수정 불가능한 이미지 뷰
+		case unEditableImageView
+	}
+	
 	// MARK: - UI Components
 	private let label: UILabel = {
 		let label = UILabel()
@@ -25,46 +34,17 @@ final class OnBoardingView: UIView {
 	
 	// MARK: - Initializers
 	init(
-		willDisplayImageView: Bool = false,
+		viewMode: OnBoardingViewMode,
 		title: String
 	) {
 		self.label.text = title
 		super.init(frame: .zero)
-		setViewHierarchy(willDisplayImageView)
-		setConstraints(willDisplayImageView)
+		setupUI(with: viewMode)
 	}
 	
 	@available(*, unavailable)
 	required init?(coder: NSCoder) {
 		fatalError()
-	}
-}
-
-// MARK: - UI Methods
-private extension OnBoardingView {
-	func setViewHierarchy(_ willDisplayImageView: Bool) {
-		addSubview(label)
-		if willDisplayImageView {
-			addSubview(profileImageView)
-		}
-	}
-	
-	func setConstraints(_ willDisplayImageView: Bool) {
-		if willDisplayImageView {
-			label.snp.makeConstraints { make in
-				make.top.leading.trailing.equalToSuperview()
-			}
-			profileImageView.snp.makeConstraints { make in
-				make.top.equalTo(label.snp.bottom).offset(40)
-				make.width.height.equalTo(140)
-				make.centerX.equalToSuperview()
-				make.bottom.equalToSuperview()
-			}
-		} else {
-			label.snp.makeConstraints { make in
-				make.edges.equalToSuperview()
-			}
-		}
 	}
 }
 
@@ -77,6 +57,72 @@ extension OnBoardingView {
 	func setProfileImage(_ image: UIImage?) {
 		DispatchQueue.main.async {
 			self.profileImageView.image = image
+		}
+	}
+}
+
+// MARK: - UI Methods
+private extension OnBoardingView {
+	func setupUI(with viewMode: OnBoardingViewMode) {
+		switch viewMode {
+			case .default:
+				defaultModeSetViewHeirarchy()
+				defaultModeSetConstraints()
+				
+			case .editableImageView:
+				imageViewModeSetViewHeirarchy()
+				imageViewModeSetConstraints()
+				setupPlusButtonUI()
+				
+			case .unEditableImageView:
+				imageViewModeSetViewHeirarchy()
+				imageViewModeSetConstraints()
+		}
+	}
+}
+
+// MARK: - Default Mode UI Methods
+private extension OnBoardingView {
+	func defaultModeSetViewHeirarchy() {
+		addSubviews(label)
+	}
+	
+	func defaultModeSetConstraints() {
+		label.snp.makeConstraints { make in
+			make.edges.equalToSuperview()
+		}
+	}
+}
+
+// MARK: - UnEditableImageView / EditableImageView Mode UI Methods
+private extension OnBoardingView {
+	func imageViewModeSetViewHeirarchy() {
+		addSubviews(label)
+		addSubviews(profileImageView)
+	}
+	
+	func imageViewModeSetConstraints() {
+		label.snp.makeConstraints { make in
+			make.top.leading.trailing.equalToSuperview()
+		}
+		profileImageView.snp.makeConstraints { make in
+			make.top.equalTo(label.snp.bottom).offset(40)
+			make.width.height.equalTo(140)
+			make.centerX.equalToSuperview()
+			make.bottom.equalToSuperview()
+		}
+	}
+	
+	func setupPlusButtonUI() {
+		let imageView = RoundImageView(image: .iconPlusCircleFill)
+		imageView.clipsToBounds = true
+		
+		addSubviews(imageView)
+		
+		imageView.snp.makeConstraints { make in
+			make.width.height.equalTo(32)
+			make.trailing.equalTo(profileImageView).offset(-12)
+			make.bottom.equalTo(profileImageView).offset(-4)
 		}
 	}
 }

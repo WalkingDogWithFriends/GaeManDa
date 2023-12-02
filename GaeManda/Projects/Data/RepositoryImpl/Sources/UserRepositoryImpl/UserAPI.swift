@@ -8,13 +8,13 @@
 
 import Foundation
 import DTO
-import Entity
 import GMDNetwork
 
 enum UserAPI {
-	case fetchUser(id: Int)
-	/// nickName, age, sex
-	case updateUser(String, Int, String)
+	case fetchUser
+	case updateUser(_ dto: UpdateUserRequestDTO)
+	case createUser(_ dto: CreateUserRequestDTO)
+	case checkDuplicated(nickName: String)
 }
 
 extension UserAPI: TargetType {
@@ -24,38 +24,34 @@ extension UserAPI: TargetType {
 	
 	public var path: String {
 		switch self {
-			case .fetchUser, .updateUser:
-				return "/profile"
+			case .fetchUser, .updateUser, .createUser:
+					return "/profile"
+			case let .checkDuplicated(nickName):
+					return "/duplication/\(nickName)"
 		}
 	}
 	
 	public var method: HTTPMethod {
 		switch self {
-			case .fetchUser:
+			case .fetchUser, .checkDuplicated:
 				return .get
 			case .updateUser:
 				return .patch
+			case .createUser:
+				return .post
 		}
 	}
 	
 	public var task: TaskType {
 		switch self {
-			case .fetchUser:
+			case .fetchUser, .checkDuplicated:
 				return .requestPlain
 				
-			case let .updateUser(nickName, age, sex):
-				let requestDTO = UserProfilePatchReqeustDTO(
-					nickname: nickName,
-					birthday: "\(age)",
-					gender: sex,
-					profileImage: Data(),
-					isFileChange: false
-				)
+			case let .updateUser(requestDTO):
+				return .uploadMultipart(parameters: requestDTO.toDictionary)
 				
-				return .requestParameters(
-					parameters: requestDTO.toDictionary,
-					encoding: .jsonBody
-				)
+			case let .createUser(requestDTO):
+				return .uploadMultipart(parameters: requestDTO.toDictionary)
 		}
 	}
 	
@@ -66,12 +62,12 @@ extension UserAPI: TargetType {
 	public var sampleData: Data {
 		switch self {
 			case .fetchUser:
-				let jsonString = UserProfileResponseDTO.stubData
+				let jsonString = FetchUserResponseDTO.stubData
 				let data = jsonString.data(using: .utf8)
 				
 				return data ?? Data()
 				
-			case .updateUser:
+			case .updateUser, .createUser, .checkDuplicated:
 				return Data()
 		}
 	}

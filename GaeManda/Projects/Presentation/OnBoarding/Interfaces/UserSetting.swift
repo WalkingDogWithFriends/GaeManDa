@@ -5,7 +5,7 @@ public protocol UserProfileSettingBuildable: Buildable {
 }
 
 public protocol UserProfileSettingListener: AnyObject {
-	func userProfileSettingDidFinish()
+	func userProfileSettingDidFinish(with passingModel: UserProfileSettingPassingModel)
 	func userProfileSettingBackButtonDidTap()
 	func userProfileSettingDismiss()
 }

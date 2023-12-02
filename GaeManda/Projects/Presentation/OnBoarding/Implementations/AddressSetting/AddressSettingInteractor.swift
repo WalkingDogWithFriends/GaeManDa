@@ -20,6 +20,8 @@ final class AddressSettingInteractor:
 	weak var router: AddressSettingRouting?
 	weak var listener: AddressSettingListener?
 	
+	public var address: AddressPassingModel = .default
+	
 	override init(presenter: AddressSettingPresentable) {
 		super.init(presenter: presenter)
 		presenter.listener = self
@@ -37,7 +39,7 @@ final class AddressSettingInteractor:
 // MARK: - PresentableListener
 extension AddressSettingInteractor {
 	func confirmButtonDidTap() {
-		listener?.addressSettingDidFinish()
+		listener?.addressSettingDidFinish(with: address)
 	}
 	
 	func backButtonDidTap() {
@@ -69,9 +71,14 @@ extension AddressSettingInteractor {
 	func detailAddressSettingCloseButtonDidTap() {
 		router?.detailAddressSettingDetach()
 	}
-	
+}
+
+// MARK: - DetailAddressSettingListener
+extension AddressSettingInteractor {
 	func detailAddressSettingLoadLocationButtonDidTap(latitude: String, longitude: String) {
 		guard let latitude = Double(latitude), let longitude = Double(longitude) else { return }
+		self.address = AddressPassingModel(latitude: latitude, longitude: longitude)
+		
 		presenter.setDetailAddress(latitude: latitude, longitude: longitude)
 		router?.detailAddressSettingDetach()
 	}

@@ -8,9 +8,10 @@ import DesignKit
 import Entity
 import GMDExtensions
 import GMDUtils
+import OnBoarding
 
 protocol UserProfileSettingPresentableListener: AnyObject {
-	func confirmButtonDidTap()
+	func confirmButtonDidTap(with passingModel: UserProfileSettingPassingModel)
 	func backButtonDidTap()
 	func birthdayPickerDidTap()
 	func dismiss()
@@ -24,11 +25,12 @@ final class UserProfileSettingViewController:
 	weak var listener: UserProfileSettingPresentableListener?
 	
 	private let maximumTextCount = 20
+	private var selectedProfileImage: UIImage?
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "")
 	
-	private let onBoardingView = OnBoardingView(willDisplayImageView: true, title: "보호자의 프로필을 설정해주세요!")
+	private let onBoardingView = OnBoardingView(viewMode: .editableImageView, title: "보호자의 프로필을 설정해주세요!")
 	
 	private let nickNameTextField = GMDTextField(title: "닉네임", warningText: "닉네임을 입력해주세요.")
 	
@@ -54,16 +56,9 @@ final class UserProfileSettingViewController:
 		return stackView
 	}()
 	
-	private let maleButton: GMDOptionButton = {
-		let button = GMDOptionButton(title: "남")
-		button.isSelected = true
-		
-		return button
-	}()
-	
+	private let maleButton = GMDOptionButton(title: "남", isSelected: true)
 	private let femaleButton = GMDOptionButton(title: "여")
-	
-	private let confirmButton = ConfirmButton(title: "확인")
+	private let confirmButton = ConfirmButton(title: "확인", isPositive: false)
 	
 	// MARK: - Life Cycles
 	override func viewDidLoad() {
@@ -240,7 +235,16 @@ final class UserProfileSettingViewController:
 			.map { $0 && $1 }
 			.filter { $0 == true }
 			.bind(with: self) { owner, _ in
-				owner.listener?.confirmButtonDidTap()
+				let gender: Gender = owner.maleButton.isSelected ? .male : .female
+				
+				owner.listener?.confirmButtonDidTap(
+					with: UserProfileSettingPassingModel(
+						nickname: owner.nickNameTextField.text,
+						birthday: owner.calenderTextField.text.trimmingCharacters(in: ["."]),
+						gender: gender,
+						profileImage: .init(owner.selectedProfileImage)
+					)
+				)
 			}
 			.disposed(by: disposeBag)
 		
@@ -275,11 +279,10 @@ extension UserProfileSettingViewController: PHPickerViewControllerDelegate {
 		guard let firstResult = results.first else { return }
 		firstResult.fetchImage { result in
 			switch result {
-			case let .success(image):
-				DispatchQueue.main.async {
+				case let .success(image):
 					self.onBoardingView.setProfileImage(image)
-				}
-			case .failure: break //
+					self.selectedProfileImage = image
+				case .failure: break //
 			}
 		}
 	}

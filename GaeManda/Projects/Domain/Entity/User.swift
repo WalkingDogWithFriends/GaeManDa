@@ -6,18 +6,47 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
+import Foundation
+
 public struct User {
+	public let id: Int
 	public let name: String
-	public let sex: Gender
-	public let age: String
+	public let gender: Gender
+	public let address: Location
+	public let birthday: String
+	public let profileImage: String
 	
-	public init(name: String, sex: Gender, age: String) {
+	public var age: Int { convertToAge() }
+
+	public init(
+		id: Int,
+		name: String, 
+		gender: Gender,
+		address: Location,
+		birthday: String,
+		profileImage: String
+	) {
+		self.id = id
 		self.name = name
-		self.sex = sex
-		self.age = age
+		self.gender = gender
+		self.address = address
+		self.birthday = birthday
+		self.profileImage = profileImage
 	}
 }
 
-public extension User {
-	static let defaultUser = User(name: "", sex: .male, age: "")
+// MARK: - Private Method
+private extension User {
+	func convertToAge() -> Int {
+		let dateFormatter = DateFormatter()
+		dateFormatter.locale = Locale(identifier: "ko_KR")
+		dateFormatter.dateFormat = "YYYYMMdd"
+		
+		guard let date = dateFormatter.date(from: birthday) else { return 0 }
+		
+		let now = Date()
+		let ageComponents = Calendar.current.dateComponents([.year], from: date, to: now)
+		
+		return ageComponents.year ?? 0
+	}
 }

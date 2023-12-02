@@ -4,6 +4,7 @@ import RxCocoa
 import RxSwift
 import Entity
 import GMDUtils
+import OnBoarding
 import UseCase
 
 protocol DogProfileSecondSettingRouting: ViewableRouting {
@@ -20,7 +21,7 @@ protocol DogProfileSecondSettingPresentable: Presentable {
 }
 
 protocol DogProfileSecondSettingListener: AnyObject {
-	func dogProfileSecondSettingDidTapConfirmButton(with viewModel: DogProfileSecondSettingViewModel)
+	func dogProfileSecondSettingDidTapConfirmButton(with passingModel: DogProfileSecondSettingPassingModel)
 	func dogProfileSecondSettingDidTaBackButtonp()
 	func dogProfileSecondSettingDismiss()
 }
@@ -92,8 +93,8 @@ extension DogProfileSecondSettingInteractor {
 			.disposeOnDeactivate(interactor: self)
 	}
 	
-	func didTapConfirmButton(with viewModel: DogProfileSecondSettingViewModel) {
-		listener?.dogProfileSecondSettingDidTapConfirmButton(with: viewModel)
+	func didTapConfirmButton(with passingModel: DogProfileSecondSettingPassingModel) {
+		listener?.dogProfileSecondSettingDidTapConfirmButton(with: passingModel)
 	}
 }
 

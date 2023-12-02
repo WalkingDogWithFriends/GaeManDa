@@ -17,6 +17,18 @@ public struct FetchDogsResponseDTO: Decodable {
 	public let personalites: [Int]
 	public let profileImageURL: String
 	
+	public enum CodingKeys: String, CodingKey {
+		case petId
+		case name
+		case birthday
+		case species
+		case gender
+		case weight
+		case isNeutered
+		case personalites
+		case profileImageURL = "profileImage"
+	}
+	
 	public init(
 		petId: Int,
 		name: String,

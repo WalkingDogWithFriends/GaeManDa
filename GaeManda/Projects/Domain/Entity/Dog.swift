@@ -17,11 +17,7 @@ public struct Dog {
 	public let weight: Int
 	public let isNeutered: Bool
 	public let characterIds: [Int]
-	
-	/// Profile Image의 데이터 타입
-	public let profileImage: Data?
-	/// API를 통해 받아온 Profile image URL
-	public let imageURL: String?
+	public let profileImage: String
 	
 	public var age: Int { convertToAge() }
 
@@ -35,7 +31,7 @@ public struct Dog {
 		weight: Int,
 		isNeutered: Bool,
 		characterIds: [Int],
-		profileImage: Data
+		profileImage: String
 	) {
 		self.id = id
 		self.name = name
@@ -46,31 +42,6 @@ public struct Dog {
 		self.isNeutered = isNeutered
 		self.characterIds = characterIds
 		self.profileImage = profileImage
-		self.imageURL =	nil
-	}
-	
-	/// Profile Image가 URL 형식으로 있는 경우
-	public init(
-		id: Int,
-		name: String,
-		species: DogSpecies,
-		gender: Gender,
-		birthday: String,
-		weight: Int,
-		isNeutered: Bool,
-		characterIds: [Int],
-		imageURL: String
-	) {
-		self.id = id
-		self.name = name
-		self.species = species
-		self.gender = gender
-		self.birthday = birthday
-		self.weight = weight
-		self.isNeutered = isNeutered
-		self.characterIds = characterIds
-		self.imageURL =	imageURL
-		self.profileImage = nil
 	}
 }
 

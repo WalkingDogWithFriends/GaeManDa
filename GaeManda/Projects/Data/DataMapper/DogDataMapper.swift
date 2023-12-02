@@ -30,7 +30,7 @@ public struct DogDataMapperImpl: DogDataMapper {
 			weight: dto.weight,
 			isNeutered: dto.isNeutered,
 			characterIds: dto.personalites,
-			imageURL: dto.profileImageURL
+			profileImage: dto.profileImageURL
 		)
 	}
 	
@@ -48,7 +48,7 @@ public struct DogDataMapperImpl: DogDataMapper {
 			weight: entity.weight,
 			isNeutered: entity.isNeutered,
 			personalites: entity.characterIds,
-			profileImage: entity.profileImage ?? Data(),
+			profileImage: entity.profileImage.data(using: .utf8) ?? Data(),
 			isFileChange: isProfileImageChaged
 		)
 	}
@@ -62,7 +62,7 @@ public struct DogDataMapperImpl: DogDataMapper {
 			weight: entity.weight,
 			isNeutered: entity.isNeutered,
 			personalites: entity.characterIds,
-			profileImage: entity.profileImage ?? Data()
+			profileImage: entity.profileImage.data(using: .utf8) ?? Data()
 		)
 	}
 }

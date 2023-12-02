@@ -20,16 +20,30 @@ public struct OnBoardingUseCaseImpl: OnBoardingUseCase {
 		self.dogRepository = dogRepository
 		self.userRepository = userRepository
 	}
-	
-	public func createDogs(_ dog: Dog) -> Single<Void> {
+}
+
+// MARK: - Dog UseCase
+public extension OnBoardingUseCaseImpl {
+	func createDogs(_ dog: Dog) -> Single<Void> {
 		return dogRepository.createDog(dog)
 	}
 	
-	public func fetchDogCharacters() -> Single<[DogCharacter]> {
+	func fetchDogCharacters() -> Single<[DogCharacter]> {
 		return dogRepository.fetchDogCharacters()
 	}
 	
-	public func fetchDogSpecies() -> Single<[String]> {
+	func fetchDogSpecies() -> Single<[String]> {
 		return dogRepository.fetchDogSpecies()
+	}
+}
+
+// MARK: - User UseCase
+public extension OnBoardingUseCaseImpl {
+	func createUser(_ user: User) -> Single<Void> {
+		return userRepository.createUser(user)
+	}
+	
+	func checkDuplicated(nickName: String) -> Single<Void> {
+		return userRepository.checkDuplicated(nickName: nickName)
 	}
 }

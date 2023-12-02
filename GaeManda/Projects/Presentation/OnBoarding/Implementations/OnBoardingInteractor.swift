@@ -23,6 +23,15 @@ final class OnBoardingInteractor:
 	weak var router: OnBoardingRouting?
 	weak var listener: OnBoardingListener?
 	
+	// MARK: - PassingModel
+	// 사용시에 옵셔널일 수가 없습니다.
+	private var addressPassingModel: AddressPassingModel!
+
+	// MARK: - Entity
+	// 사용시에 옵셔널일 수가 없습니다.
+	private var user: User!
+	private var dog: Dog!
+	
 	override init() { }
 	
 	override func didBecomeActive() {
@@ -45,8 +54,12 @@ extension OnBoardingInteractor {
 
 // MARK: AddressSettingListener
 extension OnBoardingInteractor {
-	func addressSettingDidFinish() {
+	func addressSettingDidFinish(with address: AddressPassingModel) {
+		self.addressPassingModel = address
 		router?.userProfileSettingAttach()
+	}
+	
+	func addressSettingDidFinish() {
 	}
 	
 	func addressSettingBackButtonDidTap() {
@@ -60,7 +73,8 @@ extension OnBoardingInteractor {
 
 // MARK: UserProfileSettingListener
 extension OnBoardingInteractor {
-	func userProfileSettingDidFinish() {
+	func userProfileSettingDidFinish(with passingModel: UserProfileSettingPassingModel) {
+		convertToUser(addressPassingModel, passingModel)
 		router?.dogProfileSettingAttach()
 	}
 	
@@ -81,6 +95,7 @@ extension OnBoardingInteractor {
 			router?.dogProfileSettingDetach()
 			return
 		}
+		self.dog = dog
 		// 정상 종료된 경우, 온보딩으로 데이터 전달.
 		listener?.onBoardingDidFinish()
 	}
@@ -91,5 +106,21 @@ extension OnBoardingInteractor {
 	
 	func dogProfileSettingDismiss() {
 		router?.dogProfileSettingDetach()
+	}
+}
+
+// MARK: - Create Entity Methods
+private extension OnBoardingInteractor {
+	func convertToUser(_ address: AddressPassingModel, _ user: UserProfileSettingPassingModel) -> User {
+		let addressLocation = Location(latitude: address.latitude, longitude: address.longitude)
+		
+		return User(
+			id: 0,
+			name: user.nickname,
+			gender: user.gender,
+			address: addressLocation,
+			birthday: user.birthday,
+			profileImage: user.profileImage.toUTF8
+		)
 	}
 }

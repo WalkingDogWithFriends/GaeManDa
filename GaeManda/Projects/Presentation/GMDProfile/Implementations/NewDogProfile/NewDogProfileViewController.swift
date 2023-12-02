@@ -158,7 +158,7 @@ private extension NewDogProfileViewController {
 						weight: 1,
 						isNeutered: false,
 						characterIds: [0],
-						profileImage: Data()
+						profileImage: ""
 					)
 				)
 			}

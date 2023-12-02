@@ -1,5 +1,5 @@
 import RIBs
-import OnBoarding
+=import OnBoarding
 
 protocol UserProfileSettingRouting: ViewableRouting {
 	func attachBirthdayPicker()
@@ -40,8 +40,11 @@ final class UserProfileSettingInteractor:
 
 // MARK: - PresentableListener
 extension UserProfileSettingInteractor {
+	func confirmButtonDidTap(with passingModel: UserProfileSettingPassingModel) {
+		listener?.userProfileSettingDidFinish(with: passingModel)
+	}
+	
 	func confirmButtonDidTap() {
-		listener?.userProfileSettingDidFinish()
 	}
 	
 	func backButtonDidTap() {

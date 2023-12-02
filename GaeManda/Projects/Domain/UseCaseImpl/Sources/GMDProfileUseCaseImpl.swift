@@ -29,20 +29,12 @@ public struct GMDProfileUseCaseImpl: GMDProfileUseCase {
 
 // MARK: - User Profile Use Case
 public extension GMDProfileUseCaseImpl {
-	func fetchUser(id: Int) -> Single<User> {
-		return userRepository.fetchUser(id: id)
+	func fetchUser() -> Single<User> {
+		return userRepository.fetchUser()
 	}
 	
-	func updateUser(
-		nickName: String,
-		age: Int,
-		sex: String
-	) -> Single<Void> {
-		return userRepository.updateUser(
-			nickName: nickName,
-			age: age,
-			sex: sex
-		)
+	func updateUser(_ user: User, isProfileImageChanged: Bool) -> Single<Void> {
+		return userRepository.updateUser(user, isProfileImageChanged: isProfileImageChanged)
 	}
 }
 
