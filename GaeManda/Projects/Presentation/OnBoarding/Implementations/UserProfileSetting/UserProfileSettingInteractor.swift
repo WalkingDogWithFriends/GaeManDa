@@ -1,5 +1,5 @@
 import RIBs
-=import OnBoarding
+import OnBoarding
 
 protocol UserProfileSettingRouting: ViewableRouting {
 	func attachBirthdayPicker()
