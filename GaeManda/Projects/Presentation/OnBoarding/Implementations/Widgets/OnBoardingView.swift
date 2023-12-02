@@ -115,7 +115,6 @@ private extension OnBoardingView {
 	
 	func setupPlusButtonUI() {
 		let imageView = RoundImageView(image: .iconPlusCircleFill)
-//		imageView.contentMode = .scaleToFill
 		imageView.clipsToBounds = true
 		
 		addSubviews(imageView)

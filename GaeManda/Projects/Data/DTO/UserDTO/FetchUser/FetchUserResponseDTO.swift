@@ -22,8 +22,8 @@ public struct FetchUserResponseDTO: Decodable {
 		case nickname
 		case profileImageURL = "profileImage"
 		case gender
-		case latitude, longitude
 		case birthday
+		case latitude, longitude
 	}
 	
 	public init(

@@ -1,5 +1,4 @@
 import RIBs
-import Entity
 
 public protocol UserProfileSettingBuildable: Buildable {
 	func build(withListener listener: UserProfileSettingListener) -> ViewableRouting

@@ -1,6 +1,5 @@
 import RIBs
-import Entity
-import OnBoarding
+=import OnBoarding
 
 protocol UserProfileSettingRouting: ViewableRouting {
 	func attachBirthdayPicker()
