@@ -8,9 +8,10 @@ import DesignKit
 import Entity
 import GMDExtensions
 import GMDUtils
+import OnBoarding
 
 protocol UserProfileSettingPresentableListener: AnyObject {
-	func confirmButtonDidTap()
+	func confirmButtonDidTap(with passingModel: UserProfileSettingPassingModel)
 	func backButtonDidTap()
 	func birthdayPickerDidTap()
 	func dismiss()
@@ -24,6 +25,7 @@ final class UserProfileSettingViewController:
 	weak var listener: UserProfileSettingPresentableListener?
 	
 	private let maximumTextCount = 20
+	private var selectedProfileImage: UIImage?
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "")
@@ -240,7 +242,16 @@ final class UserProfileSettingViewController:
 			.map { $0 && $1 }
 			.filter { $0 == true }
 			.bind(with: self) { owner, _ in
-				owner.listener?.confirmButtonDidTap()
+				let gender: Gender = owner.maleButton.isSelected ? .male : .female
+				
+				owner.listener?.confirmButtonDidTap(
+					with: UserProfileSettingPassingModel(
+						nickname: owner.nickNameTextField.text,
+						birthday: owner.calenderTextField.text.trimmingCharacters(in: ["."]),
+						gender: gender,
+						profileImage: .init(owner.selectedProfileImage)
+					)
+				)
 			}
 			.disposed(by: disposeBag)
 		
@@ -275,11 +286,10 @@ extension UserProfileSettingViewController: PHPickerViewControllerDelegate {
 		guard let firstResult = results.first else { return }
 		firstResult.fetchImage { result in
 			switch result {
-			case let .success(image):
-				DispatchQueue.main.async {
+				case let .success(image):
 					self.onBoardingView.setProfileImage(image)
-				}
-			case .failure: break //
+					self.selectedProfileImage = image
+				case .failure: break //
 			}
 		}
 	}

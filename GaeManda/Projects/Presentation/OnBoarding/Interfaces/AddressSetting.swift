@@ -5,7 +5,7 @@ public protocol AddressSettingBuildable: Buildable {
 }
 
 public protocol AddressSettingListener: AnyObject {
-	func addressSettingDidFinish()
+	func addressSettingDidFinish(with address: AddressPassingModel)
 	func addressSettingBackButtonDidTap()
 	func addressSettingDismiss()
 }

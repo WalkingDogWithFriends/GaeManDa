@@ -1,4 +1,5 @@
 import RIBs
+import Entity
 import OnBoarding
 
 protocol UserProfileSettingRouting: ViewableRouting {
@@ -40,8 +41,11 @@ final class UserProfileSettingInteractor:
 
 // MARK: - PresentableListener
 extension UserProfileSettingInteractor {
+	func confirmButtonDidTap(with passingModel: UserProfileSettingPassingModel) {
+		listener?.userProfileSettingDidFinish(with: passingModel)
+	}
+	
 	func confirmButtonDidTap() {
-		listener?.userProfileSettingDidFinish()
 	}
 	
 	func backButtonDidTap() {
