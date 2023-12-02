@@ -32,7 +32,7 @@ final class AddressSettingViewController:
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "")
 	
-	private let onBoardingView = OnBoardingView(title: "사생활 보호를 위해\n집 주소를 입력해주세요!")
+	private let onBoardingView = OnBoardingView(viewMode: .default, title: "사생활 보호를 위해\n집 주소를 입력해주세요!")
 	
 	private let searchTextField: UnderLineTextField = {
 		let underLineTextField = UnderLineTextField()

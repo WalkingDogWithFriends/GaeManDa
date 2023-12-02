@@ -39,7 +39,7 @@ final class DogProfileSecondSettingViewController:
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "")
-	private let onBoardingView = OnBoardingView(willDisplayImageView: true, title: "우리 아이를 등록해주세요! (2/2)")
+	private let onBoardingView = OnBoardingView(viewMode: .unEditableImageView, title: "우리 아이를 등록해주세요! (2/2)")
 	
 	private let dogSpeciesDropDownButton = DropDownButton(text: "우리 아이 종", mode: .title)
 	private let dogSpeciesDropDownView = DropDownView()

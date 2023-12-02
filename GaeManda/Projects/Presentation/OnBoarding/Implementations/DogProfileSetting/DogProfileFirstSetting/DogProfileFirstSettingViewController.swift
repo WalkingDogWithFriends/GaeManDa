@@ -34,7 +34,7 @@ final class DogProfileFirstSettingViewController:
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "")
 	
-	private let onBoardingView = OnBoardingView(willDisplayImageView: true, title: "우리 아이를 등록해주세요! (1/2)")
+	private let onBoardingView = OnBoardingView(viewMode: .editableImageView, title: "우리 아이를 등록해주세요! (1/2)")
 	
 	private let textStackView: UIStackView = {
 		let stackView = UIStackView()

@@ -30,7 +30,7 @@ final class UserProfileSettingViewController:
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "")
 	
-	private let onBoardingView = OnBoardingView(willDisplayImageView: true, title: "보호자의 프로필을 설정해주세요!")
+	private let onBoardingView = OnBoardingView(viewMode: .editableImageView, title: "보호자의 프로필을 설정해주세요!")
 	
 	private let nickNameTextField = GMDTextField(title: "닉네임", warningText: "닉네임을 입력해주세요.")
 	
@@ -56,16 +56,9 @@ final class UserProfileSettingViewController:
 		return stackView
 	}()
 	
-	private let maleButton: GMDOptionButton = {
-		let button = GMDOptionButton(title: "남")
-		button.isSelected = true
-		
-		return button
-	}()
-	
+	private let maleButton = GMDOptionButton(title: "남", isSelected: true)
 	private let femaleButton = GMDOptionButton(title: "여")
-	
-	private let confirmButton = ConfirmButton(title: "확인")
+	private let confirmButton = ConfirmButton(title: "확인", isPositive: false)
 	
 	// MARK: - Life Cycles
 	override func viewDidLoad() {

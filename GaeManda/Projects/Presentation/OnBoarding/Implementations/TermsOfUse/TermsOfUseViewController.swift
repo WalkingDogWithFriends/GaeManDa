@@ -25,7 +25,7 @@ final class TermsOfUseViewController:
 	private let disposeBag = DisposeBag()
 	
 	// MARK: - UI Components
-	private let onBoardingView = OnBoardingView(title: "아래 약관에 동의해주세요!")
+	private let onBoardingView = OnBoardingView(viewMode: .default, title: "아래 약관에 동의해주세요!")
 	
 	private let agreeAllButton: TermsOfUseButton = {
 		let button = TermsOfUseButton(title: "약관 전체 동의")
