@@ -1,5 +1,5 @@
 //
-//  GeocodingAPI.swift
+//  GeocodeAPI.swift
 //  DTO
 //
 //  Created by 김영균 on 10/31/23.
@@ -9,11 +9,11 @@
 import Foundation
 import GMDNetwork
 
-public enum GeocodingAPI {
+public enum GeocodeAPI {
 	case fetchGeocode(query: String)
 }
 
-extension GeocodingAPI: TargetType {
+extension GeocodeAPI: TargetType {
 	public var baseURL: URL {
 		return URL(string: "https://naveropenapi.apigw.ntruss.com")!
 	}
