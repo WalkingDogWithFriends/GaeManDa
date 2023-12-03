@@ -12,8 +12,6 @@ protocol OnBoardingInteractable:
 	var listener: OnBoardingListener? { get set }
 }
 
-protocol OnBoardingViewControllable: ViewControllable { }
-
 final class OnBoardingRouter:
 	Router<OnBoardingInteractable>,
 	OnBoardingRouting {
