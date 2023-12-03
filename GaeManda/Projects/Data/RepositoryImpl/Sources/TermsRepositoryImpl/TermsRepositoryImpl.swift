@@ -1,5 +1,5 @@
 //
-//  OnboardingRepositoryImpl.swift
+//  TermsRepositoryImpl.swift
 //  LocalStorage
 //
 //  Created by 김영균 on 11/5/23.
@@ -13,17 +13,17 @@ import Entity
 import LocalStorage
 import RxSwift
 
-public struct OnboardingRepositoryImpl: OnboardingRepository {
-	private let dataMapper: TermsMapper
+public struct TermsRepositoryImpl: TermsRepository {
+	private let dataMapper: TermsDataMapper
 	
-	public init(dataMapper: TermsMapper) {
+	public init(dataMapper: TermsDataMapper) {
 		self.dataMapper = dataMapper
 	}
 	
 	public func fetchTerms() -> Single<Terms> {
 		return Single.create { single in
-			let result = FileProvider<OnboardingFileAPI>()
-				.request(OnboardingFileAPI.fetchTerms, type: TermsResponseDTO.self)
+			let result = FileProvider<TermsFileAPI>()
+				.request(TermsFileAPI.fetchTerms, type: TermsResponseDTO.self)
 				.map { dataMapper.mapToTerms(from: $0) }
 			
 			switch result {
