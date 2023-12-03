@@ -18,6 +18,10 @@ protocol DetailAddressSettingPresentable: Presentable {
 	var listener: DetailAddressSettingPresentableListener? { get set }
 }
 
+protocol DetailAddressSettingInteractorDependency {
+	var onBoardingUseCase: OnBoardingUseCase { get }
+}
+
 final class DetailAddressSettingInteractor:
 	PresentableInteractor<DetailAddressSettingPresentable>,
 	DetailAddressSettingInteractable,
@@ -25,10 +29,13 @@ final class DetailAddressSettingInteractor:
 	weak var router: DetailAddressSettingRouting?
 	weak var listener: DetailAddressSettingListener?
 	
-	private let detailAddressUseCase: DetailAddressSettingUseCase
+	private let dependency: DetailAddressSettingInteractorDependency
 	
-	init(presenter: DetailAddressSettingPresentable, detailAddressUseCase: DetailAddressSettingUseCase) {
-		self.detailAddressUseCase = detailAddressUseCase
+	init(
+		presenter: DetailAddressSettingPresentable,
+		dependency: DetailAddressSettingInteractorDependency
+	) {
+		self.dependency = dependency
 		super.init(presenter: presenter)
 		presenter.listener = self
 	}
@@ -53,14 +60,14 @@ extension DetailAddressSettingInteractor {
 	}
 	
 	func loadLocationButtonDidTap(jibunAddress: String) {
-		detailAddressUseCase.fetchGeocode(for: jibunAddress)
+		dependency.onBoardingUseCase.fetchGeocode(for: jibunAddress)
 			.observe(on: MainScheduler.instance)
 			.subscribe(
 				with: self,
-				onSuccess: { owner, coordinate in
+				onSuccess: { owner, location in
 					owner.listener?.detailAddressSettingLoadLocationButtonDidTap(
-						latitude: coordinate.latitude,
-						longitude: coordinate.longitude
+						latitude: location.latitude,
+						longitude: location.longitude
 					)
 				},
 				onFailure: { _, error in
