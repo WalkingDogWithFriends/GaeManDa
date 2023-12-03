@@ -1,5 +1,5 @@
 //
-//  OnboardingFileAPI.swift
+//  TermsFileAPI.swift
 //  LocalStorage
 //
 //  Created by 김영균 on 11/5/23.
@@ -8,11 +8,11 @@
 
 import LocalStorage
 
-public enum OnboardingFileAPI {
+public enum TermsFileAPI {
 	case fetchTerms
 }
 
-extension OnboardingFileAPI: TargetType {
+extension TermsFileAPI: TargetType {
 	public var filename: String {
 		switch self {
 		case .fetchTerms: return "Terms"
