@@ -7,7 +7,8 @@
 //
 
 import RxSwift
+import Entity
 
 public protocol GeocodeRepository {
-	func fetchGeocode(for address: String) -> Single<(latitude: String, longitude: String)>
+	func fetchGeocode(for address: String) -> Single<Location>
 }

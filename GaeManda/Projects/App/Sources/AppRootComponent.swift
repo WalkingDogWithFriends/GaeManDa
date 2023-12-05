@@ -29,11 +29,11 @@ final class AppRootComponent:
 	
 	// MARK: - Repository
 	lazy var dogRepository: DogRepository = {
-		return DogRepositoryImpl(dogDataMapper: DogDataMapperImpl())
+		return DogRepositoryImpl(dataMapper: DogDataMapperImpl())
 	}()
 	
 	lazy var userRepository: UserRepository = {
-		return UserRepositoryImpl(userDataMapper: UserProfileDataMapperImpl())
+		return UserRepositoryImpl(dataMapper: UserProfileDataMapperImpl())
 	}()
 	
 	// MARK: - UseCase

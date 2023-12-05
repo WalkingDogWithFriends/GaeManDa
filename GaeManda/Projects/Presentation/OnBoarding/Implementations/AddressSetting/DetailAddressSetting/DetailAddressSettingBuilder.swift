@@ -12,11 +12,13 @@ import OnBoarding
 import UseCase
 
 public protocol DetailAddressSettingDependency: Dependency {
-	var detailAddressUseCase: DetailAddressSettingUseCase { get }
+	var onBoardingUseCase: OnBoardingUseCase { get }
 }
 
-final class DetailAddressSettingComponent: Component<DetailAddressSettingDependency> { 
-	var detailAddressUseCase: DetailAddressSettingUseCase { dependency.detailAddressUseCase }
+final class DetailAddressSettingComponent: 
+	Component<DetailAddressSettingDependency>,
+	DetailAddressSettingInteractorDependency {
+	var onBoardingUseCase: OnBoardingUseCase { dependency.onBoardingUseCase }
 }
 
 public final class DetailAddressSettingBuilder:
@@ -31,7 +33,7 @@ public final class DetailAddressSettingBuilder:
 		let viewController = DetailAddressSettingViewController()
 		let interactor = DetailAddressSettingInteractor(
 			presenter: viewController,
-			detailAddressUseCase: component.detailAddressUseCase
+			dependency: component
 		)
 		interactor.listener = listener
 		return DetailAddressSettingRouter(

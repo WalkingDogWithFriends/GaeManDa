@@ -15,10 +15,19 @@ import UseCase
 public struct OnBoardingUseCaseImpl: OnBoardingUseCase {
 	private let dogRepository: DogRepository
 	private let userRepository: UserRepository
+	private let geocodeRepository: GeocodeRepository
+	private let termsRepository: TermsRepository
 	
-	public init(dogRepository: DogRepository, userRepository: UserRepository) {
+	public init(
+		dogRepository: DogRepository,
+		userRepository: UserRepository,
+		geocodeRepository: GeocodeRepository,
+		termsRepository: TermsRepository
+	) {
 		self.dogRepository = dogRepository
 		self.userRepository = userRepository
+		self.geocodeRepository = geocodeRepository
+		self.termsRepository = termsRepository
 	}
 }
 
@@ -45,5 +54,35 @@ public extension OnBoardingUseCaseImpl {
 	
 	func checkDuplicated(nickName: String) -> Single<Void> {
 		return userRepository.checkDuplicated(nickName: nickName)
+	}
+}
+
+// MARK: - Address UseCase
+public extension OnBoardingUseCaseImpl {
+	func fetchGeocode(for address: String) -> Single<Location> {
+		return geocodeRepository.fetchGeocode(for: address)
+	}
+}
+
+// MARK: - Terms UseCase
+public extension OnBoardingUseCaseImpl {
+	func fetchTerms() -> Single<Terms> {
+		return termsRepository.fetchTerms()
+	}
+}
+
+// MARK: - OnBoaring Did Finish
+public extension OnBoardingUseCaseImpl {
+	func didFinish(
+		user: User,
+		dog: Dog,
+		is마케팅정보수신동의Checked: Bool
+	) -> Single<Void> {
+		Observable.zip(
+			createDogs(dog).asObservable(),
+			createUser(user).asObservable()
+		)
+		.map { _, _ in }
+		.asSingle()
 	}
 }

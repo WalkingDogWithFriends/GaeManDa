@@ -1,5 +1,5 @@
 //
-//  OnboardingRepository.swift
+//  TermsRepository.swift
 //  Repository
 //
 //  Created by 김영균 on 11/5/23.
@@ -9,6 +9,6 @@
 import RxSwift
 import Entity
 
-public protocol OnboardingRepository {
+public protocol TermsRepository {
 	func fetchTerms() -> Single<Terms>
 }

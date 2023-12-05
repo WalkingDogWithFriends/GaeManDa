@@ -8,11 +8,16 @@ public protocol OnBoardingDependency: Dependency {
 	var addressSettingBuildable: AddressSettingBuildable { get }
 	var userProfileSettingBuildable: UserProfileSettingBuildable { get }
 	var dogProfileSettingBuildable: DogProfileSettingBuildable { get }
-	var termsOfUseUseCase: TermsofUseUseCase { get }
 	var onBoardingUseCase: OnBoardingUseCase { get }
 }
 
-final class OnBoardingComponent: Component<OnBoardingDependency> {
+final class OnBoardingComponent: 
+	Component<OnBoardingDependency>,
+	OnBoardingInteractorDependency {
+	var onBoardingUseCase: OnBoardingUseCase {
+		dependency.onBoardingUseCase
+	}
+	
 	fileprivate var onBoardingViewController: ViewControllable {
 		dependency.onBoardingViewController
 	}
@@ -28,9 +33,6 @@ final class OnBoardingComponent: Component<OnBoardingDependency> {
 	fileprivate var dogProfileSettingBuildable: DogProfileSettingBuildable {
 		dependency.dogProfileSettingBuildable
 	}
-	fileprivate var termsOfUseUseCase: TermsofUseUseCase {
-		dependency.termsOfUseUseCase
-	}
 }
 
 public final class OnBoardingBuilder:
@@ -42,7 +44,7 @@ public final class OnBoardingBuilder:
 	
 	public func build(withListener listener: OnBoardingListener) -> Routing {
 		let component = OnBoardingComponent(dependency: dependency)
-		let interactor = OnBoardingInteractor()
+		let interactor = OnBoardingInteractor(dependency: component)
 		interactor.listener = listener
 		return OnBoardingRouter(
 			interactor: interactor,

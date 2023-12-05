@@ -14,7 +14,9 @@ import Repository
 public protocol OnBoardingUseCase {
 	init(
 		dogRepository: DogRepository,
-		userRepository: UserRepository
+		userRepository: UserRepository,
+		geocodeRepository: GeocodeRepository,
+		termsRepository: TermsRepository
 	)
 	
 	func createDogs(_ dog: Dog) -> Single<Void>
@@ -23,4 +25,14 @@ public protocol OnBoardingUseCase {
 	
 	func createUser(_ user: User) -> Single<Void>
 	func checkDuplicated(nickName: String) -> Single<Void>
+	
+	func fetchGeocode(for address: String) -> Single<Location>
+	
+	func fetchTerms() -> Single<Terms>
+	
+	func didFinish(
+		user: User,
+		dog: Dog,
+		is마케팅정보수신동의Checked: Bool
+	) -> Single<Void>
 }
