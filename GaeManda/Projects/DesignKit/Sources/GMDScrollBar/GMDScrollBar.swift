@@ -147,10 +147,10 @@ private extension GMDScrollBar {
 			make.top.bottom.equalToSuperview()
 			make.width.equalTo(self.bounds.width)
 			
-			make.leading.greaterThanOrEqualToSuperview().priority(.medium)
-			make.trailing.lessThanOrEqualToSuperview().priority(.medium)
+			make.leading.greaterThanOrEqualToSuperview()
+			make.trailing.lessThanOrEqualToSuperview()
 			
-			self.leadingInsetConstraint = make.leading.equalToSuperview().priority(.high).constraint
+			self.leadingInsetConstraint = make.leading.equalToSuperview().priority(999).constraint
 		}
 	}
 }
