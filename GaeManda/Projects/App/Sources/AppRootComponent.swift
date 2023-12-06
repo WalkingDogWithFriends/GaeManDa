@@ -2,7 +2,6 @@ import RIBs
 import CorePresentation
 import CorePresentationImpl
 import DataMapper
-import DesignKit
 import GMDUtils
 import UseCase
 import UseCaseImpl
@@ -14,13 +13,19 @@ final class AppRootComponent:
 	LoggedOutDependency,
 	LoggedInDependency,
 	BirthdayPickerDependency,
-	DogCharacterPickerDependency {
+	DogCharacterPickerDependency,
+	DogCharacterDashboardDependency {
+	// MARK: - Buildable
 	lazy var dogCharacterPickerBuildable: DogCharacterPickerBuildable = {
 		return DogCharacterPickerBuilder(dependency: self)
 	}()
 	
 	lazy var birthdayPickerBuildable: BirthdayPickerBuildable = {
 		return BirthdayPickerBuilder(dependency: self)
+	}()
+	
+	lazy var dogCharacterDashboardBuildable: DogCharacterDashboardBuildable = {
+		return DogCharacterDashboardBuilder(dependency: self)
 	}()
 	
 	lazy var loggedOutBuildable: LoggedOutBuildable = {

@@ -15,12 +15,17 @@ final class DogProfileSecondSettingRouter:
 	private let dogCharacterPickerBuildable: DogCharacterPickerBuildable
 	private var dogCharacterRouter: ViewableRouting?
 	
+	private let dogCharacterDashboardBuildable: DogCharacterDashboardBuildable
+	private var dogCharacterDashboardRouter: ViewableRouting?
+
 	init(
 		interactor: DogProfileSecondSettingInteractable,
 		viewController: DogProfileSecondSettingViewControllable,
-		dogCharacterPickerBuildable: DogCharacterPickerBuildable
+		dogCharacterPickerBuildable: DogCharacterPickerBuildable,
+		dogCharacterDashboardBuilder: DogCharacterDashboardBuildable
 	) {
 		self.dogCharacterPickerBuildable = dogCharacterPickerBuildable
+		self.dogCharacterDashboardBuildable = dogCharacterDashboardBuilder
 		super.init(interactor: interactor, viewController: viewController)
 		interactor.router = self
 	}

@@ -6,6 +6,7 @@ import UseCase
 
 protocol DogProfileSecondSettingDependency: Dependency {
 	var dogCharacterPickerBuildable: DogCharacterPickerBuildable { get }
+	var dogCharacterDashboardBuildable: DogCharacterDashboardBuildable { get }
 	var onBoardingUseCase: OnBoardingUseCase { get }
 }
 
@@ -14,6 +15,10 @@ final class DogProfileSecondSettingComponent:
 	DogProfileSecondSettingInteractorDependency {
 	fileprivate var dogCharacterPickerBuildable: DogCharacterPickerBuildable {
 		dependency.dogCharacterPickerBuildable
+	}
+	
+	fileprivate var dogCharacterDashboardBuildable: DogCharacterDashboardBuildable {
+		dependency.dogCharacterDashboardBuildable
 	}
 	
 	var useCase: OnBoardingUseCase {
@@ -51,7 +56,8 @@ final class DogProfileSecondSettingBuilder:
 		return DogProfileSecondSettingRouter(
 			interactor: interactor,
 			viewController: viewController,
-			dogCharacterPickerBuildable: component.dogCharacterPickerBuildable
+			dogCharacterPickerBuildable: component.dogCharacterPickerBuildable,
+			dogCharacterDashboardBuilder: component.dogCharacterDashboardBuildable
 		)
 	}
 }

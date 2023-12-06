@@ -29,6 +29,10 @@ final class LoggedOutComponent:
 		return dependency.birthdayPickerBuildable
 	}()
 	
+	lazy var dogCharacterDashboardBuildable: DogCharacterDashboardBuildable = {
+		return dependency.dogCharacterDashboardBuildable
+	}()
+	
 	lazy var signInBuildable: SignInBuildable = {
 		return SignInBuilder(dependency: self)
 	}()
