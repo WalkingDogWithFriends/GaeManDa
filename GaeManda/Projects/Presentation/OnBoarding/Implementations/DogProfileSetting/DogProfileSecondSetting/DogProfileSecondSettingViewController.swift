@@ -153,7 +153,7 @@ final class DogProfileSecondSettingViewController:
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 			make.top.equalTo(buttonStackView.snp.bottom).offset(32)
-			make.bottom.equalTo(confirmButton.snp.top).offset(-120)
+			make.bottom.equalTo(confirmButton.snp.top).offset(-60)
 		}
 		
 		viewController.didMove(toParent: self)
