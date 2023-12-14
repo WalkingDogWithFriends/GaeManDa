@@ -52,11 +52,11 @@ extension FetchUserResponseDTO {
  {
  "memberId": 1,
  "nickname": "thrdud0423",
- "profileImageURL": "",
+ "profileImage": "",
  "gender": "M",
  "birthday": "19980130",
- "latitude": "",
- "longitude": "",
+ "latitude": 0.0,
+ "longitude": 0.0,
  }
  """
 }
