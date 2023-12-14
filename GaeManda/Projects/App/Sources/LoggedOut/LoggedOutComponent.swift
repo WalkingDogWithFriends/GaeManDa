@@ -1,7 +1,6 @@
 import RIBs
 import CorePresentation
 import DataMapper
-import DesignKit
 import GMDUtils
 import LocalStorage
 import OnBoarding
@@ -22,10 +21,22 @@ final class LoggedOutComponent:
 	DetailAddressSettingDependency,
 	UserProfileSettingDependency,
 	DogProfileSettingDependency {
-	// MARK: - Buildable
-	var dogCharacterPickerBuildable: DogCharacterPickerBuildable {
+	lazy var dogCharacterPickerBuildable: DogCharacterPickerBuildable = {
 		return dependency.dogCharacterPickerBuildable
-	}
+	}()
+	
+	lazy var birthdayPickerBuildable: BirthdayPickerBuildable = {
+		return dependency.birthdayPickerBuildable
+	}()
+	
+	lazy var dogCharacterDashboardBuildable: DogCharacterDashboardBuildable = {
+		return dependency.dogCharacterDashboardBuildable
+	}()
+	
+	lazy var signInBuildable: SignInBuildable = {
+		return SignInBuilder(dependency: self)
+	}()
+	
 	lazy var onBoardingBuildable: OnBoardingBuildable = {
 		return OnBoardingBuilder(dependency: self)
 	}()
@@ -38,18 +49,9 @@ final class LoggedOutComponent:
 		return AddressSettingBuilder(dependency: self)
 	}()
 	
-	// MARK: Detail Address Setting
 	lazy var detailAddressSettingBuildable: DetailAddressSettingBuildable = {
 		return DetailAddressSettingBuilder(dependency: self)
 	}()
-	
-	lazy var geocodeRepository: GeocodeRepository = {
-		return GeocodingRepositoryImpl()
-	}()
-	
-	var detailAddressUseCase: DetailAddressSettingUseCase {
-		return DetailAddressSettingUseCaseImpl(geocodeRepository: geocodeRepository)
-	}
 	
 	lazy var userProfileSettingBuildable: UserProfileSettingBuildable = {
 		return UserProfileSettingBuilder(dependency: self)
@@ -59,11 +61,11 @@ final class LoggedOutComponent:
 		return DogProfileSettingBuilder(dependency: self)
 	}()
 	
-	lazy var signInBuildable: SignInBuildable = {
-		return SignInBuilder(dependency: self)
+	// MARK: - Repositories
+	lazy var geocodeRepository: GeocodeRepository = {
+		return GeocodeRepositoryImpl(dataMapper: GeocodeDataMapperImpl())
 	}()
 	
-	// MARK: - Repositories
 	var keyChainStorage: KeyChainStorage = KeyChainStorage.shared
 	
 	var signInRepository: SignInRepository {
@@ -72,6 +74,19 @@ final class LoggedOutComponent:
 	
 	// MARK: - UseCases
 	lazy var signInUseCase: SignInUseCase = SignInUseCaseImpl(signinRespository: signInRepository)
+	
+	lazy var termsRepository: TermsRepository = {
+		return TermsRepositoryImpl(dataMapper: TermsDataMapperImpl())
+	}()
+	
+	lazy var onBoardingUseCase: OnBoardingUseCase = {
+		return OnBoardingUseCaseImpl(
+			dogRepository: dependency.dogRepository,
+			userRepository: dependency.userRepository,
+			geocodeRepository: geocodeRepository,
+			termsRepository: termsRepository
+		)
+	}()
 	
 	// MARK: - ViewControllerable
 	var onBoardingViewController: ViewControllable {
@@ -82,21 +97,5 @@ final class LoggedOutComponent:
 	}
 	var loggedOutViewController: ViewControllable {
 		dependency.loggedOutViewController
-	}
-	
-	var birthdayPickerBuildable: BirthdayPickerBuildable {
-		return dependency.birthdayPickerBuildable
-	}
-	
-	var onboardingRepositry: OnboardingRepository {
-		shared { OnboardingRepositoryImpl(dataMapper: TermsMapperImpl()) }
-	}
-	
-	var onBoardingUseCase: OnBoardingUseCase {
-		return OnBoardingUseCaseImpl(dogRepository: dependency.dogRepository, userRepository: dependency.userRepository)
-	}
-	
-	var termsOfUseUseCase: TermsofUseUseCase {
-		return TermsofUseUseCaseImpl(repository: onboardingRepositry)
 	}
 }

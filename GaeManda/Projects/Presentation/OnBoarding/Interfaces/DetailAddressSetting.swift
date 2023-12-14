@@ -15,5 +15,5 @@ public protocol DetailAddressSettingBuildable: Buildable {
 public protocol DetailAddressSettingListener: AnyObject {
 	func detailAddressSettingDidDismiss()
 	func detailAddressSettingCloseButtonDidTap()
-	func detailAddressSettingLoadLocationButtonDidTap(latitude: String, longitude: String)
+	func detailAddressSettingLoadLocationButtonDidTap(latitude: Double, longitude: Double)
 }

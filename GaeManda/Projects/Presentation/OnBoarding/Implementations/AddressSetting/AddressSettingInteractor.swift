@@ -75,8 +75,7 @@ extension AddressSettingInteractor {
 
 // MARK: - DetailAddressSettingListener
 extension AddressSettingInteractor {
-	func detailAddressSettingLoadLocationButtonDidTap(latitude: String, longitude: String) {
-		guard let latitude = Double(latitude), let longitude = Double(longitude) else { return }
+	func detailAddressSettingLoadLocationButtonDidTap(latitude: Double, longitude: Double) {
 		self.address = AddressPassingModel(latitude: latitude, longitude: longitude)
 		
 		presenter.setDetailAddress(latitude: latitude, longitude: longitude)

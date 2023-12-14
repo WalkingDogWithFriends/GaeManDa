@@ -16,21 +16,21 @@ import LocalStorage
 import Repository
 
 public struct DogRepositoryImpl: DogRepository {
-	private let dogDataMapper: DogDataMapper
+	private let dataMapper: DogDataMapper
 	
-	public init(dogDataMapper: DogDataMapper) {
-		self.dogDataMapper = dogDataMapper
+	public init(dataMapper: DogDataMapper) {
+		self.dataMapper = dataMapper
 	}
 	
 	public func fetchDogs() -> Single<[Dog]> {
 		return  Provider<DogAPI>
 			.init(stubBehavior: .immediate)
 			.request(DogAPI.fetchDogs, type: [FetchDogsResponseDTO].self)
-			.map { $0.map { dogDataMapper.mapToDog(from: $0) } }
+			.map { $0.map { dataMapper.mapToDog(from: $0) } }
 	}
 	
 	public func updateDog(_ dog: Dog, isProfileImageChanged: Bool) -> Single<Void> {
-		let requestDTO = dogDataMapper.mapToUpdateDogRequestDTO(from: dog, isProfileImageChaged: isProfileImageChanged)
+		let requestDTO = dataMapper.mapToUpdateDogRequestDTO(from: dog, isProfileImageChaged: isProfileImageChanged)
 		
 		return Provider<DogAPI>
 			.init(stubBehavior: .immediate)
@@ -39,7 +39,7 @@ public struct DogRepositoryImpl: DogRepository {
 	}
 	
 	public func createDog(_ dog: Dog) -> Single<Void> {
-		let requestDTO = dogDataMapper.mapToCreateDogRequestDTO(from: dog)
+		let requestDTO = dataMapper.mapToCreateDogRequestDTO(from: dog)
 
 		return Provider<DogAPI>
 			.init(stubBehavior: .immediate)
@@ -51,7 +51,7 @@ public struct DogRepositoryImpl: DogRepository {
 		return Single.create { single in
 			let result = FileProvider<DogFileAPI>()
 				.request(DogFileAPI.fetchCharacters, type: [DogCharacterResponseDTO].self)
-				.map { dogDataMapper.mapToDogCharacter(from: $0) }
+				.map { dataMapper.mapToDogCharacter(from: $0) }
 			
 			switch result {
 				case .success(let characters): single(.success(characters))

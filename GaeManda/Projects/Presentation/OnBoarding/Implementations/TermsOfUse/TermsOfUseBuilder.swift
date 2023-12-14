@@ -3,17 +3,18 @@ import OnBoarding
 import UseCase
 
 public protocol TermsOfUseDependency: Dependency {
-	var termsOfUseUseCase: TermsofUseUseCase { get }
+	var onBoardingUseCase: OnBoardingUseCase { get }
 }
 
-final class TermsOfUseComponent: Component<TermsOfUseDependency>, TermsBottomSheetDependency {
+final class TermsOfUseComponent:
+	Component<TermsOfUseDependency>,
+	TermsBottomSheetDependency,
+	TermsOfUseInteractorDependency {
 	var termsBottomSheetBuildable: TermsBottomSheetBuildable {
 		TermsBottomSheetBuilder(dependency: self)
 	}
 	
-	fileprivate var termsOfUseUseCase: TermsofUseUseCase {
-		dependency.termsOfUseUseCase
-	}
+	var onBoardingUseCase: OnBoardingUseCase { dependency.onBoardingUseCase }
 }
 
 public final class TermsOfUseBuilder:
@@ -26,7 +27,10 @@ public final class TermsOfUseBuilder:
 	public func build(withListener listener: TermsOfUseListener) -> ViewableRouting {
 		let component = TermsOfUseComponent(dependency: dependency)
 		let viewController = TermsOfUseViewController()
-		let interactor = TermsOfUseInteractor(presenter: viewController, useCase: component.termsOfUseUseCase)
+		let interactor = TermsOfUseInteractor(
+			presenter: viewController,
+			dependency: component
+		)
 		interactor.listener = listener
 		return TermsOfUseRouter(
 			interactor: interactor,

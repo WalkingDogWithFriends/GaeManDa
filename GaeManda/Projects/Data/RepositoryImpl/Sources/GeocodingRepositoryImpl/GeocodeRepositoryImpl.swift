@@ -1,5 +1,5 @@
 //
-//  GeocodingRepositoryImpl.swift
+//  GeocodeRepositoryImpl.swift
 //  DTO
 //
 //  Created by 김영균 on 10/31/23.
@@ -8,22 +8,29 @@
 
 import Foundation
 import RxSwift
+import DataMapper
 import DTO
+import Entity
 import GMDNetwork
 import Repository
 
-public struct GeocodingRepositoryImpl: GeocodeRepository {
+public struct GeocodeRepositoryImpl: GeocodeRepository {
 	private let session: URLSession
+	private let dataMapper: GeocodeDataMapper
 	
-	public init(session: URLSession = URLSession(configuration: .default)) {
+	public init(
+		dataMapper: GeocodeDataMapper,
+		session: URLSession = URLSession(configuration: .default)
+	) {
+		self.dataMapper = dataMapper
 		self.session = session
 	}
 	
-	public func fetchGeocode(for address: String) -> Single<(latitude: String, longitude: String)> {
+	public func fetchGeocode(for address: String) -> Single<Location> {
 		return Single.create { single in
 			Task {
 				do {
-					let urlRequest = try GeocodingAPI.fetchGeocode(query: address).asURLRequest()
+					let urlRequest = try GeocodeAPI.fetchGeocode(query: address).asURLRequest()
 					let (data, response) = try await session.data(for: urlRequest)
 					handleGeocodeResponse(data: data, response: response, single: single)
 				} catch {
@@ -34,11 +41,12 @@ public struct GeocodingRepositoryImpl: GeocodeRepository {
 		}
 	}
 }
-fileprivate extension GeocodingRepositoryImpl {
+
+fileprivate extension GeocodeRepositoryImpl {
 	func handleGeocodeResponse(
 		data: Data,
 		response: URLResponse,
-		single: @escaping (SingleEvent<(latitude: String, longitude: String)>) -> Void
+		single: @escaping (SingleEvent<Location>) -> Void
 	) {
 		guard let httpURLResponse = response as? HTTPURLResponse else {
 			single(.failure(NetworkError.networkFailed(reason: .noHttpURLRepsonse)))
@@ -62,15 +70,16 @@ fileprivate extension GeocodingRepositoryImpl {
 		}
 	}
 	
-	func decodeGeocode(from data: Data) throws -> (latitude: String, longitude: String) {
-		let geocode = try JSONDecoder().decode(GeocodeResponseDTO.self, from: data)
+	func decodeGeocode(from data: Data) throws -> Location {
+		let geocode = try JSONDecoder().decode(GeocodingResponseDTO.self, from: data)
 		guard let address = geocode.addresses?.first else {
 			throw NetworkError.networkFailed(reason: .jsonDecodingFailed)
 		}
 		guard let latitude = address.y, let longitude = address.x else {
 			throw NetworkError.networkFailed(reason: .noData)
 		}
-		return (latitude: latitude, longitude: longitude)
+				
+		return dataMapper.mapToLocation(latitude: latitude, longitude: longitude)
 	}
 	
 	func decodeError(from data: Data) throws {

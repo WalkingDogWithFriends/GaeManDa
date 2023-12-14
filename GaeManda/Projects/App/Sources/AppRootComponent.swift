@@ -2,7 +2,6 @@ import RIBs
 import CorePresentation
 import CorePresentationImpl
 import DataMapper
-import DesignKit
 import GMDUtils
 import UseCase
 import UseCaseImpl
@@ -14,7 +13,9 @@ final class AppRootComponent:
 	LoggedOutDependency,
 	LoggedInDependency,
 	BirthdayPickerDependency,
-	DogCharacterPickerDependency {
+	DogCharacterPickerDependency,
+	DogCharacterDashboardDependency {
+	// MARK: - Buildable
 	lazy var dogCharacterPickerBuildable: DogCharacterPickerBuildable = {
 		return DogCharacterPickerBuilder(dependency: self)
 	}()
@@ -23,17 +24,21 @@ final class AppRootComponent:
 		return BirthdayPickerBuilder(dependency: self)
 	}()
 	
+	lazy var dogCharacterDashboardBuildable: DogCharacterDashboardBuildable = {
+		return DogCharacterDashboardBuilder(dependency: self)
+	}()
+	
 	lazy var loggedOutBuildable: LoggedOutBuildable = {
 		return LoggedOutBuilder(dependency: self)
 	}()
 	
 	// MARK: - Repository
 	lazy var dogRepository: DogRepository = {
-		return DogRepositoryImpl(dogDataMapper: DogDataMapperImpl())
+		return DogRepositoryImpl(dataMapper: DogDataMapperImpl())
 	}()
 	
 	lazy var userRepository: UserRepository = {
-		return UserRepositoryImpl(userDataMapper: UserProfileDataMapperImpl())
+		return UserRepositoryImpl(dataMapper: UserProfileDataMapperImpl())
 	}()
 	
 	var signInRepository = SignInRepositoryImpl(keychainStorage: .shared)

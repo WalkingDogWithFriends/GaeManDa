@@ -5,5 +5,5 @@ public protocol TermsOfUseBuildable: Buildable {
 }
 
 public protocol TermsOfUseListener: AnyObject {
-	func termsOfUseDidFinish()
+	func termsOfUseDidFinish(with is마케팅정보수신동의Checked: Bool)
 }

@@ -18,6 +18,10 @@ protocol TermsOfUsePresentable: Presentable {
 	func setConfirmButton(isEnabled: Bool)
 }
 
+protocol TermsOfUseInteractorDependency {
+	var onBoardingUseCase: OnBoardingUseCase { get }
+}
+
 final class TermsOfUseInteractor:
 	PresentableInteractor<TermsOfUsePresentable>,
 	TermsOfUseInteractable,
@@ -25,10 +29,14 @@ final class TermsOfUseInteractor:
 	weak var router: TermsOfUseRouting?
 	weak var listener: TermsOfUseListener?
 	private var termsOfUseViewModel = TermsOfUseViewModel()
-	private let useCase: TermsofUseUseCase
 	
-	init(presenter: TermsOfUsePresentable, useCase: TermsofUseUseCase) {
-		self.useCase = useCase
+	private let dependency: TermsOfUseInteractorDependency
+	
+	init(
+		presenter: TermsOfUsePresentable,
+		dependency: TermsOfUseInteractorDependency
+	) {
+		self.dependency = dependency
 		super.init(presenter: presenter)
 		presenter.listener = self
 	}
@@ -46,7 +54,7 @@ final class TermsOfUseInteractor:
 // MARK: - PresentableListener
 extension TermsOfUseInteractor {
 	func confirmButtonDidTap() {
-		listener?.termsOfUseDidFinish()
+		listener?.termsOfUseDidFinish(with: termsOfUseViewModel.is마케팅정보수신동의Checked)
 	}
 	
 	func a약관전체동의ButtonDidTap() {
@@ -144,7 +152,7 @@ private extension TermsOfUseInteractor {
 			.disposeOnDeactivate(interactor: self)
 		
 		/// 약관가져오기
-		useCase.fetchTerms()
+		dependency.onBoardingUseCase.fetchTerms()
 			.subscribe(
 				with: self,
 				onSuccess: { owner, termsOfUse in
