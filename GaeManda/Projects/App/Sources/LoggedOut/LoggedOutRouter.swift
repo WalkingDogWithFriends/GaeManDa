@@ -65,10 +65,9 @@ extension LoggedOutRouter {
 	
 	func detachSignIn() {
 		guard let router = signInRouting else { return }
-		
-		viewController.dismiss(completion: nil)
 		signInRouting = nil
 		detachChild(router)
+		viewController.dismiss(animated: false)
 	}
 }
 

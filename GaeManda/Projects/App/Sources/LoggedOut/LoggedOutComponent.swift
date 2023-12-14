@@ -3,6 +3,7 @@ import CorePresentation
 import DataMapper
 import DesignKit
 import GMDUtils
+import LocalStorage
 import OnBoarding
 import OnBoardingImpl
 import Repository
@@ -63,7 +64,11 @@ final class LoggedOutComponent:
 	}()
 	
 	// MARK: - Repositories
-	var signInRepository: SignInRepository = SignInRepositoryImpl()
+	var keyChainStorage: KeyChainStorage = KeyChainStorage.shared
+	
+	var signInRepository: SignInRepository {
+		SignInRepositoryImpl(keychainStorage: keyChainStorage)
+	}
 	
 	// MARK: - UseCases
 	lazy var signInUseCase: SignInUseCase = SignInUseCaseImpl(signinRespository: signInRepository)

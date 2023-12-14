@@ -1,3 +1,4 @@
+import Foundation
 import RIBs
 import RxCocoa
 import RxSwift
@@ -46,11 +47,14 @@ final class SignInInteractor:
 	
 	@MainActor
 	func didTapKakaoLoginButton() {
-		Task {
+		Task { [weak self] in
+			guard let self else { return }
 			let result = await dependency.signInUseCase.kakaoLogin()
-			if result {
-				await MainActor.run {
-					listener?.didSignIn(isFirst: false)
+			// 카카오톡의 웹뷰가 사라지기 전에 화면이 전환되는 것을 방지하기 위해 0.3초를 기다린다.
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+				if result {
+					let hasOnboardingFinished = self.dependency.signInUseCase.hasOnboardingFinished()
+					self.listener?.didSignIn(hasOnboardingFinished: hasOnboardingFinished)
 				}
 			}
 		}

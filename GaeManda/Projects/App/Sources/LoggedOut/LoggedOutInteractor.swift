@@ -39,13 +39,12 @@ extension LoggedOutInteractor {
 
 // MARK: - SignInListener
 extension LoggedOutInteractor {
-	func didSignIn(isFirst: Bool) {
+	func didSignIn(hasOnboardingFinished: Bool) {
 		router?.detachSignIn()
-
-		if isFirst {
-			router?.attachOnBoarding()
-		} else {
+		if hasOnboardingFinished {
 			listener?.loggedOutDidFinish()
+		} else {
+			router?.attachOnBoarding()
 		}
 	}
 }

@@ -17,7 +17,7 @@ import Repository
 public struct SignInRepositoryImpl {
 	private let keychainStorage: KeyChainStorage
 	
-	public init(keychainStorage: KeyChainStorage = .shared) {
+	public init(keychainStorage: KeyChainStorage) {
 		self.keychainStorage = keychainStorage
 	}
 }
@@ -29,6 +29,14 @@ extension SignInRepositoryImpl: SignInRepository {
 			let localToken = try await saveAuthorization(kakaoToken.accessToken)
 			try saveToken(accessToken: localToken.accessToken, refreshToken: localToken.refreshToken)
 			return true
+		} catch {
+			return false
+		}
+	}
+	
+	public func hasOnboardingFinished() -> Bool {
+		do {
+			return try keychainStorage.getUserHasOnboardingFinished()
 		} catch {
 			return false
 		}

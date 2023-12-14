@@ -24,4 +24,8 @@ extension SignInUseCaseImpl: SignInUseCase {
 	public func kakaoLogin() async -> Bool {
 		return await signinRespository.tryKakaoSignIn()
 	}
+	
+	public func hasOnboardingFinished() -> Bool {
+		return signinRespository.hasOnboardingFinished()
+	}
 }

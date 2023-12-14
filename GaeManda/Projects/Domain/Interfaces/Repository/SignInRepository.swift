@@ -10,4 +10,5 @@ import Foundation
 
 public protocol SignInRepository {
 	func tryKakaoSignIn() async -> Bool
+	func hasOnboardingFinished() -> Bool
 }

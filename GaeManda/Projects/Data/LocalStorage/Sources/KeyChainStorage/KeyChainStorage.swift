@@ -21,12 +21,21 @@ public final class KeyChainStorage {
 	public enum KeyChainKey: String {
 		case accessTokenKey
 		case refreshTokenKey
+		case hasOnboardingFinished
+	}
+	
+	enum OnboardingFinished: String {
+		case `true`
 	}
 	
 	private init() { }
 }
 
 public extension KeyChainStorage {
+	func setUserHasOnboardingFinished() throws {
+		try saveToKeychain(value: OnboardingFinished.true.rawValue, forKey: KeyChainKey.hasOnboardingFinished)
+	}
+	
 	func setAccessToken(_ token: String) throws {
 		try saveToKeychain(value: token, forKey: KeyChainKey.accessTokenKey)
 	}
@@ -35,6 +44,12 @@ public extension KeyChainStorage {
 		try saveToKeychain(value: token, forKey: KeyChainKey.refreshTokenKey)
 	}
 	
+	func getUserHasOnboardingFinished() throws -> Bool {
+		guard let onboardingState = try loadFromKeychain(forKey: KeyChainKey.hasOnboardingFinished) else {
+			return false
+		}
+		return onboardingState == OnboardingFinished.true.rawValue
+	}
 	func getAccessToken() throws -> String {
 		guard let accessToken = try loadFromKeychain(forKey: KeyChainKey.accessTokenKey) else {
 			throw KeyChainError.noAccessToken

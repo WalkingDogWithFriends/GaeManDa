@@ -5,5 +5,5 @@ public protocol SignInBuildable: Buildable {
 }
 
 public protocol SignInListener: AnyObject {
-	func didSignIn(isFirst: Bool)
+	func didSignIn(hasOnboardingFinished: Bool)
 }
