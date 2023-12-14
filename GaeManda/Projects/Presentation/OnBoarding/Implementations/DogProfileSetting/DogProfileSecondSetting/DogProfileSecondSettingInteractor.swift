@@ -10,14 +10,16 @@ import UseCase
 protocol DogProfileSecondSettingRouting: ViewableRouting {
 	func dogCharacterPickerAttach(characters: [DogCharacter], selectedId: [Int])
 	func dogCharacterPickerDetach()
+	
+	func dogCharacterDashboardAttach(selectedCharacters: BehaviorRelay<[DogCharacter]>)
 }
 
 protocol DogProfileSecondSettingPresentable: Presentable {
 	var listener: DogProfileSecondSettingPresentableListener? { get set }
 	
-	func updateDogCharacter(with selectedCharaters: [DogCharacter])
 	func updateDogSpecies(with dogSpecies: [String])
 	func updateProfileImage(with profileImage: UIImageWrapper)
+	func isSelectedDogCharacter(_ isSelected: Bool)
 }
 
 protocol DogProfileSecondSettingListener: AnyObject {
@@ -40,6 +42,7 @@ final class DogProfileSecondSettingInteractor:
 	
 	let dependency: DogProfileSecondSettingInteractorDependency
 	private let profileImage: UIImageWrapper
+	private let selectedCharacters = BehaviorRelay<[DogCharacter]>(value: [])
 	
 	init(
 		presenter: DogProfileSecondSettingPresentable,
@@ -54,6 +57,8 @@ final class DogProfileSecondSettingInteractor:
 	
 	override func didBecomeActive() {
 		super.didBecomeActive()
+		
+		router?.dogCharacterDashboardAttach(selectedCharacters: selectedCharacters)
 	}
 	
 	override func willResignActive() {
@@ -71,6 +76,13 @@ extension DogProfileSecondSettingInteractor {
 			}
 			.disposeOnDeactivate(interactor: self)
 		
+		selectedCharacters
+			.map { !$0.isEmpty }
+			.bind(with: self) { owner, isSelected in
+				owner.presenter.isSelectedDogCharacter(isSelected)
+		}
+		.disposeOnDeactivate(interactor: self)
+		
 		presenter.updateProfileImage(with: profileImage)
 	}
 	
@@ -82,25 +94,25 @@ extension DogProfileSecondSettingInteractor {
 		listener?.dogProfileSecondSettingDismiss()
 	}
 	
-	func didTapAddDogCharacterButton(with selectedCharaters: [DogCharacter]) {
-		dependency.useCase.fetchDogCharacters()
-			.subscribe(with: self) { owner, characters in
-				owner.router?.dogCharacterPickerAttach(
-					characters: characters,
-					selectedId: selectedCharaters.map { $0.id }
-				)
-			}
-			.disposeOnDeactivate(interactor: self)
-	}
-	
 	func didTapConfirmButton(with passingModel: DogProfileSecondSettingPassingModel) {
 		listener?.dogProfileSecondSettingDidTapConfirmButton(with: passingModel)
 	}
 }
 
 extension DogProfileSecondSettingInteractor {
+	func didTapAddCharacterButton() {
+		dependency.useCase.fetchDogCharacters()
+			.subscribe(with: self) { owner, characters in
+				owner.router?.dogCharacterPickerAttach(
+					characters: characters,
+					selectedId: owner.selectedCharacters.value.map { $0.id }
+				)
+			}
+			.disposeOnDeactivate(interactor: self)
+	}
+	
 	func dogCharactersSelected(_ dogCharacters: [DogCharacter]) {
-		presenter.updateDogCharacter(with: dogCharacters)
+		selectedCharacters.accept(dogCharacters)
 	}
 	
 	func dogCharacterPickerDismiss() {

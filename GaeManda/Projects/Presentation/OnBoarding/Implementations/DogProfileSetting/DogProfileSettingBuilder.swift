@@ -9,6 +9,7 @@ public protocol DogProfileSettingDependency: Dependency {
 	var dogProfileSettingViewController: ViewControllable { get }
 	var birthdayPickerBuildable: BirthdayPickerBuildable { get }
 	var dogCharacterPickerBuildable: DogCharacterPickerBuildable { get }
+	var dogCharacterDashboardBuildable: DogCharacterDashboardBuildable { get }
 	var onBoardingUseCase: OnBoardingUseCase { get }
 }
 
@@ -30,6 +31,10 @@ final class DogProfileSettingComponent:
 	
 	var dogCharacterPickerBuildable: DogCharacterPickerBuildable {
 		return dependency.dogCharacterPickerBuildable
+	}
+	
+	var dogCharacterDashboardBuildable: DogCharacterDashboardBuildable {
+		return dependency.dogCharacterDashboardBuildable
 	}
 }
 

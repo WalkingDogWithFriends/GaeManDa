@@ -6,6 +6,7 @@ import Repository
 protocol LoggedOutDependency: Dependency {
 	var birthdayPickerBuildable: BirthdayPickerBuildable { get }
 	var dogCharacterPickerBuildable: DogCharacterPickerBuildable { get }
+	var dogCharacterDashboardBuildable: DogCharacterDashboardBuildable { get }
 	var loggedOutViewController: ViewControllable { get }
 	var dogRepository: DogRepository { get }
 	var userRepository: UserRepository { get }
