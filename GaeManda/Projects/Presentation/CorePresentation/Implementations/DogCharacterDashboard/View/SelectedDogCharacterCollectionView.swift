@@ -35,7 +35,7 @@ final class SelectedCharacterCollectionView: UICollectionView {
 		
 		super.init(frame: .zero, collectionViewLayout: flowLayout)
 		contentSizeRelay.accept(contentSize)
-		 registerCell(SelectedDogCharacterCell.self)
+		registerCell(SelectedDogCharacterCell.self)
 		self.showsHorizontalScrollIndicator = false
 	}
 	

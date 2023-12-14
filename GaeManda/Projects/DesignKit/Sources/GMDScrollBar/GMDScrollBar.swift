@@ -33,6 +33,11 @@ public final class GMDScrollBar: UIControl {
 		}
 	}
 	
+	/// Content OffSet의 최댓값을 리턴합니다.
+	private var maximumContentOffSetX: CGFloat {
+		return contentWidth - visibleWidth
+	}
+	
 	private var indicatorViewWidth: CGFloat = 0.0 {
 		didSet { updateIndicatorViewWidth(indicatorViewWidth) }
 	}
@@ -101,14 +106,17 @@ public final class GMDScrollBar: UIControl {
 		
 		defer { self.previousTouchPoint = touchPoint }
 		
+		// drag를 실제 collectionView의 contentSize로 스케일링 해줍니다.
 		let drag = Double(touchPoint.x - self.previousTouchPoint.x)
 		let scale = visibleWidth
 		let dragScale = scale * drag / Double(self.bounds.width - indicatorViewWidth)
 		
 		if contentOffSetX + dragScale < 0 {
+			// 만약 dragScale이 0보다 작다면, 0으로 설정해줍니다.
 			contentOffSetX = 0
-		} else if contentWidth - visibleWidth < contentOffSetX + dragScale {
-			contentOffSetX = contentWidth - visibleWidth
+		} else if contentOffSetX + dragScale > maximumContentOffSetX {
+			// 만약 dragScale을 더한 값이 contentOffSet의 최댓값을 넘어서게 되면, 최댓값으로 설정해줍니다.
+			contentOffSetX = maximumContentOffSetX
 		} else {
 			contentOffSetX += dragScale
 		}
@@ -162,8 +170,8 @@ private extension GMDScrollBar {
 		
 		let ratio = visibleWidth / contentWidth
 		
-		// Content 내비 현재 영역의 비율
-		let widthRatio = ratio >= 1.0 ? 1.0: ratio
+		// Content 대비 현재 영역의 비율
+		let widthRatio = ratio >= 1.0 ? 1.0 : ratio
 		self.indicatorViewWidth = bounds.width * widthRatio
 	}
 	
