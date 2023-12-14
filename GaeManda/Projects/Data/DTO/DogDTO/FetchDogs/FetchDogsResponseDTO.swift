@@ -14,7 +14,7 @@ public struct FetchDogsResponseDTO: Decodable {
 	public let gender: String
 	public let weight: Int
 	public let isNeutered: Bool
-	public let personalites: [Int]
+	public let personalities: [Int]
 	public let profileImageURL: String
 	
 	public enum CodingKeys: String, CodingKey {
@@ -25,7 +25,7 @@ public struct FetchDogsResponseDTO: Decodable {
 		case gender
 		case weight
 		case isNeutered
-		case personalites
+		case personalities
 		case profileImageURL = "profileImage"
 	}
 	
@@ -37,7 +37,7 @@ public struct FetchDogsResponseDTO: Decodable {
 		gender: String,
 		weight: Int,
 		isNeutered: Bool,
-		personalites: [Int],
+		personalities: [Int],
 		profileImageURL: String
 	) {
 		self.petId = petId
@@ -47,7 +47,7 @@ public struct FetchDogsResponseDTO: Decodable {
 		self.gender = gender
 		self.weight = weight
 		self.isNeutered = isNeutered
-		self.personalites = personalites
+		self.personalities = personalities
 		self.profileImageURL = profileImageURL
 	}
 }
@@ -66,7 +66,7 @@ extension FetchDogsResponseDTO {
  "weight": 5,
  "isNeutered": true,
  "personalities": [2],
- "profileImageURL": ""
+ "profileImage": ""
  },
  {
  "petId": 2,
@@ -77,7 +77,7 @@ extension FetchDogsResponseDTO {
  "weight": 3,
  "isNeutered": false,
  "personalities": [1, 3, 4],
- "profileImageURL": ""
+ "profileImage": ""
  },
  {
  "petId": 3,
@@ -87,8 +87,8 @@ extension FetchDogsResponseDTO {
  "gender": "M",
  "weight": 22,
  "isNeutered": false,
- "personalities": [1, 2, ,5],
- "profileImageURL": ""
+ "personalities": [1, 2, 5],
+ "profileImage": ""
  }
  ]
  """
