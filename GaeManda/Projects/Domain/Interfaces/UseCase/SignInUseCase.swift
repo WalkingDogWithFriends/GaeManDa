@@ -8,5 +8,5 @@
 
 public protocol SignInUseCase {
 	func kakaoLogin() async -> Bool
-	func hasOnboardingFinished() -> Bool
+	func isOnboardingFinished() -> Bool
 }

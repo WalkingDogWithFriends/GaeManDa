@@ -34,9 +34,9 @@ extension SignInRepositoryImpl: SignInRepository {
 		}
 	}
 	
-	public func hasOnboardingFinished() -> Bool {
+	public func isOnboardingFinished() -> Bool {
 		do {
-			return try keychainStorage.getUserHasOnboardingFinished()
+			return try keychainStorage.isOnboardingFinished()
 		} catch {
 			return false
 		}
