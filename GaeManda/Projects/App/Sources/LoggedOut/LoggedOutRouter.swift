@@ -33,11 +33,6 @@ final class LoggedOutRouter: Router<LoggedOutInteractable>, LoggedOutRouting {
 		interactor.router = self
 	}
 	
-	override func didLoad() {
-		super.didLoad()
-		attachSignIn()
-	}
-	
 	func cleanupViews() {
 		if let routing = onBoardingRouting {
 			detachChild(routing)

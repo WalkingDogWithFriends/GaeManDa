@@ -1,5 +1,6 @@
 import Foundation
 import RIBs
+import UseCase
 
 protocol AppRootRouting: ViewableRouting {
 	func attachLoggedOut()
@@ -21,18 +22,24 @@ final class AppRootInteractor:
 	weak var router: AppRootRouting?
 	weak var listener: AppRootListener?
 	
-	private var isUserLogIn: Bool {
-		UserDefaults.standard.string(forKey: "token") != nil
-	}
+	private let signInUseCase: SignInUseCase
 	
-	override init(presenter: AppRootPresentable) {
+	init(presenter: AppRootPresentable, signInUseCase: SignInUseCase) {
+		self.signInUseCase = signInUseCase
 		super.init(presenter: presenter)
 		presenter.listener = self
 	}
 	
 	override func didBecomeActive() {
 		super.didBecomeActive()
-		isUserLogIn ? router?.attachLoggedIn() : router?.attachLoggedOut()
+		
+		let isAuthorized = signInUseCase.isAuthorized()
+		let isOnboardingFinished = signInUseCase.isOnboardingFinished()
+		if isAuthorized && isOnboardingFinished {
+			router?.attachLoggedIn()
+		} else {
+			router?.attachLoggedOut()
+		}
 	}
 	
 	override func willResignActive() {

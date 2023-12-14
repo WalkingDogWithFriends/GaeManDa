@@ -20,7 +20,10 @@ final class AppRootBuilder:
 			rootViewController: viewController
 		)
 
-		let interactor = AppRootInteractor(presenter: viewController)
+		let interactor = AppRootInteractor(
+			presenter: viewController,
+			signInUseCase: component.signInUseCase
+		)
 		
 		let loggedOut = LoggedOutBuilder(dependency: component)
 		let loggedIn = LoggedInBuilder(dependency: component)

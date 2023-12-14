@@ -36,6 +36,8 @@ final class AppRootComponent:
 		return UserRepositoryImpl(userDataMapper: UserProfileDataMapperImpl())
 	}()
 	
+	var signInRepository = SignInRepositoryImpl(keychainStorage: .shared)
+	
 	// MARK: - UseCase
 	lazy var gmdProfileUseCase: GMDProfileUseCase = {
 		return GMDProfileUseCaseImpl(
@@ -43,6 +45,10 @@ final class AppRootComponent:
 			userRepository: userRepository
 		)
 	}()
+	
+	var signInUseCase: SignInUseCase {
+		return SignInUseCaseImpl(signinRespository: signInRepository)
+	}
 	
 	var loggedOutViewController: ViewControllable { rootViewController }
 	
