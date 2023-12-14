@@ -11,4 +11,5 @@ import Foundation
 public protocol SignInRepository {
 	func tryKakaoSignIn() async -> Bool
 	func isOnboardingFinished() -> Bool
+	func isAuthorized() -> Bool
 }

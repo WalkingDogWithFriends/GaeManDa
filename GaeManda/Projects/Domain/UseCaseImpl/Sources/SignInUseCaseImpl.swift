@@ -28,4 +28,8 @@ extension SignInUseCaseImpl: SignInUseCase {
 	public func isOnboardingFinished() -> Bool {
 		return signinRespository.isOnboardingFinished()
 	}
+	
+	public func isAuthorized() -> Bool {
+		return signinRespository.isAuthorized()
+	}
 }

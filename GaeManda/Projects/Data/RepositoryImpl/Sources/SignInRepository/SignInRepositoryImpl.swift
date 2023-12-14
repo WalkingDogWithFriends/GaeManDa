@@ -41,6 +41,10 @@ extension SignInRepositoryImpl: SignInRepository {
 			return false
 		}
 	}
+	
+	public func isAuthorized() -> Bool {
+		return keychainStorage.hasAccessToken()
+	}
 }
 
 // MARK: - Login Extension
