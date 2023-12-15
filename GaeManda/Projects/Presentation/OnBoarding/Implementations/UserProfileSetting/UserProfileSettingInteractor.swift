@@ -49,19 +49,52 @@ final class UserProfileSettingInteractor:
 
 // MARK: - PresentableListener
 extension UserProfileSettingInteractor {
-	func confirmButtonDidTap(with passingModel: UserProfileSettingPassingModel) {
-		listener?.userProfileSettingDidFinish(with: passingModel)
+	func viewDidLoad() {
+		router?.attachUserProfileDashboard(
+			usernameTextFieldModeRelay: userNameTextFieldMode,
+			birthdayTextFieldIsWarningRelay: birthdayTextFieldIsWarning
+		)
+		
+		Observable.combineLatest(
+			birthdayTextFieldIsWarning.map { !$0 },
+			userNameTextFieldMode.map { $0 == .valid }
+		)
+		.map {
+			print($0, $1)
+			return ($0, $1)
+		}
+		.map { $0 && $1 }
+		.bind(with: self) { owner, isPositive in
+			print("isPositive: \(isPositive)")
+			owner.presenter.setConfirmButton(isEnabled: isPositive)
+		}
+		.disposeOnDeactivate(interactor: self)
 	}
 	
-	func confirmButtonDidTap() {
+	func confirmButtonDidTap(with profileImage: UIImageWrapper) {
+		if selectedBirthday == nil {
+			birthdayTextFieldIsWarning.accept(true)
+		}
+		if enteredUserName == nil {
+			userNameTextFieldMode.accept(.notEntered)
+		}
+		
+		guard userNameTextFieldMode.value == .valid else { return }
+		
+		guard let selectedBirthday = selectedBirthday, let enteredUserName = enteredUserName else { return }
+		
+		listener?.userProfileSettingDidFinish(
+			with: UserProfileSettingPassingModel(
+				nickname: enteredUserName,
+				birthday: selectedBirthday,
+				gender: selectedGender,
+				profileImage: profileImage
+			)
+		)
 	}
 	
 	func backButtonDidTap() {
 		listener?.userProfileSettingBackButtonDidTap()
-	}
-	
-	func birthdayPickerDidTap() {
-		router?.attachBirthdayPicker()
 	}
 	
 	func dismiss() {
@@ -69,13 +102,24 @@ extension UserProfileSettingInteractor {
 	}
 }
 
-// MARK: - BirthdayPickerListener
+// MARK: - UserProfileDashboardListener
 extension UserProfileSettingInteractor {
-	func didTapBirthdayPicker() {
-		router?.attachBirthdayPicker()
+	func didSelectedGender(_ gender: Gender) {
+		self.selectedGender = gender
 	}
 	
-	func birthdayPickerDismiss() {
-		router?.detachBirthdayPicker()
+	func didEnteredUserName(_ name: String) {
+		if name.isEmpty {
+			enteredUserName = nil
+			self.userNameTextFieldMode.accept(.default)
+		} else {
+			self.enteredUserName = name
+			// duplicate API 호출
+		}
+	}
+	
+	func didSelectedBirthday(_ date: String) {
+		self.selectedBirthday = date
+		self.birthdayTextFieldIsWarning.accept(false)
 	}
 }
