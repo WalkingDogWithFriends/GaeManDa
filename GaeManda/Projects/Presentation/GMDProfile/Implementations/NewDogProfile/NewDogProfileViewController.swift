@@ -59,8 +59,8 @@ final class NewDogProfileViewController:
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		
-		removeKeyboardNotification([keyboardShowNotification, keyboardHideNotification])
-		removeTextFieldNotification([textDidChangeNotification])
+		removeKeyboardNotification(keyboardShowNotification, keyboardHideNotification)
+		removeTextFieldNotification(textDidChangeNotification)
 	}
 	
 	override func viewDidDisappear(_ animated: Bool) {
