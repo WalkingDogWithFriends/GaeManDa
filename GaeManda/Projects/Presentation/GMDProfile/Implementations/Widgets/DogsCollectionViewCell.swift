@@ -11,8 +11,7 @@ import RxCocoa
 import RxSwift
 import SnapKit
 import DesignKit
-import Entity
-import GMDExtensions
+import GMDUtils
 
 final class DogsCollectionViewCell: UICollectionViewCell {
 	// MARK: - Properties
@@ -21,7 +20,7 @@ final class DogsCollectionViewCell: UICollectionViewCell {
 	// MARK: - UI Components
 	private let profileImageView: RoundImageView = {
 		let imageView = RoundImageView()
-		imageView.backgroundColor = .systemGray
+		imageView.backgroundColor = .white
 		
 		return imageView
 	}()
@@ -103,27 +102,16 @@ final class DogsCollectionViewCell: UICollectionViewCell {
 		return label
 	}()
 	
-	// MARK: - UI Components(Button)
 	fileprivate let editButton: UIButton = {
 		let button = UIButton()
-		let image = UIImage(
-			systemName: "rectangle.and.pencil.and.ellipsis.rtl",
-			withConfiguration: UIImage.SymbolConfiguration(pointSize: 18)
-		)
-		button.setImage(image, for: .normal)
-		button.tintColor = .gray90
+		button.setImage(.iconHighlight, for: .normal)
 		
 		return button
 	}()
 	
 	fileprivate let deleteButton: UIButton = {
 		let button = UIButton()
-		let image = UIImage(
-			systemName: "trash",
-			withConfiguration: UIImage.SymbolConfiguration(pointSize: 18)
-		)
-		button.setImage(image, for: .normal)
-		button.tintColor = .gray90
+		button.setImage(.iconDelete, for: .normal)
 		
 		return button
 	}()
@@ -140,12 +128,13 @@ final class DogsCollectionViewCell: UICollectionViewCell {
 	}
 	
 	// MARK: - Configure
-	func configure(with dog: Dog) {
-		dogID = dog.id
-		titleLabel.text = "\(dog.name) (\(dog.gender.rawValue) / \(dog.age)세)"
+	func configure(with dog: DogCellViewModel) {
+		profileImageView.loadImage(urlString: dog.profileImageURL)
+		dogID = dog.dogId
+		titleLabel.text = dog.dogTitle
 		
 		weightValueLabel.text = "\(dog.weight)kg"
-		neuteringValueLabel.text = dog.isNeutered ? "했어요" : "안 했어요"
+		neuteringValueLabel.text = dog.dogIsNeutered
 	}
 }
 
@@ -197,11 +186,11 @@ private extension DogsCollectionViewCell {
 
 // MARK: Reactive Extension
 extension Reactive where Base: DogsCollectionViewCell {
-	var editButtonDidTapped: ControlEvent<Void> {
+	var didTapEditButton: ControlEvent<Void> {
 		base.editButton.rx.tap
 	}
 	
-	var deleteButtonDidTapped: ControlEvent<Void> {
+	var didTapDeleteButton: ControlEvent<Void> {
 		base.deleteButton.rx.tap
 	}
 }

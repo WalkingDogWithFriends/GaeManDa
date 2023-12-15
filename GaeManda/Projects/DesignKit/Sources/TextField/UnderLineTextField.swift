@@ -51,7 +51,8 @@ public class UnderLineTextField: UITextField {
 	private func textFieldRect(forBounds bounds: CGRect) -> CGRect {
 		let leftViewRect = super.leftViewRect(forBounds: bounds)
 		var boundInset = bounds.inset(by: padding)
-		boundInset.origin.x += (leftViewRect.width + padding.left)
+		let leftPadding: CGFloat = 8.0
+		boundInset.origin.x += (leftViewRect.width + leftPadding)
 
 		return boundInset
 	}

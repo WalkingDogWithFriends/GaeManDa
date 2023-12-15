@@ -28,16 +28,34 @@ final class UserProfileSettingViewController:
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "")
 	
-	private let titleLabel: UILabel = {
-		let label = UILabel()
-		label.font = .jalnan20
-		label.numberOfLines = 0
-		label.text = "보호자의 프로필을 설정해주세요!"
+	private let onBoardingView = OnBoardingView(viewMode: .editableImageView, title: "보호자의 프로필을 설정해주세요!")
+	
+	private let nickNameTextField = GMDTextField(title: "닉네임", warningText: "닉네임을 입력해주세요.")
+	
+	private let maximumTextCountLabel = UILabel()
+	
+	private let calenderTextField = GMDTextField(title: "생년월일", warningText: "생년월일을 입력해주세요.")
+	
+	private let calenderButton: UIButton = {
+		let button = UIButton()
+		button.tintColor = .black
+		button.setImage(.iconCalendar, for: .normal)
 		
-		return label
+		return button
 	}()
 	
-	private let profileImageView = ProfileImageView(mode: .editable)
+	private let buttonStackView: UIStackView = {
+		let stackView = UIStackView()
+		stackView.axis = .horizontal
+		stackView.alignment = .fill
+		stackView.spacing = 26
+		stackView.distribution = .fillEqually
+		
+		return stackView
+	}()
+	
+	private let maleButton = GMDOptionButton(title: "남", isSelected: true)
+	private let femaleButton = GMDOptionButton(title: "여")
 	private let confirmButton = ConfirmButton(title: "확인", isPositive: false)
 	
 	// MARK: - Life Cycles
@@ -64,7 +82,10 @@ final class UserProfileSettingViewController:
 	
 	override func setViewHierarchy() {
 		super.setViewHierarchy()
-		contentView.addSubviews(navigationBar, titleLabel, profileImageView, confirmButton)
+		contentView.addSubviews(
+			navigationBar, onBoardingView, nickNameTextField, calenderTextField, buttonStackView, confirmButton
+		)
+		buttonStackView.addArrangedSubviews(maleButton, femaleButton)
 	}
 	
 	override func setConstraints() {
@@ -81,16 +102,26 @@ final class UserProfileSettingViewController:
 			make.trailing.equalToSuperview().offset(-32)
 		}
 		
-		profileImageView.snp.makeConstraints { make in
-			make.top.equalTo(titleLabel.snp.bottom).offset(40)
-			make.width.height.equalTo(140)
-			make.centerX.equalToSuperview()
-		}
-		
-		confirmButton.snp.makeConstraints { make in
+		nickNameTextField.snp.makeConstraints { make in
+			make.top.equalTo(onBoardingView.snp.bottom).offset(48)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
-			make.bottom.equalToSuperview().offset(-(54 - UIDevice.safeAreaBottomHeight))
+		}
+	}
+	
+	func addUserProfileDashboard(_ viewControllable: ViewControllable) {
+		let viewController = viewControllable.uiviewController
+		
+		calenderTextField.snp.makeConstraints { make in
+			make.top.equalTo(nickNameTextField.snp.bottom).offset(16)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
+		}
+		
+		buttonStackView.snp.makeConstraints { make in
+			make.top.equalTo(calenderTextField.snp.bottom).offset(44)
+			make.leading.equalToSuperview().offset(32)
+			make.trailing.equalToSuperview().offset(-32)
 			make.height.equalTo(40)
 		}
 	}
@@ -98,17 +129,13 @@ final class UserProfileSettingViewController:
 	func addUserProfileDashboard(_ viewControllable: ViewControllable) {
 		let viewController = viewControllable.uiviewController
 		
-		addChild(viewController)
-		contentView.addSubview(viewController.view)
-		
-		viewController.view.snp.makeConstraints { make in
+		confirmButton.snp.makeConstraints { make in
+			make.top.equalTo(buttonStackView.snp.bottom).offset(98)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
-			make.top.equalTo(profileImageView.snp.bottom).offset(48)
-			make.bottom.equalTo(confirmButton.snp.top).offset(-60)
+			make.bottom.equalToSuperview().offset(-(54 - UIDevice.safeAreaBottomHeight))
+			make.height.equalTo(40)
 		}
-		
-		viewController.didMove(toParent: self)
 	}
 	
 	// MARK: - Bind Methods
@@ -145,14 +172,20 @@ final class UserProfileSettingViewController:
 	}
 }
 
-// MARK: - UserProfileSettingPresentable
-extension UserProfileSettingViewController: UserProfileSettingPresentable {
-	func setConfirmButton(isEnabled: Bool) {
-		confirmButton.isPositive = isEnabled
+// MARK: - Presentable {
+extension UserProfileSettingViewController {
+	func displayBirthday(date: String) {
+		self.calenderTextField.text = date
 	}
 }
 
-// MARK: - PHPickerViewControllerDelegate
+// MARK: - Action
+private extension UserProfileSettingViewController {
+	func calenderButtonDidTap() {
+		listener?.birthdayPickerDidTap()
+	}
+}
+
 extension UserProfileSettingViewController: PHPickerViewControllerDelegate {
 	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
 		picker.dismiss(animated: true)
