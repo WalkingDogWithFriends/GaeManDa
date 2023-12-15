@@ -9,6 +9,7 @@
 import RIBs
 import Chatting
 import ChattingImpl
+import CorePresentation
 import DataMapper
 import GMDMap
 import GMDMapImpl
@@ -59,5 +60,9 @@ final class LoggedInComponent:
 	
 	var gmdProfileUseCase: GMDProfileUseCase {
 		dependency.gmdProfileUseCase
+	}
+	
+	var userProfileDashboardBuildable: UserProfileDashboardBuildable {
+		dependency.userProfileDashboardBuildable
 	}
 }
