@@ -14,6 +14,5 @@ public protocol BirthdayPickerBuildable: Buildable {
 
 public protocol BirthdayPickerListener: AnyObject {
 	func birthdayPickerDismiss()
-	func didTapBirthdayPicker()
 	func birthdaySelected(date: String)
 }
