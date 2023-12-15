@@ -55,7 +55,7 @@ open class BaseViewController: UIViewController {
 	
 	open override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
-		removeKeyboardNotification([keyboardShowNotification, keyboardHideNotification])
+		removeKeyboardNotification(keyboardShowNotification, keyboardHideNotification)
 	}
 	
 	// MARK: - Methods
