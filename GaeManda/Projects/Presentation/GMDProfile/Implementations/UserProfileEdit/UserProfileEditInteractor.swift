@@ -9,17 +9,21 @@
 import Foundation
 import RIBs
 import RxSwift
+import RxRelay
+import CorePresentation
 import Entity
 import GMDProfile
 import UseCase
 
-protocol UserProfileEditRouting: ViewableRouting { }
+protocol UserProfileEditRouting: ViewableRouting {
+	func attachUserProfileDashboard(
+		usernameTextFieldModeRelay: BehaviorRelay<NicknameTextFieldMode>,
+		birthdayTextFieldIsWarningRelay: BehaviorRelay<Bool>
+	)
+}
 
 protocol UserProfileEditPresentable: Presentable {
 	var listener: UserProfileEditPresentableListener? { get set }
-	
-	func updateUsername(_ name: String)
-	func updateUserSex(_ sex: Gender)
 }
 
 protocol UserProfileEditInteractorDependency {

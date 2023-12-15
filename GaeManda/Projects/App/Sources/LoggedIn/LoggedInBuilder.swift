@@ -7,10 +7,12 @@
 //
 
 import RIBs
+import CorePresentation
 import UseCase
 
 protocol LoggedInDependency: Dependency { 
 	var gmdProfileUseCase: GMDProfileUseCase { get }
+	var userProfileDashboardBuildable: UserProfileDashboardBuildable { get }
 }
 
 // MARK: - Builder

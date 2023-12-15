@@ -7,11 +7,13 @@
 //
 
 import RIBs
+import CorePresentation
 import GMDProfile
 import UseCase
 
 public protocol UserProfileEditDependency: Dependency {
 	var gmdProfileUseCase: GMDProfileUseCase { get }
+	var userProfileDashboardBuildable: UserProfileDashboardBuildable { get }
 }
 
 final class UserProfileEditComponent:
@@ -19,6 +21,10 @@ final class UserProfileEditComponent:
 	UserProfileEditInteractorDependency {
 	var gmdProfileUseCase: GMDProfileUseCase {
 		dependency.gmdProfileUseCase
+	}
+	
+	var userProfileDashboardBuildable: UserProfileDashboardBuildable {
+		dependency.userProfileDashboardBuildable
 	}
 }
 
@@ -40,7 +46,8 @@ public final class UserProfileEditBuilder:
 		interactor.listener = listener
 		return UserProfileEditRouter(
 			interactor: interactor,
-			viewController: viewController
+			viewController: viewController,
+			userProfileDashboardBuildable: component.userProfileDashboardBuildable
 		)
 	}
 }
