@@ -9,14 +9,14 @@ public class UnderLineTextField: UITextField {
 			setNeedsDisplay()
 		}
 	}
-	
+		
 	public override var text: String? {
 		didSet {
 			// textField.text를 통해 값을 설정할 때, rx.text로 이벤트를 방출시키기 위해 추가한 코드
-			// NotificatoinCenter를 위한 것.
 			NotificationCenter.default.post(name: UITextField.textDidChangeNotification, object: self)
+			
 			// rxSwift의 text이벤트를 위한 것
-			sendActions(for: .valueChanged)
+			sendActions(for: .allEditingEvents)
 		}
 	}
 	
@@ -51,8 +51,7 @@ public class UnderLineTextField: UITextField {
 	private func textFieldRect(forBounds bounds: CGRect) -> CGRect {
 		let leftViewRect = super.leftViewRect(forBounds: bounds)
 		var boundInset = bounds.inset(by: padding)
-		let leftPadding: CGFloat = 8.0
-		boundInset.origin.x += (leftViewRect.width + leftPadding)
+		boundInset.origin.x += (leftViewRect.width + padding.left)
 
 		return boundInset
 	}

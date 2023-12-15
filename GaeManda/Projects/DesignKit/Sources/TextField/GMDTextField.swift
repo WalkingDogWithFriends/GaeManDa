@@ -5,8 +5,8 @@ import SnapKit
 import GMDExtensions
 
 public enum GMDTextFieldMode {
-	case warning
 	case normal
+	case warning
 }
 
 public final class GMDTextField: UIView {
@@ -142,12 +142,10 @@ private extension GMDTextField {
 // MARK: - UI Logic
 private extension GMDTextField {
 	func changeNormalMode() {
-		textField.underLineColor = .gray90
 		warningLabel.layer.opacity = 0.0
 	}
 	
 	func changeWarningMode() {
-		textField.underLineColor = .red100
 		warningLabel.layer.opacity = 1.0
 	}
 }
