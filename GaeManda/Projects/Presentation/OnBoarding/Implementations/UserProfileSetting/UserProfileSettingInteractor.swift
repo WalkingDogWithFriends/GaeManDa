@@ -1,28 +1,37 @@
 import RIBs
+import RxSwift
+import RxRelay
+import CorePresentation
+import Entity
 import OnBoarding
+import GMDUtils
 
 protocol UserProfileSettingRouting: ViewableRouting {
-	func attachBirthdayPicker()
-	func detachBirthdayPicker()
+	func attachUserProfileDashboard(
+		usernameTextFieldModeRelay: BehaviorRelay<NicknameTextFieldMode>,
+		birthdayTextFieldIsWarningRelay: BehaviorRelay<Bool>
+	)
 }
 
 protocol UserProfileSettingPresentable: Presentable {
 	var listener: UserProfileSettingPresentableListener? { get set }
 	
-	func displayBirthday(date: String)
+	func setConfirmButton(isEnabled: Bool)
 }
 
 final class UserProfileSettingInteractor:
 	PresentableInteractor<UserProfileSettingPresentable>,
 	UserProfileSettingInteractable,
 	UserProfileSettingPresentableListener {
-	func birthdaySelected(date: String) {
-		presenter.displayBirthday(date: date)
-		router?.detachBirthdayPicker()
-	}
-	
 	weak var router: UserProfileSettingRouting?
 	weak var listener: UserProfileSettingListener?
+	
+	private let userNameTextFieldMode = BehaviorRelay<NicknameTextFieldMode>(value: .default)
+	private let birthdayTextFieldIsWarning = BehaviorRelay<Bool>(value: true)
+	
+	private var selectedGender: Gender = .male
+	private var enteredUserName: String?
+	private var selectedBirthday: String?
 	
 	override init(presenter: UserProfileSettingPresentable) {
 		super.init(presenter: presenter)
