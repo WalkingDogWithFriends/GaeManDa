@@ -4,12 +4,12 @@ import DesignKit
 import OnBoarding
 
 public protocol UserProfileSettingDependency: Dependency { 
-	var birthdayPickerBuildable: BirthdayPickerBuildable { get }
+	var userProfileDashboardBuildable: UserProfileDashboardBuildable { get }
 }
 
 final class UserProfileSettingComponent: Component<UserProfileSettingDependency> { 
-	var birthdayPickerBuildable: BirthdayPickerBuildable {
-		dependency.birthdayPickerBuildable
+	var userProfileDashboardBuildable: UserProfileDashboardBuildable {
+		dependency.userProfileDashboardBuildable
 	}
 }
 
@@ -25,10 +25,10 @@ public final class UserProfileSettingBuilder:
 		let viewController = UserProfileSettingViewController()
 		let interactor = UserProfileSettingInteractor(presenter: viewController)
 		interactor.listener = listener
-		return ProfileSettingRouter(
+		return UserProfileSettingRouter(
 			interactor: interactor,
 			viewController: viewController,
-			birthdayPickerBuildable: component.birthdayPickerBuildable
+			userProfileDashboardBuildable: component.userProfileDashboardBuildable
 		)
 	}
 }
