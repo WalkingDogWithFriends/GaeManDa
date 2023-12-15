@@ -12,7 +12,6 @@ import RxCocoa
 import RxSwift
 import SnapKit
 import DesignKit
-import Entity
 import GMDExtensions
 import GMDUtils
 
@@ -235,7 +234,7 @@ extension GMDProfileViewController {
 	}
 }
 
-// MARK: - Action Bind
+// MARK: - Bind
 private extension GMDProfileViewController {
 	func bind() {
 		profileEditButton.rx.tap
@@ -251,17 +250,60 @@ private extension GMDProfileViewController {
 			.disposed(by: disposeBag)	}
 	
 	func bind(to cell: DogsCollectionViewCell) {
-		cell.rx.editButtonDidTapped
+		cell.rx.didTapEditButton
 			.bind(with: self) { owner, _ in
 				owner.listener?.didTapDogProfileEditButton(at: cell.dogID)
 			}
 			.disposed(by: disposeBag)
 		
-		cell.rx.deleteButtonDidTapped
+		cell.rx.didTapDeleteButton
 			.bind(with: self) { owner, _ in
-				owner.listener?.didTapDogProfileDeleteButton()
+				owner.didTapDeleteButton()
 			}
 			.disposed(by: disposeBag)
+	}
+}
+
+// MARK: - Action
+private extension GMDProfileViewController {
+	func didTapDeleteButton() {
+		// 한마리 남을 경우 삭제 불가능
+		if carouselViewModel.dogsCount == 1 {
+			disPlayCantDeleteAlertController()
+		} else {
+			displayDeleteAlertController()
+		}
+	}
+	
+	func disPlayCantDeleteAlertController() {
+		let alert = UIAlertController(
+			title: "",
+			message: "등록된 강아지가 한 마리일 경우 삭제가 불가능합니다.",
+			preferredStyle: .alert
+		)
+		
+		let confirm = UIAlertAction(title: "확인", style: .default)
+		alert.addAction(confirm)
+		
+		present(alert, animated: true)
+	}
+	
+	func displayDeleteAlertController() {
+		let alert = UIAlertController(
+			title: "프로필 삭제",
+			message: "프로필을 삭제하면 등록된 나의 아이에 대한 정보가 모두 사라집니다.",
+			preferredStyle: .alert
+		)
+		
+		let cancel = UIAlertAction(title: "취소", style: .default)
+		let confirm = UIAlertAction(title: "삭제", style: .destructive) { [weak self] _ in
+			self?.listener?.didTapDogProfileDeleteButton()
+		}
+		
+		alert.addAction(cancel)
+		alert.addAction(confirm)
+		
+		present(alert, animated: true)
 	}
 }
 
@@ -341,3 +383,12 @@ extension GMDProfileViewController: UICollectionViewDelegateFlowLayout {
 		)
 	}
 }
+
+/*
+ // MARK: - AlertController
+ private extension ChattingViewController {
+	 func displayLeaveChattingAlertController() {
+		
+	 }
+ }
+ */

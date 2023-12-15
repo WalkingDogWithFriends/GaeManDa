@@ -43,7 +43,7 @@ final class GMDProfileInteractor:
 	GMDProfilePresentableListener {
 	weak var router: GMDProfileRouting?
 	weak var listener: GMDProfileListener?
-
+	
 	private let dependency: GMDProfileInteractorDependency
 	
 	init(
@@ -138,8 +138,8 @@ private extension GMDProfileInteractor {
 			.fetchUser()
 			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, user in
-				let sexAndAge = "\(user.gender.rawValue) \(user.age)세"
-
+				let sexAndAge = "\(user.gender.genderKR) \(user.age)세"
+				
 				owner.presenter.updateUserName(user.name)
 				owner.presenter.updateUserSexAndAge(sexAndAge)
 			}
@@ -151,7 +151,8 @@ private extension GMDProfileInteractor {
 			.fetchDogs()
 			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, dogs in
-				let dogsCarousel = owner.convertToDogsCarousel(with: dogs)
+				let dogCellViewModels = dogs.map { DogCellViewModel.init($0) }
+				let dogsCarousel = owner.convertToDogsCarousel(with: dogCellViewModels)
 				let viewMoel = DogsCarouselViewModel(dogs: dogsCarousel)
 				owner.presenter.updateDogs(with: viewMoel)
 			}
@@ -161,14 +162,14 @@ private extension GMDProfileInteractor {
 
 // MARK: - Interactor Logic
 private extension GMDProfileInteractor {
-	func convertToDogsCarousel(with dogs: [Dog]) -> [Dog] {
+	func convertToDogsCarousel(with dogs: [DogCellViewModel]) -> [DogCellViewModel] {
 		guard
 			let last = dogs.last,
 			let first = dogs.first
 		else {
 			return dogs
 		}
-
+		
 		return [last] + dogs + [first]
 	}
 }

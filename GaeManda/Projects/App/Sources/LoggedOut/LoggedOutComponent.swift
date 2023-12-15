@@ -21,14 +21,18 @@ final class LoggedOutComponent:
 	UserProfileSettingDependency,
 	DogProfileSettingDependency {
 	// MARK: - Buildable
-	lazy var dogCharacterPickerBuildable: DogCharacterPickerBuildable = {
+	var dogCharacterPickerBuildable: DogCharacterPickerBuildable {
 		return dependency.dogCharacterPickerBuildable
-	}()
+	}
 	
-	lazy var birthdayPickerBuildable: BirthdayPickerBuildable = {
+	var birthdayPickerBuildable: BirthdayPickerBuildable {
 		return dependency.birthdayPickerBuildable
-	}()
+	}
 	
+	var userProfileDashboardBuildable: UserProfileDashboardBuildable {
+		return dependency.userProfileDashboardBuildable
+	}
+
 	lazy var dogCharacterDashboardBuildable: DogCharacterDashboardBuildable = {
 		return dependency.dogCharacterDashboardBuildable
 	}()

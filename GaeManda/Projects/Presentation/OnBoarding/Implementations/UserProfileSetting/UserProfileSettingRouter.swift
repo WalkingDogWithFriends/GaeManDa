@@ -1,46 +1,52 @@
 import Foundation
 import RIBs
+import RxRelay
 import CorePresentation
 import DesignKit
 import OnBoarding
 
-protocol UserProfileSettingInteractable: Interactable, BirthdayPickerListener {
+protocol UserProfileSettingInteractable: Interactable, UserProfileDashboardListener {
 	var router: UserProfileSettingRouting? { get set }
 	var listener: UserProfileSettingListener? { get set }
 }
 
-protocol UserProfileSettingViewControllable: ViewControllable { }
+protocol UserProfileSettingViewControllable: ViewControllable {
+	func addUserProfileDashboard(_ viewControllable: ViewControllable)
+}
 
-final class ProfileSettingRouter:
+final class UserProfileSettingRouter:
 	ViewableRouter<UserProfileSettingInteractable, UserProfileSettingViewControllable>,
 	UserProfileSettingRouting {
-	private let birthdayPickerBuildable: BirthdayPickerBuildable
-	private var birthdayPickerRouting: ViewableRouting?
+	private let userProfileDashboardBuildable: UserProfileDashboardBuildable
+	private var userProfileDashboardRouting: ViewableRouting?
 	
 	init(
 		interactor: UserProfileSettingInteractable,
 		viewController: UserProfileSettingViewControllable,
-		birthdayPickerBuildable: BirthdayPickerBuildable
+		userProfileDashboardBuildable: UserProfileDashboardBuildable
 	) {
-		self.birthdayPickerBuildable = birthdayPickerBuildable
+		self.userProfileDashboardBuildable = userProfileDashboardBuildable
 		super.init(interactor: interactor, viewController: viewController)
 		interactor.router = self
 	}
 }
 
 // MARK: - BirthdayPicker
-extension ProfileSettingRouter {
-	func attachBirthdayPicker() {
-		guard birthdayPickerRouting == nil else { return }
-		let router = birthdayPickerBuildable.build(withListener: interactor)
-		self.birthdayPickerRouting = router
+extension UserProfileSettingRouter {
+	func attachUserProfileDashboard(
+		usernameTextFieldModeRelay: BehaviorRelay<NicknameTextFieldMode>,
+		birthdayTextFieldIsWarningRelay: BehaviorRelay<Bool>
+	) {
+		guard userProfileDashboardRouting == nil else { return }
+		let router = userProfileDashboardBuildable.build(
+			withListener: interactor,
+			nicknameTextFieldMode: usernameTextFieldModeRelay,
+			birthdayTextFieldIsWarning: birthdayTextFieldIsWarningRelay,
+			userProfilePassingModel: nil
+		)
+		
+		self.userProfileDashboardRouting = router
 		attachChild(router)
-		viewControllable.present(router.viewControllable, animated: false, modalPresentationStyle: .overFullScreen)
-	}
-	
-	func detachBirthdayPicker() {
-		guard let router = birthdayPickerRouting else { return }
-		detachChild(router)
-		self.birthdayPickerRouting = nil
+		viewController.addUserProfileDashboard(router.viewControllable)
 	}
 }
