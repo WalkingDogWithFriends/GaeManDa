@@ -1,16 +1,22 @@
-import Foundation
 import RIBs
+import RxRelay
+import RxSwift
+import Entity
+import GMDUtils
 import OnBoarding
 
 protocol DogProfileFirstSettingRouting: ViewableRouting {
-	func attachBirthdayPicker()
-	func detachBirthdayPicker()
+	func dogProfileFirstDashboardAttach(
+		nameTextFieldIsWarning: BehaviorRelay<Void>,
+		birthdayTextFieldIsWarning: BehaviorRelay<Void>,
+		weightTextFieldIsWarning: BehaviorRelay<Void>
+	)
 }
 
 protocol DogProfileFirstSettingPresentable: Presentable {
 	var listener: DogProfileFirstSettingPresentableListener? { get set }
 	
-	func setBirthday(date: String)
+	func setConfirmButton(isPositive: Bool)
 }
 
 protocol DogProfileFirstSettingListener: AnyObject {
@@ -21,11 +27,19 @@ protocol DogProfileFirstSettingListener: AnyObject {
 
 final class DogProfileFirstSettingInteractor:
 	PresentableInteractor<DogProfileFirstSettingPresentable>,
-	DogProfileFirstSettingInteractable,
-	DogProfileFirstSettingPresentableListener {
+	DogProfileFirstSettingInteractable {
 	weak var router: DogProfileFirstSettingRouting?
 	weak var listener: DogProfileFirstSettingListener?
-
+	
+	private let nameTextFieldIsWarning = BehaviorRelay<Void>(value: ())
+	private let birthdayTextFieldIsWarning = BehaviorRelay<Void>(value: ())
+	private let weightTextFieldIsWarning = BehaviorRelay<Void>(value: ())
+	
+	private var selectedGender: Gender = .male
+	private var selectedBirthday: String?
+	private var enteredDogName: String?
+	private var enteredDogWeight: Int?
+	
 	override init(presenter: DogProfileFirstSettingPresentable) {
 		super.init(presenter: presenter)
 		presenter.listener = self
@@ -41,9 +55,41 @@ final class DogProfileFirstSettingInteractor:
 }
 
 // MARK: PresentableListener
-extension DogProfileFirstSettingInteractor {
-	func didTapConfirmButton(with passingModel: DogProfileFirstSettingPassingModel) {
-		listener?.dogProfileFirstSettingDidTapConfirmButton(with: passingModel)
+extension DogProfileFirstSettingInteractor: DogProfileFirstSettingPresentableListener {
+	func viewDidLoad() {
+		router?.dogProfileFirstDashboardAttach(
+			nameTextFieldIsWarning: nameTextFieldIsWarning,
+			birthdayTextFieldIsWarning: birthdayTextFieldIsWarning,
+			weightTextFieldIsWarning: weightTextFieldIsWarning
+		)
+	}
+	
+	func didTapConfirmButton(with profileImage: UIImageWrapper) {
+		if selectedBirthday == nil {
+			birthdayTextFieldIsWarning.accept(())
+		}
+		if enteredDogName == nil {
+			nameTextFieldIsWarning.accept(())
+		}
+		if enteredDogWeight == nil {
+			weightTextFieldIsWarning.accept(())
+		}
+		
+		guard
+			let selectedBirthday = selectedBirthday,
+			let enteredDogName = enteredDogName,
+			let enteredDogWeight = enteredDogWeight
+		else { return }
+		
+		listener?.dogProfileFirstSettingDidTapConfirmButton(
+			with: DogProfileFirstSettingPassingModel(
+				name: enteredDogName,
+				birthday: selectedBirthday,
+				gender: selectedGender,
+				weight: enteredDogWeight,
+				profileImage: profileImage
+			)
+		)
 	}
 	
 	func didTapBackButton() {
@@ -55,18 +101,46 @@ extension DogProfileFirstSettingInteractor {
 	}
 }
 
-// MARK: - BirthdayPickerListener
+// MARK: - DogProfileFirstDashboardListener
 extension DogProfileFirstSettingInteractor {
-	func didTapBirthdayPicker() {
-		router?.attachBirthdayPicker()
+	func didSelectedGender(_ gender: Gender) {
+		self.selectedGender = gender
 	}
 	
-	func birthdayPickerDismiss() {
-		router?.detachBirthdayPicker()
+	func didSelectedBirthday(_ date: String) {
+		defer { presenter.setConfirmButton(isPositive: confirmIsPositive()) }
+		
+		if date.isEmpty {
+			self.selectedBirthday = nil
+		} else {
+			self.selectedBirthday = date
+		}
 	}
 	
-	func birthdaySelected(date: String) {
-		presenter.setBirthday(date: date)
-		router?.detachBirthdayPicker()
+	func didEnteredDogName(_ name: String) {
+		defer { presenter.setConfirmButton(isPositive: confirmIsPositive()) }
+
+		if name.isEmpty {
+			self.enteredDogName = nil
+		} else {
+			self.enteredDogName = name
+		}
+	}
+	
+	func didEnteredDogWeight(_ weight: Int) {
+		defer { presenter.setConfirmButton(isPositive: confirmIsPositive()) }
+
+		if weight == -1 {
+			self.enteredDogWeight = nil
+		} else {
+			self.enteredDogWeight = weight
+		}
+	}
+}
+
+// MARK: - Private Method
+private extension DogProfileFirstSettingInteractor {
+	func confirmIsPositive() -> Bool {
+		return (selectedBirthday != nil) && (enteredDogName != nil) && (enteredDogWeight != nil)
 	}
 }
