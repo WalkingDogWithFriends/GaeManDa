@@ -32,6 +32,10 @@ final class LoggedOutComponent:
 	var userProfileDashboardBuildable: UserProfileDashboardBuildable {
 		return dependency.userProfileDashboardBuildable
 	}
+	
+	var dogProfileFirstDashboardBuildable: DogProfileFirstDashboardBuildable {
+		return dependency.dogProfileFirstDashboardBuildable
+	}
 
 	lazy var dogCharacterDashboardBuildable: DogCharacterDashboardBuildable = {
 		return dependency.dogCharacterDashboardBuildable
