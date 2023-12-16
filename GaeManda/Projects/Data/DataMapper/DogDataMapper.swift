@@ -29,7 +29,7 @@ public struct DogDataMapperImpl: DogDataMapper {
 			birthday: dto.birthday,
 			weight: dto.weight,
 			isNeutered: dto.isNeutered,
-			characterIds: dto.personalites,
+			characterIds: dto.personalities,
 			profileImage: dto.profileImageURL
 		)
 	}

@@ -9,17 +9,21 @@
 import Foundation
 import RIBs
 import RxSwift
+import RxRelay
+import CorePresentation
 import Entity
 import GMDProfile
 import UseCase
 
-protocol UserProfileEditRouting: ViewableRouting { }
+protocol UserProfileEditRouting: ViewableRouting {
+	func attachUserProfileDashboard(
+		usernameTextFieldModeRelay: BehaviorRelay<NicknameTextFieldMode>,
+		birthdayTextFieldIsWarningRelay: BehaviorRelay<Bool>
+	)
+}
 
 protocol UserProfileEditPresentable: Presentable {
 	var listener: UserProfileEditPresentableListener? { get set }
-	
-	func updateUsername(_ name: String)
-	func updateUserSex(_ sex: Gender)
 }
 
 protocol UserProfileEditInteractorDependency {
@@ -34,6 +38,9 @@ final class UserProfileEditInteractor:
 	weak var listener: UserProfileEditListener?
 	
 	private let dependency: UserProfileEditInteractorDependency
+	
+	private let userNameTextFieldMode = BehaviorRelay<NicknameTextFieldMode>(value: .valid)
+	private let birthdayTextFieldIsWarning = BehaviorRelay<Bool>(value: true)
 	
 	init(
 		presenter: UserProfileEditPresentable,
@@ -56,12 +63,15 @@ final class UserProfileEditInteractor:
 // MARK: PresentableListener
 extension UserProfileEditInteractor {
 	func viewWillAppear() {
+		router?.attachUserProfileDashboard(
+			usernameTextFieldModeRelay: userNameTextFieldMode,
+			birthdayTextFieldIsWarningRelay: birthdayTextFieldIsWarning
+		)
+		
 		dependency.gmdProfileUseCase
 			.fetchUser()
 			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, user in
-				owner.presenter.updateUsername(user.name)
-				owner.presenter.updateUserSex(user.gender)
 			}
 			.disposeOnDeactivate(interactor: self)
 	}
@@ -89,4 +99,13 @@ extension UserProfileEditInteractor {
 			}
 			.disposeOnDeactivate(interactor: self)
 	}
+}
+
+// MARK: - UserProfileDashboardListener
+extension UserProfileEditInteractor {
+	func didSelectedGender(_ gender: Gender) { }
+	
+	func didEnteredUserName(_ name: String) { }
+	
+	func didSelectedBirthday(_ date: String) { }
 }

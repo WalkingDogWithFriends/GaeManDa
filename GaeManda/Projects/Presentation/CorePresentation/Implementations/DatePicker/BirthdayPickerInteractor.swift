@@ -7,7 +7,6 @@
 //
 
 import RIBs
-import RxSwift
 import CorePresentation
 
 public protocol BirthdayPickerRouting: ViewableRouting {}

@@ -99,7 +99,7 @@ final class DogProfileFirstSettingViewController:
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 		
-		removeTextFieldNotification([textDidChangeNotification])
+		removeTextFieldNotification(textDidChangeNotification)
 		
 		if isBeingDismissed || isMovingFromParent {
 			listener?.dismiss()
