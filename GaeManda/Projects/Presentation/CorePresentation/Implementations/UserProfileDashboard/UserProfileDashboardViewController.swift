@@ -176,6 +176,7 @@ private extension UserProfileDashboardViewController {
 			.disposed(by: disposeBag)
 		
 		// 실시간 피드백
+		// TODO: - 서버랑 상의해보고 debounce결정해봅시다.
 		nickNameTextField.rx.text
 			.orEmpty
 			.skip(1)
