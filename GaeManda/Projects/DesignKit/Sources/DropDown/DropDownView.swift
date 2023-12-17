@@ -34,6 +34,14 @@ public final class DropDownView: UIView {
 	/// DropDown의 현재 선택된 항목을 알 수 있습니다.
 	public private(set) var selectedOption: String?
 	
+	/// DropDown의 default로 선택된 항목을 설정할 수 있습니다.
+	public var defaultSelectedOption: String? {
+		didSet {
+			self.selectedOption = defaultSelectedOption
+			dropDownTableView.reloadData()
+		}
+	}
+	
 	public override var canBecomeFirstResponder: Bool { true }
 	public override var canResignFirstResponder: Bool { true }
 	
