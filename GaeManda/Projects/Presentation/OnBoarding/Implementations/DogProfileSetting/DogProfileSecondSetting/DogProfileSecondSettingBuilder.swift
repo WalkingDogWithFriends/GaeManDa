@@ -61,6 +61,7 @@ final class DogProfileSecondSettingBuilder:
 		return DogProfileSecondSettingRouter(
 			interactor: interactor,
 			viewController: viewController,
+			dogProfileSecondDashboardBuildable: component.dogProfileSecondDashboardBuildable,
 			dogCharacterPickerBuildable: component.dogCharacterPickerBuildable,
 			dogCharacterDashboardBuilder: component.dogCharacterDashboardBuildable
 		)

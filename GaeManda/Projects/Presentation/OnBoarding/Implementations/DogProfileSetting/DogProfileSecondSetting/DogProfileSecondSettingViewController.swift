@@ -13,7 +13,7 @@ import OnBoarding
 // swiftlint:disable:next type_name
 protocol DogProfileSecondSettingPresentableListener: AnyObject {
 	func viewDidLoad()
-	func didTapConfirmButton(with passingModel: DogProfileSecondSettingPassingModel)
+	func didTapConfirmButton()
 	func didTapBackButton()
 	func dismiss()
 }
@@ -31,25 +31,28 @@ final class DogProfileSecondSettingViewController:
 	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "")
-	private let onBoardingView = OnBoardingView(viewMode: .unEditableImageView, title: "우리 아이를 등록해주세요! (2/2)")
 	
-	private let dropDownButton = DropDownButton(text: "우리 아이 종", mode: .title)
+	private let titleLabel: UILabel = {
+		let label = UILabel()
+		label.font = .jalnan20
+		label.numberOfLines = 0
+		label.text = "우리 아이를 등록해주세요! (2/2)"
+		
+		return label
+	}()
 	
-	private lazy var dogSpeciesDropDownView = DropDownView(anchorView: self.dropDownButton)
+	private let profileImageView = ProfileImageView(mode: .unEditable)
+	private let confirmButton = ConfirmButton(title: "확인", isPositive: false)
 	
-	private let buttonStackView: UIStackView = {
+	private let contentStackView: UIStackView = {
 		let stackView = UIStackView()
-		stackView.axis = .horizontal
+		stackView.spacing = 32
+		stackView.axis = .vertical
+		stackView.distribution = .fillProportionally
 		stackView.alignment = .fill
-		stackView.spacing = 26
-		stackView.distribution = .fillEqually
 		
 		return stackView
 	}()
-	
-	private let didNeuterButton = GMDOptionButton(title: "중성화 했어요", isSelected: true)
-	private let didNotNeuterButton = GMDOptionButton(title: "중성화 안 했어요")
-	private let confirmButton = ConfirmButton(title: "확인", isPositive: false)
 	
 	// MARK: - Life Cycles
 	override func viewDidLoad() {
@@ -86,10 +89,7 @@ final class DogProfileSecondSettingViewController:
 	
 	override func setViewHierarchy() {
 		super.setViewHierarchy()
-		contentView.addSubviews(
-			navigationBar, onBoardingView, dogSpeciesDropDownView, buttonStackView, confirmButton
-		)
-		buttonStackView.addArrangedSubviews(didNeuterButton, didNotNeuterButton)
+		contentView.addSubviews(navigationBar, titleLabel, profileImageView, contentStackView, confirmButton)
 	}
 	
 	override func setConstraints() {
@@ -99,29 +99,22 @@ final class DogProfileSecondSettingViewController:
 			make.height.equalTo(44)
 		}
 		
-		onBoardingView.snp.makeConstraints { make in
+		titleLabel.snp.makeConstraints { make in
 			make.top.equalTo(navigationBar.snp.bottom).offset(28)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 		}
 		
-		dogSpeciesDropDownView.snp.makeConstraints { make in
-			make.leading.equalToSuperview().offset(32)
-			make.trailing.equalToSuperview().offset(-32)
-			make.top.equalTo(onBoardingView.snp.bottom).offset(56)
+		profileImageView.snp.makeConstraints { make in
+			make.top.equalTo(titleLabel.snp.bottom).offset(40)
+			make.width.height.equalTo(140)
+			make.centerX.equalToSuperview()
 		}
 		
-		dogSpeciesDropDownView.setConstraints { [weak self] make in
-			guard let self else { return }
-			make.leading.trailing.equalTo(self.dogSpeciesDropDownView)
-			make.top.equalTo(self.dogSpeciesDropDownView.snp.bottom)
-		}
-		
-		buttonStackView.snp.makeConstraints { make in
-			make.top.equalTo(dogSpeciesDropDownView.snp.bottom).offset(32)
-			make.leading.equalToSuperview().offset(32)
-			make.trailing.equalToSuperview().offset(-32)
-			make.height.equalTo(40)
+		contentStackView.snp.makeConstraints { make in
+			make.leading.trailing.equalToSuperview().inset(32)
+			make.top.equalTo(profileImageView.snp.bottom).offset(56)
+			make.bottom.equalTo(confirmButton.snp.top).offset(-60)
 		}
 		
 		confirmButton.snp.makeConstraints { make in
@@ -132,28 +125,19 @@ final class DogProfileSecondSettingViewController:
 		}
 	}
 	
-	func addDogCharacterDashboard(_ viewControllable: ViewControllable) {
+	func addDashboard(_ viewControllable: ViewControllable) {
 		let viewController = viewControllable.uiviewController
 		
 		addChild(viewController)
-		view.addSubview(viewController.view)
-		
-		viewController.view.snp.makeConstraints { make in
-			make.leading.equalToSuperview().offset(32)
-			make.trailing.equalToSuperview().offset(-32)
-			make.top.equalTo(buttonStackView.snp.bottom).offset(32)
-			make.bottom.equalTo(confirmButton.snp.top).offset(-60)
-		}
+		contentStackView.addArrangedSubviews(viewController.view)
 		
 		viewController.didMove(toParent: self)
 	}
-	
+		
 	// MARK: - UI Binding
 	override func bind() {
 		super.bind()
 		bindNavigationBar()
-		bindDropDown()
-		bindButtons()
 		bindConfirmButton()
 	}
 	
@@ -165,62 +149,14 @@ final class DogProfileSecondSettingViewController:
 			.disposed(by: disposeBag)
 	}
 	
-	private func bindDropDown() {
-		dogSpeciesDropDownView.rx.selectedOption
-			.map { ($0, .option) }
-			.bind(to: dropDownButton.rx.title)
-			.disposed(by: disposeBag)
-	}
-	
-	private func bindButtons() {
-		// 중성화 버튼 선택 Observable
-		let selectedNeuteredObservable = Observable
-			.merge(
-				didNeuterButton.rx.tap.map { true },
-				didNotNeuterButton.rx.tap.map { false }
-			)
-			.asDriver(onErrorJustReturn: true)
-		
-		// 선택된 성별이 남성일 경우
-		selectedNeuteredObservable
-			.map { $0 == true }
-			.drive(didNeuterButton.rx.isSelected)
-			.disposed(by: disposeBag)
-		
-		// 선택된 성별이 여성일 경우
-		selectedNeuteredObservable
-			.map { $0 == false }
-			.drive(didNotNeuterButton.rx.isSelected)
-			.disposed(by: disposeBag)
-	}
-	
-	private func bindConfirmButton() {
-		let dropDownSelectedObservable = Observable.combineLatest(
-			dogSpeciesDropDownView.rx.isSelectedOption,
-			isSelectedCharacters
-		)
-			.asDriver(onErrorJustReturn: (false, false))
-		
-		dropDownSelectedObservable
-			.map { $0 && $1 }
-			.drive(confirmButton.rx.isPositive)
-			.disposed(by: disposeBag)
-		
+	private func bindConfirmButton() { 
 		confirmButton.rx.tap
-			.withLatestFrom(dropDownSelectedObservable)
-			.map { $0 && $1 }
-			.filter { $0 == true }
+			.withUnretained(self)
+			.filter { owner, _ in
+				owner.confirmButton.isPositive
+			}
 			.bind(with: self) { owner, _ in
-				let isNeutered = owner.didNeuterButton.isSelected ? true : false
-				
-				owner.listener?.didTapConfirmButton(
-					with: DogProfileSecondSettingPassingModel(
-						species: owner.selectedSpecies,
-						isNeutered: isNeutered,
-						characterIds: [0, 1],
-						profileImage: .init(owner.selectedProfileImage)
-					)
-				)
+				owner.listener?.didTapConfirmButton()
 			}
 			.disposed(by: disposeBag)
 	}
@@ -228,25 +164,13 @@ final class DogProfileSecondSettingViewController:
 
 // MARK: - Presentable
 extension DogProfileSecondSettingViewController: DogProfileSecondSettingPresentable {
-	func isSelectedDogCharacter(_ isSelected: Bool) {
-		isSelectedCharacters.accept(isSelected)
-	}
-	
-	func updateDogSpecies(with dogSpecies: [String]) {
-		dogSpeciesDropDownView.dataSource = dogSpecies
+	func setConfirmButton(isPositive: Bool) {
+		confirmButton.isPositive = isPositive
 	}
 	
 	func updateProfileImage(with profileImage: UIImageWrapper) {
 		guard let profileImage = profileImage.image else { return }
 		
-		selectedProfileImage = profileImage
-		onBoardingView.setProfileImage(selectedProfileImage)
-	}
-}
-
-// MARK: - DropDownListener
-extension DogProfileSecondSettingViewController: DropDownDelegate {
-	func dropdown(_ dropDown: DropDownView, didSelectRowAt indexPath: IndexPath) {
-		selectedSpecies = dropDown.dataSource[indexPath.row]
+		profileImageView.image = selectedProfileImage
 	}
 }
