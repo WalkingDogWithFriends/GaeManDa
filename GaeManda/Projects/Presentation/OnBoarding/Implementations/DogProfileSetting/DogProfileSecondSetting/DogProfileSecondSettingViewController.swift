@@ -33,8 +33,9 @@ final class DogProfileSecondSettingViewController:
 	private let navigationBar = GMDNavigationBar(title: "")
 	private let onBoardingView = OnBoardingView(viewMode: .unEditableImageView, title: "우리 아이를 등록해주세요! (2/2)")
 	
-	private let dogSpeciesDropDownButton = DropDownButton(text: "우리 아이 종", mode: .title)
-	private let dogSpeciesDropDownView = DropDownView()
+	private let dropDownButton = DropDownButton(text: "우리 아이 종", mode: .title)
+	
+	private lazy var dogSpeciesDropDownView = DropDownView(anchorView: self.dropDownButton)
 	
 	private let buttonStackView: UIStackView = {
 		let stackView = UIStackView()
@@ -48,17 +49,14 @@ final class DogProfileSecondSettingViewController:
 	
 	private let didNeuterButton = GMDOptionButton(title: "중성화 했어요", isSelected: true)
 	private let didNotNeuterButton = GMDOptionButton(title: "중성화 안 했어요")
-	
 	private let confirmButton = ConfirmButton(title: "확인", isPositive: false)
 	
 	// MARK: - Life Cycles
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		registerDropDrownViews(dogSpeciesDropDownView)
+		setupUI()
 		
 		listener?.viewDidLoad()
-		
-		setupUI()
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {
@@ -73,32 +71,23 @@ final class DogProfileSecondSettingViewController:
 		}
 	}
 	
-	// MARK: - touchesBegan
-	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-		super.touchesBegan(touches, with: event)
-		guard
-			let touch = touches.first,
-			let hitView = self.view.hitTest(touch.location(in: view), with: event)
-		else { return }
-		self.hit(at: hitView)
+	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+		super.touchesEnded(touches, with: event)
+
+		self.view.endEditing(true)
 	}
 	
 	// MARK: - UI Methods
 	private func setupUI() {
 		setViewHierarchy()
 		setConstraints()
-		setDropDown()
 		bind()
 	}
 	
 	override func setViewHierarchy() {
 		super.setViewHierarchy()
 		contentView.addSubviews(
-			navigationBar,
-			onBoardingView,
-			dogSpeciesDropDownButton,
-			buttonStackView,
-			confirmButton
+			navigationBar, onBoardingView, dogSpeciesDropDownView, buttonStackView, confirmButton
 		)
 		buttonStackView.addArrangedSubviews(didNeuterButton, didNotNeuterButton)
 	}
@@ -116,7 +105,7 @@ final class DogProfileSecondSettingViewController:
 			make.trailing.equalToSuperview().offset(-32)
 		}
 		
-		dogSpeciesDropDownButton.snp.makeConstraints { make in
+		dogSpeciesDropDownView.snp.makeConstraints { make in
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 			make.top.equalTo(onBoardingView.snp.bottom).offset(56)
@@ -124,12 +113,12 @@ final class DogProfileSecondSettingViewController:
 		
 		dogSpeciesDropDownView.setConstraints { [weak self] make in
 			guard let self else { return }
-			make.leading.trailing.equalTo(self.dogSpeciesDropDownButton)
-			make.top.equalTo(self.dogSpeciesDropDownButton.snp.bottom)
+			make.leading.trailing.equalTo(self.dogSpeciesDropDownView)
+			make.top.equalTo(self.dogSpeciesDropDownView.snp.bottom)
 		}
 		
 		buttonStackView.snp.makeConstraints { make in
-			make.top.equalTo(dogSpeciesDropDownButton.snp.bottom).offset(32)
+			make.top.equalTo(dogSpeciesDropDownView.snp.bottom).offset(32)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 			make.height.equalTo(40)
@@ -159,10 +148,6 @@ final class DogProfileSecondSettingViewController:
 		viewController.didMove(toParent: self)
 	}
 	
-	private func setDropDown() {
-		dogSpeciesDropDownView.anchorView = dogSpeciesDropDownButton
-	}
-	
 	// MARK: - UI Binding
 	override func bind() {
 		super.bind()
@@ -183,7 +168,7 @@ final class DogProfileSecondSettingViewController:
 	private func bindDropDown() {
 		dogSpeciesDropDownView.rx.selectedOption
 			.map { ($0, .option) }
-			.bind(to: dogSpeciesDropDownButton.rx.title)
+			.bind(to: dropDownButton.rx.title)
 			.disposed(by: disposeBag)
 	}
 	
@@ -260,7 +245,7 @@ extension DogProfileSecondSettingViewController: DogProfileSecondSettingPresenta
 }
 
 // MARK: - DropDownListener
-extension DogProfileSecondSettingViewController: DropDownListener {
+extension DogProfileSecondSettingViewController: DropDownDelegate {
 	func dropdown(_ dropDown: DropDownView, didSelectRowAt indexPath: IndexPath) {
 		selectedSpecies = dropDown.dataSource[indexPath.row]
 	}
