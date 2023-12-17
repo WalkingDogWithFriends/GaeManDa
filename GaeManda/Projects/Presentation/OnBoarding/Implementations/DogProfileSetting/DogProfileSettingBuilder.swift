@@ -8,6 +8,7 @@ import UseCase
 public protocol DogProfileSettingDependency: Dependency {
 	var dogProfileSettingViewController: ViewControllable { get }
 	var dogProfileFirstDashboardBuildable: DogProfileFirstDashboardBuildable { get }
+	var dogProfileSecondDashboardBuildable: DogProfileSecondDashboardBuildable { get }
 	var dogCharacterPickerBuildable: DogCharacterPickerBuildable { get }
 	var dogCharacterDashboardBuildable: DogCharacterDashboardBuildable { get }
 	var onBoardingUseCase: OnBoardingUseCase { get }
@@ -27,6 +28,10 @@ final class DogProfileSettingComponent:
 	
 	var dogProfileFirstDashboardBuildable: DogProfileFirstDashboardBuildable {
 		dependency.dogProfileFirstDashboardBuildable
+	}
+	
+	var dogProfileSecondDashboardBuildable: DogProfileSecondDashboardBuildable {
+		dependency.dogProfileSecondDashboardBuildable
 	}
 	
 	var dogCharacterPickerBuildable: DogCharacterPickerBuildable {

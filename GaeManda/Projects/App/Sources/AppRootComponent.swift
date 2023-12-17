@@ -16,7 +16,8 @@ final class AppRootComponent:
 	DogCharacterPickerDependency,
 	DogCharacterDashboardDependency,
 	UserProfileDashboardDependency,
-	DogProfileFirstDashboardDependency {
+	DogProfileFirstDashboardDependency,
+	DogProfileSecondDashboardDependency {
 	// MARK: - Buildable
 	lazy var dogCharacterPickerBuildable: DogCharacterPickerBuildable = {
 		return DogCharacterPickerBuilder(dependency: self)
@@ -36,6 +37,10 @@ final class AppRootComponent:
 	
 	lazy var dogProfileFirstDashboardBuildable: DogProfileFirstDashboardBuildable = {
 		return DogProfileFirstDashboardBuilder(dependency: self)
+	}()
+	
+	lazy var dogProfileSecondDashboardBuildable: DogProfileSecondDashboardBuildable = {
+		return DogProfileSecondDashboardBuilder(dependency: self)
 	}()
 	
 	lazy var loggedOutBuildable: LoggedOutBuildable = {

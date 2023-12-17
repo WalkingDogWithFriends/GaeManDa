@@ -5,6 +5,7 @@ import GMDUtils
 import UseCase
 
 protocol DogProfileSecondSettingDependency: Dependency {
+	var dogProfileSecondDashboardBuildable: DogProfileSecondDashboardBuildable { get }
 	var dogCharacterPickerBuildable: DogCharacterPickerBuildable { get }
 	var dogCharacterDashboardBuildable: DogCharacterDashboardBuildable { get }
 	var onBoardingUseCase: OnBoardingUseCase { get }
@@ -19,6 +20,10 @@ final class DogProfileSecondSettingComponent:
 	
 	fileprivate var dogCharacterDashboardBuildable: DogCharacterDashboardBuildable {
 		dependency.dogCharacterDashboardBuildable
+	}
+	
+	fileprivate var dogProfileSecondDashboardBuildable: DogProfileSecondDashboardBuildable {
+		dependency.dogProfileSecondDashboardBuildable
 	}
 	
 	var useCase: OnBoardingUseCase {
