@@ -43,7 +43,7 @@ public extension KeyboardListener where Self: UIViewController {
 		return hideNotification
 	}
 	
-	func removeKeyboardNotification(_ notifications: [NSObjectProtocol?]) {
+	func removeKeyboardNotification(_ notifications: NSObjectProtocol?...) {
 		notifications.forEach(NotificationCenter.default.removeObserver(_:))
 	}
 }

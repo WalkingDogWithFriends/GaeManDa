@@ -33,7 +33,7 @@ public extension GMDTextFieldListener where Self: UIViewController {
 		return textDidChangeNotification
 	}
 	
-	func removeTextFieldNotification(_ notifications: [NSObjectProtocol?]) {
+	func removeTextFieldNotification(_ notifications: NSObjectProtocol?...) {
 		notifications.forEach(NotificationCenter.default.removeObserver(_:))
 	}
 	

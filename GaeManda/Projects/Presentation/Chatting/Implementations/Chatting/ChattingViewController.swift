@@ -83,7 +83,7 @@ final class ChattingViewController:
 	
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
-		removeKeyboardNotification([keyboardShowNotification, keyboardHideNotification])
+		removeKeyboardNotification(keyboardShowNotification, keyboardHideNotification)
 	}
 }
 // MARK: - UI Setting

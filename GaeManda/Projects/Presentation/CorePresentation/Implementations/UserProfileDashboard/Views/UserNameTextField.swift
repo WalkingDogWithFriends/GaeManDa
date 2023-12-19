@@ -1,28 +1,31 @@
+//
+//  File.swift
+//  CorePresentation
+//
+//  Created by jung on 12/15/23.
+//  Copyright © 2023 com.gaemanda. All rights reserved.
+//
+
 import UIKit
 import RxCocoa
 import RxSwift
-import SnapKit
-import GMDExtensions
+import CorePresentation
+import DesignKit
 
-public enum GMDTextFieldMode {
-	case normal
-	case warning
-}
-
-public final class GMDTextField: UIView {
+final class UserNameTextField: UIView {
 	// MARK: - Properties
-	public var mode: GMDTextFieldMode = .normal {
+	var mode: NicknameTextFieldMode = .default {
 		didSet {
 			switch mode {
-			case .normal:
-				changeNormalMode()
-			case .warning:
-				changeWarningMode()
+				case .default: setDefaultMode()
+				case .valid: setValidMode()
+				case .duplicate: setDuplicateMode()
+				case .notEntered: setNotEnteredMode()
 			}
 		}
 	}
 	
-	public var text: String {
+	var text: String {
 		get {
 			textField.text ?? ""
 		}
@@ -31,7 +34,7 @@ public final class GMDTextField: UIView {
 		}
 	}
 	
-	public var attributedText: NSAttributedString {
+	var attributedText: NSAttributedString {
 		get {
 			textField.attributedText ?? NSAttributedString(string: "")
 		}
@@ -40,7 +43,7 @@ public final class GMDTextField: UIView {
 		}
 	}
 	
-	public var titleAlpha: CGFloat {
+	var titleAlpha: CGFloat {
 		get {
 			titleLabel.alpha
 		}
@@ -49,7 +52,7 @@ public final class GMDTextField: UIView {
 		}
 	}
 	
-	public var textFieldPadding: UIEdgeInsets {
+	var textFieldPadding: UIEdgeInsets {
 		get {
 			textField.padding
 		}
@@ -78,9 +81,8 @@ public final class GMDTextField: UIView {
 		return textField
 	}()
 	
-	private let warningLabel: UILabel = {
+	private let subTitleLabel: UILabel = {
 		let label = UILabel()
-		label.textColor = .red100
 		label.numberOfLines = 1
 		label.font = .r12
 		label.layer.opacity = 0.0
@@ -97,14 +99,6 @@ public final class GMDTextField: UIView {
 		setupUI()
 	}
 	
-	public convenience init(
-		title: String,
-		warningText: String
-	) {
-		self.init(title: title)
-		self.warningLabel.text = warningText
-	}
-	
 	@available(*, unavailable)
 	required init?(coder: NSCoder) {
 		fatalError()
@@ -112,14 +106,14 @@ public final class GMDTextField: UIView {
 }
 
 // MARK: - UI Setting
-private extension GMDTextField {
+private extension UserNameTextField {
 	func setupUI() {
 		setViewHierarchy()
 		setConstraints()
 	}
 	
 	func setViewHierarchy() {
-		addSubviews(titleLabel, textField, warningLabel)
+		addSubviews(titleLabel, textField, subTitleLabel)
 	}
 	
 	func setConstraints() {
@@ -132,7 +126,7 @@ private extension GMDTextField {
 			make.top.equalTo(titleLabel.snp.bottom).offset(8)
 		}
 		
-		warningLabel.snp.makeConstraints { make in
+		subTitleLabel.snp.makeConstraints { make in
 			make.leading.bottom.equalToSuperview()
 			make.top.equalTo(textField.snp.bottom).offset(2)
 		}
@@ -140,31 +134,40 @@ private extension GMDTextField {
 }
 
 // MARK: - UI Logic
-private extension GMDTextField {
-	func changeNormalMode() {
-		warningLabel.layer.opacity = 0.0
+private extension UserNameTextField {
+	func setDefaultMode() {
+		subTitleLabel.layer.opacity = 0.0
 	}
 	
-	func changeWarningMode() {
-		warningLabel.layer.opacity = 1.0
+	func setValidMode() {
+		subTitleLabel.textColor = .green100
+		subTitleLabel.text = "사용 가능한 닉네임입니다."
+		subTitleLabel.layer.opacity = 1.0
+	}
+	
+	func setDuplicateMode() {
+		subTitleLabel.textColor = .red100
+		subTitleLabel.text = "이미 존재하는 닉네임입니다."
+		subTitleLabel.layer.opacity = 1.0
+	}
+	
+	func setNotEnteredMode() {
+		subTitleLabel.textColor = .red100
+		subTitleLabel.text = "닉네임을 입력해주세요"
+		subTitleLabel.layer.opacity = 1.0
 	}
 }
 
-// MARK: - Public Methods
-public extension GMDTextField {
+// MARK: - Internal Methods
+extension UserNameTextField {
 	func setRightView(_ rightView: UIView, viewMode: UITextField.ViewMode = .always) {
 		textField.rightView = rightView
 		textField.rightViewMode = viewMode
 	}
-	
-	func setLeftView(_ leftView: UIView, viewMode: UITextField.ViewMode = .always) {
-		textField.leftView = leftView
-		textField.leftViewMode = viewMode
-	}
 }
 
 // MARK: - Reactive Extension
-public extension Reactive where Base: GMDTextField {
+extension Reactive where Base: UserNameTextField {
 	var text: ControlProperty<String?> {
 		base.textField.rx.text
 	}
