@@ -9,7 +9,7 @@ let project = Project.createProject(
 			product: .app,
 			bundleId: "com.gaemanda.dev",
 			infoPlist: .file(path: .relativeToRoot("Projects/App/Info.plist")),
-			resources: ["Resources/**"],
+			resources: [.glob(pattern: "Resources/**", excluding: ["Resources/prod/**"])],
 			entitlements: .relativeToRoot("Projects/App/Entitlements/Dev-GaeManda.entitlements"),
 			dependencies: [
 				.Project.PresentationLayer.CorePresentationImpl,
@@ -21,13 +21,13 @@ let project = Project.createProject(
 				.Project.CoreLayer.GMDUtils,
 				.Project.DomainLayer.UseCaseImpl,
 				.Project.DataLayer.RepositoryImpl,
-				.SPM.RxKakaoSDKCommon,
 				.SPM.KakaoSDKAuth,
-				.SPM.RxKakaoSDKAuth
+				.SPM.FirebaseMessaging
 			],
 			settings: .settings(
 				base: [
-					"ASSETCATALOG_COMPILER_APPICON_NAME": "DevAppIcon"
+					"ASSETCATALOG_COMPILER_APPICON_NAME": "DevAppIcon",
+					"OTHER_LDFLAGS": "-ObjC"
 				],
 				configurations: [
 					.debug(name: .debug, xcconfig: "./xcconfigs/GaeManda.debug.xcconfig")
@@ -39,7 +39,7 @@ let project = Project.createProject(
 			product: .app,
 			bundleId: "com.gaemanda",
 			infoPlist: .file(path: .relativeToRoot("Projects/App/Info.plist")),
-			resources: ["Resources/**"],
+			resources: [.glob(pattern: "Resources/**", excluding: ["Resources/dev/**"])],
 			entitlements: .relativeToRoot("Projects/App/Entitlements/Prod-GaeManda.entitlements"),
 			dependencies: [
 				.Project.PresentationLayer.CorePresentationImpl,
@@ -53,13 +53,13 @@ let project = Project.createProject(
 				.Project.DomainLayer.Repository,
 				.Project.DomainLayer.UseCaseImpl,
 				.Project.DataLayer.RepositoryImpl,
-				.SPM.RxKakaoSDKCommon,
 				.SPM.KakaoSDKAuth,
-				.SPM.RxKakaoSDKAuth
+				.SPM.FirebaseMessaging
 			],
 			settings: .settings(
 				base: [
-					"ASSETCATALOG_COMPILER_APPICON_NAME": "ProdAppIcon"
+					"ASSETCATALOG_COMPILER_APPICON_NAME": "ProdAppIcon",
+					"OTHER_LDFLAGS": "-ObjC"
 				],
 				configurations: [
 					.release(name: .release, xcconfig: "./xcconfigs/GaeManda.release.xcconfig")
