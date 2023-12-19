@@ -16,6 +16,7 @@ protocol TermsOfUsePresentable: Presentable {
 	func set위치정보수집및이용동의Button(isChecked: Bool)
 	func set마케팅정보수신동의Button(isChecked: Bool)
 	func setConfirmButton(isEnabled: Bool)
+	func registerForRemoteNotifications()
 }
 
 protocol TermsOfUseInteractorDependency {
@@ -175,5 +176,28 @@ extension TermsOfUseInteractor {
 	func termsBottomSheetDidFinish(type: BottomSheetType) {
 		router?.detachTermsBottomSheet()
 		termsOfUseViewModel.termsButtonDidTap(type: type)
+		requestPermission(type: type)
+	}
+}
+
+extension TermsOfUseInteractor {
+	func requestPermission(type: BottomSheetType) {
+		switch type {
+		case .a이용약관동의: requestNotificationPermission()
+		default: break
+		}
+	}
+	
+	func requestNotificationPermission() {
+		Task { @MainActor [weak self] in
+			guard let self else { return }
+			do {
+				let isGranted = try await self.dependency.onBoardingUseCase.requestNotificationPermission()
+				guard isGranted else { return }
+				self.presenter.registerForRemoteNotifications()
+			} catch {
+				debugPrint(error.localizedDescription)
+			}
+		}
 	}
 }

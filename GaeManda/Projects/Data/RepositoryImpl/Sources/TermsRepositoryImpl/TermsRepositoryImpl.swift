@@ -15,9 +15,14 @@ import RxSwift
 
 public struct TermsRepositoryImpl: TermsRepository {
 	private let dataMapper: TermsDataMapper
+	private let notificationPermissionManager: NotificationPermissionManager
 	
-	public init(dataMapper: TermsDataMapper) {
+	public init(
+		dataMapper: TermsDataMapper,
+		notificationPermissionManager: NotificationPermissionManager
+	) {
 		self.dataMapper = dataMapper
+		self.notificationPermissionManager = notificationPermissionManager
 	}
 	
 	public func fetchTerms() -> Single<Terms> {
@@ -33,5 +38,11 @@ public struct TermsRepositoryImpl: TermsRepository {
 			
 			return Disposables.create()
 		}
+	}
+}
+
+public extension TermsRepositoryImpl {
+	func requestNotificationPermission() async throws -> Bool {
+		return try await notificationPermissionManager.requestNotificationPermission()
 	}
 }

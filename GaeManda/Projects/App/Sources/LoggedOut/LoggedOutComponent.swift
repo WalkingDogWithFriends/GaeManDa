@@ -70,7 +70,6 @@ final class LoggedOutComponent:
 		return GeocodeRepositoryImpl(dataMapper: GeocodeDataMapperImpl())
 	}()
 	
-	
 	var signInRepository: SignInRepository {
 		SignInRepositoryImpl(keychainStorage: dependency.keychainStorage)
 	}
@@ -79,7 +78,10 @@ final class LoggedOutComponent:
 	lazy var signInUseCase: SignInUseCase = SignInUseCaseImpl(signinRespository: signInRepository)
 	
 	lazy var termsRepository: TermsRepository = {
-		return TermsRepositoryImpl(dataMapper: TermsDataMapperImpl())
+		return TermsRepositoryImpl(
+			dataMapper: TermsDataMapperImpl(),
+			notificationPermissionManager: NotificationPermissionManagerImpl()
+		)
 	}()
 	
 	lazy var onBoardingUseCase: OnBoardingUseCase = {

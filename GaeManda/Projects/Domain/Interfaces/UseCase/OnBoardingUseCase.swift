@@ -19,6 +19,8 @@ public protocol OnBoardingUseCase {
 		termsRepository: TermsRepository
 	)
 	
+	func requestNotificationPermission() async throws -> Bool
+	
 	func createDogs(_ dog: Dog) -> Single<Void>
 	func fetchDogCharacters() -> Single<[DogCharacter]>
 	func fetchDogSpecies() -> Single<[String]>

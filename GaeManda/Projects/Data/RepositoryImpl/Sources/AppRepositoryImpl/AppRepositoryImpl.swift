@@ -9,22 +9,27 @@
 import DataMapper
 import Repository
 import GMDNetwork
+import LocalStorage
 
 public struct AppRepositoryImpl: AppRepository {
 	public let dataMapper: AppDataMapper
 	public let session: Session
+	public let keychainStorage: KeyChainStorage
 	
 	public init(
 		dataMapper: AppDataMapper,
-		session: Session
+		session: Session,
+		keychainStorage: KeyChainStorage
 	) {
 		self.dataMapper = dataMapper
 		self.session = session
+		self.keychainStorage = keychainStorage
 	}
 }
 
 extension AppRepositoryImpl {
 	public func registerDeviceToken(_ deviceToken: String) async throws {
+		guard keychainStorage.hasAccessToken() else { return }
 		let requestDto = dataMapper.mapToRegisterDeviceTokenRequestDTO(from: deviceToken)
 		_ = try await Provider<AppAPI>.init(session: session)
 			.request(AppAPI.registerDeviceToken(requestDto), type: VoidResponse.self)
