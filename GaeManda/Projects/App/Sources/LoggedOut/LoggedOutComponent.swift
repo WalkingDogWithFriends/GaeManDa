@@ -70,10 +70,9 @@ final class LoggedOutComponent:
 		return GeocodeRepositoryImpl(dataMapper: GeocodeDataMapperImpl())
 	}()
 	
-	var keyChainStorage: KeyChainStorage = KeyChainStorage.shared
 	
 	var signInRepository: SignInRepository {
-		SignInRepositoryImpl(keychainStorage: keyChainStorage)
+		SignInRepositoryImpl(keychainStorage: dependency.keychainStorage)
 	}
 	
 	// MARK: - UseCases

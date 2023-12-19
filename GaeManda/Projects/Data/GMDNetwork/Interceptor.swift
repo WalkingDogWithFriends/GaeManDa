@@ -14,6 +14,8 @@ public protocol Interceptor {
 }
 
 public struct RequesetInterceptor: Interceptor {
+	public init() {}
+	
 	public func adapt(_ request: URLRequest) -> URLRequest {
 		var urlRequest = request
 		do {

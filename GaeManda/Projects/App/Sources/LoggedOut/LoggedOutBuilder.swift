@@ -3,6 +3,7 @@ import CorePresentation
 import DesignKit
 import Repository
 import UseCase
+import LocalStorage
 
 protocol LoggedOutDependency: Dependency {
 	var birthdayPickerBuildable: BirthdayPickerBuildable { get }
@@ -13,6 +14,7 @@ protocol LoggedOutDependency: Dependency {
 	var dogRepository: DogRepository { get }
 	var userRepository: UserRepository { get }
 	var signInUseCase: SignInUseCase { get }
+	var keychainStorage: KeyChainStorage { get }
 }
 
 protocol LoggedOutBuildable: Buildable {

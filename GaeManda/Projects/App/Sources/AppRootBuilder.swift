@@ -1,6 +1,21 @@
 import RIBs
+import CorePresentation
+import CorePresentationImpl
+import DataMapper
+import GMDNetwork
+import GMDUtils
+import UseCase
+import UseCaseImpl
+import Repository
+import RepositoryImpl
+import LocalStorage
 
-protocol AppRootDependency: Dependency { }
+protocol AppRootDependency: Dependency {
+	var appDataMapper: AppDataMapper { get }
+	var requestInterceptor: Interceptor { get }
+	var session: Session { get }
+	var keychainStorage: KeyChainStorage { get }
+}
 
 protocol AppRootBuildable: Buildable {
 	func build() -> LaunchRouting
