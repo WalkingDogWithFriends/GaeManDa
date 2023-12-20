@@ -28,7 +28,7 @@ final class ChattingListViewController:
 	
 	// MARK: - UI Components
 	private let navigationBar: GMDNavigationBar = {
-		let navigationBar = GMDNavigationBar(title: "채팅")
+		let navigationBar = GMDNavigationBar(title: "채팅", rightItems: [.more])
 		navigationBar.backButton.isHidden = true
 		
 		return navigationBar
@@ -90,6 +90,8 @@ private extension ChattingListViewController {
 				return cell
 			}
 		)
+		navigationBar.rightItems?.first?.menu = makeNavigationBarRightButtonMenu()
+		navigationBar.rightItems?.first?.showsMenuAsPrimaryAction = true
 	}
 	
 	func setConstraints() {
@@ -116,6 +118,14 @@ private extension ChattingListViewController {
 				}
 			}
 			.disposed(by: disposeBag)
+	}
+	
+	func makeNavigationBarRightButtonMenu() -> UIMenu {
+		let editAction = UIAction(title: "편집") { _ in
+		}
+		let allChattingMuteAction = UIAction(title: "채팅 알림 전체 끄기") { _ in			
+		}
+		return UIMenu(title: "", children: [allChattingMuteAction, editAction])
 	}
 }
 
