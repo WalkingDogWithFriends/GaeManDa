@@ -47,6 +47,10 @@ extension ChattingListInteractor {
 		router?.attachChatting(with: user)
 	}
 	
+	func deleteChatting(at roomId: Int) async { }
+	
+	func muteAllChattings() { }
+	
 	func viewWillAppear() { }
 }
 

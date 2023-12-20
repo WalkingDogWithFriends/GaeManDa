@@ -18,6 +18,8 @@ import GMDUtils
 protocol ChattingListPresentableListener: AnyObject {
 	func viewWillAppear()
 	func didTapChatting(with user: String)
+	func deleteChatting(at roomId: Int) async
+	func muteAllChattings()
 }
 
 final class ChattingListViewController:
@@ -90,6 +92,7 @@ private extension ChattingListViewController {
 				return cell
 			}
 		)
+		chattingListDataSource?.listener = listener
 		navigationBar.rightItems?.first?.menu = makeNavigationBarRightButtonMenu()
 		navigationBar.rightItems?.first?.showsMenuAsPrimaryAction = true
 	}
@@ -121,10 +124,17 @@ private extension ChattingListViewController {
 	}
 	
 	func makeNavigationBarRightButtonMenu() -> UIMenu {
-		let editAction = UIAction(title: "편집") { _ in
+		let editAction = UIAction(title: "편집") { [weak self] _ in
+			guard let self else { return }
+			let isEditing = chattingListTableView.isEditing
+			self.chattingListTableView.setEditing(!isEditing, animated: true)
 		}
-		let allChattingMuteAction = UIAction(title: "채팅 알림 전체 끄기") { _ in			
+		
+		let allChattingMuteAction = UIAction(title: "채팅 알림 전체 끄기") { [weak self] _ in
+			guard let self else { return }
+			self.listener?.muteAllChattings()
 		}
+		
 		return UIMenu(title: "", children: [allChattingMuteAction, editAction])
 	}
 }
