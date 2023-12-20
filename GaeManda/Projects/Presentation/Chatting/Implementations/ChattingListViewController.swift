@@ -16,12 +16,12 @@ import GMDExtensions
 import GMDUtils
 
 protocol ChattingListPresentableListener: AnyObject {
+	func viewWillAppear()
 	func didTapChatting(with user: String)
 }
 
 final class ChattingListViewController:
 	UIViewController,
-	ChattingListPresentable,
 	ChattingListViewControllable {
 	weak var listener: ChattingListPresentableListener?
 	private let disposeBag = DisposeBag()
@@ -37,11 +37,12 @@ final class ChattingListViewController:
 	private let chattingListTableView: UITableView = {
 		let tableView = UITableView()
 		tableView.registerCell(ChattingListCell.self)
-		// remove Top Seperator
-		tableView.tableHeaderView = UIView()
-
+		tableView.estimatedRowHeight = 84
+		tableView.rowHeight = 84
 		return tableView
 	}()
+	
+	private var chattingListDataSource: (ChattingListDiffableDataSource & ChattingListDataSourceProtocol)?
 	
 	private let refreshControl: UIRefreshControl = {
 		let refreshControl = UIRefreshControl()
@@ -61,6 +62,7 @@ final class ChattingListViewController:
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		showTabBar()
+		listener?.viewWillAppear()
 	}
 }
 
@@ -69,7 +71,7 @@ private extension ChattingListViewController {
 	func setupUI() {
 		// Register RefreshControl
 		chattingListTableView.refreshControl = refreshControl
-		
+		setViewAttributes()
 		setupSubviews()
 		setConstraints()
 		bind()
@@ -77,6 +79,17 @@ private extension ChattingListViewController {
 	
 	func setupSubviews() {
 		view.addSubviews(navigationBar, chattingListTableView)
+	}
+	
+	func setViewAttributes() {
+		chattingListDataSource = ChattingListDataSource(
+			tableView: chattingListTableView,
+			cellProvider: { tableView, indexPath, itemIdentifier in
+				let cell = tableView.dequeueCell(ChattingListCell.self, for: indexPath)
+				cell.configure(with: itemIdentifier)
+				return cell
+			}
+		)
 	}
 	
 	func setConstraints() {
@@ -89,7 +102,7 @@ private extension ChattingListViewController {
 		chattingListTableView.snp.makeConstraints { make in
 			make.top.equalTo(navigationBar.snp.bottom)
 			make.leading.trailing.equalToSuperview()
-			make.bottom.equalToSuperview().offset(152)
+			make.bottom.equalToSuperview().offset(-152)
 		}
 	}
 	
@@ -103,5 +116,11 @@ private extension ChattingListViewController {
 				}
 			}
 			.disposed(by: disposeBag)
+	}
+}
+
+extension ChattingListViewController: ChattingListPresentable {
+	func updateChattingList(_ chattingList: [ChattingListDataSource.ViewModel]) {
+		chattingListDataSource?.updateChattingList(chattingList)
 	}
 }
