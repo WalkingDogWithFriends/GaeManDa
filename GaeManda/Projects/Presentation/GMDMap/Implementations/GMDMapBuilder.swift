@@ -8,8 +8,11 @@
 
 import RIBs
 import GMDMap
+import GMDUtils
 
-public protocol GMDMapDependency: Dependency { }
+public protocol GMDMapDependency: Dependency {
+	var locationManagable: CLLocationManagable { get }
+}
 
 final class GMDMapComponent: Component<GMDMapDependency> { }
 
@@ -21,8 +24,12 @@ public final class GMDMapBuilder:
 	}
 	
 	public func build(withListener listener: GMDMapListener) -> ViewableRouting {
+		let component = GMDMapComponent(dependency: dependency)
 		let viewController = GMDMapViewController()
-		let interactor = GMDMapInteractor(presenter: viewController)
+		let interactor = GMDMapInteractor(
+			presenter: viewController,
+			locaitonManagable: component.dependency.locationManagable
+		)
 		interactor.listener = listener
 		return GMDMapRouter(
 			interactor: interactor,

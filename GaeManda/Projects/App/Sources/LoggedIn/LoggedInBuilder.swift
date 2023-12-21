@@ -8,11 +8,13 @@
 
 import RIBs
 import CorePresentation
+import GMDUtils
 import UseCase
 
 protocol LoggedInDependency: Dependency { 
 	var gmdProfileUseCase: GMDProfileUseCase { get }
 	var userProfileDashboardBuildable: UserProfileDashboardBuildable { get }
+	var locationManagable: CLLocationManagable { get }
 }
 
 // MARK: - Builder

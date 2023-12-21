@@ -1,6 +1,7 @@
 import RIBs
 import CorePresentation
 import DataMapper
+import GMDExtensions
 import GMDUtils
 import LocalStorage
 import OnBoarding
@@ -22,12 +23,6 @@ final class LoggedOutComponent:
 	DetailAddressSettingDependency,
 	UserProfileSettingDependency,
 	DogProfileSettingDependency {
-	var clLocationManager: CLLocationManager = {
-		let manager = CLLocationManager()
-		manager.desiredAccuracy = kCLLocationAccuracyBest
-		return manager
-	}()
-	
 	// MARK: Buildeable
   lazy var dogCharacterPickerBuildable: DogCharacterPickerBuildable = {
 		return dependency.dogCharacterPickerBuildable
@@ -88,7 +83,7 @@ final class LoggedOutComponent:
 	lazy var termsRepository: TermsRepository = {
 		return TermsRepositoryImpl(
 			dataMapper: TermsDataMapperImpl(),
-			permissionManager: PermissionManagerImpl(locationManager: clLocationManager)
+			permissionManager: PermissionManagerImpl(locationManager: dependency.locationManagable.locationManager)
 		)
 	}()
 	

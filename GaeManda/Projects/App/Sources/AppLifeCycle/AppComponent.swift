@@ -1,6 +1,7 @@
 import RIBs
 import DataMapper
 import GMDNetwork
+import GMDUtils
 import UseCase
 import UseCaseImpl
 import Repository
@@ -12,6 +13,7 @@ final class AppComponent: Component<EmptyComponent>, AppRootDependency {
 	let requestInterceptor: Interceptor
 	let session: Session
 	let keychainStorage: KeyChainStorage
+	let locationManagable: CLLocationManagable
 	
 	// MARK: - Repository
 	let appRepository: AppRepository
@@ -29,7 +31,8 @@ final class AppComponent: Component<EmptyComponent>, AppRootDependency {
 			session: session,
 			keychainStorage: keychainStorage
 		)
-		self.appUseCase = AppUseCaseImpl(appRepository: appRepository)
+		self.locationManagable = CLLocationManagerProxy()
+		self.appUseCase = AppUseCaseImpl(appRepository: appRepository, locationManagable: locationManagable)
 		super.init(dependency: EmptyComponent())
 	}
 }
