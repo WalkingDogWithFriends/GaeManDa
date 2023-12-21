@@ -9,4 +9,6 @@
 public protocol AppUseCase {
 	@discardableResult
 	func registerDeviceToken(_ deviceToken: String) async -> Bool
+	func startUnpdateLocation()
+	func stopUpdatingLocation()
 }

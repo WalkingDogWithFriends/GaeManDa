@@ -6,16 +6,19 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
+import GMDUtils
 import Repository
 import UseCase
 
 public struct AppUseCaseImpl: AppUseCase {
 	// MARK: - Properties
 	private let appRepository: AppRepository
+	private let locationManagable: CLLocationManagable
 	
 	// MARK: - Initializers
-	public init(appRepository: AppRepository) {
+	public init(appRepository: AppRepository, locationManagable: CLLocationManagable) {
 		self.appRepository = appRepository
+		self.locationManagable = locationManagable
 	}
 }
 
@@ -27,5 +30,14 @@ extension AppUseCaseImpl {
 		} catch {
 			return false
 		}
+	}
+	
+	public func startUnpdateLocation() {
+		guard !locationManagable.isUpdatingLocation else { return }
+		locationManagable.locationManager.startUpdatingLocation()
+	}
+	
+	public func stopUpdatingLocation() {
+		locationManagable.locationManager.stopUpdatingLocation()
 	}
 }
