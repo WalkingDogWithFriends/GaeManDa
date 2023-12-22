@@ -16,6 +16,7 @@ let project = Project.createProject(
 			name: projectName,
 			dependencies: [
 				.Project.PresentationLayer.GMDMap,
+				.Project.DataLayer.GMDNetwork,
 				.Project.CoreLayer.GMDUtils,
 				.Project.CoreLayer.GMDExtensions,
 				.Project.DomainLayer.Entity,

@@ -9,12 +9,15 @@
 import RIBs
 import GMDMap
 import GMDUtils
+import GMDNetwork
 
 public protocol GMDMapDependency: Dependency {
 	var locationManagable: CLLocationManagable { get }
 }
 
-final class GMDMapComponent: Component<GMDMapDependency> { }
+final class GMDMapComponent: Component<GMDMapDependency> { 
+	fileprivate var webSocket: WebSocket = WebSocketProvider()
+}
 
 public final class GMDMapBuilder:
 	Builder<GMDMapDependency>,
@@ -25,7 +28,7 @@ public final class GMDMapBuilder:
 	
 	public func build(withListener listener: GMDMapListener) -> ViewableRouting {
 		let component = GMDMapComponent(dependency: dependency)
-		let viewController = GMDMapViewController()
+		let viewController = GMDMapViewController(webSocket: component.webSocket)
 		let interactor = GMDMapInteractor(
 			presenter: viewController,
 			locaitonManagable: component.dependency.locationManagable
