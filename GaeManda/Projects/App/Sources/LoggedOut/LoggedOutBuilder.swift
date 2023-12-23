@@ -8,6 +8,8 @@ protocol LoggedOutDependency: Dependency {
 	var dogCharacterPickerBuildable: DogCharacterPickerBuildable { get }
 	var dogCharacterDashboardBuildable: DogCharacterDashboardBuildable { get }
 	var userProfileDashboardBuildable: UserProfileDashboardBuildable { get }
+	var dogProfileFirstDashboardBuildable: DogProfileFirstDashboardBuildable { get }
+	var dogProfileSecondDashboardBuildable: DogProfileSecondDashboardBuildable { get }
 	var loggedOutViewController: ViewControllable { get }
 	var dogRepository: DogRepository { get }
 	var userRepository: UserRepository { get }

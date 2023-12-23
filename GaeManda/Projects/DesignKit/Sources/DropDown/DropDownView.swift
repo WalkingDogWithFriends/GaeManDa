@@ -34,7 +34,15 @@ public final class DropDownView: UIView {
 	/// DropDown의 현재 선택된 항목을 알 수 있습니다.
 	public private(set) var selectedOption: String?
 	
-	public override var canBecomeFirstResponder: Bool { true }
+	/// DropDown의 default로 선택된 항목을 설정할 수 있습니다.
+	public var defaultSelectedOption: String? {
+		didSet {
+			self.selectedOption = defaultSelectedOption
+			dropDownTableView.reloadData()
+		}
+	}
+
+  public override var canBecomeFirstResponder: Bool { true }
 	public override var canResignFirstResponder: Bool { true }
 	
 	// MARK: - UI Components
@@ -45,7 +53,7 @@ public final class DropDownView: UIView {
 	public init(anchorView: UIView) {
 		self.anchorView = anchorView
 		super.init(frame: .zero)
-
+    
 		dropDownTableView.dataSource = self
 		dropDownTableView.delegate = self
 		
@@ -62,12 +70,11 @@ public final class DropDownView: UIView {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
-	
 	public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
 		return super.hitTest(point, with: event)
 	}
-	
-	public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+
+  public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		if isDisplayed == true {
 			resignFirstResponder()
 		} else {
