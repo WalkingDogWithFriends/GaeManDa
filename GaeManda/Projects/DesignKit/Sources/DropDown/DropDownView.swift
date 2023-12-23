@@ -41,8 +41,8 @@ public final class DropDownView: UIView {
 			dropDownTableView.reloadData()
 		}
 	}
-	
-	public override var canBecomeFirstResponder: Bool { true }
+
+  public override var canBecomeFirstResponder: Bool { true }
 	public override var canResignFirstResponder: Bool { true }
 	
 	// MARK: - UI Components
@@ -53,29 +53,28 @@ public final class DropDownView: UIView {
 	public init(anchorView: UIView) {
 		self.anchorView = anchorView
 		super.init(frame: .zero)
-		anchorView.isUserInteractionEnabled = true
-		self.isUserInteractionEnabled = true
+    
 		dropDownTableView.dataSource = self
 		dropDownTableView.delegate = self
 		
 		setupUI()
 	}
 	
-	public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-		return super.hitTest(point, with: event)
-	}
-	
 	convenience public init(anchorView: UIView, selectedOption: String) {
 		self.init(anchorView: anchorView)
 		self.selectedOption = selectedOption
 	}
-	
+
 	@available(*, unavailable)
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
-	public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+	public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+		return super.hitTest(point, with: event)
+	}
+
+  public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		if isDisplayed == true {
 			resignFirstResponder()
 		} else {

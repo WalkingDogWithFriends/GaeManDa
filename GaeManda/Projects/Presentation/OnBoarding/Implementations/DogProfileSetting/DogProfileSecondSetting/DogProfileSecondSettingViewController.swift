@@ -133,8 +133,8 @@ final class DogProfileSecondSettingViewController:
 		
 		viewController.didMove(toParent: self)
 	}
-		
-	// MARK: - UI Binding
+
+  // MARK: - UI Binding
 	override func bind() {
 		super.bind()
 		bindNavigationBar()
@@ -149,7 +149,7 @@ final class DogProfileSecondSettingViewController:
 			.disposed(by: disposeBag)
 	}
 	
-	private func bindConfirmButton() { 
+  private func bindConfirmButton() { 
 		confirmButton.rx.tap
 			.withUnretained(self)
 			.filter { owner, _ in
