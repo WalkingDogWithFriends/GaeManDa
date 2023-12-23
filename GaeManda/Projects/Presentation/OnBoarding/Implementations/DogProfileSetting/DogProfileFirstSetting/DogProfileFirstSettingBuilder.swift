@@ -4,12 +4,12 @@ import DesignKit
 import OnBoarding
 
 protocol DogProfileFirstSettingDependency: Dependency { 
-	var birthdayPickerBuildable: BirthdayPickerBuildable { get }
+	var dogProfileFirstDashboardBuildable: DogProfileFirstDashboardBuildable { get }
 }
 
 final class DogProfileFirstSettingComponent: Component<DogProfileFirstSettingDependency> {
-	var birthdayPickerBuildable: BirthdayPickerBuildable {
-		dependency.birthdayPickerBuildable
+	var dogProfileFirstDashboardBuildable: DogProfileFirstDashboardBuildable {
+		dependency.dogProfileFirstDashboardBuildable
 	}
 }
 
@@ -29,10 +29,11 @@ final class DogProfileFirstSettingBuilder:
 		let viewController = DogProfileFirstSettingViewController()
 		let interactor = DogProfileFirstSettingInteractor(presenter: viewController)
 		interactor.listener = listener
+		
 		return DogProfileFirstSettingRouter(
 			interactor: interactor,
 			viewController: viewController,
-			birthdayPickerBuildable: component.birthdayPickerBuildable
+			dogProfileFirstDashboardBuildable: component.dogProfileFirstDashboardBuildable
 		)
 	}
 }
