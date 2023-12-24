@@ -19,7 +19,7 @@ public final class TermsBottomSheetBuilder: Builder<TermsBottomSheetDependency>,
 	
 	public func build(
 		withListener listener: TermsBottomSheetListener,
-		type: BottomSheetType,
+		type: TermsType,
 		terms: String?
 	) -> ViewableRouting {
 		let viewController = TermsBottomSheetViewController()
