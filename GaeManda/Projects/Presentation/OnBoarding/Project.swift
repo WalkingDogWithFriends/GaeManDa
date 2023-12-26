@@ -19,6 +19,7 @@ let project = Project.createProject(
 				.Project.PresentationLayer.CorePresentation,
 				.Project.PresentationLayer.OnBoarding,
 				.Project.CoreLayer.GMDExtensions,
+				.Project.CoreLayer.GMDUtils,
 				.Project.DomainLayer.UseCase,
 				.Project.DomainLayer.Entity,
 				.Project.DesignKit,

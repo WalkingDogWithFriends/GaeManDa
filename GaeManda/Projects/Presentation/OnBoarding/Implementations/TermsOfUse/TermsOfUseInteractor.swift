@@ -3,7 +3,7 @@ import OnBoarding
 import UseCase
 
 protocol TermsOfUseRouting: ViewableRouting {
-	func attachTermsBottomSheet(type: BottomSheetType, with terms: String?)
+	func attachTermsBottomSheet(type: TermsType, with terms: String?)
 	func detachTermsBottomSheet()
 }
 
@@ -16,6 +16,7 @@ protocol TermsOfUsePresentable: Presentable {
 	func set위치정보수집및이용동의Button(isChecked: Bool)
 	func set마케팅정보수신동의Button(isChecked: Bool)
 	func setConfirmButton(isEnabled: Bool)
+	func registerForRemoteNotifications()
 }
 
 protocol TermsOfUseInteractorDependency {
@@ -172,8 +173,36 @@ extension TermsOfUseInteractor {
 		router?.detachTermsBottomSheet()
 	}
 	
-	func termsBottomSheetDidFinish(type: BottomSheetType) {
+	func termsBottomSheetDidFinish(type: TermsType) {
 		router?.detachTermsBottomSheet()
 		termsOfUseViewModel.termsButtonDidTap(type: type)
+		requestPermission(type: type)
+	}
+}
+
+extension TermsOfUseInteractor {
+	func requestPermission(type: TermsType) {
+		switch type {
+		case .a이용약관동의: requestNotificationPermission()
+		case .a위치정보수집및이용동의: requestLocationPermission()
+		default: break
+		}
+	}
+	
+	func requestNotificationPermission() {
+		Task { @MainActor [weak self] in
+			guard let self else { return }
+			do {
+				let isGranted = try await self.dependency.onBoardingUseCase.requestNotificationPermission()
+				guard isGranted else { return }
+				self.presenter.registerForRemoteNotifications()
+			} catch {
+				debugPrint(error.localizedDescription)
+			}
+		}
+	}
+	
+	func requestLocationPermission() {
+		self.dependency.onBoardingUseCase.requestLocationPermission()
 	}
 }

@@ -1,12 +1,15 @@
+import Foundation
 import RIBs
 import CorePresentation
 import CorePresentationImpl
 import DataMapper
+import GMDNetwork
 import GMDUtils
 import UseCase
 import UseCaseImpl
 import Repository
 import RepositoryImpl
+import LocalStorage
 
 final class AppRootComponent:
 	Component<AppRootDependency>,
@@ -15,7 +18,7 @@ final class AppRootComponent:
 	BirthdayPickerDependency,
 	DogCharacterPickerDependency,
 	DogCharacterDashboardDependency,
-	UserProfileDashboardDependency{
+	UserProfileDashboardDependency {
 	// MARK: - Buildable
 	lazy var dogCharacterPickerBuildable: DogCharacterPickerBuildable = {
 		return DogCharacterPickerBuilder(dependency: self)
@@ -63,6 +66,8 @@ final class AppRootComponent:
 	var loggedOutViewController: ViewControllable { rootViewController }
 	
 	private let rootViewController: ViewControllable
+	
+	var keychainStorage: KeyChainStorage { dependency.keychainStorage }
 	
 	init(
 		dependency: AppRootDependency,

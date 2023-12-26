@@ -20,7 +20,8 @@ let project = Project.createProject(
 			sources: ["GMDUtils/**"],
 			dependencies: [
 				.Project.CoreLayer.GMDExtensions,
-				.Project.DesignKit
+				.Project.DesignKit,
+				.SPM.FirebaseMessaging
 			]
 		)
 	]

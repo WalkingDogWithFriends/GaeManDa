@@ -8,7 +8,7 @@
 
 import RIBs
 
-public enum BottomSheetType {
+public enum TermsType {
 	case a약관전체동의
 	case a이용약관동의
 	case a개인정보수집및이용동의
@@ -21,12 +21,12 @@ public protocol TermsBottomSheetDependency: Dependency {}
 public protocol TermsBottomSheetBuildable: Buildable {
 	func build(
 		withListener listener: TermsBottomSheetListener,
-		type: BottomSheetType,
+		type: TermsType,
 		terms: String?
 	) -> ViewableRouting
 }
 
 public protocol TermsBottomSheetListener: AnyObject {
 	func termsBottomSheetDismiss()
-	func termsBottomSheetDidFinish(type: BottomSheetType)
+	func termsBottomSheetDidFinish(type: TermsType)
 }

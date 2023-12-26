@@ -25,10 +25,10 @@ final class TermsBottomSheetInteractor:
 	weak var router: TermsBottomSheetRouting?
 	weak var listener: TermsBottomSheetListener?
 	
-	private let type: BottomSheetType
+	private let type: TermsType
 	private var terms: String?
 	
-	init(presenter: TermsBottomSheetPresentable, type: BottomSheetType, terms: String?) {
+	init(presenter: TermsBottomSheetPresentable, type: TermsType, terms: String?) {
 		self.type = type
 		self.terms = terms
 		super.init(presenter: presenter)

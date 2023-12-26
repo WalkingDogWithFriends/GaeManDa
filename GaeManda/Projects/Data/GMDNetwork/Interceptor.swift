@@ -7,21 +7,7 @@
 //
 
 import Foundation
-import LocalStorage
 
 public protocol Interceptor {
 	func adapt(_ request: URLRequest) -> URLRequest
-}
-
-public struct RequesetInterceptor: Interceptor {
-	public func adapt(_ request: URLRequest) -> URLRequest {
-		var urlRequest = request
-		do {
-			let accessToken = try KeyChainStorage.shared.getAccessToken()
-			urlRequest.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-			return urlRequest
-		} catch {
-			return urlRequest
-		}
-	}
 }

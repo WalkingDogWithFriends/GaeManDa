@@ -66,6 +66,14 @@ public extension OnBoardingUseCaseImpl {
 
 // MARK: - Terms UseCase
 public extension OnBoardingUseCaseImpl {
+	func requestNotificationPermission() async throws -> Bool {
+		return try await termsRepository.requestNotificationPermission()
+	}
+	
+	func requestLocationPermission() {
+		return termsRepository.requestLocationPermission()
+	}
+	
 	func fetchTerms() -> Single<Terms> {
 		return termsRepository.fetchTerms()
 	}
