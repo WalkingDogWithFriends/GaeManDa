@@ -11,5 +11,6 @@ import Entity
 
 public protocol TermsRepository {
 	func requestNotificationPermission() async throws -> Bool
+	func requestLocationPermission()
 	func fetchTerms() -> Single<Terms>
 }

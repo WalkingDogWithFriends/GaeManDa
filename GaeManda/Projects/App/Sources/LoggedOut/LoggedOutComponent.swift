@@ -6,6 +6,7 @@ import LocalStorage
 import OnBoarding
 import OnBoardingImpl
 import Repository
+import CoreLocation
 import RepositoryImpl
 import SignIn
 import SignInImpl
@@ -21,6 +22,13 @@ final class LoggedOutComponent:
 	DetailAddressSettingDependency,
 	UserProfileSettingDependency,
 	DogProfileSettingDependency {
+	var clLocationManager: CLLocationManager = {
+		let manager = CLLocationManager()
+		manager.desiredAccuracy = kCLLocationAccuracyBest
+		return manager
+	}()
+	
+	// MARK: Buildeable
   lazy var dogCharacterPickerBuildable: DogCharacterPickerBuildable = {
 		return dependency.dogCharacterPickerBuildable
 	}()
@@ -80,7 +88,7 @@ final class LoggedOutComponent:
 	lazy var termsRepository: TermsRepository = {
 		return TermsRepositoryImpl(
 			dataMapper: TermsDataMapperImpl(),
-			notificationPermissionManager: NotificationPermissionManagerImpl()
+			permissionManager: PermissionManagerImpl(locationManager: clLocationManager)
 		)
 	}()
 	

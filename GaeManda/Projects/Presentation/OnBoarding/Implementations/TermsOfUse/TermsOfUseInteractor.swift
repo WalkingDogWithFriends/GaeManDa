@@ -3,7 +3,7 @@ import OnBoarding
 import UseCase
 
 protocol TermsOfUseRouting: ViewableRouting {
-	func attachTermsBottomSheet(type: BottomSheetType, with terms: String?)
+	func attachTermsBottomSheet(type: TermsType, with terms: String?)
 	func detachTermsBottomSheet()
 }
 
@@ -173,7 +173,7 @@ extension TermsOfUseInteractor {
 		router?.detachTermsBottomSheet()
 	}
 	
-	func termsBottomSheetDidFinish(type: BottomSheetType) {
+	func termsBottomSheetDidFinish(type: TermsType) {
 		router?.detachTermsBottomSheet()
 		termsOfUseViewModel.termsButtonDidTap(type: type)
 		requestPermission(type: type)
@@ -181,9 +181,10 @@ extension TermsOfUseInteractor {
 }
 
 extension TermsOfUseInteractor {
-	func requestPermission(type: BottomSheetType) {
+	func requestPermission(type: TermsType) {
 		switch type {
 		case .a이용약관동의: requestNotificationPermission()
+		case .a위치정보수집및이용동의: requestLocationPermission()
 		default: break
 		}
 	}
@@ -199,5 +200,9 @@ extension TermsOfUseInteractor {
 				debugPrint(error.localizedDescription)
 			}
 		}
+	}
+	
+	func requestLocationPermission() {
+		self.dependency.onBoardingUseCase.requestLocationPermission()
 	}
 }

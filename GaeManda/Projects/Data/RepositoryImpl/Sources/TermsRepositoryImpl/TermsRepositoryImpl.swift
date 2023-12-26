@@ -6,23 +6,24 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
-import DTO
-import Repository
 import DataMapper
+import DTO
 import Entity
+import GMDUtils
 import LocalStorage
+import Repository
 import RxSwift
 
 public struct TermsRepositoryImpl: TermsRepository {
 	private let dataMapper: TermsDataMapper
-	private let notificationPermissionManager: NotificationPermissionManager
+	private let permissionManager: PermissionManager
 	
 	public init(
 		dataMapper: TermsDataMapper,
-		notificationPermissionManager: NotificationPermissionManager
+		permissionManager: PermissionManager
 	) {
 		self.dataMapper = dataMapper
-		self.notificationPermissionManager = notificationPermissionManager
+		self.permissionManager = permissionManager
 	}
 	
 	public func fetchTerms() -> Single<Terms> {
@@ -43,6 +44,10 @@ public struct TermsRepositoryImpl: TermsRepository {
 
 public extension TermsRepositoryImpl {
 	func requestNotificationPermission() async throws -> Bool {
-		return try await notificationPermissionManager.requestNotificationPermission()
+		return try await permissionManager.requestNotificationPermission()
+	}
+	
+	func requestLocationPermission() {
+		permissionManager.requestLocationPermission()
 	}
 }

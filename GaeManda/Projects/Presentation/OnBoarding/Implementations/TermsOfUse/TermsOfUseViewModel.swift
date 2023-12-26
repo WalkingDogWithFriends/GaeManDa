@@ -74,7 +74,7 @@ final class TermsOfUseViewModel {
 		is마케팅정보수신동의Checked
 	}
 	
-	func termsButtonDidTap(type: BottomSheetType) {
+	func termsButtonDidTap(type: TermsType) {
 		switch type {
 		case .a약관전체동의: a약관전체동의ButtonDidTap()
 		case .a이용약관동의: a이용약관동의ButtonDidTap()

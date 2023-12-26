@@ -20,6 +20,7 @@ public protocol OnBoardingUseCase {
 	)
 	
 	func requestNotificationPermission() async throws -> Bool
+	func requestLocationPermission()
 	
 	func createDogs(_ dog: Dog) -> Single<Void>
 	func fetchDogCharacters() -> Single<[DogCharacter]>
