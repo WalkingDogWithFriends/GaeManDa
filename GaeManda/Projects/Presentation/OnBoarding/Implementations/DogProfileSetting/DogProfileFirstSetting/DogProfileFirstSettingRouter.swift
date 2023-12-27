@@ -1,44 +1,52 @@
 import RIBs
+import RxRelay
 import CorePresentation
-import DesignKit
 import OnBoarding
 
-protocol DogProfileFirstSettingInteractable: Interactable, BirthdayPickerListener {
+protocol DogProfileFirstSettingInteractable: Interactable, DogProfileFirstDashboardListener {
 	var router: DogProfileFirstSettingRouting? { get set }
 	var listener: DogProfileFirstSettingListener? { get set }
 }
 
-protocol DogProfileFirstSettingViewControllable: ViewControllable { }
+protocol DogProfileFirstSettingViewControllable: ViewControllable {
+	func addDogProfileFirstDashboard(_ viewControllable: ViewControllable)
+}
 
 final class DogProfileFirstSettingRouter:
 	ViewableRouter<DogProfileFirstSettingInteractable, DogProfileFirstSettingViewControllable>,
 	DogProfileFirstSettingRouting {
-	private let birthdayPickerBuildable: BirthdayPickerBuildable
-	private var birthdayPickerRouting: ViewableRouting?
+	private let dogProfileFirstDashboardBuildable: DogProfileFirstDashboardBuildable
+	private var dogProfileFirstDashboardRouting: ViewableRouting?
 	
 	init(
 		interactor: DogProfileFirstSettingInteractable,
 		viewController: DogProfileFirstSettingViewControllable,
-		birthdayPickerBuildable: BirthdayPickerBuildable
+		dogProfileFirstDashboardBuildable: DogProfileFirstDashboardBuildable
 	) {
-		self.birthdayPickerBuildable = birthdayPickerBuildable
+		self.dogProfileFirstDashboardBuildable = dogProfileFirstDashboardBuildable
 		super.init(interactor: interactor, viewController: viewController)
 		interactor.router = self
 	}
 }
 
+// MARK: - DogProfileFirstDashboard
 extension DogProfileFirstSettingRouter {
-	func attachBirthdayPicker() {
-		guard birthdayPickerRouting == nil else { return }
-		let router = birthdayPickerBuildable.build(withListener: interactor)
-		self.birthdayPickerRouting = router
+	func dogProfileFirstDashboardAttach(
+		nameTextFieldIsWarning: BehaviorRelay<Void>,
+		birthdayTextFieldIsWarning: BehaviorRelay<Void>,
+		weightTextFieldIsWarning: BehaviorRelay<Void>
+	) {
+		guard dogProfileFirstDashboardRouting == nil else { return }
+		let router = dogProfileFirstDashboardBuildable.build(
+			withListener: interactor,
+			nameTextFieldIsWarning: nameTextFieldIsWarning,
+			birthdayTextFieldIsWarning: birthdayTextFieldIsWarning,
+			weightTextFieldIsWarning: weightTextFieldIsWarning,
+			passingModel: nil
+		)
+		
+		self.dogProfileFirstDashboardRouting = router
 		attachChild(router)
-		viewControllable.present(router.viewControllable, animated: false, modalPresentationStyle: .overFullScreen)
-	}
-	
-	func detachBirthdayPicker() {
-		guard let router = birthdayPickerRouting else { return }
-		detachChild(router)
-		self.birthdayPickerRouting = nil
+		viewController.addDogProfileFirstDashboard(router.viewControllable)
 	}
 }

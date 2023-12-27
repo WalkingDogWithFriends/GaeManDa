@@ -34,16 +34,7 @@ final class AddressSettingViewController:
 	
 	private let onBoardingView = OnBoardingView(viewMode: .default, title: "사생활 보호를 위해\n집 주소를 입력해주세요!")
 	
-	private let searchTextField: UnderLineTextField = {
-		let underLineTextField = UnderLineTextField()
-		underLineTextField.underLineColor = .black
-		underLineTextField.placeholder = "도로명 또는 지번 주소를 입력해주세요"
-		underLineTextField.leftView = UIImageView(image: .iconSearch)
-		underLineTextField.leftViewMode = .always
-		underLineTextField.setPlaceholdColor(.gray90)
-		
-		return underLineTextField
-	}()
+	private let locationSearchButton = LocationSearchButton()
 	
 	private let loadLocationButton = LocationLoadButton()
 	
@@ -95,7 +86,7 @@ final class AddressSettingViewController:
 	override func setViewHierarchy() {
 		super.setViewHierarchy()
 		contentView.addSubviews(
-			navigationBar, onBoardingView, searchTextField, loadLocationButton, mapView, noticeLabel, confirmButton
+			navigationBar, onBoardingView, locationSearchButton, loadLocationButton, mapView, noticeLabel, confirmButton
 		)
 	}
 	
@@ -112,14 +103,14 @@ final class AddressSettingViewController:
 			make.trailing.equalToSuperview().offset(-32)
 		}
 		
-		searchTextField.snp.makeConstraints { make in
+		locationSearchButton.snp.makeConstraints { make in
 			make.top.equalTo(onBoardingView.snp.bottom).offset(36)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 		}
 		
 		loadLocationButton.snp.makeConstraints { make in
-			make.top.equalTo(searchTextField.snp.bottom).offset(12)
+			make.top.equalTo(locationSearchButton.snp.bottom).offset(12)
 			make.leading.equalToSuperview().offset(32)
 			make.trailing.equalToSuperview().offset(-32)
 			make.height.equalTo(28)
@@ -150,13 +141,8 @@ final class AddressSettingViewController:
 	override func bind() {
 		super.bind()
 		bindCLLocationManager()
-		searchTextField.rx.controlEvent(.editingDidBegin)
-			.bind(with: self) { owner, _ in
-				owner.searchTextField.resignFirstResponder()
-			}
-			.disposed(by: disposeBag)
 		
-		searchTextField.rx.tapGesture().when(.recognized)
+		locationSearchButton.rx.tap
 			.bind(with: self) { owner, _ in
 				owner.listener?.searchTextFieldDidTap()
 			}
