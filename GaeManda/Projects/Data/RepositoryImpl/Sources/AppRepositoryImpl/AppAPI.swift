@@ -16,13 +16,13 @@ public enum AppAPI {
 
 extension AppAPI: TargetType {
 	public var baseURL: URL {
-		return URL(string: "http://117.17.198.45:8000")!
+		return URL(string: "http://117.17.198.45:9000")!
 	}
 	
 	public var path: String {
 		switch self {
 		case .registerDeviceToken:
-			return "/memeber/deviceToken"
+			return "/member/deviceToken"
 		}
 	}
 	

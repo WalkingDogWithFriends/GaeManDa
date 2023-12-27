@@ -18,7 +18,7 @@ public enum DogAPI {
 
 extension DogAPI: TargetType {
 	public var baseURL: URL {
-		return URL(string: "http://117.17.198.45:8000/api/pet")!
+		return URL(string: "http://117.17.198.45:9000/api/pet")!
 	}
 	
 	public var path: String {
