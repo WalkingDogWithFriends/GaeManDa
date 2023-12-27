@@ -141,5 +141,9 @@ public extension TargetDependency.SPM {
 	static let RxCocoa = TargetDependency.external(name: "RxCocoa")
 	static let RxGesture = TargetDependency.external(name: "RxGesture")
 	static let SnapKit = TargetDependency.external(name: "SnapKit")
+	static let KakaoSDKAuth = TargetDependency.external(name: "KakaoSDKAuth")
+	static let KakaoSDKUser = TargetDependency.external(name: "KakaoSDKUser")
 	static let NMapsMap = TargetDependency.external(name: "NMapsMapSPM")
+	static let FirebaseCore = TargetDependency.external(name: "FirebaseCore")
+	static let FirebaseMessaging = TargetDependency.external(name: "FirebaseMessaging")
 }

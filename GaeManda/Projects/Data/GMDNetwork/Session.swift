@@ -14,15 +14,21 @@ public protocol Sessionable {
 
 public struct Session: Sessionable {
 	private let session: URLSession
+	private var interceptor: Interceptor?
 	
-	public init(session: URLSession = URLSession(configuration: .default)) {
+	public init(
+		session: URLSession = URLSession(configuration: .default),
+		interceptor: Interceptor? = nil
+	) {
 		self.session = session
+		self.interceptor = interceptor
 	}
 	
 	public func request(request: URLRequest) async throws -> Data {
 		var request = request
-		if let token = UserDefaults.standard.string(forKey: "token") {
-			request.headers.add(.authorization(bearerToken: token))
+		
+		if let interceptor = self.interceptor {
+			request = interceptor.adapt(request)
 		}
 		
 		let (data, response) = try await self.session.data(for: request)

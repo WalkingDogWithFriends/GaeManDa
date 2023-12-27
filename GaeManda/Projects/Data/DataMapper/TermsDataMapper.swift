@@ -17,8 +17,11 @@ public struct TermsDataMapperImpl: TermsDataMapper {
 	public init() {}
 	
 	public func mapToTerms(from dto: TermsResponseDTO) -> Terms {
+		let allAgreement = [
+			dto.useAgreement, dto.personalInformationAgreement, dto.locationAgreement, dto.marketingAgreement
+		].joined(separator: "\n\n")
 		return Terms(
-			allAgreement: dto.allAgreement,
+			allAgreement: allAgreement,
 			useAgreement: dto.useAgreement,
 			personalInformationAgreement: dto.personalInformationAgreement,
 			locationAgreement: dto.locationAgreement,

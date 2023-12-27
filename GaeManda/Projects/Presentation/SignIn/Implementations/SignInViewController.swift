@@ -42,11 +42,7 @@ final class SignInViewController:
 	
 	private let kakaoLoginButton: UIButton = {
 		let button = UIButton()
-		button.setTitle("Kakao", for: .normal)
-		button.setTitleColor(.white, for: .normal)
-		button.backgroundColor = .yellow
-		button.layer.cornerRadius = 4
-		
+		button.setImage(.kakaoLogin, for: .normal)
 		return button
 	}()
 	
@@ -63,6 +59,7 @@ private extension SignInViewController {
 		view.backgroundColor = .white
 		setViewHierarchy()
 		setConstraints()
+		bind()
 	}
 	
 	func setViewHierarchy() {

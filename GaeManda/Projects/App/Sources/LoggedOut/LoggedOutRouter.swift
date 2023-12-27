@@ -33,11 +33,6 @@ final class LoggedOutRouter: Router<LoggedOutInteractable>, LoggedOutRouting {
 		interactor.router = self
 	}
 	
-	override func didLoad() {
-		super.didLoad()
-		attachOnBoarding()
-	}
-	
 	func cleanupViews() {
 		if let routing = onBoardingRouting {
 			detachChild(routing)
@@ -65,10 +60,9 @@ extension LoggedOutRouter {
 	
 	func detachSignIn() {
 		guard let router = signInRouting else { return }
-		
-		viewController.dismiss(completion: nil)
 		signInRouting = nil
 		detachChild(router)
+		viewController.dismiss(animated: false)
 	}
 }
 

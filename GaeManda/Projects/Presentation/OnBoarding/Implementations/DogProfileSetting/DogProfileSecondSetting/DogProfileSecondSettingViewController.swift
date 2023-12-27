@@ -25,10 +25,6 @@ final class DogProfileSecondSettingViewController:
 	weak var listener: DogProfileSecondSettingPresentableListener?
 	var dropDownViews: [DropDownView]?
 	
-	private var selectedProfileImage: UIImage?
-	private var selectedSpecies: String = ""
-	private var isSelectedCharacters = BehaviorRelay<Bool>(value: false)
-	
 	// MARK: - UI Components
 	private let navigationBar = GMDNavigationBar(title: "")
 	
@@ -76,7 +72,7 @@ final class DogProfileSecondSettingViewController:
 	
 	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
 		super.touchesEnded(touches, with: event)
-
+		
 		self.view.endEditing(true)
 	}
 	
@@ -133,8 +129,8 @@ final class DogProfileSecondSettingViewController:
 		
 		viewController.didMove(toParent: self)
 	}
-
-  // MARK: - UI Binding
+	
+	// MARK: - UI Binding
 	override func bind() {
 		super.bind()
 		bindNavigationBar()
@@ -149,7 +145,7 @@ final class DogProfileSecondSettingViewController:
 			.disposed(by: disposeBag)
 	}
 	
-  private func bindConfirmButton() { 
+	private func bindConfirmButton() {
 		confirmButton.rx.tap
 			.withUnretained(self)
 			.filter { owner, _ in
@@ -171,6 +167,6 @@ extension DogProfileSecondSettingViewController: DogProfileSecondSettingPresenta
 	func updateProfileImage(with profileImage: UIImageWrapper) {
 		guard let profileImage = profileImage.image else { return }
 		
-		profileImageView.image = selectedProfileImage
+		profileImageView.image = profileImage
 	}
 }

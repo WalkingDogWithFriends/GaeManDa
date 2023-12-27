@@ -1,7 +1,10 @@
 import RIBs
 import CorePresentation
 import DesignKit
+import GMDUtils
 import Repository
+import UseCase
+import LocalStorage
 
 protocol LoggedOutDependency: Dependency {
 	var birthdayPickerBuildable: BirthdayPickerBuildable { get }
@@ -13,6 +16,9 @@ protocol LoggedOutDependency: Dependency {
 	var loggedOutViewController: ViewControllable { get }
 	var dogRepository: DogRepository { get }
 	var userRepository: UserRepository { get }
+	var signInUseCase: SignInUseCase { get }
+	var keychainStorage: KeyChainStorage { get }
+	var locationManagable: CLLocationManagable { get }
 }
 
 protocol LoggedOutBuildable: Buildable {
@@ -28,7 +34,7 @@ final class LoggedOutBuilder:
 	
 	func build(withListener listener: LoggedOutListener) -> Routing {
 		let component = LoggedOutComponent(dependency: dependency)
-		let interactor = LoggedOutInteractor()
+		let interactor = LoggedOutInteractor(signInUseCase: component.signInUseCase)
 		interactor.listener = listener
 		
 		return LoggedOutRouter(

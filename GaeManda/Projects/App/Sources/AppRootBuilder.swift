@@ -1,6 +1,22 @@
 import RIBs
+import CorePresentation
+import CorePresentationImpl
+import DataMapper
+import GMDNetwork
+import GMDUtils
+import UseCase
+import UseCaseImpl
+import Repository
+import RepositoryImpl
+import LocalStorage
 
-protocol AppRootDependency: Dependency { }
+protocol AppRootDependency: Dependency {
+	var appDataMapper: AppDataMapper { get }
+	var requestInterceptor: Interceptor { get }
+	var session: Session { get }
+	var keychainStorage: KeyChainStorage { get }
+	var locationManagable: CLLocationManagable { get }
+}
 
 protocol AppRootBuildable: Buildable {
 	func build() -> LaunchRouting
@@ -20,7 +36,10 @@ final class AppRootBuilder:
 			rootViewController: viewController
 		)
 
-		let interactor = AppRootInteractor(presenter: viewController)
+		let interactor = AppRootInteractor(
+			presenter: viewController,
+			signInUseCase: component.signInUseCase
+		)
 		
 		let loggedOut = LoggedOutBuilder(dependency: component)
 		let loggedIn = LoggedInBuilder(dependency: component)

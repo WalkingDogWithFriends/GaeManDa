@@ -1,12 +1,15 @@
+import Foundation
 import RIBs
 import CorePresentation
 import CorePresentationImpl
 import DataMapper
+import GMDNetwork
 import GMDUtils
 import UseCase
 import UseCaseImpl
 import Repository
 import RepositoryImpl
+import LocalStorage
 
 final class AppRootComponent:
 	Component<AppRootDependency>,
@@ -18,6 +21,9 @@ final class AppRootComponent:
 	UserProfileDashboardDependency,
 	DogProfileFirstDashboardDependency,
 	DogProfileSecondDashboardDependency {
+	// MARK: CLLocation Managable
+	var locationManagable: CLLocationManagable { dependency.locationManagable }
+	
 	// MARK: - Buildable
 	lazy var dogCharacterPickerBuildable: DogCharacterPickerBuildable = {
 		return DogCharacterPickerBuilder(dependency: self)
@@ -56,6 +62,8 @@ final class AppRootComponent:
 		return UserRepositoryImpl(dataMapper: UserProfileDataMapperImpl())
 	}()
 	
+	var signInRepository = SignInRepositoryImpl(keychainStorage: .shared)
+	
 	// MARK: - UseCase
 	lazy var gmdProfileUseCase: GMDProfileUseCase = {
 		return GMDProfileUseCaseImpl(
@@ -64,9 +72,15 @@ final class AppRootComponent:
 		)
 	}()
 	
+	var signInUseCase: SignInUseCase {
+		return SignInUseCaseImpl(signinRespository: signInRepository)
+	}
+	
 	var loggedOutViewController: ViewControllable { rootViewController }
 	
 	private let rootViewController: ViewControllable
+	
+	var keychainStorage: KeyChainStorage { dependency.keychainStorage }
 	
 	init(
 		dependency: AppRootDependency,

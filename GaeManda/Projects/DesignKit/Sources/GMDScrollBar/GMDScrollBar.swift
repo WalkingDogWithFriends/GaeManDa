@@ -177,8 +177,6 @@ private extension GMDScrollBar {
 	
 	func setLeadingOffSet(contentOffSetX: CGFloat, contentWidth: CGFloat) {
 		guard contentWidth != 0 else { return }
-		
-		let leftRatio = contentOffSetX / contentWidth
 		self.indicatorViewLeadingOffSet = contentOffSetX / contentWidth * bounds.width
 	}
 	

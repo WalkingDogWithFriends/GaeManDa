@@ -4,6 +4,9 @@
 .AppleDouble
 .LSOverride
 
+# Secret Config
+GaeManda.shared.xcconfig
+
 # Icon must end with two
 Icon
 

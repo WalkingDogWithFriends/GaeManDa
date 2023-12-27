@@ -1,15 +1,18 @@
 import RIBs
 import CorePresentation
 import DataMapper
+import GMDExtensions
 import GMDUtils
+import LocalStorage
 import OnBoarding
 import OnBoardingImpl
+import Repository
+import CoreLocation
+import RepositoryImpl
 import SignIn
 import SignInImpl
 import UseCase
 import UseCaseImpl
-import Repository
-import RepositoryImpl
 
 final class LoggedOutComponent:
 	Component<LoggedOutDependency>,
@@ -20,10 +23,16 @@ final class LoggedOutComponent:
 	DetailAddressSettingDependency,
 	UserProfileSettingDependency,
 	DogProfileSettingDependency {
-	// MARK: - Buildable
-	var dogCharacterPickerBuildable: DogCharacterPickerBuildable {
+	var clLocationManager: CLLocationManager = {
+		let manager = CLLocationManager()
+		manager.desiredAccuracy = kCLLocationAccuracyBest
+		return manager
+	}()
+	
+	// MARK: Buildeable
+  lazy var dogCharacterPickerBuildable: DogCharacterPickerBuildable = {
 		return dependency.dogCharacterPickerBuildable
-	}
+	}()
 	
 	var birthdayPickerBuildable: BirthdayPickerBuildable {
 		return dependency.birthdayPickerBuildable
@@ -72,17 +81,26 @@ final class LoggedOutComponent:
 	lazy var dogProfileSettingBuildable: DogProfileSettingBuildable = {
 		return DogProfileSettingBuilder(dependency: self)
 	}()
-
-	// MARK: - Repository
+	
+	// MARK: - Repositories
 	lazy var geocodeRepository: GeocodeRepository = {
 		return GeocodeRepositoryImpl(dataMapper: GeocodeDataMapperImpl())
 	}()
 	
+	var signInRepository: SignInRepository {
+		SignInRepositoryImpl(keychainStorage: dependency.keychainStorage)
+	}
+	
+	// MARK: - UseCases
+	lazy var signInUseCase: SignInUseCase = SignInUseCaseImpl(signinRespository: signInRepository)
+	
 	lazy var termsRepository: TermsRepository = {
-		return TermsRepositoryImpl(dataMapper: TermsDataMapperImpl())
+		return TermsRepositoryImpl(
+			dataMapper: TermsDataMapperImpl(),
+			permissionManager: PermissionManagerImpl(locationManagable: dependency.locationManagable)
+		)
 	}()
 	
-	// MARK: - UseCase
 	lazy var onBoardingUseCase: OnBoardingUseCase = {
 		return OnBoardingUseCaseImpl(
 			dogRepository: dependency.dogRepository,

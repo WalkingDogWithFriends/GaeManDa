@@ -170,4 +170,8 @@ extension TermsOfUseViewController: TermsOfUsePresentable {
 		self.confirmButton.isUserInteractionEnabled = isEnabled
 		self.confirmButton.isPositive = isEnabled
 	}
+	
+	func registerForRemoteNotifications() {
+		UIApplication.shared.registerForRemoteNotifications()
+	}
 }

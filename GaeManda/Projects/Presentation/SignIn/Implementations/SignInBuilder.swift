@@ -1,9 +1,18 @@
 import RIBs
 import SignIn
+import UseCase
 
-public protocol SignInDependency: Dependency { }
+public protocol SignInDependency: Dependency {
+	var signInUseCase: SignInUseCase { get }
+}
 
-final class SignInComponent: Component<SignInDependency> { }
+final class SignInComponent:
+	Component<SignInDependency>,
+	SignInInteractorDependency {
+	var signInUseCase: SignInUseCase {
+		dependency.signInUseCase
+	}
+}
 
 // MARK: - Builder
 public final class SignInBuilder:
@@ -14,9 +23,17 @@ public final class SignInBuilder:
 	}
 	
 	public func build(withListener listener: SignInListener) -> ViewableRouting {
+		let component = SignInComponent(dependency: dependency)
 		let viewController = SignInViewController()
-		let interactor = SignInInteractor(presenter: viewController)
+		let interactor = SignInInteractor(
+			presenter: viewController,
+			dependency: component
+		)
 		interactor.listener = listener
-		return SignInRouter(interactor: interactor, viewController: viewController)
+		
+		return SignInRouter(
+			interactor: interactor,
+			viewController: viewController
+		)
 	}
 }

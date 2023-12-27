@@ -37,8 +37,19 @@ public struct Provider<Target: TargetType> {
 			return requestStub(target, type: type)
 		}
 	}
+	
+	public func request<T: Decodable>(_ target: TargetType, type: T.Type) async throws -> T {
+		switch stubBehavior {
+		case .never:
+			return try await requestObject(target, type: type)
+			
+		case .immediate:
+			return try await requestStub(target, type: type)
+		}
+	}
 }
 
+// RxSwift
 private extension Provider {
 	func requestObject<T: Decodable>(_ target: TargetType, type: T.Type) -> Single<T> {
 		return Single<T>.create { single in
@@ -69,5 +80,23 @@ private extension Provider {
 			}
 			return Disposables.create()
 		}
+	}
+}
+
+// MARK: - Async Await
+private extension Provider {
+	func requestObject<T: Decodable>(_ target: TargetType, type: T.Type) async throws -> T {
+		let urlRequest = try target.asURLRequest()
+		let data = try await session.request(request: urlRequest)
+		let decoder = JSONDecoder()
+		let decodedData = try decoder.decode(BaseResponse.ExistData<T>.self, from: data)
+		return decodedData.data
+	}
+	
+	func requestStub<T: Decodable>(_ target: TargetType, type: T.Type) async throws -> T {
+		let data = target.sampleData
+		let decoder = JSONDecoder()
+		let decodedData = try decoder.decode(T.self, from: data)
+		return decodedData
 	}
 }

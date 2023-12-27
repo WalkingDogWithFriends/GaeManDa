@@ -33,7 +33,9 @@ let project = Project.createProject(
 				.Project.DataLayer.DTO,
 				.Project.DataLayer.GMDNetwork,
 				.Project.DataLayer.DataMapper,
-				.Project.DomainLayer.Repository
+				.Project.DomainLayer.Repository,
+				.Project.CoreLayer.GMDUtils,
+				.SPM.KakaoSDKUser
 			]
 		),
 		.createTarget(

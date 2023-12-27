@@ -24,7 +24,8 @@ let project = Project.createProject(
 			product: .staticLibrary,
 			sources: ["UseCaseImpl/Sources/**"],
 			dependencies: [
-				.Project.DomainLayer.UseCase
+				.Project.DomainLayer.UseCase,
+				.Project.CoreLayer.GMDUtils
 			]
 		),
 		.createTarget(
