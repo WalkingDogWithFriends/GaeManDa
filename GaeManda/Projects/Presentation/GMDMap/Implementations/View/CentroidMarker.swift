@@ -1,5 +1,5 @@
 //
-//  ClusterCentroid.swift
+//  CentroidMarker.swift
 //  GMDMap
 //
 //  Created by 김영균 on 12/15/23.
@@ -39,7 +39,7 @@ extension CentroidScale {
 	}
 }
 
-final class ClusterCentroid: UIView {
+final class CentroidMarker: UIView {
 	private let titleLabel: UILabel = {
 		let label = UILabel()
 		label.font = .jalnan28
@@ -55,8 +55,8 @@ final class ClusterCentroid: UIView {
 		self.scale = scale
 		super.init(frame: .zero)
 		setViewAttributes()
-		setViewHierarchies()
-		setViewConstraints()
+		setViewHierarchy()
+		setConstraints()
 	}
 	
 	@available(*, unavailable)
@@ -65,7 +65,7 @@ final class ClusterCentroid: UIView {
 	}
 }
 
-private extension ClusterCentroid {
+private extension CentroidMarker {
 	func setViewAttributes() {
 		titleLabel.text = "\(scale.rawValue)"
 		backgroundColor = .green70.withAlphaComponent(0.7)
@@ -81,11 +81,11 @@ private extension ClusterCentroid {
 		layer.shadowRadius = 4
 	}
 	
-	func setViewHierarchies() {
+	func setViewHierarchy() {
 		addSubviews(titleLabel)
 	}
 	
-	func setViewConstraints() {
+	func setConstraints() {
 		titleLabel.snp.makeConstraints {
 			$0.center.equalToSuperview()
 		}
