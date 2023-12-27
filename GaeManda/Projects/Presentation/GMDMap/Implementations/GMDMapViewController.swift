@@ -8,6 +8,7 @@
 
 import UIKit
 import RIBs
+import GMDNetwork
 import NMapsMap
 import RxCocoa
 import RxSwift
@@ -19,6 +20,22 @@ final class GMDMapViewController:
 	GMDMapViewControllable {
 	weak var listener: GMDMapPresentableListener?
 	private let mapView = NMFMapView()
+	private var webSocket: WebSocket
+	
+	// MARK: - Initializers
+	init(webSocket: WebSocket) {
+		self.webSocket = webSocket
+		super.init(nibName: nil, bundle: nil)
+	}
+	
+	@available(*, unavailable)
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+	
+	deinit {
+		webSocket.closeWebSocket()
+	}
 	
 	// MARK: - View Life Cycles
 	override func loadView() {
@@ -27,7 +44,8 @@ final class GMDMapViewController:
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		setMapViewAttributes()
+		webSocket.delegate = self
+//		webSocket.openWebSocket(with: URL(string: "")!)
 	}
 }
 
@@ -77,6 +95,8 @@ extension GMDMapViewController: GMDMapPresentable {
 		mapView.locationOverlay.location = location
 	}
 }
+
+extension GMDMapViewController: WebSocketDelegate { }
 
 /// 부드럽게 지도 위치를 이동하기 위한 확장자
 fileprivate extension NMFCameraUpdate {
