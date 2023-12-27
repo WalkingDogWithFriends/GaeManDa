@@ -89,7 +89,7 @@ final class LoggedOutComponent:
 	lazy var termsRepository: TermsRepository = {
 		return TermsRepositoryImpl(
 			dataMapper: TermsDataMapperImpl(),
-			permissionManager: PermissionManagerImpl(locationManager: dependency.locationManagable.locationManager)
+			permissionManager: PermissionManagerImpl(locationManagable: dependency.locationManagable)
 		)
 	}()
 	
