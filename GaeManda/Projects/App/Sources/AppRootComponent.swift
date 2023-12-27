@@ -20,7 +20,7 @@ final class AppRootComponent:
 	DogCharacterDashboardDependency,
 	UserProfileDashboardDependency {
 	// MARK: CLLocation Managable
-	var locationManagable: CLLocationManagable { dependency.locationManagable}
+	var locationManagable: CLLocationManagable { dependency.locationManagable }
 	
 	// MARK: - Buildable
 	lazy var dogCharacterPickerBuildable: DogCharacterPickerBuildable = {
