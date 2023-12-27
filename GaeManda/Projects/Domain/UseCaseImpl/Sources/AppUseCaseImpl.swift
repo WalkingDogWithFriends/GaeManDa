@@ -32,11 +32,6 @@ extension AppUseCaseImpl {
 		}
 	}
 	
-	public func startUnpdateLocation() {
-		guard !locationManagable.isUpdatingLocation else { return }
-		locationManagable.locationManager.startUpdatingLocation()
-	}
-	
 	public func stopUpdatingLocation() {
 		locationManagable.locationManager.stopUpdatingLocation()
 	}

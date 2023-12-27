@@ -31,10 +31,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		return true
 	}
 	
-	func applicationDidBecomeActive(_ application: UIApplication) {
-		appUseCase?.startUnpdateLocation()
-	}
-	
 	func applicationDidEnterBackground(_ application: UIApplication) {
 		appUseCase?.stopUpdatingLocation()
 	}
