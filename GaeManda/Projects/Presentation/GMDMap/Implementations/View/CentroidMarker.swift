@@ -49,11 +49,29 @@ final class CentroidMarker: UIView {
 	}()
 	
 	private let scale: CentroidScale
+	private let group: [GMDMapViewModel]
+	private let centroid: CGPoint
 	
 	// MARK: - Initializers
-	init(scale: CentroidScale) {
-		self.scale = scale
-		super.init(frame: .zero)
+	init(
+		centroid: CGPoint,
+		group: [GMDMapViewModel]
+	) {
+		self.centroid = centroid
+		self.group = group
+		if group.count <= 1 {
+			self.scale = .tiny
+		} else if group.count == 3 {
+			self.scale = .small
+		} else if group.count == 4 {
+			self.scale = .medium
+		} else if group.count == 5 {
+			self.scale = .large
+		} else {
+			self.scale = .huge
+		}
+		
+		super.init(frame: .init(origin: centroid, size: scale.size))
 		setViewAttributes()
 		setViewHierarchy()
 		setConstraints()
@@ -67,7 +85,7 @@ final class CentroidMarker: UIView {
 
 private extension CentroidMarker {
 	func setViewAttributes() {
-		titleLabel.text = "\(scale.rawValue)"
+		titleLabel.text = "\(group.count)"
 		backgroundColor = .green70.withAlphaComponent(0.7)
 		layer.cornerRadius = scale.size.width / 2
 		layer.masksToBounds = false

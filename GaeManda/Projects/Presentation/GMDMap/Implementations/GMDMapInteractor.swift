@@ -6,8 +6,10 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
+import Foundation
 import RIBs
 import GMDMap
+import GMDClustering
 import GMDUtils
 
 protocol GMDMapRouting: ViewableRouting { }
@@ -17,16 +19,18 @@ protocol GMDMapPresentable: Presentable {
 	
 	func updateCameraPosition(lat: Double, lng: Double)
 	func openPermissionSettings()
+	
+	func drawMarkers(_ markers: [CentroidMarker])
 }
 
 final class GMDMapInteractor:
 	PresentableInteractor<GMDMapPresentable>,
-	GMDMapInteractable,
-	GMDMapPresentableListener {
+	GMDMapInteractable {
 	weak var router: GMDMapRouting?
 	weak var listener: GMDMapListener?
 	
 	private let locaitonManagable: CLLocationManagable
+	private let clustering = Clustering<GMDMapViewModel>()
 	
 	init(
 		presenter: GMDMapPresentable,
@@ -35,6 +39,7 @@ final class GMDMapInteractor:
 		self.locaitonManagable = locaitonManagable
 		super.init(presenter: presenter)
 		presenter.listener = self
+		clustering.delegate = self
 	}
 	
 	override func didBecomeActive() {
@@ -49,6 +54,7 @@ final class GMDMapInteractor:
 
 private extension GMDMapInteractor {
 	func bindLocationManager() {
+		// 위치 정보에 대한 권한이 바뀔때 권한 요청을 다시 진행.
 		locaitonManagable.locationManager.rx.didChangeAuthorization
 			.bind(with: self) { owner, clLocationEvent in
 				switch clLocationEvent.status {
@@ -69,5 +75,29 @@ private extension GMDMapInteractor {
 				owner.presenter.updateCameraPosition(lat: lat, lng: lng)
 			}
 			.disposeOnDeactivate(interactor: self)
+	}
+}
+
+// MARK: - GMDMapPresentableListener
+extension GMDMapInteractor: GMDMapPresentableListener {
+	func viewDidLoad() {
+		locaitonManagable.locationManager.startUpdatingLocation()
+		clustering.run(data: stubData)
+	}
+}
+
+// MARK: - ClusteringDelegate
+extension GMDMapInteractor: ClusteringDelegate {
+	typealias DataType = GMDMapViewModel
+	
+	func didFinishClustering(with results: [ClusterResult<GMDMapViewModel>]) {
+		let markers = results.map { result in
+			return CentroidMarker(
+				centroid: CGPoint(x: result.centroid.longitude, y: result.centroid.latitude),
+				group: result.group
+			)
+		}
+		debugPrint(markers)
+		presenter.drawMarkers(markers)
 	}
 }

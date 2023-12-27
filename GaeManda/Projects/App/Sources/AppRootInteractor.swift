@@ -32,14 +32,14 @@ final class AppRootInteractor:
 	
 	override func didBecomeActive() {
 		super.didBecomeActive()
-		
-		let isAuthorized = signInUseCase.isAuthorized()
-		let isOnboardingFinished = signInUseCase.isOnboardingFinished()
-		if isAuthorized && isOnboardingFinished {
-			router?.attachLoggedIn()
-		} else {
-			router?.attachLoggedOut()
-		}
+		router?.attachLoggedIn()
+//		let isAuthorized = signInUseCase.isAuthorized()
+//		let isOnboardingFinished = signInUseCase.isOnboardingFinished()
+//		if isAuthorized && isOnboardingFinished {
+//			router?.attachLoggedIn()
+//		} else {
+//			router?.attachLoggedOut()
+//		}
 	}
 	
 	override func willResignActive() {

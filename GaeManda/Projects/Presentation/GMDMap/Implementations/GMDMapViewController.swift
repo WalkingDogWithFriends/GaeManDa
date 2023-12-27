@@ -12,7 +12,9 @@ import NMapsMap
 import RxCocoa
 import RxSwift
 
-protocol GMDMapPresentableListener: AnyObject { }
+protocol GMDMapPresentableListener: AnyObject {
+	func viewDidLoad()
+}
 
 final class GMDMapViewController:
 	UIViewController,
@@ -28,6 +30,8 @@ final class GMDMapViewController:
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setMapViewAttributes()
+		
+		listener?.viewDidLoad()
 	}
 }
 
@@ -75,6 +79,12 @@ extension GMDMapViewController: GMDMapPresentable {
 		)
 		mapView.moveCamera(cameraUpdatePosition)
 		mapView.locationOverlay.location = location
+	}
+	
+	func drawMarkers(_ markers: [CentroidMarker]) {
+		markers.forEach { marker in
+			view.addSubview(marker)
+		}		
 	}
 }
 

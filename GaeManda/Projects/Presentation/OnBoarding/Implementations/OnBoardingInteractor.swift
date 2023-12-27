@@ -109,22 +109,24 @@ extension OnBoardingInteractor {
 			return
 		}
 		
-		dependency.onBoardingUseCase.didFinish(
-			user: user,
-			dog: dog,
-			is마케팅정보수신동의Checked: is마케팅정보수신동의Checked
-		)
-		.observe(on: MainScheduler.instance)
-		.subscribe(
-			with: self,
-			onSuccess: { owner, _ in
-				owner.listener?.onBoardingDidFinish()
-			},
-			onFailure: { _, _ in
-				// 에러 정책??
-			}
-		)
-		.disposeOnDeactivate(interactor: self)
+		listener?.onBoardingDidFinish()
+		
+//		dependency.onBoardingUseCase.didFinish(
+//			user: user,
+//			dog: dog,
+//			is마케팅정보수신동의Checked: is마케팅정보수신동의Checked
+//		)
+//		.observe(on: MainScheduler.instance)
+//		.subscribe(
+//			with: self,
+//			onSuccess: { owner, _ in
+//				owner.listener?.onBoardingDidFinish()
+//			},
+//			onFailure: { _, _ in
+//				// 에러 정책??
+//			}
+//		)
+//		.disposeOnDeactivate(interactor: self)
 	}
 	
 	func dogProfileSettingBackButtonDidTap() {

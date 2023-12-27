@@ -63,7 +63,7 @@ extension UserProfileSettingInteractor {
 			print($0, $1)
 			return ($0, $1)
 		}
-		.map { $0 && $1 }
+		.map { $0.0 == true }
 		.bind(with: self) { owner, isPositive in
 			print("isPositive: \(isPositive)")
 			owner.presenter.setConfirmButton(isEnabled: isPositive)
@@ -79,7 +79,7 @@ extension UserProfileSettingInteractor {
 			userNameTextFieldMode.accept(.notEntered)
 		}
 		
-		guard userNameTextFieldMode.value == .valid else { return }
+//		guard userNameTextFieldMode.value == .valid else { return }
 		
 		guard let selectedBirthday = selectedBirthday, let enteredUserName = enteredUserName else { return }
 		
