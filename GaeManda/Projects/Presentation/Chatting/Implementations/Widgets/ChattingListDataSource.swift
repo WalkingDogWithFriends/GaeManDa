@@ -28,17 +28,18 @@ final class ChattingListDataSource: ChattingListDiffableDataSource {
 	enum Section { case chattingList }
 	
 	struct ViewModel: Hashable {
-		private var id: Int { roomId }
 		let roomId: Int
 		let nickName: String
 		let profileImage: String
 		let message: String
 		let newMessageCount: Int?
 		let recentMessageDate: String
+		let isAlarmOn: Bool 
 	}
 	
 	weak var listener: ChattingListPresentableListener?
 	
+	// MARK: - Intializers
 	override init(
 		tableView: UITableView,
 		cellProvider: @escaping ChattingListDiffableDataSource.CellProvider
@@ -47,6 +48,7 @@ final class ChattingListDataSource: ChattingListDiffableDataSource {
 		makeSection()
 	}
 	
+	// MARK: - Override Methods
 	override func tableView(
 		_ tableView: UITableView,
 		commit editingStyle: UITableViewCell.EditingStyle,

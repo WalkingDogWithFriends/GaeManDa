@@ -71,30 +71,19 @@ final class ChattingListViewController:
 // MARK: - UI Setting
 private extension ChattingListViewController {
 	func setupUI() {
-		// Register RefreshControl
-		chattingListTableView.refreshControl = refreshControl
-		setViewAttributes()
-		setupSubviews()
+		setViewHierarchy()
 		setConstraints()
+		
+		setRefreshControl(for: chattingListTableView)
+		setDataSource()
+		
+		setNavigationBarButtonItem()
+		
 		bind()
 	}
 	
-	func setupSubviews() {
+	func setViewHierarchy() {
 		view.addSubviews(navigationBar, chattingListTableView)
-	}
-	
-	func setViewAttributes() {
-		chattingListDataSource = ChattingListDataSource(
-			tableView: chattingListTableView,
-			cellProvider: { tableView, indexPath, itemIdentifier in
-				let cell = tableView.dequeueCell(ChattingListCell.self, for: indexPath)
-				cell.configure(with: itemIdentifier)
-				return cell
-			}
-		)
-		chattingListDataSource?.listener = listener
-		navigationBar.rightItems?.first?.menu = makeNavigationBarRightButtonMenu()
-		navigationBar.rightItems?.first?.showsMenuAsPrimaryAction = true
 	}
 	
 	func setConstraints() {
@@ -111,16 +100,25 @@ private extension ChattingListViewController {
 		}
 	}
 	
-	func bind() {
-		/// Refresh Control
-		refreshControl.rx.controlEvent(.valueChanged)
-			.subscribe(with: self) { owner, _ in
-				DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-					owner.chattingListTableView.reloadData()
-					owner.refreshControl.endRefreshing()
-				}
+	func setRefreshControl(for view: UIScrollView) {
+		view.refreshControl = refreshControl
+	}
+	
+	func setDataSource() {
+		chattingListDataSource = ChattingListDataSource(
+			tableView: chattingListTableView,
+			cellProvider: { tableView, indexPath, itemIdentifier in
+				let cell = tableView.dequeueCell(ChattingListCell.self, for: indexPath)
+				cell.configure(with: itemIdentifier)
+				return cell
 			}
-			.disposed(by: disposeBag)
+		)
+		chattingListDataSource?.listener = listener
+	}
+	
+	func setNavigationBarButtonItem() {
+		navigationBar.rightItems?.first?.menu = makeNavigationBarRightButtonMenu()
+		navigationBar.rightItems?.first?.showsMenuAsPrimaryAction = true
 	}
 	
 	func makeNavigationBarRightButtonMenu() -> UIMenu {
@@ -139,6 +137,22 @@ private extension ChattingListViewController {
 	}
 }
 
+// MARK: - Bind Method
+private extension ChattingListViewController {
+	func bind() {
+		/// Refresh Control
+		refreshControl.rx.controlEvent(.valueChanged)
+			.subscribe(with: self) { owner, _ in
+				DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+					owner.chattingListTableView.reloadData()
+					owner.refreshControl.endRefreshing()
+				}
+			}
+			.disposed(by: disposeBag)
+	}
+}
+
+// MARK: - ChattingListPresentable
 extension ChattingListViewController: ChattingListPresentable {
 	func updateChattingList(_ chattingList: [ChattingListDataSource.ViewModel]) {
 		chattingListDataSource?.updateChattingList(chattingList)

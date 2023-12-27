@@ -40,6 +40,8 @@ final class ChattingListCell: UITableViewCell {
 		return label
 	}()
 	
+	private let alarmOffImageView = UIImageView(image: .iconBellOff)
+	
 	private let newMessageCountLabel: UILabel = {
 		let label = UILabel()
 		label.font = .r8
@@ -75,10 +77,12 @@ final class ChattingListCell: UITableViewCell {
 		nickNameLabel.text = viewModel.nickName
 		dateLabel.text = viewModel.recentMessageDate
 		messageLabel.text = viewModel.message
+		
 		if let newMessageCount = viewModel.newMessageCount {
 			newMessageCountLabel.isHidden = false
 			newMessageCountLabel.text = "\(newMessageCount)"
 		}
+		alarmOffImageView.isHidden = viewModel.isAlarmOn
 	}
 }
 
@@ -89,16 +93,20 @@ private extension ChattingListCell {
 		static let profileImageSize = CGSize(width: 60, height: 60)
 		static let profileImageOutsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 20)
 		static let nickNameLabelBottomPadding: CGFloat = 20
+		static let alarmOffImageViewLeadingPadding: CGFloat = 10
+		static let alarmOffImageViewSize = CGSize(width: 12, height: 14)
 		static let newMessageLabelSize = CGSize(width: 16, height: 16)
 	}
 	
 	func setupUI() {
-		setupSubviews()
+		setViewHierarchy()
 		setConstraints()
 	}
 	
-	func setupSubviews() {
-		contentView.addSubviews(profileImageView, nickNameLabel, dateLabel, messageLabel, newMessageCountLabel)
+	func setViewHierarchy() {
+		contentView.addSubviews(
+			profileImageView, nickNameLabel, alarmOffImageView, dateLabel, messageLabel, newMessageCountLabel
+		)
 	}
 	
 	func setConstraints() {
@@ -111,31 +119,34 @@ private extension ChattingListCell {
 		
 		nickNameLabel.snp.makeConstraints { make in
 			make.leading.equalTo(profileImageView.snp.trailing).offset(Constant.profileImageOutsets.right)
-			make.top.equalTo(profileImageView.snp.top)
+			make.top.equalTo(profileImageView)
+		}
+		
+		alarmOffImageView.snp.makeConstraints { make in
+			make.centerY.equalTo(nickNameLabel)
+			make.leading.equalTo(nickNameLabel.snp.trailing).offset(Constant.alarmOffImageViewLeadingPadding)
+			make.size.equalTo(Constant.alarmOffImageViewSize)
 		}
 		
 		dateLabel.snp.makeConstraints { make in
 			make.trailing.equalToSuperview().offset(-Constant.contentViewInsets.right)
-			make.centerY.equalTo(nickNameLabel.snp.centerY)
+			make.centerY.equalTo(nickNameLabel)
 		}
 		
 		messageLabel.snp.makeConstraints { make in
 			make.leading.equalTo(profileImageView.snp.trailing).offset(Constant.profileImageOutsets.right)
-			make.bottom.equalTo(profileImageView.snp.bottom)
+			make.bottom.equalTo(profileImageView)
 		}
 		
 		newMessageCountLabel.snp.makeConstraints { make in
 			make.width.greaterThanOrEqualTo(Constant.newMessageLabelSize.width)
 			make.height.equalTo(Constant.newMessageLabelSize.height)
-			make.centerY.equalTo(messageLabel.snp.centerY)
+			make.centerY.equalTo(messageLabel)
 			make.trailing.equalToSuperview().offset(-Constant.contentViewInsets.right)
 			make.leading.equalTo(messageLabel.snp.trailing).offset(8)
 		}
 		
-		profileImageView.setContentHuggingPriority(.init(755), for: .horizontal)
 		newMessageCountLabel.setContentHuggingPriority(.init(755), for: .horizontal)
-		
-		profileImageView.setContentHuggingPriority(.init(755), for: .horizontal)
 		newMessageCountLabel.setContentCompressionResistancePriority(.init(755), for: .horizontal)
 	}
 }
