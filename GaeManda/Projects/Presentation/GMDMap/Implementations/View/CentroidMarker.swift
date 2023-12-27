@@ -61,11 +61,11 @@ final class CentroidMarker: UIView {
 		self.group = group
 		if group.count <= 1 {
 			self.scale = .tiny
-		} else if group.count == 3 {
+		} else if group.count <= 3 {
 			self.scale = .small
-		} else if group.count == 4 {
+		} else if group.count <= 4 {
 			self.scale = .medium
-		} else if group.count == 5 {
+		} else if group.count <= 5 {
 			self.scale = .large
 		} else {
 			self.scale = .huge
