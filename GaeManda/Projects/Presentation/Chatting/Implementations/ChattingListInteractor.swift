@@ -16,6 +16,8 @@ protocol ChattingListRouting: ViewableRouting {
 
 protocol ChattingListPresentable: Presentable {
 	var listener: ChattingListPresentableListener? { get set }
+	
+	func updateChattingList(_ chattingList: [ChattingListDataSource.ViewModel])
 }
 
 final class ChattingListInteractor:
@@ -44,6 +46,12 @@ extension ChattingListInteractor {
 	func didTapChatting(with user: String) {
 		router?.attachChatting(with: user)
 	}
+	
+	func deleteChatting(at roomId: Int) async { }
+	
+	func muteAllChattings() { }
+	
+	func viewWillAppear() { }
 }
 
 // MARK: - Chatting Listener

@@ -18,7 +18,9 @@ final class AppRootComponent:
 	BirthdayPickerDependency,
 	DogCharacterPickerDependency,
 	DogCharacterDashboardDependency,
-	UserProfileDashboardDependency {
+	UserProfileDashboardDependency,
+	DogProfileFirstDashboardDependency,
+	DogProfileSecondDashboardDependency {
 	// MARK: CLLocation Managable
 	var locationManagable: CLLocationManagable { dependency.locationManagable }
 	
@@ -37,6 +39,14 @@ final class AppRootComponent:
 	
 	lazy var userProfileDashboardBuildable: UserProfileDashboardBuildable = {
 		return UserProfileDashboardBuilder(dependency: self)
+	}()
+	
+	lazy var dogProfileFirstDashboardBuildable: DogProfileFirstDashboardBuildable = {
+		return DogProfileFirstDashboardBuilder(dependency: self)
+	}()
+	
+	lazy var dogProfileSecondDashboardBuildable: DogProfileSecondDashboardBuildable = {
+		return DogProfileSecondDashboardBuilder(dependency: self)
 	}()
 	
 	lazy var loggedOutBuildable: LoggedOutBuildable = {

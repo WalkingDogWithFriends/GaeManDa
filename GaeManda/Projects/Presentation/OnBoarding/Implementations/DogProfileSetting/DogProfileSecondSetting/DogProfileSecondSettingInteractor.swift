@@ -8,18 +8,18 @@ import OnBoarding
 import UseCase
 
 protocol DogProfileSecondSettingRouting: ViewableRouting {
+	func dogProfileSecondDashboardAttach(dogSpecies: [String])
+	func dogCharacterDashboardAttach(selectedCharacters: BehaviorRelay<[DogCharacter]>)
+	
 	func dogCharacterPickerAttach(characters: [DogCharacter], selectedId: [Int])
 	func dogCharacterPickerDetach()
-	
-	func dogCharacterDashboardAttach(selectedCharacters: BehaviorRelay<[DogCharacter]>)
 }
 
 protocol DogProfileSecondSettingPresentable: Presentable {
 	var listener: DogProfileSecondSettingPresentableListener? { get set }
 	
-	func updateDogSpecies(with dogSpecies: [String])
 	func updateProfileImage(with profileImage: UIImageWrapper)
-	func isSelectedDogCharacter(_ isSelected: Bool)
+	func setConfirmButton(isPositive: Bool)
 }
 
 protocol DogProfileSecondSettingListener: AnyObject {
@@ -43,6 +43,8 @@ final class DogProfileSecondSettingInteractor:
 	let dependency: DogProfileSecondSettingInteractorDependency
 	private let profileImage: UIImageWrapper
 	private let selectedCharacters = BehaviorRelay<[DogCharacter]>(value: [])
+	private var selectedDogSpecies: String?
+	private var isNeutered: Bool = true
 	
 	init(
 		presenter: DogProfileSecondSettingPresentable,
@@ -57,8 +59,6 @@ final class DogProfileSecondSettingInteractor:
 	
 	override func didBecomeActive() {
 		super.didBecomeActive()
-		
-		router?.dogCharacterDashboardAttach(selectedCharacters: selectedCharacters)
 	}
 	
 	override func willResignActive() {
@@ -69,21 +69,24 @@ final class DogProfileSecondSettingInteractor:
 // MARK: PresentableListener
 extension DogProfileSecondSettingInteractor {
 	func viewDidLoad() {
+		presenter.updateProfileImage(with: profileImage)
+
 		dependency.useCase.fetchDogSpecies()
 			.observe(on: MainScheduler.instance)
 			.subscribe(with: self) { owner, species in
-				owner.presenter.updateDogSpecies(with: owner.convertToSpeciesKR(from: species))
+				let speciesKR = owner.convertToSpeciesKR(from: species)
+				
+				owner.router?.dogProfileSecondDashboardAttach(dogSpecies: speciesKR)
 			}
 			.disposeOnDeactivate(interactor: self)
 		
-		selectedCharacters
-			.map { !$0.isEmpty }
-			.bind(with: self) { owner, isSelected in
-				owner.presenter.isSelectedDogCharacter(isSelected)
-		}
-		.disposeOnDeactivate(interactor: self)
+		router?.dogCharacterDashboardAttach(selectedCharacters: selectedCharacters)
 		
-		presenter.updateProfileImage(with: profileImage)
+		selectedCharacters
+			.bind(with: self) { owner, _ in
+				owner.presenter.setConfirmButton(isPositive: owner.confirmIsPositive())
+			}
+			.disposeOnDeactivate(interactor: self)
 	}
 	
 	func didTapBackButton() {
@@ -94,8 +97,33 @@ extension DogProfileSecondSettingInteractor {
 		listener?.dogProfileSecondSettingDismiss()
 	}
 	
-	func didTapConfirmButton(with passingModel: DogProfileSecondSettingPassingModel) {
-		listener?.dogProfileSecondSettingDidTapConfirmButton(with: passingModel)
+	func didTapConfirmButton() {
+		guard 
+			let selectedDogSpecies = selectedDogSpecies,
+			!selectedCharacters.value.isEmpty
+		else { return }
+		
+		listener?.dogProfileSecondSettingDidTapConfirmButton(
+			with: DogProfileSecondSettingPassingModel(
+				species: selectedDogSpecies,
+				isNeutered: self.isNeutered,
+				characterIds: selectedCharacters.value.map { $0.id },
+				profileImage: profileImage
+			)
+		)
+	}
+}
+
+// MARK: - DogProfileSecondDashboardListener
+extension DogProfileSecondSettingInteractor {
+	func didSelectedDogSpecies(_ dogSpecies: String) {
+		print("dogSpecies: \(dogSpecies)")
+		self.selectedDogSpecies = dogSpecies
+		presenter.setConfirmButton(isPositive: confirmIsPositive())
+	}
+	
+	func didSelectedIsNeutered(_ isNeutered: Bool) {
+		self.isNeutered = isNeutered
 	}
 }
 
@@ -122,6 +150,13 @@ extension DogProfileSecondSettingInteractor {
 
 // MARK: - Private Methods
 private extension DogProfileSecondSettingInteractor {
+	func confirmIsPositive() -> Bool {
+		print(selectedDogSpecies != nil)
+		print(!selectedCharacters.value.isEmpty)
+
+		return (selectedDogSpecies != nil) && (!selectedCharacters.value.isEmpty)
+	}
+	
 	func convertToSpeciesKR(from species: [String]) -> [String] {
 		return species
 			.map { DogSpecies(rawValue: $0) ?? .ETC }

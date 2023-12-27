@@ -71,8 +71,7 @@ extension UserProfileEditInteractor {
 		dependency.gmdProfileUseCase
 			.fetchUser()
 			.observe(on: MainScheduler.instance)
-			.subscribe(with: self) { _, _ in
-			}
+			.subscribe(with: self) { _, _ in }
 			.disposeOnDeactivate(interactor: self)
 	}
 	

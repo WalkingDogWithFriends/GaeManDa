@@ -16,19 +16,21 @@ import GMDExtensions
 import GMDUtils
 
 protocol ChattingListPresentableListener: AnyObject {
+	func viewWillAppear()
 	func didTapChatting(with user: String)
+	func deleteChatting(at roomId: Int) async
+	func muteAllChattings()
 }
 
 final class ChattingListViewController:
 	UIViewController,
-	ChattingListPresentable,
 	ChattingListViewControllable {
 	weak var listener: ChattingListPresentableListener?
 	private let disposeBag = DisposeBag()
 	
 	// MARK: - UI Components
 	private let navigationBar: GMDNavigationBar = {
-		let navigationBar = GMDNavigationBar(title: "채팅")
+		let navigationBar = GMDNavigationBar(title: "채팅", rightItems: [.more])
 		navigationBar.backButton.isHidden = true
 		
 		return navigationBar
@@ -37,11 +39,12 @@ final class ChattingListViewController:
 	private let chattingListTableView: UITableView = {
 		let tableView = UITableView()
 		tableView.registerCell(ChattingListCell.self)
-		// remove Top Seperator
-		tableView.tableHeaderView = UIView()
-
+		tableView.estimatedRowHeight = 84
+		tableView.rowHeight = 84
 		return tableView
 	}()
+	
+	private var chattingListDataSource: (ChattingListDiffableDataSource & ChattingListDataSourceProtocol)?
 	
 	private let refreshControl: UIRefreshControl = {
 		let refreshControl = UIRefreshControl()
@@ -61,21 +64,25 @@ final class ChattingListViewController:
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		showTabBar()
+		listener?.viewWillAppear()
 	}
 }
 
 // MARK: - UI Setting
 private extension ChattingListViewController {
 	func setupUI() {
-		// Register RefreshControl
-		chattingListTableView.refreshControl = refreshControl
-		
-		setupSubviews()
+		setViewHierarchy()
 		setConstraints()
+		
+		setRefreshControl(for: chattingListTableView)
+		setDataSource()
+		
+		setNavigationBarButtonItem()
+		
 		bind()
 	}
 	
-	func setupSubviews() {
+	func setViewHierarchy() {
 		view.addSubviews(navigationBar, chattingListTableView)
 	}
 	
@@ -89,10 +96,49 @@ private extension ChattingListViewController {
 		chattingListTableView.snp.makeConstraints { make in
 			make.top.equalTo(navigationBar.snp.bottom)
 			make.leading.trailing.equalToSuperview()
-			make.bottom.equalToSuperview().offset(152)
+			make.bottom.equalToSuperview().offset(-152)
 		}
 	}
 	
+	func setRefreshControl(for view: UIScrollView) {
+		view.refreshControl = refreshControl
+	}
+	
+	func setDataSource() {
+		chattingListDataSource = ChattingListDataSource(
+			tableView: chattingListTableView,
+			cellProvider: { tableView, indexPath, itemIdentifier in
+				let cell = tableView.dequeueCell(ChattingListCell.self, for: indexPath)
+				cell.configure(with: itemIdentifier)
+				return cell
+			}
+		)
+		chattingListDataSource?.listener = listener
+	}
+	
+	func setNavigationBarButtonItem() {
+		navigationBar.rightItems?.first?.menu = makeNavigationBarRightButtonMenu()
+		navigationBar.rightItems?.first?.showsMenuAsPrimaryAction = true
+	}
+	
+	func makeNavigationBarRightButtonMenu() -> UIMenu {
+		let editAction = UIAction(title: "편집") { [weak self] _ in
+			guard let self else { return }
+			let isEditing = chattingListTableView.isEditing
+			self.chattingListTableView.setEditing(!isEditing, animated: true)
+		}
+		
+		let allChattingMuteAction = UIAction(title: "채팅 알림 전체 끄기") { [weak self] _ in
+			guard let self else { return }
+			self.listener?.muteAllChattings()
+		}
+		
+		return UIMenu(title: "", children: [allChattingMuteAction, editAction])
+	}
+}
+
+// MARK: - Bind Method
+private extension ChattingListViewController {
 	func bind() {
 		/// Refresh Control
 		refreshControl.rx.controlEvent(.valueChanged)
@@ -103,5 +149,12 @@ private extension ChattingListViewController {
 				}
 			}
 			.disposed(by: disposeBag)
+	}
+}
+
+// MARK: - ChattingListPresentable
+extension ChattingListViewController: ChattingListPresentable {
+	func updateChattingList(_ chattingList: [ChattingListDataSource.ViewModel]) {
+		chattingListDataSource?.updateChattingList(chattingList)
 	}
 }

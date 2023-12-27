@@ -12,21 +12,20 @@ import RxSwift
 import SnapKit
 import GMDExtensions
 
+public protocol DropDownDelegate: AnyObject {
+	func dropdown(_ dropDown: DropDownView, didSelectRowAt indexPath: IndexPath)
+}
+
 public final class DropDownView: UIView {
 	// MARK: - Properties
-	public weak var listener: DropDownListener?
-	public weak var anchorView: AnchorView?
+	public weak var delegate: DropDownDelegate?
 	
 	/// DropDown을 띄울 Constraint를 적용합니다.
 	private var dropDownConstraints: ((ConstraintMaker) -> Void)?
+	private var becomeFirstResponderWhenTouchInside: Bool = false
 	
 	/// DropDown을 display할지 결정합니다.
-	public var isDisplayed: Bool = false {
-		didSet {
-			isDisplayed ? displayDropDown(with: dropDownConstraints) : hideDropDown()
-		}
-	}
-
+	public var isDisplayed: Bool = false
 	/// DropDown에 띄울 목록들을 정의합니다.
 	public var dataSource = [String]() {
 		didSet { dropDownTableView.reloadData() }
@@ -35,24 +34,94 @@ public final class DropDownView: UIView {
 	/// DropDown의 현재 선택된 항목을 알 수 있습니다.
 	public private(set) var selectedOption: String?
 	
+	/// DropDown의 default로 선택된 항목을 설정할 수 있습니다.
+	public var defaultSelectedOption: String? {
+		didSet {
+			self.selectedOption = defaultSelectedOption
+			dropDownTableView.reloadData()
+		}
+	}
+
+  public override var canBecomeFirstResponder: Bool { true }
+	public override var canResignFirstResponder: Bool { true }
+	
 	// MARK: - UI Components
+	private let anchorView: UIView
 	fileprivate let dropDownTableView = DropDownTableView()
 	
 	// MARK: - Initializers
-	public init() {
+	public init(anchorView: UIView) {
+		self.anchorView = anchorView
 		super.init(frame: .zero)
+    
 		dropDownTableView.dataSource = self
 		dropDownTableView.delegate = self
+		
+		setupUI()
 	}
 	
-	convenience public init(selectedOption: String) {
-		self.init()
+	convenience public init(anchorView: UIView, selectedOption: String) {
+		self.init(anchorView: anchorView)
 		self.selectedOption = selectedOption
 	}
-	
+
 	@available(*, unavailable)
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+	
+	public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+		return super.hitTest(point, with: event)
+	}
+
+  public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+		if isDisplayed == true {
+			resignFirstResponder()
+		} else {
+			becomeFirstResponderWhenTouchInside = true
+			becomeFirstResponder()
+		}
+	}
+	
+	public override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+		becomeFirstResponderWhenTouchInside = false
+	}
+	
+	public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+		becomeFirstResponderWhenTouchInside = false
+	}
+	
+	// MARK: - UI Responder Overriding
+	@discardableResult
+	public override func becomeFirstResponder() -> Bool {
+		if self.isDisplayed == true { return true }
+		super.becomeFirstResponder()
+
+		displayDropDown(with: dropDownConstraints)
+		self.isDisplayed = true
+
+		return true
+	}
+	
+	@discardableResult
+	public override func resignFirstResponder() -> Bool {
+		// 내부 터치 하면 FirstResponder가 anchorView로 지정되어 First Responder가 뺏기는 것을 방지합니다.
+		if becomeFirstResponderWhenTouchInside == true { return false }
+		if self.isDisplayed == false { return true }
+		super.resignFirstResponder()
+
+		hideDropDown()
+		self.isDisplayed = false
+		
+		return true
+	}
+}
+
+// MARK: - UI Setting
+private extension DropDownView {
+	func setupUI() {
+		self.addSubview(anchorView)
+		anchorView.snp.makeConstraints { $0.edges.equalToSuperview() }
 	}
 }
 
@@ -78,10 +147,10 @@ extension DropDownView: UITableViewDataSource {
 // MARK: - UITableViewDataSource
 extension DropDownView: UITableViewDelegate {
 	public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		listener?.dropdown(self, didSelectRowAt: indexPath)
+		delegate?.dropdown(self, didSelectRowAt: indexPath)
 		selectedOption = dataSource[indexPath.row]
 		dropDownTableView.selectRow(at: indexPath)
-		isDisplayed = false
+		resignFirstResponder()
 	}
 }
 
@@ -90,7 +159,7 @@ extension DropDownView {
 	/// DropDownList를 보여줍니다.
 	public func displayDropDown(with constraints: ((ConstraintMaker) -> Void)?) {
 		guard let constraints = constraints else { return }
-				
+		
 		UIWindow.key?.addSubview(dropDownTableView)
 		dropDownTableView.snp.makeConstraints(constraints)
 	}
