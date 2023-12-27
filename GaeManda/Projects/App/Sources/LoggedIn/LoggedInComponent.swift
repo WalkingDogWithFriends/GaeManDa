@@ -11,6 +11,7 @@ import Chatting
 import ChattingImpl
 import CorePresentation
 import DataMapper
+import GMDUtils
 import GMDMap
 import GMDMapImpl
 import GMDProfile
@@ -29,6 +30,9 @@ final class LoggedInComponent:
 	UserProfileEditDependency,
 	DogProfileEditDependency,
 	NewDogProfileDependency {
+	// MARK: CLLocation Managable
+	var locationManagable: CLLocationManagable { dependency.locationManagable}
+	
 	// MARK: - Buildable
 	lazy var chattingListBuildable: ChattingListBuildable = {
 		return ChattingListBuilder(dependency: self)

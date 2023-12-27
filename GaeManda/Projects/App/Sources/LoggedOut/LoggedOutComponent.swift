@@ -1,6 +1,7 @@
 import RIBs
 import CorePresentation
 import DataMapper
+import GMDExtensions
 import GMDUtils
 import LocalStorage
 import OnBoarding
@@ -88,7 +89,7 @@ final class LoggedOutComponent:
 	lazy var termsRepository: TermsRepository = {
 		return TermsRepositoryImpl(
 			dataMapper: TermsDataMapperImpl(),
-			permissionManager: PermissionManagerImpl(locationManager: clLocationManager)
+			permissionManager: PermissionManagerImpl(locationManagable: dependency.locationManagable)
 		)
 	}()
 	

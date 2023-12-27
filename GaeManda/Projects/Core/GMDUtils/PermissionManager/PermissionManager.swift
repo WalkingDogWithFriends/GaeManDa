@@ -6,7 +6,6 @@
 //  Copyright © 2023 com.gaemanda. All rights reserved.
 //
 
-import CoreLocation
 import FirebaseMessaging
 
 public protocol PermissionManager {
@@ -15,10 +14,10 @@ public protocol PermissionManager {
 }
 
 public struct PermissionManagerImpl {
-	private let locationManager: CLLocationManager
+	private let locationManagable: CLLocationManagable
 	
-	public init(locationManager: CLLocationManager) {
-		self.locationManager = locationManager
+	public init(locationManagable: CLLocationManagable) {
+		self.locationManagable = locationManagable
 	}
 }
 
@@ -29,6 +28,7 @@ extension PermissionManagerImpl: PermissionManager {
 	}
 	
 	public func requestLocationPermission() {
+		let locationManager = locationManagable.locationManager
 		let status = locationManager.authorizationStatus
 		if status == .notDetermined || status == .denied || status == .restricted {
 			locationManager.requestWhenInUseAuthorization()

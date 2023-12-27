@@ -1,6 +1,7 @@
 import RIBs
 import CorePresentation
 import DesignKit
+import GMDUtils
 import Repository
 import UseCase
 import LocalStorage
@@ -15,6 +16,7 @@ protocol LoggedOutDependency: Dependency {
 	var userRepository: UserRepository { get }
 	var signInUseCase: SignInUseCase { get }
 	var keychainStorage: KeyChainStorage { get }
+	var locationManagable: CLLocationManagable { get }
 }
 
 protocol LoggedOutBuildable: Buildable {

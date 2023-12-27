@@ -15,6 +15,7 @@ protocol AppRootDependency: Dependency {
 	var requestInterceptor: Interceptor { get }
 	var session: Session { get }
 	var keychainStorage: KeyChainStorage { get }
+	var locationManagable: CLLocationManagable { get }
 }
 
 protocol AppRootBuildable: Buildable {
