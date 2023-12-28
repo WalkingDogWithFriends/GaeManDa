@@ -25,6 +25,8 @@ final class MapUserViewController:
 	weak var listener: MapUserPresentableListener?
 	private let disposeBag = DisposeBag()
 	
+	private var dogInfo = [MapDog]()
+	
 	// MARK: - UI Components
 	private let upperView: UIView = {
 		let view = UIView()
@@ -44,12 +46,11 @@ final class MapUserViewController:
 	// MARK: - View Life Cycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
-//		
-//		tableView.delegate = self
-//		tableView.dataSource = self
+
+		tableView.dataSource = self
 		
 		setupUI()
-//		listener?.viewDidLoad()
+		listener?.viewDidLoad()
 	}
 }
 
@@ -97,6 +98,22 @@ private extension MapUserViewController {
 
 // MARK: - MapUserPresentable
 extension MapUserViewController: MapUserPresentable {
-	
+	func getDogInfo(_ dogInfo: [MapDog]) {
+		self.dogInfo = dogInfo
+		self.tableView.reloadData()
+	}
 }
 
+// MARK: - UITableViewDataSource
+extension MapUserViewController: UITableViewDataSource {
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return self.dogInfo.count
+	}
+	
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueCell(DogInfoCell.self, for: indexPath)
+		cell.configure(with: dogInfo[indexPath.row])
+		
+		return cell
+	}
+}

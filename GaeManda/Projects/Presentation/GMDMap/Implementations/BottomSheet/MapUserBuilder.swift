@@ -30,7 +30,7 @@ final class MapUserBuilder: Builder<MapUserDependency>, MapUserBuildable {
 		group: [MapDog]
 	) -> ViewableRouting {
 		let viewController = MapUserViewController()
-		let interactor = MapUserInteractor(presenter: viewController)
+		let interactor = MapUserInteractor(presenter: viewController, dogInfo: group)
 		interactor.listener = listener
 		return MapUserRouter(interactor: interactor, viewController: viewController)
 	}

@@ -12,6 +12,8 @@ protocol MapUserRouting: ViewableRouting { }
 
 protocol MapUserPresentable: Presentable {
 	var listener: MapUserPresentableListener? { get set }
+	
+	func getDogInfo(_ dogInfo: [MapDog])
 }
 
 protocol MapUserListener: AnyObject { 
@@ -23,8 +25,10 @@ final class MapUserInteractor:
 	MapUserInteractable {
 	weak var router: MapUserRouting?
 	weak var listener: MapUserListener?
+	private var dogInfo: [MapDog]
 	
-	override init(presenter: MapUserPresentable) {
+	init(presenter: MapUserPresentable, dogInfo: [MapDog]) {
+		self.dogInfo = dogInfo
 		super.init(presenter: presenter)
 		presenter.listener = self
 	}
@@ -40,7 +44,9 @@ final class MapUserInteractor:
 
 // MARK: - MapUserPresentableListener
 extension MapUserInteractor: MapUserPresentableListener {
-	func viewDidLoad() { }
+	func viewDidLoad() {
+		presenter.getDogInfo(self.dogInfo)
+	}
 	func dismiss() { 
 		listener?.mapUserDismiss()
 	}
