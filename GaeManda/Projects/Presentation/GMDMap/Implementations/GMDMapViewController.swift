@@ -14,6 +14,7 @@ import RxSwift
 
 protocol GMDMapPresentableListener: AnyObject {
 	func viewDidLoad()
+	func didTapMarker(group: [GMDMapViewModel])
 }
 
 final class GMDMapViewController:
@@ -85,6 +86,13 @@ extension GMDMapViewController: GMDMapPresentable {
 		markers.forEach { marker in
 			view.addSubview(marker)
 		}		
+	}
+	
+	func bind(for marker: CentroidMarker) {
+		marker.rx.tap
+			.bind(with: self) { owner, _ in
+				owner.listener?.didTapMarker(group: marker.group)
+			}
 	}
 }
 

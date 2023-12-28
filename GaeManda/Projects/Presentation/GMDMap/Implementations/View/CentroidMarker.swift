@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
+import RxGesture
 import SnapKit
 import DesignKit
 
@@ -49,8 +52,8 @@ final class CentroidMarker: UIView {
 	}()
 	
 	private let scale: CentroidScale
-	private let group: [GMDMapViewModel]
-	private let centroid: CGPoint
+	let group: [GMDMapViewModel]
+	let centroid: CGPoint
 	
 	// MARK: - Initializers
 	init(
@@ -107,5 +110,13 @@ private extension CentroidMarker {
 		titleLabel.snp.makeConstraints {
 			$0.center.equalToSuperview()
 		}
+	}
+}
+
+extension Reactive where Base: CentroidMarker {
+	var tap: ControlEvent<Void> {
+		let source = base.rx.tapGesture().when(.recognized).map { _ in }
+		
+		return ControlEvent(events: source)
 	}
 }

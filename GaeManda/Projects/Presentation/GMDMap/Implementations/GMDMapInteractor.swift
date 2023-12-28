@@ -12,7 +12,10 @@ import GMDMap
 import GMDClustering
 import GMDUtils
 
-protocol GMDMapRouting: ViewableRouting { }
+protocol GMDMapRouting: ViewableRouting {
+	func attachMapUser(with mapUser: [GMDMapViewModel])
+	func detachMapUser()
+}
 
 protocol GMDMapPresentable: Presentable {
 	var listener: GMDMapPresentableListener? { get set }
@@ -83,6 +86,10 @@ extension GMDMapInteractor: GMDMapPresentableListener {
 	func viewDidLoad() {
 		locaitonManagable.locationManager.startUpdatingLocation()
 		clustering.run(data: stubData)
+	}
+	
+	func didTapMarker(group: [GMDMapViewModel]) {
+		print("tap")
 	}
 }
 

@@ -19,11 +19,27 @@ protocol GMDMapViewControllable: ViewControllable { }
 final class GMDMapRouter:
 	ViewableRouter<GMDMapInteractable, GMDMapViewControllable>,
 	GMDMapRouting {
-	override init(
+	private let mapUserBuildable: MapUserBuildable
+	private var mapUserRouter: ViewableRouting?
+	
+	init(
 		interactor: GMDMapInteractable,
-		viewController: GMDMapViewControllable
+		viewController: GMDMapViewControllable,
+		mapUserBuildable: MapUserBuildable
 	) {
+		self.mapUserBuildable = mapUserBuildable
 		super.init(interactor: interactor, viewController: viewController)
 		interactor.router = self
+	}
+}
+
+// MARK: - MapUserBuildable
+extension GMDMapRouter {
+	func attachMapUser(with mapUser: [GMDMapViewModel]) {
+//		if let 
+	}
+	
+	func detachMapUser() {
+		
 	}
 }

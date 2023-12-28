@@ -10,7 +10,7 @@ import RIBs
 import GMDMap
 import GMDUtils
 
-public protocol GMDMapDependency: Dependency {
+public protocol GMDMapDependency: Dependency, MapUserDependency {
 	var locationManagable: CLLocationManagable { get }
 }
 
@@ -31,9 +31,13 @@ public final class GMDMapBuilder:
 			locaitonManagable: component.dependency.locationManagable
 		)
 		interactor.listener = listener
+		
+		let mapUserBuildable = MapUserBuilder(dependency: dependency)
+		
 		return GMDMapRouter(
 			interactor: interactor,
-			viewController: viewController
+			viewController: viewController,
+			mapUserBuildable: mapUserBuildable
 		)
 	}
 }
