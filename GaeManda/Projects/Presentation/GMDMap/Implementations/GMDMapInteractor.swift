@@ -89,7 +89,7 @@ extension GMDMapInteractor: GMDMapPresentableListener {
 	}
 	
 	func didTapMarker(group: [GMDMapViewModel]) {
-		print("tap")
+		router?.attachMapUser(with: group)
 	}
 }
 
@@ -106,5 +106,11 @@ extension GMDMapInteractor: ClusteringDelegate {
 		}
 		debugPrint(markers)
 		presenter.drawMarkers(markers)
+	}
+}
+
+extension GMDMapInteractor: MapUserListener {	
+	func mapUserDismiss() {
+		router?.detachMapUser()
 	}
 }

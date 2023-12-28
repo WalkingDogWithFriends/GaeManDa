@@ -22,7 +22,7 @@ final class GMDMapViewController:
 	GMDMapViewControllable {
 	weak var listener: GMDMapPresentableListener?
 	private let mapView = NMFMapView()
-	
+	private let disposeBag = DisposeBag()
 	// MARK: - View Life Cycles
 	override func loadView() {
 		self.view = mapView
@@ -31,7 +31,6 @@ final class GMDMapViewController:
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setMapViewAttributes()
-		
 		listener?.viewDidLoad()
 	}
 }
@@ -85,7 +84,8 @@ extension GMDMapViewController: GMDMapPresentable {
 	func drawMarkers(_ markers: [CentroidMarker]) {
 		markers.forEach { marker in
 			view.addSubview(marker)
-		}		
+			bind(for: marker)
+		}
 	}
 	
 	func bind(for marker: CentroidMarker) {
@@ -93,6 +93,7 @@ extension GMDMapViewController: GMDMapPresentable {
 			.bind(with: self) { owner, _ in
 				owner.listener?.didTapMarker(group: marker.group)
 			}
+			.disposed(by: disposeBag)
 	}
 }
 

@@ -9,7 +9,7 @@
 import RIBs
 import GMDMap
 
-protocol GMDMapInteractable: Interactable {
+protocol GMDMapInteractable: Interactable, MapUserListener {
 	var router: GMDMapRouting? { get set }
 	var listener: GMDMapListener? { get set }
 }
@@ -36,10 +36,21 @@ final class GMDMapRouter:
 // MARK: - MapUserBuildable
 extension GMDMapRouter {
 	func attachMapUser(with mapUser: [GMDMapViewModel]) {
-//		if let 
+		if mapUserRouter != nil { return }
+		let group = mapUser.map(\.mapDog)
+		let router = mapUserBuildable.build(withListener: interactor, group: group)
+		self.mapUserRouter = router
+		attachChild(router)
+		viewControllable.present(
+			router.viewControllable,
+			animated: false,
+			modalPresentationStyle: .overFullScreen
+		)
 	}
 	
 	func detachMapUser() {
-		
+		guard let router = mapUserRouter else { return }
+		detachChild(router)
+		self.mapUserRouter = nil
 	}
 }

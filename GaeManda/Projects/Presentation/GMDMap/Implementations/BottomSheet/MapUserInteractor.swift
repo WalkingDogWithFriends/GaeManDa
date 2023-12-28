@@ -41,5 +41,7 @@ final class MapUserInteractor:
 // MARK: - MapUserPresentableListener
 extension MapUserInteractor: MapUserPresentableListener {
 	func viewDidLoad() { }
-	func dismiss() { }
+	func dismiss() { 
+		listener?.mapUserDismiss()
+	}
 }
